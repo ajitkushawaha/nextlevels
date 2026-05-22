@@ -43,7 +43,7 @@ export default async function Footer() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <div className="hidden lg:block relative -mt-4 opacity-80 pl-4">
-              <Image src="/visa/air1.png" width={100} height={50} alt="Airplane" className="object-contain" />
+              <Image src="/visa/air1.png" width={100} height={90} alt="Airplane" className="object-contain" style={{ width: 'auto', height: 'auto' }} />
             </div>
           </div>
         </div>

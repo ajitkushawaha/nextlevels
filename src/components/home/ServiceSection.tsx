@@ -48,8 +48,8 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
         className="!pb-14"
       >
         {displayServices.map((service, idx) => (
-          <SwiperSlide key={`${service.title}-${idx}`} className="!h-auto">
-            <div className="flex h-full flex-col overflow-hidden rounded-lg border border-[#ece8df] bg-white shadow-sm">
+          <SwiperSlide key={`${service.title}-${idx}`} className="!h-auto p-1">
+            <div className="flex h-full flex-col overflow-hidden rounded-lg border border-[#ece8df] bg-white shadow-sm transition-all duration-300 hover:scale-[1.025] hover:-translate-y-1 hover:shadow-md hover:border-[#d7a23a]/50">
 
               <div className="relative h-48 w-full">
                 <Image

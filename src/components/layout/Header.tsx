@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ChevronDown, Menu, PhoneCall } from 'lucide-react'
 
 const navItems = [
@@ -39,6 +42,8 @@ function Logo() {
 }
 
 export default function Header() {
+  const pathname = usePathname()
+
   return (
     <header className="sticky inset-x-0 top-0 z-50 bg-[#061331] border-b border-[#061331]/20 w-full">
       <nav className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-5 sm:px-8 lg:px-10">
@@ -50,8 +55,8 @@ export default function Header() {
               <Link
                 href={item.href}
                 className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold text-white transition ${
-                  item.label === 'Home'
-                    ? 'border-[#d7a23a]'
+                  pathname === item.href
+                    ? 'border-[#d7a23a] text-[#d7a23a]'
                     : 'border-transparent hover:border-[#d7a23a]'
                 }`}
               >

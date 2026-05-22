@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@source "../../src/**/*.{js,ts,jsx,tsx,mdx,html}";
+@source not "../../.next";
+@source not "../../node_modules";
+@source not "../../public";
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -10,4 +15,59 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+/* Custom Premium Animations & Utilities */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes shimmer-slow {
+  0% {
+    transform: translateX(-150%);
+  }
+  50% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(150%);
+  }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: translateX(-150%);
+  animation: shimmer-slow 4s infinite ease-in-out;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #f6da73 0%, #d7a23a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

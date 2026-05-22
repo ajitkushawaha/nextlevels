@@ -2,8 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ServicesCarousel from './ServiceSection'
 import StudentTestimonialsCarousel from './StudentTestimonialsCarousel'
-import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound } from 'lucide-react'
+import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck } from 'lucide-react'
 import Footer from '../layout/footer'
+import FlyingAeroplane from './FlyingAeroplane'
+import FAQSection from './FAQSection'
 
 
 
@@ -153,6 +155,44 @@ const services = [
   },
 ]
 
+const courseTypes = [
+  {
+    title: 'Foundation',
+    icon: BookOpen,
+    eligibility: 'After O/Ls',
+    duration: '1 Year',
+    description: 'Prepares you for direct entry to university degrees.'
+  },
+  {
+    title: 'Undergraduate',
+    icon: GraduationCap,
+    eligibility: 'After A/Ls',
+    duration: '3-4 Years',
+    description: 'Standard Bachelor\'s degree courses.'
+  },
+  {
+    title: 'Top-Up',
+    icon: TrendingUp,
+    eligibility: 'After HND',
+    duration: '1 Year',
+    description: 'Upgrade your diploma to a full honors degree.'
+  },
+  {
+    title: 'Postgraduate',
+    icon: Award,
+    eligibility: 'After Degree',
+    duration: '1 Year',
+    description: 'Master\'s programs to advance your career.'
+  },
+  {
+    title: 'Research',
+    icon: Search,
+    eligibility: 'After PG/Master\'s',
+    duration: '1-2 Years',
+    description: 'MPhil, PhD and high-level academic research.'
+  }
+]
+
 
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -184,7 +224,7 @@ export default function NextLevelHomepage() {
                 className="mt-5 max-w-3xl text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
-                Free Student Visa Consultation to Study Abroad
+                <span className="text-gradient-gold">Free Student Visa Consultation</span> to Study Abroad
               </h1>
               <p className="mt-6 max-w-xl text-base leading-7 text-white/90 sm:text-lg">
                 Expert guidance for your global education journey. We make it
@@ -194,7 +234,7 @@ export default function NextLevelHomepage() {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
                   href="/contact-us"
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-[#d7a23a] px-6 py-3 text-sm font-bold text-[#061331] shadow-[0_12px_30px_rgba(215,162,58,0.28)] transition hover:bg-[#efbd5a]"
+                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-[#d7a23a] px-6 py-3 text-sm font-bold text-[#061331] shadow-[0_12px_30px_rgba(215,162,58,0.28)] transition-all duration-300 hover:bg-[#efbd5a] hover:scale-[1.03] active:scale-[0.98] btn-shimmer"
                 >
                   Book a Free Consultation
                   <ArrowRight className="h-4 w-4" />
@@ -221,13 +261,13 @@ export default function NextLevelHomepage() {
                 return (
                   <article
                     key={feature.title}
-                    className="flex min-h-[105px] items-center gap-4 rounded-md border border-[#ece8df] bg-white p-4"
+                    className="group flex min-h-[105px] items-center gap-4 rounded-md border border-[#ece8df] bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(6,19,49,0.08)] hover:border-[#d7a23a]/50"
                   >
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-[#061331] text-white">
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-[#061331] text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
                       <Icon className="h-7 w-7" />
                     </span>
                     <div>
-                      <h3 className="text-sm font-bold leading-5">
+                      <h3 className="text-sm font-bold leading-5 transition-colors duration-300 group-hover:text-[#d7a23a]">
                         {feature.title}
                       </h3>
                       <p className="mt-1 text-xs leading-5 text-[#59616f]">
@@ -239,16 +279,7 @@ export default function NextLevelHomepage() {
               })}
             </div>
           </div>
-          <div className='absolute left-[20%] bottom-[40%]'>
-            <Image
-              src="/visa/aroplane.png"
-              alt=""
-              fill
-              priority
-              className="object-cover object-top center"
-              sizes="10vw"
-            />
-          </div>
+          <FlyingAeroplane />
         </section>
 
         <section id="programs" className="relative bg-white py-16 sm:py-20">
@@ -266,7 +297,7 @@ export default function NextLevelHomepage() {
           </div>
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-10">
             <div className="relative min-h-[360px] sm:min-h-[430px]">
-              <div className="absolute left-0 top-0 h-48 w-72 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)]">
+              <div className="absolute left-0 top-0 h-48 w-72 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
                 <Image
                   src="/home2/happy-ma.png"
                   alt="Students discussing study abroad options"
@@ -275,7 +306,7 @@ export default function NextLevelHomepage() {
                   sizes="320px"
                 />
               </div>
-              <div className="absolute right-0 -top-10 h-56 w-72 -translate-y-[-50%] overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)]">
+              <div className="absolute right-0 -top-10 h-56 w-72 -translate-y-[-50%] overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
                 <Image
                   src="/home2/happy-team.png"
                   alt="Students with passports"
@@ -284,7 +315,7 @@ export default function NextLevelHomepage() {
                   sizes="384px"
                 />
               </div>
-              <div className="absolute bottom-0 -right-24 h-48 w-80 -translate-x-1/2 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)]">
+              <div className="absolute bottom-0 -right-24 h-48 w-80 -translate-x-1/2 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
                 <Image
                   src="/home2/happy-gi.png"
                   alt="Visa application documents"
@@ -370,13 +401,13 @@ export default function NextLevelHomepage() {
                 return (
                   <article
                     key={item.title}
-                    className="flex gap-4 border-white/20 lg:border-r lg:pr-6 lg:last:border-r-0"
+                    className="group flex gap-4 border-white/20 p-3 rounded-lg transition-all duration-300 hover:bg-white/5 lg:border-r lg:pr-6 lg:last:border-r-0 hover:-translate-y-1"
                   >
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#d7a23a] text-[#d7a23a]">
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#d7a23a] text-[#d7a23a] transition-all duration-300 group-hover:bg-[#d7a23a] group-hover:text-[#061331] group-hover:rotate-12">
                       <Icon className="h-6 w-6" />
                     </span>
                     <div>
-                      <h3 className="font-bold">{item.title}</h3>
+                      <h3 className="font-bold transition-colors duration-300 group-hover:text-[#d7a23a]">{item.title}</h3>
                       <p className="mt-2 text-sm leading-6 text-white/70">
                         {item.text}
                       </p>
@@ -404,7 +435,83 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
-       
+
+        <section className="bg-slate-50 border-y border-[#ece8df]/40 py-16 sm:py-20 relative overflow-hidden">
+          {/* Subtle background decorative shapes */}
+          <div aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 opacity-30">
+            <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1.25rem_1.25rem]" />
+          </div>
+          <div aria-hidden="true" className="absolute right-0 top-10 opacity-30">
+            <div className="h-28 w-56 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1.25rem_1.25rem]" />
+          </div>
+
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
+            <div className="text-center max-w-3xl mx-auto">
+              <Eyebrow>Study Levels</Eyebrow>
+              <h2
+                className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
+                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              >
+                Types Of Courses Available <span className="text-gradient-gold">At University Of Chester</span>
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
+                Choose from wide ranging undergraduate and postgraduate courses, continuing professional development (CPD), online distance learning and short courses offered by University of Chester.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+              {courseTypes.map(course => {
+                const Icon = course.icon
+                return (
+                  <article
+                    key={course.title}
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#061331] to-[#0b1f4d] p-6 text-white shadow-[0_12px_36px_rgba(6,19,49,0.12)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(215,162,58,0.18)]"
+                    style={{ borderTop: '3px solid rgba(215, 162, 58, 0.7)' }}
+                  >
+                    {/* Top hover glow accent */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(215,162,58,0.1),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[#d7a23a] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
+                          <Icon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-6" />
+                        </span>
+                        <h3 className="text-base font-bold leading-tight group-hover:text-[#d7a23a] transition-colors duration-300">
+                          {course.title}
+                        </h3>
+                      </div>
+
+                      <p className="mt-4 text-xs leading-relaxed text-white/70 min-h-[48px]">
+                        {course.description}
+                      </p>
+
+                      <div className="mt-6 space-y-2.5 border-t border-white/10 pt-5">
+                        <div className="flex items-center gap-2.5 text-xs text-white/80">
+                          <UserCheck className="h-4 w-4 shrink-0 text-[#d7a23a]" />
+                          <span className="font-medium text-white/90">{course.eligibility}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-xs text-white/80">
+                          <Clock className="h-4 w-4 shrink-0 text-[#d7a23a]" />
+                          <span className="font-medium text-white/90">{course.duration}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-2 relative z-10">
+                      <Link
+                        href="/contact-us"
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-white/5 py-2 text-xs font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331]"
+                      >
+                        Apply Now
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
 
         <section className="bg-[#031336] py-8">
           <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-10">
@@ -413,14 +520,14 @@ export default function NextLevelHomepage() {
               return (
                 <article
                   key={stat.label}
-                  className="flex items-center justify-center gap-4 rounded-lg border-r border-[#ece8df] bg-transparent px-5 py-6"
+                  className="group flex items-center justify-center gap-4 rounded-lg border-r border-white/10 bg-transparent px-5 py-6 transition-all duration-300 hover:bg-white/5 last:border-r-0"
                 >
-                  <Icon className="h-9 w-9 text-[#d7a23a]" />
+                  <Icon className="h-9 w-9 text-[#d7a23a] transition-transform duration-500 group-hover:scale-125 group-hover:rotate-[360deg]" />
                   <div>
-                    <p className="text-3xl font-bold text-[#d7a23a]">
+                    <p className="text-3xl font-bold text-[#d7a23a] transition-all duration-300 group-hover:scale-105 origin-left">
                       {stat.value}
                     </p>
-                    <p className="text-xs font-semibold text-white/80">
+                    <p className="text-xs font-semibold text-white/80 transition-colors duration-300 group-hover:text-white">
                       {stat.label}
                     </p>
                   </div>
@@ -446,6 +553,7 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
+        <FAQSection />
 
          <section className="bg-white py-8 sm:py-10">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
@@ -472,7 +580,7 @@ export default function NextLevelHomepage() {
               {blogs.map((blog, index) => (
                 <article
                   key={`${blog.title}-${index}`}
-                  className="overflow-hidden rounded-lg border border-[#ece8df] bg-white shadow-[0_12px_34px_rgba(8,22,56,0.06)]"
+                  className="overflow-hidden rounded-lg border border-[#ece8df] bg-white shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:scale-[1.025] hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(8,22,56,0.12)] hover:border-[#d7a23a]/40"
                 >
                   <div className="relative h-40">
                     <Image
