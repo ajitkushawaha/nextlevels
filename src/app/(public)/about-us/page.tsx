@@ -53,7 +53,7 @@ export default function AboutUsPage() {
             <span>&bull;</span>
             <span className="text-[#d7a23a]">About Us</span>
           </nav>
-          
+
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#061331] mb-6 leading-tight" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
             About{' '}
             <span className="block sm:inline text-gradient-gold">
@@ -75,23 +75,23 @@ export default function AboutUsPage() {
         {/* Who We Are Section */}
         <section className="max-w-[1200px] mx-auto px-6 sm:px-8 py-16 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            
+
             {/* Text Column */}
             <div className="flex flex-col">
               <span className="text-xs font-bold uppercase tracking-widest text-[#d7a23a] mb-3">
                 Who We Are
               </span>
-              <h2 
+              <h2
                 className="text-3xl sm:text-4xl font-bold text-[#061331] leading-tight mb-6"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
                 Your Trusted Partner for Global Education
               </h2>
-              
+
               <p className="text-sm sm:text-base leading-relaxed text-[#59616f] mb-5">
                 Founded with a vision to simplify international student placement, <strong>Next Level Education (Pvt) Ltd</strong> is a premier study abroad agency headquartered in Palali Road, Kondavil, Jaffna, Sri Lanka. We believe that global education transforms lives, which is why we provide our counseling and application support completely <strong>100% free of charge</strong> for all students.
               </p>
-              
+
               <p className="text-sm sm:text-base leading-relaxed text-[#59616f] mb-6">
                 Our consultancy partners with highly ranked universities in the UK, Canada, Australia, New Zealand, Germany, and beyond. Whether you are looking for undergraduate entry after your O/Ls or A/Ls, or wishing to advance your career with a post-graduate research degree, our advisors represent your best interests at every single stage of the process.
               </p>
@@ -121,7 +121,7 @@ export default function AboutUsPage() {
             <div className="relative">
               {/* Backdrop effects */}
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#d7a23a]/15 via-[#061331]/5 to-transparent blur-md"></div>
-              
+
               {/* Image Container with premium frame and hover zoom */}
               <div className="relative group overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-500 hover:border-[#d7a23a] shadow-2xl">
                 <div className="relative h-64 sm:h-80 md:h-[420px] w-full bg-slate-50">
@@ -150,7 +150,7 @@ export default function AboutUsPage() {
         {/* Milestones, Vision & Mission, and Values Section */}
         <section className="bg-gradient-to-b from-slate-50 to-white border-y border-[#ece8df]/40 py-16 sm:py-24">
           <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
-            
+
             {/* Stateful timeline & vision tabs */}
             <AboutInteractiveHub />
 
@@ -179,28 +179,7 @@ export default function AboutUsPage() {
           </div>
         </section>
 
-        {/* Enquiry Form Section */}
-        <section className="bg-slate-50 border-b border-[#ece8df]/40 py-16 sm:py-24">
-          <div className="max-w-[900px] mx-auto px-6 sm:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#d7a23a]">
-                Contact Enquiry Form
-              </span>
-              <h2 
-                className="text-3xl font-bold text-[#061331] leading-tight mt-3"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-              >
-                Register For A Free Consultation
-              </h2>
-              <p className="mt-4 text-sm sm:text-base text-[#59616f] leading-relaxed">
-                Provide your academic background details below. Our study abroad coordinators will evaluate your credentials and reach back to schedule a 1-on-1 planning session.
-              </p>
-            </div>
 
-            {/* Custom Interactive Form */}
-            <CustomEnquiryForm />
-          </div>
-        </section>
       </main>
 
       {/* Footer */}

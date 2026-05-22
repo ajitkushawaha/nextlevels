@@ -9,9 +9,9 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
   { label: 'About Us', href: '/about-us' },
-  { 
-    label: 'Study Abroad', 
-    href: '#programs', 
+  {
+    label: 'Study Abroad',
+    href: '#programs',
     dropdownItems: [
       { label: 'University of Hertfordshire', href: '/uk/hertfordshire' },
       { label: 'University of Chester', href: '/uk/chester' },
@@ -54,11 +54,10 @@ export default function Header() {
             <div key={item.label} className="group/nav relative">
               <Link
                 href={item.href}
-                className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold text-white transition ${
-                  pathname === item.href
+                className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold text-white transition ${pathname === item.href
                     ? 'border-[#d7a23a] text-[#d7a23a]'
                     : 'border-transparent hover:border-[#d7a23a]'
-                }`}
+                  }`}
               >
                 {item.label}
                 {item.dropdownItems ? (
@@ -90,7 +89,7 @@ export default function Header() {
               <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
               <div className="flex flex-col text-left">
                 <span className="text-[10px] text-white/80 leading-tight">Call Anytime</span>
-                <span className="text-[13px] font-bold text-[#d7a23a] leading-tight">+91 88 345 6789</span>
+                <span className="text-[13px] font-bold text-[#d7a23a] leading-tight">+94775198195</span>
               </div>
             </a>
           </div>
