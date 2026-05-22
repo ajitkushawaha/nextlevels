@@ -64,7 +64,7 @@
     "input-otp": "^1.4.2",
     "lottie-react": "^2.4.1",
     "lucide-react": "^1.16.0",
-    "mongodb": "^7.2.0",
+    "mongodb": "^6.0.0",
     "mongoose": "^9.6.2",
     "next": "16.2.6",
     "next-auth": "^4.24.14",
