@@ -15,7 +15,7 @@ export default function FlyingAeroplane() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<SmokeParticle[]>([])
-  
+
   // Ref to hold movement and tracking variables to ensure smooth 60fps frame rate without re-renders
   const posRef = useRef({
     currX: 0,
@@ -45,23 +45,23 @@ export default function FlyingAeroplane() {
     const updateDimensions = () => {
       const w = window.innerWidth
       const h = window.innerHeight
-      
+
       // Update canvas dimensions to match the full viewport
       if (canvasRef.current) {
         canvasRef.current.width = w
         canvasRef.current.height = h
       }
-      
+
       // Default home spot (parked in header, top-right side)
-      const defaultX = Math.min(w * 0.85, w - 120)
-      const defaultY = 40
-      
+      const defaultX = Math.min(w * 0.75, w - 180) + 70
+      const defaultY = 60
+
       if (!posRef.current.initialized) {
         // Initialize position centered on the header home spot
         posRef.current.currX = defaultX - posRef.current.width / 2
         posRef.current.currY = defaultY - posRef.current.height / 2
         posRef.current.initialized = true
-        
+
         el.style.left = '0px'
         el.style.top = '0px'
       }
@@ -91,12 +91,12 @@ export default function FlyingAeroplane() {
     const tick = () => {
       const p = posRef.current
       const particles = particlesRef.current
-      
+
       const w = window.innerWidth
       const h = window.innerHeight
-      
+
       // Responsive default home spot (parked in header, top-right side)
-      const defaultX = Math.min(w * 0.85, w - 120)
+      const defaultX = Math.min(w * 0.75, w - 180) + 35
       const defaultY = 40
 
       // Update existing particles in the array
@@ -106,7 +106,7 @@ export default function FlyingAeroplane() {
         pt.y += pt.vy
         pt.alpha -= 0.015 // fade speed
         pt.size += 0.2 // grow/dispersion size
-        
+
         if (pt.alpha <= 0) {
           particles.splice(i, 1)
         }
@@ -116,7 +116,7 @@ export default function FlyingAeroplane() {
       if (p.introPhase) {
         p.introFrameCount++
         const frame = p.introFrameCount
-        
+
         if (frame <= 90) {
           // Phase 1: Parked in header (bobbing, facing right)
           p.targetX = defaultX - p.width / 2
@@ -130,7 +130,7 @@ export default function FlyingAeroplane() {
           const R = Math.min(w * 0.15, 120)
           const endX = w * 0.5 + R - p.width / 2
           const endY = h * 0.45 - p.height / 2
-          
+
           p.targetX = startX * (1 - t * t) + endX * t * t
           p.targetY = startY * (1 - t) * (1 - t) + endY * t * (2 - t)
         } else if (frame <= 270) {
@@ -138,10 +138,10 @@ export default function FlyingAeroplane() {
           const t = (frame - 150) / 120
           const angle = t * 2 * Math.PI
           const R = Math.min(w * 0.15, 120)
-          
+
           const centerX = w * 0.5 - p.width / 2
           const centerY = h * 0.45 - p.height / 2
-          
+
           p.targetX = centerX + R * Math.cos(angle)
           p.targetY = centerY + R * Math.sin(angle)
         } else if (frame <= 330) {
@@ -150,7 +150,7 @@ export default function FlyingAeroplane() {
           const R = Math.min(w * 0.15, 120)
           const startX = w * 0.5 + R - p.width / 2
           const startY = h * 0.45 - p.height / 2
-          
+
           let endX = defaultX - p.width / 2
           let endY = defaultY - p.height / 2
           if (p.isHovering) {
@@ -162,7 +162,7 @@ export default function FlyingAeroplane() {
             endX = p.lastMouseX + offsetX - p.width / 2
             endY = p.lastMouseY + offsetY - p.height / 2
           }
-          
+
           p.targetX = startX + (endX - startX) * t
           p.targetY = startY + (endY - startY) * t
         } else {
@@ -176,25 +176,25 @@ export default function FlyingAeroplane() {
         if (p.isHovering) {
           const planeCenterX = p.currX + p.width / 2
           const dxToMouse = p.lastMouseX - planeCenterX
-          
+
           // Face the cursor
           if (Math.abs(dxToMouse) > 5) {
             p.flipX = dxToMouse > 0 ? 1 : -1
           }
-          
+
           const offsetX = p.flipX === 1 ? -60 : 60
           const offsetY = 25
-          
+
           p.targetX = p.lastMouseX + offsetX - p.width / 2
           p.targetY = p.lastMouseY + offsetY - p.height / 2
         } else {
           // Returning back to header parking spot
           p.targetX = defaultX - p.width / 2
           p.targetY = defaultY - p.height / 2
-          
+
           const planeCenterX = p.currX + p.width / 2
           const dxToHome = defaultX - planeCenterX
-          
+
           if (Math.abs(dxToHome) > 15) {
             p.flipX = dxToHome > 0 ? 1 : -1
           } else {
@@ -202,14 +202,14 @@ export default function FlyingAeroplane() {
           }
         }
       }
-      
+
       // Smooth movement interpolation (lerping)
       const dx = p.targetX - p.currX
       const dy = p.targetY - p.currY
-      
+
       p.currX += dx * 0.07 // smooth easing speed (lower = softer/more trailing)
       p.currY += dy * 0.07
-      
+
       // Detect horizontal flight direction during intro phase
       if (p.introPhase) {
         if (p.introFrameCount <= 90) {
@@ -231,17 +231,17 @@ export default function FlyingAeroplane() {
       const centerX = p.currX + p.width / 2
       const centerY = p.currY + p.height / 2
       const angleRad = p.angle * (Math.PI / 180)
-      
+
       const cos = Math.cos(angleRad)
       const sin = Math.sin(angleRad)
-      
+
       // Calculate precise tail offset (using SVG tail tip coordinates: localX = -32, localY = -2)
       const tailX = centerX - 32 * p.flipX * cos + 2 * sin
       const tailY = centerY - 32 * p.flipX * sin - 2 * cos
 
       // Calculate velocity magnitude
       const speed = Math.hypot(dx, dy)
-      
+
       // Spawn new particles (heavier trail when moving, small puffs when idling)
       let shouldSpawn = false
       if ((p.isHovering || p.introPhase) && speed > 2.5) {
@@ -267,7 +267,7 @@ export default function FlyingAeroplane() {
         const headingAngle = angleRad + (p.flipX === -1 ? Math.PI : 0)
         const driftAngle = headingAngle + Math.PI + (Math.random() - 0.5) * 0.35
         const pSpeed = (speed > 2.5 ? speed * 0.12 : 0.4) + Math.random() * 0.4
-        
+
         particles.push({
           x: tailX,
           y: tailY + (Math.random() - 0.5) * 4,
@@ -284,18 +284,18 @@ export default function FlyingAeroplane() {
         const ctx = canvas.getContext('2d')
         if (ctx) {
           ctx.clearRect(0, 0, canvas.width, canvas.height)
-          
+
           for (const pt of particles) {
             ctx.beginPath()
             ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2)
-            
+
             // Magical glowing gold-white radial gradient cloud particle
             const grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.size)
             grad.addColorStop(0, `rgba(255, 255, 255, ${pt.alpha})`)
             grad.addColorStop(0.3, `rgba(246, 218, 115, ${pt.alpha * 0.7})`)
             grad.addColorStop(0.7, `rgba(215, 162, 58, ${pt.alpha * 0.25})`)
             grad.addColorStop(1, 'rgba(215, 162, 58, 0)')
-            
+
             ctx.fillStyle = grad
             ctx.fill()
           }
@@ -309,7 +309,7 @@ export default function FlyingAeroplane() {
       // Apply transforms using CSS transform for GPU-acceleration (smooth 60+ FPS)
       if (el) {
         el.style.transform = `translate3d(${p.currX}px, ${p.currY + floatY}px, 0) rotate(${p.angle}deg)`
-        
+
         // Find the SVG element and update its scale flip directly in the DOM
         const svg = el.querySelector('svg')
         if (svg) {
@@ -337,7 +337,7 @@ export default function FlyingAeroplane() {
         ref={canvasRef}
         className="fixed inset-0 z-[59] pointer-events-none"
       />
-      
+
       {/* Elegant SVG plane container */}
       <div
         ref={containerRef}
