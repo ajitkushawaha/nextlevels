@@ -278,7 +278,7 @@ export default function NextLevelHomepage() {
           {/* <FlyingAeroplane /> */}
         </section>
 
-        <section id="programs" className="relative bg-white py-16 sm:py-20">
+        <section id="programs" className="relative bg-white py-16 sm:py-20 overflow-hidden">
           <div
             aria-hidden="true"
             className="absolute hidden md:flex left-10 bottom-8 -translate-y-1/2"
@@ -521,7 +521,7 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        <section id="testimonials" className=" py-16 sm:py-20">
+        <section id="testimonials" className=" py-16 sm:py-20 overflow-hidden">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
               <Eyebrow>Testimonials</Eyebrow>

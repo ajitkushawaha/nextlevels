@@ -24,7 +24,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
   const displayServices = [...services, ...services]
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full services-swiper">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={10}
@@ -45,7 +45,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
             slidesPerView: 4,
           },
         }}
-        className="!pb-14"
+        className="!pb-16"
       >
         {displayServices.map((service, idx) => (
           <SwiperSlide key={`${service.title}-${idx}`} className="!h-auto p-1">
@@ -91,6 +91,25 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
       <button className="swiper-next absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#07034F] text-white shadow-md transition hover:bg-[#1f1c84]">
         <ArrowRight size={20} />
       </button>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .services-swiper .swiper-pagination {
+          bottom: 0px !important;
+        }
+        .services-swiper .swiper-pagination-bullet {
+          height: 6px !important;
+          width: 16px !important;
+          border-radius: 9999px !important;
+          background-color: #d8dce5 !important;
+          opacity: 1 !important;
+          transition: width 0.3s ease !important;
+          margin: 0 4px !important;
+        }
+        .services-swiper .swiper-pagination-bullet-active {
+          width: 32px !important;
+          background-color: #061331 !important;
+        }
+      `}} />
     </div>
   )
 }

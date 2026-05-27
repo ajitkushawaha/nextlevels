@@ -44,7 +44,7 @@ export default function StudentTestimonialsCarousel({
             slidesPerView: 2,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
         className="!pb-16"
@@ -87,12 +87,12 @@ export default function StudentTestimonialsCarousel({
       </Swiper>
 
       {/* Left Button */}
-      <button className="swiper-prev-student absolute -left-4 md:-left-6 top-[40%] z-[50] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-100 text-[#07034F]">
+      <button className="swiper-prev-student absolute -left-4 md:-left-6 top-[40%] z-[50] hidden md:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-100 text-[#07034F]">
         <ArrowLeft size={20} />
       </button>
 
       {/* Right Button */}
-      <button className="swiper-next-student absolute -right-4 md:-right-6 top-[40%] z-[50] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#07034F] text-white shadow-md transition hover:bg-[#1f1c84]">
+      <button className="swiper-next-student absolute -right-4 md:-right-6 top-[40%] z-[50] hidden md:flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#07034F] text-white shadow-md transition hover:bg-[#1f1c84]">
         <ArrowRight size={20} />
       </button>
 

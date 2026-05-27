@@ -5,6 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ChevronDown, Menu, PhoneCall } from 'lucide-react'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -44,6 +51,8 @@ function Logo() {
 export default function Header() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -109,42 +118,95 @@ export default function Header() {
             </a>
           </div>
 
-          <details className="group relative lg:hidden">
-            <summary
-              className="inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md border transition duration-300 text-[#061331] border-[#061331]/20 hover:border-[#d7a23a] hover:text-[#d7a23a]"
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border transition duration-300 text-[#061331] border-[#061331]/20 hover:border-[#d7a23a] hover:text-[#d7a23a] lg:hidden focus-visible:outline-none"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-[300px] sm:w-[350px] bg-[#061331] text-white border-l border-white/10 p-6 flex flex-col justify-between focus-visible:outline-none"
             >
-              <span className="sr-only">Open navigation</span>
-              <Menu className="h-5 w-5" />
-            </summary>
-            <div className="absolute right-0 mt-3 w-64 rounded-lg border border-white/10 bg-[#061331] p-3 shadow-2xl">
-              {navItems.map(item => (
-                <div key={item.label} className="flex flex-col">
-                  <Link
-                    href={item.href}
-                    className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-semibold text-white transition hover:bg-white/10 hover:text-[#d7a23a]"
-                  >
-                    <span>{item.label}</span>
-                    {item.dropdownItems ? (
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    ) : null}
-                  </Link>
-                  {item.dropdownItems && (
-                    <div className="flex flex-col pl-4 pb-2">
-                      {item.dropdownItems.map(dropItem => (
-                        <Link
-                          key={dropItem.label}
-                          href={dropItem.href}
-                          className="block rounded-md px-3 py-2 text-[13px] text-white/70 transition hover:bg-white/5 hover:text-[#d7a23a]"
-                        >
-                          {dropItem.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </details>
+              <div className="flex flex-col gap-6">
+                <SheetHeader className="text-left border-b border-white/10 pb-4">
+                  <div className="flex items-center justify-between">
+                    <SheetTitle className="text-white font-bold text-lg">Navigation</SheetTitle>
+                  </div>
+                </SheetHeader>
+                
+                <nav className="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-250px)] pr-2">
+                  {navItems.map(item => {
+                    const isDropdown = !!item.dropdownItems
+                    const isDropdownOpen = activeDropdown === item.label
+                    const isActive = pathname === item.href
+                    
+                    return (
+                      <div key={item.label} className="flex flex-col">
+                        {isDropdown ? (
+                          <>
+                            <button
+                              onClick={() => setActiveDropdown(isDropdownOpen ? null : item.label)}
+                              className="flex items-center justify-between w-full rounded-md px-3 py-3 text-sm font-semibold text-white transition hover:bg-white/10 hover:text-[#d7a23a] text-left cursor-pointer"
+                            >
+                              <span>{item.label}</span>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180 text-[#d7a23a]' : 'opacity-70'}`} />
+                            </button>
+                            {isDropdownOpen && (
+                              <div className="flex flex-col pl-4 pb-2 border-l border-white/10 ml-3 mt-1 space-y-1">
+                                {item.dropdownItems?.map(dropItem => (
+                                  <Link
+                                    key={dropItem.label}
+                                    href={dropItem.href}
+                                    onClick={() => setOpen(false)}
+                                    className={`block rounded-md px-3 py-2 text-[13px] transition ${
+                                      pathname === dropItem.href
+                                        ? 'bg-white/10 text-[#d7a23a] font-medium'
+                                        : 'text-white/70 hover:bg-white/5 hover:text-[#d7a23a]'
+                                    }`}
+                                  >
+                                    {dropItem.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className={`block rounded-md px-3 py-3 text-sm font-semibold transition ${
+                              isActive
+                                ? 'bg-white/10 text-[#d7a23a]'
+                                : 'text-white hover:bg-white/10 hover:text-[#d7a23a]'
+                            }`}
+                          >
+                            {item.label}
+                          </Link>
+                        )}
+                      </div>
+                    )
+                  })}
+                </nav>
+              </div>
+
+              <div className="border-t border-white/10 pt-4 mt-auto">
+                <a
+                  href="tel:+94775198195"
+                  className="flex items-center gap-3 rounded-md border border-[#d7a23a]/40 bg-white/5 px-4 py-3 transition duration-300 hover:bg-[#d7a23a]/10"
+                >
+                  <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
+                  <div className="flex flex-col text-left">
+                    <span className="text-[10px] leading-tight text-white/60">Call Anytime</span>
+                    <span className="text-[14px] font-bold text-[#d7a23a] leading-tight">+94775198195</span>
+                  </div>
+                </a>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </nav>
     </header>
