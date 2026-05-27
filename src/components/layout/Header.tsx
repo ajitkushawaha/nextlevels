@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { ChevronDown, Menu, PhoneCall } from 'lucide-react'
 
 const navItems = [
@@ -22,7 +23,7 @@ const navItems = [
   { label: 'Testimonial', href: '#testimonials' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact Us', href: '/contact-us' },
-  {label: 'Courses', href: '/corses'}
+  { label: 'Courses', href: '/corses' }
 ]
 
 function Logo() {
@@ -42,10 +43,20 @@ function Logo() {
 
 export default function Header() {
   const pathname = usePathname()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 w-full bg-white "
+      className={`fixed inset-x-0 top-0 z-50 w-full transition-all duration-300 ${scrolled
+        ? 'bg-white shadow-md'
+        : 'bg-white'
+        }`}
     >
       <nav className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-5 sm:px-8 lg:px-10">
         <Logo />
