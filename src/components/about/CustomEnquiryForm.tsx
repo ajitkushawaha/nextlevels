@@ -84,7 +84,7 @@ export default function CustomEnquiryForm() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-3xl bg-white border border-[#ece8df] shadow-2xl overflow-hidden">
+      <div className="rounded-3xl bg-white border border-[#ece8df] shadow-sm overflow-hidden">
         <div className="bg-[#061331] px-8 py-5 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">Next Level Education</p>
@@ -117,7 +117,7 @@ export default function CustomEnquiryForm() {
             ))}
           </div>
           <button
-            onClick={() => { setFormData({ fullName:'',email:'',phone:'',educationLevel:'',fieldOfStudy:'',preferredCountry:'',intakeYear:'',intakeMonth:'',message:'' }); setStep(0); setStatus('idle') }}
+            onClick={() => { setFormData({ fullName: '', email: '', phone: '', educationLevel: '', fieldOfStudy: '', preferredCountry: '', intakeYear: '', intakeMonth: '', message: '' }); setStep(0); setStatus('idle') }}
             className="mt-6 text-xs font-bold text-[#061331]/50 hover:text-[#d7a23a] transition-colors cursor-pointer"
           >
             Submit another inquiry →
@@ -152,16 +152,14 @@ export default function CustomEnquiryForm() {
             return (
               <div key={s.label} className="flex items-center gap-2 flex-1">
                 <div className="flex items-center gap-2">
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                    isDone ? 'bg-[#d7a23a] text-[#061331]' :
-                    isActive ? 'bg-white text-[#061331]' :
-                    'bg-white/10 text-white/40'
-                  }`}>
+                  <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${isDone ? 'bg-[#d7a23a] text-[#061331]' :
+                      isActive ? 'bg-white text-[#061331]' :
+                        'bg-white/10 text-white/40'
+                    }`}>
                     {isDone ? <CheckCircle className="h-4 w-4" /> : <StepIcon className="h-4 w-4" />}
                   </div>
-                  <span className={`text-[11px] font-bold uppercase tracking-wider hidden sm:block transition-colors duration-300 ${
-                    isActive ? 'text-white' : isDone ? 'text-[#d7a23a]' : 'text-white/30'
-                  }`}>{s.label}</span>
+                  <span className={`text-[11px] font-bold uppercase tracking-wider hidden sm:block transition-colors duration-300 ${isActive ? 'text-white' : isDone ? 'text-[#d7a23a]' : 'text-white/30'
+                    }`}>{s.label}</span>
                 </div>
                 {i < STEPS.length - 1 && (
                   <div className="flex-1 h-px mx-2 transition-all duration-500" style={{
@@ -235,11 +233,10 @@ export default function CustomEnquiryForm() {
                   <button
                     key={opt} type="button"
                     onClick={() => set('educationLevel', opt)}
-                    className={`text-left px-4 py-3 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                      formData.educationLevel === opt
+                    className={`text-left px-4 py-3 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer ${formData.educationLevel === opt
                         ? 'bg-[#061331] border-[#d7a23a] text-[#d7a23a] shadow-md'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-[#061331]/30 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     {formData.educationLevel === opt && (
                       <span className="mr-1.5">✓</span>
@@ -278,11 +275,10 @@ export default function CustomEnquiryForm() {
                   <button
                     key={c.value} type="button"
                     onClick={() => set('preferredCountry', c.value)}
-                    className={`flex flex-col items-center gap-1.5 px-3 py-3.5 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
-                      formData.preferredCountry === c.value
+                    className={`flex flex-col items-center gap-1.5 px-3 py-3.5 rounded-xl border text-center transition-all duration-200 cursor-pointer ${formData.preferredCountry === c.value
                         ? 'bg-[#061331] border-[#d7a23a] shadow-md'
                         : 'bg-slate-50 border-slate-200 hover:border-[#061331]/30 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     <span className="text-2xl leading-none">{c.flag}</span>
                     <span className={`text-[11px] font-bold leading-tight ${formData.preferredCountry === c.value ? 'text-[#d7a23a]' : 'text-slate-600'}`}>
@@ -303,11 +299,10 @@ export default function CustomEnquiryForm() {
                     <button
                       key={y} type="button"
                       onClick={() => set('intakeYear', y)}
-                      className={`flex-1 py-2.5 rounded-lg border text-xs font-bold transition-all duration-200 cursor-pointer ${
-                        formData.intakeYear === y
+                      className={`flex-1 py-2.5 rounded-lg border text-xs font-bold transition-all duration-200 cursor-pointer ${formData.intakeYear === y
                           ? 'bg-[#061331] border-[#d7a23a] text-[#d7a23a]'
                           : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-[#061331]/30'
-                      }`}
+                        }`}
                     >
                       {y}
                     </button>

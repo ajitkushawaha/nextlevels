@@ -23,48 +23,54 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#061331]/5 to-transparent border-b border-[#061331]/10">
-        <div className="absolute inset-0 bg-[#061331]/[0.01]"></div>
-        <div className="relative px-8 py-20 sm:px-16 sm:pt-28 text-center max-w-5xl mx-auto">
+      <section className="relative overflow-hidden bg-white border-b border-slate-100">
+        {/* Subtle light background blobs to match the clean aesthetic */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#f0f7ff] rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#f8fafc] rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+        
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+
+        <div className="relative px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28 lg:px-10 lg:pt-48 lg:pb-32 text-center max-w-4xl mx-auto z-10">
           {/* Breadcrumb */}
-          <nav className="flex justify-center items-center gap-2 mb-6 text-sm text-[#061331]/60 font-semibold uppercase tracking-wider">
+          <nav className="flex justify-center items-center gap-2 mb-8 text-xs font-bold uppercase tracking-widest text-[#061331]/50">
             <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
-            <span>&bull;</span>
+            <span className="opacity-50">/</span>
             <span className="text-[#d7a23a]">Services</span>
           </nav>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#061331] mb-6 leading-tight" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-            Our Professional{' '}
-            <span className="block sm:inline text-gradient-gold">
+          <h1 
+            className="text-[40px] sm:text-5xl lg:text-[64px] font-extrabold text-[#081638] mb-8 leading-[1.15]" 
+          >
+            Our Professional <br className="hidden sm:block" />
+            <span className="text-[#d7a23a] relative whitespace-nowrap">
               Services
+              <span className="absolute bottom-2 left-0 w-full h-[4px] bg-[#d7a23a] rounded-full opacity-30"></span>
             </span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#061331]/80 max-w-3xl mx-auto leading-relaxed">
-            Empowering your global academic aspirations through end-to-end, 100% free guidance. From university matching to landing safely in your dream destination.
+          
+          <p className="text-base sm:text-lg lg:text-xl text-[#59616f] max-w-2xl mx-auto leading-relaxed">
+            Empowering your global academic aspirations through end-to-end, <strong className="text-[#061331]">100% free</strong> guidance. From university matching to landing safely in your dream destination.
           </p>
         </div>
-
-        {/* Decorative ambient blobs */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-[#d7a23a]/10 rounded-full -translate-y-36 translate-x-36 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#d7a23a]/10 rounded-full translate-y-28 -translate-x-28 blur-3xl"></div>
       </section>
 
       {/* Main Content: Interactive Dashboard Hub */}
-      <main className="w-full flex-grow py-16">
+      <main className="w-full grow py-16">
         <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
           
           {/* Renders client-side stateful tabs and bento network */}
           <ServicesInteractiveHub />
 
           {/* Premium Call to Action Banner */}
-          <section className="mt-8 relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#061331] to-[#0b1f4d] text-white p-8 sm:p-12 md:p-16 shadow-[0_24px_50px_rgba(6,19,49,0.25)]">
+          <section className="mt-8 relative rounded-3xl overflow-hidden bg-linear-to-br from-[#061331] to-[#0b1f4d] text-white p-8 sm:p-12 md:p-16 shadow-[0_24px_50px_rgba(6,19,49,0.25)]">
             {/* Ambient Background Lights */}
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#d7a23a]/15 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#d7a23a]/10 rounded-full blur-3xl"></div>
             
             {/* Decorative dot grids */}
             <div className="absolute top-8 left-8 opacity-10">
-              <div className="h-16 w-32 bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] [background-size:0.75rem_0.75rem]" />
+              <div className="h-16 w-32 bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] bg-size-[0.75rem_0.75rem]" />
             </div>
 
             <div className="relative z-10 text-center max-w-3xl mx-auto">

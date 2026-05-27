@@ -4,8 +4,9 @@ import ServicesCarousel from './ServiceSection'
 import StudentTestimonialsCarousel from './StudentTestimonialsCarousel'
 import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck } from 'lucide-react'
 import Footer from '../layout/footer'
-import FlyingAeroplane from './FlyingAeroplane'
+// import FlyingAeroplane from './FlyingAeroplane'
 import FAQSection from './FAQSection'
+import VisaConsultationForm from './VisaConsultationForm'
 
 
 
@@ -204,58 +205,53 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 export default function NextLevelHomepage() {
   return (
     <div className="bg-white text-[#081638]">
-
-
       <main>
-        <section className="relative overflow-hidden  pt-20 text-white">
-          <Image
-             src="/visa/bg2.png"
-             alt=""
-             fill
-             priority
-             className="object-cover object-top center"
-             sizes="100vw"
-           />
+        <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-5 sm:px-8 lg:px-10">
+          {/* Subtle light background matrix dots & world map overlay */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(#081638 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
+          <div className="absolute inset-0 opacity-5 pointer-events-none bg-center bg-no-repeat bg-cover mix-blend-multiply" style={{ backgroundImage: "url('/visa/map.png')" }}></div>
 
-           <div className="relative mx-auto grid max-w-7xl gap-8 px-5 pb-8 pt-12 sm:px-8 lg:grid-cols-[1fr_0.82fr] lg:px-10 lg:pb-0 lg:pt-16">
-            <div className="flex min-h-[470px] flex-col justify-center pb-8 lg:min-h-[620px] lg:pb-28">
-              <Eyebrow>Study Abroad</Eyebrow>
-              <h1
-                className="mt-5 max-w-3xl text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-              >
-                <span className="text-gradient-gold">Free Student Visa Consultation</span> to Study Abroad
+          {/* Decorative Dashed Circles */}
+          <div className="absolute bottom-[-150px] left-[-150px] w-[500px] h-[500px] rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
+          <div className="absolute bottom-[-100px] left-[-100px] w-[400px] h-[400px] rounded-full border border-[#081638]/3 border-dashed pointer-events-none"></div>
+          <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
+
+          <div className="relative z-30 mx-auto grid max-w-6xl items-center lg:grid-cols-[1.15fr_0.95fr]">
+            {/* Left Column */}
+            <div className="flex flex-col justify-center z-10 text-left px-2">
+              <h1 className="text-4xl sm:text-5xl text-[#081638]  lg:text-[56px] font-black   leading-[1.1] tracking-tight">
+                <span className="text-[#081638]  block mb-1">Free Student Visa</span>
+                Consultation to 
+             <span className=" text-[#d7a23a] block mb-1">Study Abroad</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-7 text-white/90 sm:text-lg">
-                Expert guidance for your global education journey. We make it
-                simple, you make it happen.
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-[#59616f] font-medium">
+                By taking our expert guidance for your global education journey, you can build your profile and save time. Starting right now.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  href="/contact-us"
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-[#d7a23a] px-6 py-3 text-sm font-bold text-[#061331] shadow-[0_12px_30px_rgba(215,162,58,0.28)] transition-all duration-300 hover:bg-[#efbd5a] hover:scale-[1.03] active:scale-[0.98] btn-shimmer"
-                >
-                  Book a Free Consultation
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="#testimonials"
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-md px-2 py-3 text-sm font-bold text-white transition hover:text-[#d7a23a]"
-                >
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#d7a23a] text-[#d7a23a]">
-                    <CirclePlay className="h-4 w-4" />
-                  </span>
-                  Watch Video
-                </Link>
-              </div>
+              {/* Interactive consultation lookup and action selectors */}
+              <VisaConsultationForm />
             </div>
 
-           
+            {/* Right Column */}
+            <div className="relative  flex items-center justify-center  w-full overflow-visible">
+
+              {/* Main Image Box */}
+              <div className="relative  z-10 w-[280px] h-[400px] sm:w-[340px] py-4 sm:h-[450px] lg:w-[480px] lg:h-[650px] rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
+                <Image
+                  src="/image3.png"
+                  alt="Student with Suitcase"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 480px"
+                  className="object-cover object-center hover:scale-105 transition-transform duration-700"
+                  priority
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:-mt-20 lg:px-10">
-            <div className="grid gap-3 rounded-lg bg-white p-4 text-[#081638] shadow-[0_20px_55px_rgba(6,19,49,0.14)] sm:grid-cols-2 lg:grid-cols-4">
+          <div className="relative z-20 mx-auto max-w-7xl mb-4 sm:mb-0 ">
+            {/* Features Highlight Grid */}
+            <div className="grid  gap-3 rounded-lg bg-white p-4 text-[#081638] shadow-[0_20px_55px_rgba(6,19,49,0.14)] sm:grid-cols-2 lg:grid-cols-4">
               {heroFeatures.map(feature => {
                 const Icon = feature.icon
                 return (
@@ -279,21 +275,21 @@ export default function NextLevelHomepage() {
               })}
             </div>
           </div>
-          <FlyingAeroplane />
+          {/* <FlyingAeroplane /> */}
         </section>
 
         <section id="programs" className="relative bg-white py-16 sm:py-20">
           <div
             aria-hidden="true"
-            className="absolute left-10 bottom-8 -translate-y-1/2"
+            className="absolute hidden md:flex left-10 bottom-8 -translate-y-1/2"
           >
-            <div className="h-32 w-16 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1rem_1rem]" />
+            <div className="h-32 w-16 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1rem_1rem]" />
           </div>
           <div
             aria-hidden="true"
             className="absolute right-4 top-20 -translate-y-1/2"
           >
-            <div className="h-16 w-32 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1rem_1rem]" />
+            <div className="h-16 w-32 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1rem_1rem]" />
           </div>
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-10">
             <div className="relative min-h-[360px] sm:min-h-[430px]">
@@ -306,7 +302,7 @@ export default function NextLevelHomepage() {
                   sizes="320px"
                 />
               </div>
-              <div className="absolute right-0 -top-10 h-56 w-72 -translate-y-[-50%] overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
+              <div className="absolute right-0 -top-10 h-56 w-72 translate-y-[50%] overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
                 <Image
                   src="/home2/happy-team.png"
                   alt="Students with passports"
@@ -375,18 +371,7 @@ export default function NextLevelHomepage() {
         <section className="bg-[#061331] py-14 text-white sm:py-16">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
-              <div className="flex items-center justify-center gap-x-3">
-                <p className="text-xs font-bold uppercase text-[#d7a23a]">
-                  Why Choose
-                </p>
-                <Image
-                  src="/logo.png"
-                  alt="Next Level Education Logo"
-                  width={150}
-                  height={74}
-                  className="h-auto w-24 brightness-0 invert"
-                />
-              </div>
+              <Eyebrow>Why Choose Next Level Education</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
@@ -418,7 +403,7 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
-        
+
         <section className="bg-white py-6 sm:py-10">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
@@ -436,13 +421,12 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        <section className="bg-slate-50 border-y border-[#ece8df]/40 py-16 sm:py-20 relative overflow-hidden">
-          {/* Subtle background decorative shapes */}
+        {/* <section className="bg-slate-50 border-y border-[#ece8df]/40 py-16 sm:py-20 relative overflow-hidden">
           <div aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 opacity-30">
-            <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1.25rem_1.25rem]" />
+            <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1.25rem_1.25rem]" />
           </div>
           <div aria-hidden="true" className="absolute right-0 top-10 opacity-30">
-            <div className="h-28 w-56 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] [background-size:1.25rem_1.25rem]" />
+            <div className="h-28 w-56 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1.25rem_1.25rem]" />
           </div>
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
@@ -452,10 +436,10 @@ export default function NextLevelHomepage() {
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
-                Types Of Courses Available <span className="text-gradient-gold">At University Of Chester</span>
+                Types Of Courses Available <span className="text-gradient-gold">For International Students</span>
               </h2>
               <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
-                Choose from wide ranging undergraduate and postgraduate courses, continuing professional development (CPD), online distance learning and short courses offered by University of Chester.
+                Choose from wide ranging undergraduate and postgraduate courses, continuing professional development (CPD), online distance learning and short courses offered by our partner universities.
               </p>
             </div>
 
@@ -465,12 +449,12 @@ export default function NextLevelHomepage() {
                 return (
                   <article
                     key={course.title}
-                    className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#061331] to-[#0b1f4d] p-6 text-white shadow-[0_12px_36px_rgba(6,19,49,0.12)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(215,162,58,0.18)]"
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-linear-to-br from-[#061331] to-[#0b1f4d] p-6 text-white shadow-[0_12px_36px_rgba(6,19,49,0.12)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(215,162,58,0.18)]"
                     style={{ borderTop: '3px solid rgba(215, 162, 58, 0.7)' }}
                   >
-                    {/* Top hover glow accent */}
+                   
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(215,162,58,0.1),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    
+
                     <div className="relative z-10">
                       <div className="flex items-center gap-3">
                         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[#d7a23a] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
@@ -511,7 +495,7 @@ export default function NextLevelHomepage() {
               })}
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section className="bg-[#031336] py-8">
           <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-10">
@@ -522,7 +506,7 @@ export default function NextLevelHomepage() {
                   key={stat.label}
                   className="group flex items-center justify-center gap-4 rounded-lg border-r border-white/10 bg-transparent px-5 py-6 transition-all duration-300 hover:bg-white/5 last:border-r-0"
                 >
-                  <Icon className="h-9 w-9 text-[#d7a23a] transition-transform duration-500 group-hover:scale-125 group-hover:rotate-[360deg]" />
+                  <Icon className="h-9 w-9 text-[#d7a23a] transition-transform duration-500 group-hover:scale-125 group-hover:rotate-360" />
                   <div>
                     <p className="text-3xl font-bold text-[#d7a23a] transition-all duration-300 group-hover:scale-105 origin-left">
                       {stat.value}
@@ -555,7 +539,7 @@ export default function NextLevelHomepage() {
 
         <FAQSection />
 
-         <section className="bg-white py-8 sm:py-10">
+        <section className="bg-white py-8 sm:py-10">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -612,12 +596,12 @@ export default function NextLevelHomepage() {
               ))}
             </div>
           </div>
-        </section> 
+        </section>
 
-   
+
       </main>
 
-      <Footer/>
+      <Footer />
     </div>
   )
 }

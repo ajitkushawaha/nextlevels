@@ -44,34 +44,40 @@ export default function AboutUsPage() {
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#061331]/5 to-transparent border-b border-[#061331]/10">
-        <div className="absolute inset-0 bg-[#061331]/[0.01]"></div>
-        <div className="relative px-8 py-20 sm:px-16 sm:pt-28 text-center max-w-5xl mx-auto">
+      <section className="relative overflow-hidden bg-white border-b border-slate-100">
+        {/* Subtle light background blobs to match the clean aesthetic */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#f0f7ff] rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#f8fafc] rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+        
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+
+        <div className="relative px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28 lg:px-10 lg:pt-48 lg:pb-32 text-center max-w-4xl mx-auto z-10">
           {/* Breadcrumb */}
-          <nav className="flex justify-center items-center gap-2 mb-6 text-sm text-[#061331]/60 font-semibold uppercase tracking-wider">
+          <nav className="flex justify-center items-center gap-2 mb-8 text-xs font-bold uppercase tracking-widest text-[#061331]/50">
             <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
-            <span>&bull;</span>
+            <span className="opacity-50">/</span>
             <span className="text-[#d7a23a]">About Us</span>
           </nav>
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#061331] mb-6 leading-tight" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-            About{' '}
-            <span className="block sm:inline text-gradient-gold">
+          
+          <h1 
+            className="text-[40px] sm:text-5xl lg:text-[64px] font-extrabold text-[#081638] mb-8 leading-[1.15]" 
+          >
+            About <br className="hidden sm:block" />
+            <span className="text-[#d7a23a] relative whitespace-nowrap">
               Next Level
+              <span className="absolute bottom-2 left-0 w-full h-[4px] bg-[#d7a23a] rounded-full opacity-30"></span>
             </span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#061331]/80 max-w-3xl mx-auto leading-relaxed">
-            We are a leading study abroad consultancy in Sri Lanka, dedicated to guiding students toward global success through expert, zero-cost education support.
+          
+          <p className="text-base sm:text-lg lg:text-xl text-[#59616f] max-w-2xl mx-auto leading-relaxed">
+            We are a leading study abroad consultancy in Sri Lanka, dedicated to guiding students toward global success through expert, <strong className="text-[#061331]">zero-cost</strong> education support.
           </p>
         </div>
-
-        {/* Decorative ambient blobs */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-[#d7a23a]/10 rounded-full -translate-y-36 translate-x-36 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-56 h-56 bg-[#d7a23a]/10 rounded-full translate-y-28 -translate-x-28 blur-3xl"></div>
       </section>
 
       {/* Main Content */}
-      <main className="w-full flex-grow">
+      <main className="w-full grow">
         {/* Who We Are Section */}
         <section className="max-w-[1200px] mx-auto px-6 sm:px-8 py-16 lg:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -120,7 +126,7 @@ export default function AboutUsPage() {
             {/* Visual Column */}
             <div className="relative">
               {/* Backdrop effects */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#d7a23a]/15 via-[#061331]/5 to-transparent blur-md"></div>
+              <div className="absolute -inset-4 rounded-3xl bg-linear-to-tr from-[#d7a23a]/15 via-[#061331]/5 to-transparent blur-md"></div>
 
               {/* Image Container with premium frame and hover zoom */}
               <div className="relative group overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-500 hover:border-[#d7a23a] shadow-2xl">
@@ -148,7 +154,7 @@ export default function AboutUsPage() {
         </section>
 
         {/* Milestones, Vision & Mission, and Values Section */}
-        <section className="bg-gradient-to-b from-slate-50 to-white border-y border-[#ece8df]/40 py-16 sm:py-24">
+        <section className="bg-linear-to-b from-slate-50 to-white border-y border-[#ece8df]/40 py-16 sm:py-24">
           <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
 
             {/* Stateful timeline & vision tabs */}

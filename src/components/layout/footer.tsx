@@ -20,16 +20,16 @@ function Logo({ footer = false }: { footer?: boolean }) {
 
 export default async function Footer() {
   return (
-    <footer className="relative bg-[#061331] pt-14 text-white bg-[url('/visa/footervector.png')] bg-cover bg-center">
+    <footer className="relative bg-[#061331] pt-8 text-white bg-[url('/visa/footervector.png')] bg-cover bg-center">
       {/* Ready to Start Your Journey Section */}
-      <div className="border-b border-white/10 pb-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 sm:px-8 lg:flex-row lg:px-10">
-          <div className="flex items-center gap-5">
-            <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#f6da73] text-[#061331]">
-              <PhoneCall className="h-8 w-8" />
+      <div className="border-b border-white/10 pb-6">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 sm:px-8 lg:flex-row lg:px-10">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f6da73] text-[#061331]">
+              <PhoneCall className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="text-2xl font-bold leading-tight sm:text-3xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              <h2 className="text-xl font-bold leading-tight sm:text-2xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
                 Ready to Start Your Journey?
               </h2>
               <p className="mt-1 text-sm text-white/75">
@@ -37,8 +37,8 @@ export default async function Footer() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <Link href="/contact-us" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-[#f6da73] px-8 py-3 text-sm font-bold text-[#061331] transition hover:bg-[#e3c761]">
+          <div className="flex items-center gap-4">
+            <Link href="/contact-us" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[#f6da73] px-6 py-2 text-sm font-bold text-[#061331] transition hover:bg-[#e3c761]">
               Book a Free Consultation
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -49,7 +49,7 @@ export default async function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-4 lg:px-10">
+      <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 sm:px-8 grid-cols-2 lg:grid-cols-4 lg:px-10">
         {/* Logo & Description */}
         <div className="lg:col-span-1">
           <Logo footer />
@@ -79,15 +79,13 @@ export default async function Footer() {
         </div>
 
         {/* Quick Links */}
-        <div>
+        <div className='pt-8 lg:pt-0'>
           <h3 className="text-[15px] font-bold">Quick Links</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
             {[
               ['Home', '/'],
               ['About Us', '/about-us'],
-              ['Programs', '#programs'],
-              ['Destinations', '#programs'],
-              ['Events', '/events'],
+
               ['Blog', '/blog'],
               ['Contact Us', '/contact-us'],
             ].map(([label, href]) => (
@@ -105,10 +103,8 @@ export default async function Footer() {
           <h3 className="text-[15px] font-bold">Study Abroad</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
             {[
-              'University of Hertfordshire',
-              'University of Chester',
-              'Coventry University',
-              'University of Greenwich',
+              'Study in UK',
+              'Study in USA',
               'Study in Canada',
               'Study in Australia',
             ].map(item => (
