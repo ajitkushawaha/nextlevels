@@ -44,13 +44,13 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="bg-[#f8fafc] py-16 sm:py-20 text-[#061331] relative overflow-hidden">
+    <section className="bg-[#f8fafc] py-10 sm:py-10 text-[#061331] relative overflow-hidden">
       {/* Background Decorative Accents */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[#d7a23a]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#061331]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
 
       <div className="mx-auto max-w-4xl px-5 sm:px-8 lg:px-10 relative z-10">
-        <div className="text-center mb-12">
+        <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-2 mb-4">
             <HelpCircle className="h-5 w-5 text-[#d7a23a]" />
             <span className="text-xs font-bold uppercase tracking-wider text-[#d7a23a]">
@@ -59,7 +59,7 @@ export default function FAQSection() {
           </div>
 
           <h2
-            className="text-3xl sm:text-4xl font-bold leading-tight text-[#061331]"
+            className="text-3xl font-bold leading-tight text-[#061331]"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
             Clear Answers to Your <span className="text-gradient-gold font-extrabold">Study Abroad Queries</span>
@@ -72,7 +72,7 @@ export default function FAQSection() {
         </div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => {
+          {faqs.slice(0, 4).map((faq, index) => {
             const isOpen = openIndex === index
             return (
               <div
@@ -123,30 +123,17 @@ export default function FAQSection() {
           })}
         </div>
 
-        {/* Premium Mini-CTA Box */}
-        <div className="mt-12 p-6 bg-[#061331] sm:p-8 rounded-2xl border border-slate-200  shadow-[0_12px_40px_rgba(6,19,49,0.04)] relative group hover:border-[#d7a23a]/30 transition-all duration-300 text-center sm:flex sm:items-center sm:justify-between sm:text-left overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#d7a23a]/30 to-transparent group-hover:via-[#d7a23a] transition-all duration-500"></div>
-
-          <div className="sm:max-w-md ">
-            <div className="flex items-center justify-center sm:justify-start gap-3.5 mb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#061331]/5 text-white">
-                <MessageSquare className="h-5 w-5" />
-              </div>
-              <h3 className="font-bold text-lg text-white">Still Have Questions?</h3>
-            </div>
-            <p className="text-white/80 text-sm leading-relaxed mb-6 sm:mb-0 font-medium">
-              Can't find the answers you're looking for? Connect with our expert advisors for a free, customized roadmap.
-            </p>
-          </div>
-
+        {/* View All FAQs CTA */}
+        <div className="mt-8 text-center">
           <Link
-            href="/contact-us"
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#d7a23a] hover:bg-[#d7a23a] px-6 py-3.5 text-sm font-bold text-white hover:text-[#061331] shadow-[0_4px_14px_rgba(8,22,56,0.15)] hover:shadow-[0_6px_20px_rgba(215,162,58,0.25)] transition-all duration-300"
+            href="/faq"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#061331]/20 hover:border-[#d7a23a] px-6 py-3 text-sm font-bold text-[#061331] hover:text-[#d7a23a] transition-all duration-300"
           >
-            Get Free Consultation
-            <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
+            Explore All FAQs
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+
       </div>
     </section>
   )

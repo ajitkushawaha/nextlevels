@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ServicesCarousel from './ServiceSection'
@@ -64,10 +67,10 @@ const whyChooseUs = [
 ]
 
 const stats = [
-  { icon: UsersRound, value: '1000+', label: 'Students Placed' },
-  { icon: Building2, value: '150+', label: 'Partner Universities' },
-  { icon: Globe2, value: '20+', label: 'Countries Covered' },
-  { icon: Award, value: '98%', label: 'Visa Success Rate' },
+  { icon: UsersRound, targetValue: 1000, suffix: '+', label: 'Students Placed' },
+  { icon: Building2, targetValue: 150, suffix: '+', label: 'Partner Universities' },
+  { icon: Globe2, targetValue: 20, suffix: '+', label: 'Countries Covered' },
+  { icon: Award, targetValue: 98, suffix: '%', label: 'Visa Success Rate' },
 ]
 
 const testimonials = [
@@ -196,6 +199,52 @@ const courseTypes = [
 
 
 
+function AnimatedCounter({ target, suffix = '', duration = 2000 }: { target: number, suffix?: string, duration?: number }) {
+  const [count, setCount] = useState(0)
+  const elementRef = useRef<HTMLSpanElement>(null)
+  const hasAnimated = useRef(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true
+          let startTimestamp: number | null = null
+          
+          const step = (timestamp: number) => {
+            if (!startTimestamp) startTimestamp = timestamp
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1)
+            const easeProgress = 1 - Math.pow(1 - progress, 3) // Cubic ease out
+            
+            setCount(Math.floor(easeProgress * target))
+            
+            if (progress < 1) {
+              window.requestAnimationFrame(step)
+            }
+          }
+          
+          window.requestAnimationFrame(step)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [target, duration])
+
+  return (
+    <span ref={elementRef} className="tabular-nums">
+      {count}
+      {suffix}
+    </span>
+  )
+}
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-xs font-bold uppercase text-[#d7a23a]">{children}</p>
@@ -216,7 +265,7 @@ export default function NextLevelHomepage() {
           <div className="absolute bottom-[-100px] left-[-100px] w-[400px] h-[400px] rounded-full border border-[#081638]/3 border-dashed pointer-events-none"></div>
           <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
 
-          <div className="relative z-30 mx-auto grid max-w-6xl items-center lg:grid-cols-[1.15fr_0.95fr]">
+          <div className="relative z-30 mx-auto grid max-w-6xl items-center gap-8 lg:gap-12 lg:grid-cols-[1.15fr_0.95fr]">
             {/* Left Column */}
             <div className="flex flex-col justify-center z-10 text-left px-2">
               <h1 className="text-4xl sm:text-5xl text-[#081638]  lg:text-[56px] font-black   leading-[1.1] tracking-tight">
@@ -236,7 +285,7 @@ export default function NextLevelHomepage() {
             <div className="relative  flex items-center justify-center  w-full overflow-visible">
 
               {/* Main Image Box */}
-              <div className="relative  z-10 w-[280px] h-[400px] sm:w-[340px] py-4 sm:h-[450px] lg:w-[480px] lg:h-[650px] rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
+              <div className="relative  z-6 w-[280px] h-[400px] sm:w-[340px] py-4 sm:h-[450px] lg:w-[480px] lg:h-[600px] rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
                 <Image
                   src="/image3.png"
                   alt="Student with Suitcase"
@@ -278,7 +327,7 @@ export default function NextLevelHomepage() {
           {/* <FlyingAeroplane /> */}
         </section>
 
-        <section id="programs" className="relative bg-white py-16 sm:py-20 overflow-hidden">
+        <section id="programs" className="relative bg-white py-10  overflow-hidden">
           <div
             aria-hidden="true"
             className="absolute hidden md:flex left-10 bottom-8 -translate-y-1/2"
@@ -368,12 +417,29 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        <section className="bg-[#061331] py-14 text-white sm:py-16">
+        <section className="bg-[#061331] py-10 text-white ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
-              <Eyebrow>Why Choose Next Level Education</Eyebrow>
+              <div className="relative inline-block pb-2.5 mb-2">
+                <Eyebrow>Why Choose Next Level Education</Eyebrow>
+                <svg
+                  className="absolute left-0 bottom-0 w-full h-[8px] text-[#d7a23a] pointer-events-none"
+                  viewBox="0 0 100 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M2 5C30 2 70 2 98 4.5C88 6.5 75 8 72 8.5"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
               <h2
-                className="mt-3 text-3xl font-bold leading-tight sm:text-4xl"
+                className="mt-1 text-3xl font-bold leading-tight sm:text-4xl"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
                 We Make Your Study Abroad Journey Easy
@@ -404,7 +470,7 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        <section className="bg-white py-6 sm:py-10">
+        <section className="bg-white py-10 ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
               <Eyebrow>Our Services</Eyebrow>
@@ -497,7 +563,7 @@ export default function NextLevelHomepage() {
           </div>
         </section> */}
 
-        <section className="bg-[#031336] py-8">
+        <section className="bg-[#031336] py-10">
           <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-10">
             {stats.map(stat => {
               const Icon = stat.icon
@@ -509,7 +575,7 @@ export default function NextLevelHomepage() {
                   <Icon className="h-9 w-9 text-[#d7a23a] transition-transform duration-500 group-hover:scale-125 group-hover:rotate-360" />
                   <div>
                     <p className="text-3xl font-bold text-[#d7a23a] transition-all duration-300 group-hover:scale-105 origin-left">
-                      {stat.value}
+                      <AnimatedCounter target={stat.targetValue} suffix={stat.suffix} />
                     </p>
                     <p className="text-xs font-semibold text-white/80 transition-colors duration-300 group-hover:text-white">
                       {stat.label}
@@ -521,7 +587,7 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        <section id="testimonials" className=" py-16 sm:py-20 overflow-hidden">
+        <section id="testimonials" className=" py-10  overflow-hidden">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
               <Eyebrow>Testimonials</Eyebrow>
@@ -539,7 +605,7 @@ export default function NextLevelHomepage() {
 
         <FAQSection />
 
-        <section className="bg-white py-8 sm:py-10">
+        <section className="bg-white py-10 ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>

@@ -7,7 +7,7 @@ function Logo({ footer = false }: { footer?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-2" aria-label="Home">
       <Image
-        src="/logo.png"
+        src="/logo1.png"
         alt="Next Level Education"
         width={150}
         height={74}
@@ -18,7 +18,7 @@ function Logo({ footer = false }: { footer?: boolean }) {
   )
 }
 
-export default async function Footer() {
+export default function Footer() {
   return (
     <footer className="relative bg-[#061331] pt-8 text-white bg-[url('/visa/footervector.png')] bg-cover bg-center">
       {/* Ready to Start Your Journey Section */}
@@ -103,10 +103,10 @@ export default async function Footer() {
           <h3 className="text-[15px] font-bold">Study Abroad</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
             {[
-              'Study in UK',
-              'Study in USA',
-              'Study in Canada',
-              'Study in Australia',
+              'United Kingdom',
+              'Canada',
+              'Australia',
+              'New Zealand',
             ].map(item => (
               <li key={item}>
                 <Link href="#" className="transition hover:text-white">
