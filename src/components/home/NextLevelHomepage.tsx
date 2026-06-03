@@ -417,6 +417,56 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
+        {/* Study Destinations Section */}
+        <section className="bg-slate-50 py-10 px-5 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            {/* Title Section */}
+            <div className="mb-10 text-left">
+              <h2 className="text-3xl font-extrabold text-[#081638] sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                Your dream study destination awaits
+              </h2>
+              {/* Short thick accent line */}
+              <div className="mt-3 h-[5px] w-12 bg-[#d7a23a] rounded" />
+              <p className="mt-5 text-sm leading-relaxed text-[#59616f] sm:text-base font-medium">
+                Start your inspiring academic journey in these vibrant and welcoming study destinations!
+              </p>
+            </div>
+
+            {/* Country Cards Grid */}
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { name: 'Australia', image: '/destinations_australia.png' },
+                { name: 'Canada', image: '/destinations_canada.png' },
+                { name: 'New Zealand', image: '/destinations_nz.png' },
+                { name: 'United Kingdom', image: '/destinations_uk.png' },
+              ].map((country) => (
+                <div
+                  key={country.name}
+                  className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
+                  style={{ position: 'relative', height: '360px' }}
+                >
+                  <Image
+                    src={country.image}
+                    alt={country.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Dark overlay with transition */}
+                  <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/45" />
+                  
+                  {/* Country Name Centered */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <h3 className="text-2xl font-bold text-white tracking-wide drop-shadow-md text-center transition-transform duration-500 group-hover:scale-105">
+                      {country.name}
+                    </h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="bg-[#061331] py-10 text-white ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
