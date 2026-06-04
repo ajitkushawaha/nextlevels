@@ -24,7 +24,7 @@ export async function generateMetadata() {
 export default function AboutUsPage() {
   return (
     <div className="min-h-screen bg-[#fbf8fc] text-[#1b1b1e] font-sans overflow-x-hidden flex flex-col justify-between select-none">
-      
+
       {/* Hero Section */}
       <section className="bg-[#0e1a38] text-white py-16 md:py-24 relative overflow-hidden">
         {/* Subtle grid line decoration */}
@@ -48,7 +48,7 @@ export default function AboutUsPage() {
           <span className="text-[10px] font-bold uppercase tracking-widest text-[#ffdea9] mb-4 inline-block">
             ESTABLISHED 2020
           </span>
-          <h1 
+          <h1
             className="text-4xl sm:text-5xl lg:text-[64px] font-extrabold mb-6 tracking-tight leading-tight"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
@@ -63,19 +63,19 @@ export default function AboutUsPage() {
       {/* Our Story Section */}
       <section className="py-16 px-8 max-w-container-max mx-auto px-gutter w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          
+
           <div className="space-y-6 text-left">
-            <h2 
+            <h2
               className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38] leading-tight"
               style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
             >
               Rooted in Jaffna, Focused Globally
             </h2>
-            
+
             <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-medium">
               Founded with a vision to simplify international student placement, Next Level Education (Pvt) Ltd is a premier study abroad agency headquartered in Jaffna, Sri Lanka. We believe that global education transforms lives, which is why we provide our counseling and application support completely 100% free of charge for all students.
             </p>
-            
+
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl">
                 <span className="block text-[#7d5800] font-black text-3xl sm:text-4xl">98%</span>
@@ -95,8 +95,8 @@ export default function AboutUsPage() {
           <div className="relative w-full">
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#7d5800]/5 -z-10 rounded-full"></div>
             <div className="rounded-2xl overflow-hidden border border-slate-200/60 shadow-2xl relative h-64 sm:h-80 md:h-[400px]">
-              <Image 
-                alt="Mock Interview Consultation" 
+              <Image
+                alt="Mock Interview Consultation"
                 src="/home2/mock-interview.png"
                 fill
                 className="object-cover"
@@ -114,12 +114,12 @@ export default function AboutUsPage() {
       <section className="bg-[#f0edf0]/60 border-y border-slate-200/40 py-16 px-10  w-full">
         <div className="max-w-container-max mx-auto px-gutter">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
+
             <div className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200/60 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:shadow-md text-left flex flex-col items-start">
               <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#7d5800]/10 text-[#7d5800] mb-6">
-                <Eye className="h-6 w-6 stroke-[2]" />
+                <Eye className="h-6 w-6 stroke-2" />
               </span>
-              <h3 
+              <h3
                 className="text-2xl font-extrabold text-[#0e1a38] mb-4"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
@@ -132,9 +132,9 @@ export default function AboutUsPage() {
 
             <div className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200/60 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:shadow-md text-left flex flex-col items-start">
               <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#7d5800]/10 text-[#7d5800] mb-6">
-                <Rocket className="h-6 w-6 stroke-[2]" />
+                <Rocket className="h-6 w-6 stroke-2" />
               </span>
-              <h3 
+              <h3
                 className="text-2xl font-extrabold text-[#0e1a38] mb-4"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
@@ -152,7 +152,7 @@ export default function AboutUsPage() {
       {/* Core Pillars */}
       <section className="py-10 px-8 max-w-container-max mx-auto px-gutter w-full">
         <div className="text-center mb-16">
-          <h2 
+          <h2
             className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38]"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
@@ -162,10 +162,10 @@ export default function AboutUsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
+
           <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
             <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
-              <Users className="h-7 w-7 stroke-[2]" />
+              <Users className="h-7 w-7 stroke-2" />
             </div>
             <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
               Student-First Approach
@@ -177,7 +177,7 @@ export default function AboutUsPage() {
 
           <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
             <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
-              <HeartHandshake className="h-7 w-7 stroke-[2]" />
+              <HeartHandshake className="h-7 w-7 stroke-2" />
             </div>
             <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
               100% Free Services
@@ -189,7 +189,7 @@ export default function AboutUsPage() {
 
           <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
             <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
-              <ShieldCheck className="h-7 w-7 stroke-[2]" />
+              <ShieldCheck className="h-7 w-7 stroke-2" />
             </div>
             <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
               Ethical &amp; Transparent
@@ -205,9 +205,9 @@ export default function AboutUsPage() {
       {/* Our Growth Timeline */}
       <section className="py-10 px-8 bg-slate-50 border-y border-slate-200/40 overflow-hidden w-full">
         <div className="max-w-container-max mx-auto px-gutter">
-          
+
           <div className="mb-16 text-center">
-            <h2 
+            <h2
               className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38]"
               style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
             >
@@ -221,9 +221,9 @@ export default function AboutUsPage() {
           <div className="relative pt-6 pb-12">
             {/* Horizontal Timeline Progress Line */}
             <div className="absolute top-[38px] left-8 right-8 h-1 bg-linear-to-r from-[#7d5800] to-[#0e1a38] opacity-25 rounded-full hidden md:block"></div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative text-left">
-              
+
               {/* 2020 */}
               <div className="relative bg-white p-6 rounded-2xl border border-slate-150 shadow-xs md:bg-transparent md:border-0 md:shadow-none md:p-0">
                 <div className="w-8 h-8 rounded-full bg-[#7d5800] border-4 border-slate-50 shadow-md mb-4 hidden md:block"></div>
@@ -289,7 +289,7 @@ export default function AboutUsPage() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-[#0e1a38] text-white text-center w-full">
         <div className="max-w-3xl mx-auto px-gutter">
-          <h2 
+          <h2
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
@@ -298,17 +298,17 @@ export default function AboutUsPage() {
           <p className="text-base sm:text-lg text-[#bac6ec] mb-10 max-w-2xl mx-auto leading-relaxed">
             Join thousands of successful students who have achieved their dreams with Next Level Education. Your future starts with a single conversation.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link 
+            <Link
               href="/contact-us"
               className="w-full sm:w-auto bg-[#ffc65a] text-[#271900] px-10 py-4 rounded-xl font-bold hover:bg-[#efbd5a] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md text-sm"
             >
               Book a Free Consultation
               <ArrowRight className="h-4 w-4 stroke-[2.5]" />
             </Link>
-            
-            <Link 
+
+            <Link
               href="/services"
               className="w-full sm:w-auto border-2 border-[#7d5800] text-[#ffdea9] hover:text-white px-10 py-4 rounded-xl font-bold hover:bg-[#7d5800]/25 transition-all text-sm block"
             >

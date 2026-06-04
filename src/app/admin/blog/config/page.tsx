@@ -129,18 +129,18 @@ function BlogConfigContent() {
             isActive: false,
           },
           sidebarCTA: configData.sidebarCTA || {
-            title: 'Secure Your Visa in 4 Quick Steps',
-            buttonText: 'View Prices',
-            buttonLink: '/select-plan',
+            title: 'Study Abroad in 4 Quick Steps',
+            buttonText: 'Get Started',
+            buttonLink: '/contact-us',
             isActive: true,
           },
           visaPlanCTA: configData.visaPlanCTA || {
             badgeText: 'Popular',
-            title: 'Choose Your Visa Plan',
-            processingTime: '3-5 Days',
-            price: 'Starting at ₹99',
-            buttonText: 'Apply Now',
-            buttonLink: '/select-plan',
+            title: 'Book Your Consultation',
+            processingTime: 'Within 24 Hours',
+            price: 'Free Consultation',
+            buttonText: 'Book Now',
+            buttonLink: '/contact-us',
             isActive: true,
           },
         })
@@ -479,7 +479,7 @@ function BlogConfigContent() {
                           <div className="flex items-center gap-4 flex-1">
                             {/* Profile Image */}
                             {author.profileImage ? (
-                              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 shrink-0">
                                 <img
                                   src={author.profileImage}
                                   alt={author.name || 'Author'}
@@ -490,7 +490,7 @@ function BlogConfigContent() {
                                 />
                               </div>
                             ) : (
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                              <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0">
                                 <span className="text-white text-lg font-bold">
                                   {(author.name || 'A').charAt(0).toUpperCase()}
                                 </span>
@@ -820,7 +820,7 @@ function BlogConfigContent() {
                       onChange={e =>
                         updateCTA('sidebarCTA', 'title', e.target.value)
                       }
-                      placeholder="e.g. Secure Your Visa in 4 Quick Steps"
+                      placeholder="e.g. Study Abroad in 4 Quick Steps"
                     />
                   </div>
                   <div className="space-y-2">
@@ -831,7 +831,7 @@ function BlogConfigContent() {
                       onChange={e =>
                         updateCTA('sidebarCTA', 'buttonText', e.target.value)
                       }
-                      placeholder="e.g. View Prices"
+                      placeholder="e.g. Get Started"
                     />
                   </div>
                 </div>
@@ -845,7 +845,7 @@ function BlogConfigContent() {
                       onChange={e =>
                         updateCTA('sidebarCTA', 'buttonLink', e.target.value)
                       }
-                      placeholder="e.g. /select-plan"
+                      placeholder="e.g. /contact-us"
                     />
                   </div>
                   <div className="space-y-2">
@@ -893,7 +893,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('headerCTA', 'title', e.target.value)
                     }
-                    placeholder="e.g. Ready to Start Your Visa Application?"
+                    placeholder="e.g. Ready to Start Your Study Abroad Journey?"
                   />
                 </div>
                 <div className="space-y-2">
@@ -903,7 +903,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('headerCTA', 'buttonText', e.target.value)
                     }
-                    placeholder="e.g. Start Visa Application"
+                    placeholder="e.g. Book Free Consultation"
                   />
                 </div>
                 <div className="space-y-2">
@@ -913,7 +913,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('headerCTA', 'buttonLink', e.target.value)
                     }
-                    placeholder="e.g. /select-plan"
+                    placeholder="e.g. /contact-us"
                   />
                 </div>
                 <div className="space-y-2">
@@ -923,7 +923,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('headerCTA', 'travelersText', e.target.value)
                     }
-                    placeholder="e.g. Join 1,50,000+ Travelers"
+                    placeholder="e.g. Join 10,000+ Students"
                   />
                 </div>
                 <div className="space-y-2">
@@ -933,7 +933,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('headerCTA', 'trustText', e.target.value)
                     }
-                    placeholder="e.g. who trust our guide."
+                    placeholder="e.g. who trust our admissions guidance."
                   />
                 </div>
                 <div className="space-y-2">
@@ -950,17 +950,17 @@ function BlogConfigContent() {
             </CardContent>
           </Card>
 
-          {/* Visa Plan CTA Section */}
+          {/* Consultation Plan CTA Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Visa Plan CTA (Default)</CardTitle>
+              <CardTitle>Consultation Plan CTA (Default)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <div className="space-y-0.5">
-                  <Label className="text-base">Enable Visa Plan CTA</Label>
+                  <Label className="text-base">Enable Consultation Plan CTA</Label>
                   <p className="text-sm text-gray-500">
-                    Default fallback for the visa plan comparison card.
+                    Default fallback for the consultation plan comparison card.
                   </p>
                 </div>
                 <Switch
@@ -989,17 +989,17 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('visaPlanCTA', 'title', e.target.value)
                     }
-                    placeholder="e.g. Choose Your Visa Plan"
+                    placeholder="e.g. Choose Your Consultation Plan"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Processing Time</Label>
+                  <Label>Response Time</Label>
                   <Input
                     value={config.visaPlanCTA?.processingTime || ''}
                     onChange={e =>
                       updateCTA('visaPlanCTA', 'processingTime', e.target.value)
                     }
-                    placeholder="e.g. 3-5 Days"
+                    placeholder="e.g. Within 24 Hours"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1009,7 +1009,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('visaPlanCTA', 'price', e.target.value)
                     }
-                    placeholder="e.g. Starting at ₹99"
+                    placeholder="e.g. Free Consultation"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1019,7 +1019,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('visaPlanCTA', 'buttonText', e.target.value)
                     }
-                    placeholder="e.g. Apply Now"
+                    placeholder="e.g. Book Now"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1029,7 +1029,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('visaPlanCTA', 'buttonLink', e.target.value)
                     }
-                    placeholder="e.g. /select-plan"
+                    placeholder="e.g. /contact-us"
                   />
                 </div>
               </div>
@@ -1065,7 +1065,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('footerCTA', 'title', e.target.value)
                     }
-                    placeholder="e.g. Ready to Apply for Your Visa?"
+                    placeholder="e.g. Ready to Study Abroad?"
                   />
                 </div>
                 <div className="space-y-2 text-wrap">
@@ -1075,7 +1075,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('footerCTA', 'description', e.target.value)
                     }
-                    placeholder="e.g. Get expert assistance with your visa application."
+                    placeholder="e.g. Get expert assistance with university applications, course selection, and student visa guidance."
                     rows={2}
                   />
                 </div>
@@ -1086,7 +1086,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('footerCTA', 'buttonText', e.target.value)
                     }
-                    placeholder="e.g. Start Application"
+                    placeholder="e.g. Get Started"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1096,7 +1096,7 @@ function BlogConfigContent() {
                     onChange={e =>
                       updateCTA('footerCTA', 'buttonLink', e.target.value)
                     }
-                    placeholder="e.g. /select-plan"
+                    placeholder="e.g. /contact-us"
                   />
                 </div>
               </div>

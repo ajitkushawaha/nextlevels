@@ -160,60 +160,55 @@ export default function AdminBlogPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-          </div>
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-slate-800"></div>
+          <p className="text-slate-600 text-sm font-medium">Loading blog list...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with Gradient */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 text-white p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Blog Management</h1>
-            <p className="text-blue-100 mt-2">
-              Create, edit, and manage your blog posts
-            </p>
-          </div>
-          <Link href="/admin/blog/create">
-            <Button className="bg-white text-blue-600 hover:bg-blue-50">
-              <Plus className="w-4 h-4 mr-2" />
-              Create New Blog
-            </Button>
-          </Link>
+    <div className="p-6 md:p-8 space-y-6 bg-slate-50 min-h-screen">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Blog Management</h1>
+          <p className="text-slate-500 text-sm mt-0.5">Create, edit, publish, and manage your blog posts catalog.</p>
         </div>
+        <Link href="/admin/blog/create">
+          <Button className="bg-[#061331] hover:bg-slate-800 text-white font-medium text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <Plus className="w-4 h-4" />
+            Create New Blog
+          </Button>
+        </Link>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="space-y-6">
         {/* Filters and Search */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
+        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden">
+          <CardContent className="p-5">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex flex-col md:flex-row gap-4 flex-1">
+              <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     placeholder="Search blogs..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-9 text-xs h-9 bg-slate-50 border-slate-200"
                   />
                 </div>
                 <Select
                   value={categoryFilter}
                   onValueChange={setCategoryFilter}
                 >
-                  <SelectTrigger className="w-full md:w-48">
+                  <SelectTrigger className="w-full md:w-48 text-xs h-9 bg-slate-50 border-slate-200">
                     <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white text-slate-800 border-slate-200">
                     <SelectItem value="all">All Categories</SelectItem>
                     {categories.map(category => (
                       <SelectItem
@@ -226,18 +221,18 @@ export default function AdminBlogPage() {
                   </SelectContent>
                 </Select>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full md:w-48">
+                  <SelectTrigger className="w-full md:w-48 text-xs h-9 bg-slate-50 border-slate-200">
                     <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white text-slate-800 border-slate-200">
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="published">Published</SelectItem>
                     <SelectItem value="draft">Draft</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-xs text-slate-400 font-medium">
                 {filteredBlogs.length} of {blogs.length} blogs
               </div>
             </div>
@@ -272,38 +267,38 @@ export default function AdminBlogPage() {
             {filteredBlogs.map(blog => (
               <Card
                 key={blog._id}
-                className="hover:shadow-lg transition-shadow"
+                className="border border-slate-200/80 shadow-xs bg-white rounded-2xl overflow-hidden hover:shadow-md transition duration-300"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                      <div className="flex items-center gap-3 mb-2.5">
+                        <h3 className="text-sm font-bold text-slate-800 hover:text-blue-600 transition">
                           <Link href={`/admin/blog/edit/${blog._id}`}>
                             {blog.title}
                           </Link>
                         </h3>
-                        <Badge className={getStatusColor(blog.status)}>
+                        <Badge className={`text-[10px] ${getStatusColor(blog.status)}`}>
                           {blog.status}
                         </Badge>
                       </div>
 
-                      <p className="text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-xs text-slate-500 mb-3.5 line-clamp-2 leading-relaxed font-medium">
                         {blog.excerpt}
                       </p>
 
-                      <div className="flex items-center gap-6 text-sm text-gray-500">
+                      <div className="flex items-center gap-6 text-[10px] text-slate-400 font-medium">
                         <div className="flex items-center gap-1">
-                          <User className="w-4 h-4" />
+                          <User className="w-3.5 h-3.5" />
                           {blog.author}
                         </div>
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
+                          <Calendar className="w-3.5 h-3.5" />
                           {blog.publishedAt
                             ? formatDate(blog.publishedAt)
                             : formatDate(blog.createdAt)}
                         </div>
-                        <div className="text-xs">Category: {blog.category}</div>
+                        <div className="bg-slate-100 px-2 py-0.5 rounded border border-slate-200/50">Category: {blog.category}</div>
                       </div>
                     </div>
 

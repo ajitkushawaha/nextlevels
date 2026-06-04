@@ -665,106 +665,104 @@ export default function EditBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 text-white p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/admin/blog">
+    <div className="p-6 md:p-8 space-y-6 bg-slate-50 min-h-screen">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <Link href="/admin/blog">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50 animate-transition"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Edit Blog Post</h1>
+            <p className="text-slate-500 text-sm mt-0.5">Update and publish article modifications.</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="bg-slate-100 text-slate-700 border-slate-200 h-8 font-semibold uppercase tracking-wider text-[9px]"
+          >
+            {originalData?.status || 'draft'}
+          </Badge>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className="bg-red-50 border-red-100 text-red-600 hover:bg-red-100 h-9 text-xs"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blogs
+                <Trash2 className="w-4 h-4 mr-1.5" />
+                Delete
               </Button>
-            </Link>
-            <div>
-              <h1 className="text-3xl font-bold">Edit Blog Post</h1>
-              <p className="text-blue-100 mt-2">Update your blog content</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className="bg-white/10 border-white/20 text-white"
-            >
-              {originalData?.status || 'draft'}
-            </Badge>
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-red-600/10 border-red-400/20 text-red-100 hover:bg-red-600/20"
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  the blog post "{originalData?.title}" and remove all
+                  associated data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="bg-red-600 hover:bg-red-700"
                 >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    the blog post "{originalData?.title}" and remove all
-                    associated data.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className="bg-red-600 hover:bg-red-700"
-                  >
-                    {isDeleting ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        Deleting...
-                      </div>
-                    ) : (
-                      'Delete Blog'
-                    )}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                  {isDeleting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Deleting...
+                    </div>
+                  ) : (
+                    'Delete Blog'
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
-            <Button
-              variant="outline"
-              onClick={() => handleSave('draft')}
-              disabled={isLoading}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save Draft
-            </Button>
-            <Button
-              onClick={() => handleSave('published')}
-              disabled={isLoading}
-              className="bg-white text-blue-600 hover:bg-blue-50"
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></div>
-                  Updating...
-                </div>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Update & Publish
-                </>
-              )}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            onClick={() => handleSave('draft')}
+            disabled={isLoading}
+            className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50 h-9 text-xs"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save Draft
+          </Button>
+          <Button
+            onClick={() => handleSave('published')}
+            disabled={isLoading}
+            className="bg-[#061331] hover:bg-slate-800 text-white font-medium text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition h-9"
+          >
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Updating...
+              </div>
+            ) : (
+              <>
+                <Eye className="w-4 h-4 mr-1" />
+                Update & Publish
+              </>
+            )}
+          </Button>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <Card className="shadow-lg">
+      <div className="space-y-6">
+        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
@@ -777,10 +775,9 @@ export default function EditBlogPage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="content">Content</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
-                <TabsTrigger value="ctas">CTAs</TabsTrigger>
                 <TabsTrigger value="seo">SEO</TabsTrigger>
               </TabsList>
 

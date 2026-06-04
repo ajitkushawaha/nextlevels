@@ -181,8 +181,8 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   // Hardcoded default values for all visa blogs
-  const DEFAULT_TRAVELERS_TEXT = 'Join 1,50,000+ Travelers'
-  const DEFAULT_TRUST_TEXT = 'who trust our guide.'
+  const DEFAULT_TRAVELERS_TEXT = 'Join 10,000+ Students'
+  const DEFAULT_TRUST_TEXT = 'who trust our admissions guidance.'
   const DEFAULT_WHATSAPP_LINK = 'https://wa.me/9822553417'
   const DEFAULT_PHONE_LINK = 'tel:+919822553417'
   const DEFAULT_TRAVELER_IMAGES = [
@@ -196,15 +196,15 @@ export default async function BlogPostPage({ params }: Props) {
         title:
           postData.headerCTA.title ||
           blogConfig?.headerCTA?.title ||
-          'Ready to Start Your Visa Application?',
+          'Ready to Start Your Study Abroad Journey?',
         buttonText:
           postData.headerCTA.buttonText ||
           blogConfig?.headerCTA?.buttonText ||
-          'Start Visa Application',
+          'Book Free Consultation',
         buttonLink:
           postData.headerCTA.buttonLink ||
           blogConfig?.headerCTA?.buttonLink ||
-          '/select-plan',
+          '/contact-us',
         travelersText:
           postData.headerCTA.travelersText ||
           blogConfig?.headerCTA?.travelersText ||
@@ -226,10 +226,10 @@ export default async function BlogPostPage({ params }: Props) {
     : {
         title:
           blogConfig?.headerCTA?.title ||
-          'Ready to Start Your Visa Application?',
+          'Ready to Start Your Study Abroad Journey?',
         buttonText:
-          blogConfig?.headerCTA?.buttonText || 'Start Visa Application',
-        buttonLink: blogConfig?.headerCTA?.buttonLink || '/select-plan',
+          blogConfig?.headerCTA?.buttonText || 'Book Free Consultation',
+        buttonLink: blogConfig?.headerCTA?.buttonLink || '/contact-us',
         travelersText:
           blogConfig?.headerCTA?.travelersText || DEFAULT_TRAVELERS_TEXT,
         trustText: blogConfig?.headerCTA?.trustText || DEFAULT_TRUST_TEXT,
@@ -297,16 +297,16 @@ export default async function BlogPostPage({ params }: Props) {
     price: string,
     country: string
   ) => {
-    const message = `Hello! I'm interested in applying for ${country} Visa.
+    const message = `Hello! I'm interested in applying for ${country} Consultation.
 
 📋 Plan Details:
 • Plan: ${planName}
-• Processing Time: ${processingTime}
+• Response Time: ${processingTime}
 • Price: ${price}
 
 📝 Blog: ${post.title}
 
-Please help me with the visa application process.`
+Please help me with the admission consultation process.`
 
     return encodeURIComponent(message)
   }
@@ -322,7 +322,7 @@ Please help me with the visa application process.`
     const phoneMatch = baseLink.match(/(?:wa\.me\/|tel:)([0-9+]+)/)
     if (phoneMatch && phoneMatch[1]) {
       const phoneNumber = phoneMatch[1].replace(/^\+/, '') // Remove leading + if present
-      const country = visaDetails?.country || post.title.split(' ')[0] || 'Visa'
+      const country = visaDetails?.country || post.title.split(' ')[0] || 'Consultation'
       const message = generateWhatsAppMessage(
         planName,
         processingTime,
@@ -346,27 +346,27 @@ Please help me with the visa application process.`
         title:
           postData.visaPlanCTA.title ||
           blogConfig?.visaPlanCTA?.title ||
-          'Choose Your Visa Plan',
+          'Choose Your Consultation Plan',
         description:
           postData.visaPlanCTA.description ||
           blogConfig?.visaPlanCTA?.description ||
-          'Get your visa processed quickly and efficiently',
+          'Get expert guidance on admissions and visas',
         processingTime:
           postData.visaPlanCTA.processingTime ||
           blogConfig?.visaPlanCTA?.processingTime ||
-          '3-5 Days',
+          'Within 24 Hours',
         price:
           postData.visaPlanCTA.price ||
           blogConfig?.visaPlanCTA?.price ||
-          'Starting at ₹99',
+          'Free Consultation',
         buttonText:
           postData.visaPlanCTA.buttonText ||
           blogConfig?.visaPlanCTA?.buttonText ||
-          'Apply Now',
+          'Book Now',
         buttonLink:
           postData.visaPlanCTA.buttonLink ||
           blogConfig?.visaPlanCTA?.buttonLink ||
-          '/select-plan',
+          '/contact-us',
         whatsappLink:
           postData.visaPlanCTA.whatsappLink || DEFAULT_WHATSAPP_LINK,
         phoneLink: postData.visaPlanCTA.phoneLink || DEFAULT_PHONE_LINK,
@@ -376,14 +376,14 @@ Please help me with the visa application process.`
         badgeText: blogConfig?.visaPlanCTA?.badgeText || 'Popular',
         planName: 'Standard',
         showPopularBadge: blogConfig?.visaPlanCTA?.badgeText === 'Popular',
-        title: blogConfig?.visaPlanCTA?.title || 'Choose Your Visa Plan',
+        title: blogConfig?.visaPlanCTA?.title || 'Choose Your Consultation Plan',
         description:
           blogConfig?.visaPlanCTA?.description ||
-          'Get your visa processed quickly and efficiently',
-        processingTime: blogConfig?.visaPlanCTA?.processingTime || '3-5 Days',
-        price: blogConfig?.visaPlanCTA?.price || 'Starting at ₹99',
-        buttonText: blogConfig?.visaPlanCTA?.buttonText || 'Apply Now',
-        buttonLink: blogConfig?.visaPlanCTA?.buttonLink || '/select-plan',
+          'Get expert guidance on admissions and visas',
+        processingTime: blogConfig?.visaPlanCTA?.processingTime || 'Within 24 Hours',
+        price: blogConfig?.visaPlanCTA?.price || 'Free Consultation',
+        buttonText: blogConfig?.visaPlanCTA?.buttonText || 'Book Now',
+        buttonLink: blogConfig?.visaPlanCTA?.buttonLink || '/contact-us',
         whatsappLink: DEFAULT_WHATSAPP_LINK,
         phoneLink: DEFAULT_PHONE_LINK,
         isActive: blogConfig?.visaPlanCTA?.isActive === true,
@@ -394,28 +394,28 @@ Please help me with the visa application process.`
         title:
           postData.footerCTA.title ||
           blogConfig?.footerCTA?.title ||
-          'Ready to Apply for Your Visa?',
+          'Ready to Study Abroad?',
         description:
           postData.footerCTA.description ||
           blogConfig?.footerCTA?.description ||
-          'Get expert assistance with your visa application. Our team is here to help you every step of the way.',
+          'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
         buttonText:
           postData.footerCTA.buttonText ||
           blogConfig?.footerCTA?.buttonText ||
-          'Start Application',
+          'Get Started',
         buttonLink:
           postData.footerCTA.buttonLink ||
           blogConfig?.footerCTA?.buttonLink ||
-          '/select-plan',
+          '/contact-us',
         isActive: postData.footerCTA.isActive === true,
       }
     : {
-        title: blogConfig?.footerCTA?.title || 'Ready to Apply for Your Visa?',
+        title: blogConfig?.footerCTA?.title || 'Ready to Study Abroad?',
         description:
           blogConfig?.footerCTA?.description ||
-          'Get expert assistance with your visa application. Our team is here to help you every step of the way.',
-        buttonText: blogConfig?.footerCTA?.buttonText || 'Start Application',
-        buttonLink: blogConfig?.footerCTA?.buttonLink || '/select-plan',
+          'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
+        buttonText: blogConfig?.footerCTA?.buttonText || 'Get Started',
+        buttonLink: blogConfig?.footerCTA?.buttonLink || '/contact-us',
         isActive: blogConfig?.footerCTA?.isActive === true,
       }
 
@@ -571,7 +571,7 @@ Please help me with the visa application process.`
               </span>
             </div>
             <h3 className="px-5 py-2.5 bg-[#061331] text-[#d7a23a] border border-[#061331] rounded-full text-sm md:text-base font-semibold hover:bg-[#d7a23a] hover:text-[#061331] hover:border-[#d7a23a] transition-all duration-350 shadow-sm cursor-pointer">
-              Apply Visa Online
+              Free Consultation
             </h3>
           </div>
 
@@ -813,7 +813,7 @@ Please help me with the visa application process.`
           {/* Sidebar - Right Column (30%) */}
           <div className="lg:col-span-4">
             <div className="sticky top-8 space-y-6">
-              {visaPlanCTA.isActive && (
+              {false && visaPlanCTA.isActive && (
                 <div className="bg-white rounded-2xl p-5 md:p-6 shadow-[0_12px_36px_rgba(8,22,56,0.05)] border border-[#ece8df]">
                   <h3 className="text-lg md:text-xl font-bold text-[#061331] font-serif mb-4">
                     {visaPlanCTA.title || 'Choose Your Visa Plan'}
@@ -974,7 +974,7 @@ Please help me with the visa application process.`
               </div>
 
               {/* Secure Your Visa CTA */}
-              {blogConfig?.sidebarCTA?.isActive !== false && (
+              {false && blogConfig?.sidebarCTA?.isActive !== false && (
                 <div className="mt-8">
                   <div className="bg-gradient-to-br from-[#061331]/5 to-[#061331]/10 rounded-2xl p-6 shadow-sm border border-[#061331]/10 text-center space-y-4">
                     <h3 className="text-lg font-bold text-[#061331] font-serif">

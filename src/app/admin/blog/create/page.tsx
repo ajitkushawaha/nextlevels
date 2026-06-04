@@ -580,61 +580,57 @@ export default function CreateBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500 text-white p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/admin/blog">
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blogs
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-3xl font-bold">Create New Blog Post</h1>
-              <p className="text-blue-100 mt-2">
-                Write and publish your blog content
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
+    <div className="p-6 md:p-8 space-y-6 bg-slate-50 min-h-screen">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <Link href="/admin/blog">
             <Button
               variant="outline"
-              onClick={() => handleSave('draft')}
-              disabled={isLoading}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              size="sm"
+              className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50"
             >
-              <Save className="w-4 h-4 mr-2" />
-              Save Draft
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
             </Button>
-            <Button
-              onClick={() => handleSave('published')}
-              disabled={isLoading}
-              className="bg-white text-blue-600 hover:bg-blue-50"
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></div>
-                  Publishing...
-                </div>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Publish
-                </>
-              )}
-            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create Blog Post</h1>
+            <p className="text-slate-500 text-sm mt-0.5">Write and draft articles for public posts.</p>
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => handleSave('draft')}
+            disabled={isLoading}
+            className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50 h-9 text-xs"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save Draft
+          </Button>
+          <Button
+            onClick={() => handleSave('published')}
+            disabled={isLoading}
+            className="bg-[#061331] hover:bg-slate-800 text-white font-medium text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition h-9"
+          >
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Publishing...
+              </div>
+            ) : (
+              <>
+                <Eye className="w-4 h-4 mr-1" />
+                Publish Post
+              </>
+            )}
+          </Button>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <Card className="shadow-lg">
+      <div className="space-y-6">
+        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
@@ -647,10 +643,9 @@ export default function CreateBlogPage() {
 
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="content">Content</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
-                <TabsTrigger value="ctas">CTAs</TabsTrigger>
                 <TabsTrigger value="seo">SEO</TabsTrigger>
               </TabsList>
 

@@ -175,11 +175,11 @@ export default function ServicesInteractiveHub() {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 sm:p-8 flex flex-col flex-grow text-left">
+                <div className="p-6 sm:p-8 flex flex-col grow text-left">
                   <h3 className="text-lg sm:text-xl font-extrabold text-[#081638] mb-3 group-hover:text-[#d7a23a] transition-colors duration-300">
                     {service.title}
                   </h3>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6 grow">
                     {service.shortDesc}
                   </p>
                   <div className="inline-flex items-center gap-2 font-bold text-sm text-[#081638] group-hover:text-[#d7a23a] transition-colors pt-4 border-t border-slate-100 w-full mt-auto">

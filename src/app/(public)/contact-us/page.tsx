@@ -84,15 +84,15 @@ export default function ContactUsPage() {
 
   return (
     <div className="min-h-screen bg-[#fbf8fc] text-[#1b1b1e] font-sans flex flex-col justify-between select-none">
-      
+
       {/* Hero Section */}
       <section className="relative bg-[#0e1a38] py-24 md:py-32 overflow-hidden text-white">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(215,162,58,0.15),transparent_70%)]"></div>
         </div>
-        
+
         <div className="max-w-container-max mx-auto px-gutter relative z-10 text-center pt-10">
-          <h1 
+          <h1
             className="text-4xl sm:text-5xl lg:text-[56px] font-bold mb-6 tracking-tight leading-tight"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
@@ -108,10 +108,10 @@ export default function ContactUsPage() {
       <section className="py-10 px-8 bg-[#fbf8fc]">
         <div className="max-w-container-max mx-auto px-gutter">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
+
             {/* Left Column: Contact Form */}
             <div className="lg:col-span-6 bg-white p-8 sm:p-10 border border-slate-200/80 rounded-2xl shadow-xs text-left">
-              <h2 
+              <h2
                 className="text-2xl sm:text-3xl font-extrabold text-[#0e1a38] mb-8"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
@@ -240,7 +240,7 @@ export default function ContactUsPage() {
 
             {/* Right Column: Contact Info */}
             <div className="lg:col-span-5 flex flex-col gap-4 text-left">
-              
+
               {/* Office Locations */}
               <div className="space-y-6">
                 <h3 className="text-xs font-black uppercase tracking-widest text-[#7d5800]">
@@ -256,7 +256,7 @@ export default function ContactUsPage() {
                       <p className="text-slate-500 text-sm mt-0.5 font-medium">Palali Road, Kondavil, Jaffna, Sri Lanka</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-4">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center text-[#0e1a38]">
                       <MapPin className="h-6 w-6 stroke-[1.5]" />
@@ -283,7 +283,7 @@ export default function ContactUsPage() {
                       +94 77 519 8195
                     </span>
                   </a>
-                  
+
                   <a href="mailto:info@nextleveleducation.com" className="flex items-center gap-4 group cursor-pointer">
                     <div className="w-10 h-10 rounded-full bg-[#0e1a38]/5 flex items-center justify-center text-[#0e1a38] transition-transform duration-300 group-hover:scale-110">
                       <Mail className="h-5 w-5" />
@@ -314,7 +314,7 @@ export default function ContactUsPage() {
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   sizes="(max-width: 1024px) 100vw, 450px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-6">
                   <p className="text-white font-bold text-lg">Guiding your global future</p>
                 </div>
               </div>
@@ -327,15 +327,15 @@ export default function ContactUsPage() {
       {/* Why Contact Us? (Trust Section) */}
       <section className="py-20 bg-white border-y border-slate-200/40 w-full">
         <div className="max-w-container-max mx-auto px-gutter text-center">
-          <h2 
+          <h2
             className="text-3xl font-extrabold text-[#0e1a38] mb-16"
             style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
             Why Contact Us?
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            
+
             <div className="flex flex-col items-center">
               <div className="mb-6 text-[#7d5800] bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/80 flex items-center justify-center w-20 h-20">
                 <Check className="h-8 w-8 stroke-[2.5]" />
@@ -348,7 +348,7 @@ export default function ContactUsPage() {
 
             <div className="flex flex-col items-center">
               <div className="mb-6 text-[#7d5800] bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/80 flex items-center justify-center w-20 h-20">
-                <GraduationCap className="h-8 w-8 stroke-[2]" />
+                <GraduationCap className="h-8 w-8 stroke-2" />
               </div>
               <h4 className="font-extrabold text-lg text-[#0e1a38] mb-2">Official University Partners</h4>
               <p className="text-slate-500 text-sm leading-relaxed max-w-xs font-medium">
@@ -358,7 +358,7 @@ export default function ContactUsPage() {
 
             <div className="flex flex-col items-center">
               <div className="mb-6 text-[#7d5800] bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/80 flex items-center justify-center w-20 h-20">
-                <Award className="h-8 w-8 stroke-[2]" />
+                <Award className="h-8 w-8 stroke-2" />
               </div>
               <h4 className="font-extrabold text-lg text-[#0e1a38] mb-2">98% Visa Success Rate</h4>
               <p className="text-slate-500 text-sm leading-relaxed max-w-xs font-medium">
