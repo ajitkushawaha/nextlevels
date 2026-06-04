@@ -1,18 +1,17 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Footer from '@/components/layout/footer'
-import AboutInteractiveHub from '@/components/about/AboutInteractiveHub'
-import CustomEnquiryForm from '@/components/about/CustomEnquiryForm'
 import {
   fetchSEOData,
   generateMetadata as generateSEOMetadata,
 } from '@/components/seo/ServerSEO'
 import {
-  CheckCircle2,
+  Eye,
+  Rocket,
   Users,
-  Compass,
-  Briefcase,
-  GraduationCap,
+  HeartHandshake,
+  ShieldCheck,
+  ArrowRight
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -22,171 +21,302 @@ export async function generateMetadata() {
   return generateSEOMetadata(seoData)
 }
 
-const keyValues = [
-  {
-    icon: Users,
-    title: 'Student-First Approach',
-    text: 'Every student is unique. We tailor our academic and visa guidance to match your specific backgrounds and goals.',
-  },
-  {
-    icon: GraduationCap,
-    title: '100% Free Services',
-    text: 'We never charge students for counseling, applications, or visa support. Our operations are fully funded by partner universities.',
-  },
-  {
-    icon: Briefcase,
-    title: 'Ethical & Transparent',
-    text: 'We maintain strict compliance and integrity in our applications, ensuring authentic documentation and high credibility.',
-  },
-]
-
 export default function AboutUsPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
-      {/* Hero Header */}
-      <section className="relative overflow-hidden bg-white border-b border-slate-100">
-        {/* Subtle light background blobs to match the clean aesthetic */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#f0f7ff] rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#f8fafc] rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+    <div className="min-h-screen bg-[#fbf8fc] text-[#1b1b1e] font-sans overflow-x-hidden flex flex-col justify-between select-none">
+      
+      {/* Hero Section */}
+      <section className="bg-[#0e1a38] text-white py-16 md:py-24 relative overflow-hidden">
+        {/* Subtle grid line decoration */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="grid grid-cols-12 h-full">
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+            <div className="border-r border-white/20 h-full"></div>
+          </div>
+        </div>
 
-        <div className="relative px-5 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28 lg:px-10 lg:pt-48 lg:pb-32 text-center max-w-4xl mx-auto z-10">
-          {/* Breadcrumb */}
-          <nav className="flex justify-center items-center gap-2 mb-8 text-xs font-bold uppercase tracking-widest text-[#061331]/50">
-            <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
-            <span className="opacity-50">/</span>
-            <span className="text-[#d7a23a]">About Us</span>
-          </nav>
-          
+        <div className="max-w-container-max mx-auto px-gutter relative z-10 text-center pt-10">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#ffdea9] mb-4 inline-block">
+            ESTABLISHED 2020
+          </span>
           <h1 
-            className="text-[40px] sm:text-5xl lg:text-[64px] font-extrabold text-[#081638] mb-8 leading-[1.15]" 
+            className="text-4xl sm:text-5xl lg:text-[64px] font-extrabold mb-6 tracking-tight leading-tight"
+            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
           >
-            About <br className="hidden sm:block" />
-            <span className="text-[#d7a23a] relative whitespace-nowrap">
-              Next Level
-              <span className="absolute bottom-2 left-0 w-full h-[4px] bg-[#d7a23a] rounded-full opacity-30"></span>
-            </span>
+            About Next Level
           </h1>
-          
-          <p className="text-base sm:text-lg lg:text-xl text-[#59616f] max-w-2xl mx-auto leading-relaxed">
-            We are a leading study abroad consultancy in Sri Lanka, dedicated to guiding students toward global success through expert, <strong className="text-[#061331]">zero-cost</strong> education support.
+          <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto text-[#bac6ec] leading-relaxed">
+            Guiding students toward global success through expert, zero-cost education support. We are your bridge to prestigious international universities.
           </p>
         </div>
       </section>
 
-      {/* Main Content */}
-      <main className="w-full grow">
-        {/* Who We Are Section */}
-        <section className="max-w-[1200px] mx-auto px-6 sm:px-8 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      {/* Our Story Section */}
+      <section className="py-16 px-8 max-w-container-max mx-auto px-gutter w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          
+          <div className="space-y-6 text-left">
+            <h2 
+              className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38] leading-tight"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              Rooted in Jaffna, Focused Globally
+            </h2>
+            
+            <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-medium">
+              Founded with a vision to simplify international student placement, Next Level Education (Pvt) Ltd is a premier study abroad agency headquartered in Jaffna, Sri Lanka. We believe that global education transforms lives, which is why we provide our counseling and application support completely 100% free of charge for all students.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <div className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                <span className="block text-[#7d5800] font-black text-3xl sm:text-4xl">98%</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1 block">
+                  VISA SUCCESS
+                </span>
+              </div>
+              <div className="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                <span className="block text-[#7d5800] font-black text-3xl sm:text-4xl">1000+</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1 block">
+                  STUDENTS PLACED
+                </span>
+              </div>
+            </div>
+          </div>
 
-            {/* Text Column */}
-            <div className="flex flex-col">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#d7a23a] mb-3">
-                Who We Are
+          <div className="relative w-full">
+            <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#7d5800]/5 -z-10 rounded-full"></div>
+            <div className="rounded-2xl overflow-hidden border border-slate-200/60 shadow-2xl relative h-64 sm:h-80 md:h-[400px]">
+              <Image 
+                alt="Mock Interview Consultation" 
+                src="/home2/mock-interview.png"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 550px"
+                priority
+              />
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#0e1a38]/5 -z-10 rounded-full"></div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Vision & Mission */}
+      <section className="bg-[#f0edf0]/60 border-y border-slate-200/40 py-16 px-10  w-full">
+        <div className="max-w-container-max mx-auto px-gutter">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200/60 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:shadow-md text-left flex flex-col items-start">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#7d5800]/10 text-[#7d5800] mb-6">
+                <Eye className="h-6 w-6 stroke-[2]" />
               </span>
-              <h2
-                className="text-3xl sm:text-4xl font-bold text-[#061331] leading-tight mb-6"
+              <h3 
+                className="text-2xl font-extrabold text-[#0e1a38] mb-4"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
-                Your Trusted Partner for Global Education
-              </h2>
-
-              <p className="text-sm sm:text-base leading-relaxed text-[#59616f] mb-5">
-                Founded with a vision to simplify international student placement, <strong>Next Level Education (Pvt) Ltd</strong> is a premier study abroad agency headquartered in Palali Road, Kondavil, Jaffna, Sri Lanka. We believe that global education transforms lives, which is why we provide our counseling and application support completely <strong>100% free of charge</strong> for all students.
+                Our Vision
+              </h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                To be a trusted leader in education consultancy, empowering students to achieve their academic goals and transform their futures through personalized guidance for studying abroad.
               </p>
-
-              <p className="text-sm sm:text-base leading-relaxed text-[#59616f] mb-6">
-                Our consultancy partners with highly ranked universities in the UK, Canada, Australia, New Zealand, Germany, and beyond. Whether you are looking for undergraduate entry after your O/Ls or A/Ls, or wishing to advance your career with a post-graduate research degree, our advisors represent your best interests at every single stage of the process.
-              </p>
-
-              {/* Bullet Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 fill-[#061331] text-white" />
-                  <span>Personalized Counseling</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 fill-[#061331] text-white" />
-                  <span>150+ Partner Universities</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 fill-[#061331] text-white" />
-                  <span>98% Visa Success Rate</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-semibold text-slate-700">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 fill-[#061331] text-white" />
-                  <span>End-to-End Post Arrival Support</span>
-                </div>
-              </div>
             </div>
 
-            {/* Visual Column */}
-            <div className="relative">
-              {/* Backdrop effects */}
-              <div className="absolute -inset-4 rounded-3xl bg-linear-to-tr from-[#d7a23a]/15 via-[#061331]/5 to-transparent blur-md"></div>
-
-              {/* Image Container with premium frame and hover zoom */}
-              <div className="relative group overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-500 hover:border-[#d7a23a] shadow-2xl">
-                <div className="relative h-64 sm:h-80 md:h-[420px] w-full bg-slate-50">
-                  <Image
-                    src="/home2/mock-interview.png"
-                    alt="Next Level Education Team Counseling"
-                    fill
-                    priority
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-103"
-                    sizes="(max-width: 768px) 100vw, 550px"
-                  />
-                  <div className="absolute inset-0 bg-[#061331]/5 group-hover:bg-transparent transition-colors duration-500"></div>
-                </div>
-
-                {/* Floating Experience Badge */}
-                <div className="absolute bottom-6 left-6 bg-[#061331] border border-white/10 p-4 rounded-xl shadow-xl text-left transition-transform duration-500 group-hover:translate-y-[-4px]">
-                  <p className="text-2xl font-black text-[#d7a23a] leading-none">1000+</p>
-                  <p className="text-[11px] font-bold text-white/80 uppercase tracking-wider mt-1">Students Placed</p>
-                </div>
-              </div>
+            <div className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200/60 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:shadow-md text-left flex flex-col items-start">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#7d5800]/10 text-[#7d5800] mb-6">
+                <Rocket className="h-6 w-6 stroke-[2]" />
+              </span>
+              <h3 
+                className="text-2xl font-extrabold text-[#0e1a38] mb-4"
+                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              >
+                Our Mission
+              </h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-medium">
+                Building international pathways since 2020 by providing ethical, transparent, and comprehensive support that removes financial barriers to global education excellence.
+              </p>
             </div>
 
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Milestones, Vision & Mission, and Values Section */}
-        <section className="bg-linear-to-b from-slate-50 to-white border-y border-[#ece8df]/40 py-16 sm:py-24">
-          <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
+      {/* Core Pillars */}
+      <section className="py-10 px-8 max-w-container-max mx-auto px-gutter w-full">
+        <div className="text-center mb-16">
+          <h2 
+            className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38]"
+            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          >
+            Our Core Pillars
+          </h2>
+          <div className="h-1 w-20 bg-[#7d5800] mx-auto mt-4 rounded-full" />
+        </div>
 
-            {/* Stateful timeline & vision tabs */}
-            <AboutInteractiveHub />
-
-            {/* Key Core Values Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-[#ece8df]/60">
-              {keyValues.map((value, idx) => {
-                const ValIcon = value.icon
-                return (
-                  <div key={idx} className="flex gap-4 group">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#061331]/5 text-[#061331] transition-colors duration-300 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
-                      <ValIcon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#061331] group-hover:text-[#d7a23a] transition-colors duration-300">
-                        {value.title}
-                      </h4>
-                      <p className="mt-2 text-xs sm:text-sm text-[#59616f] leading-relaxed">
-                        {value.text}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
+            <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
+              <Users className="h-7 w-7 stroke-[2]" />
             </div>
-
+            <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
+              Student-First Approach
+            </h4>
+            <p className="text-slate-500 text-sm leading-relaxed font-medium">
+              Every student is unique. We tailor our academic and visa guidance to match your specific backgrounds and goals.
+            </p>
           </div>
-        </section>
 
+          <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
+            <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
+              <HeartHandshake className="h-7 w-7 stroke-[2]" />
+            </div>
+            <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
+              100% Free Services
+            </h4>
+            <p className="text-slate-500 text-sm leading-relaxed font-medium">
+              We never charge students for counseling, applications, or visa support. Our operations are fully funded by partner universities.
+            </p>
+          </div>
 
-      </main>
+          <div className="flex flex-col items-center text-center p-8 bg-white border border-slate-100 rounded-3xl shadow-xs transition-all duration-300 hover:shadow-md">
+            <div className="w-16 h-16 bg-slate-50 border border-slate-200/80 rounded-full flex items-center justify-center mb-6 shadow-xs text-[#0e1a38]">
+              <ShieldCheck className="h-7 w-7 stroke-[2]" />
+            </div>
+            <h4 className="text-xl font-extrabold text-[#0e1a38] mb-3">
+              Ethical &amp; Transparent
+            </h4>
+            <p className="text-slate-500 text-sm leading-relaxed font-medium">
+              We maintain strict compliance and integrity in our applications, ensuring authentic documentation and high credibility.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Our Growth Timeline */}
+      <section className="py-10 px-8 bg-slate-50 border-y border-slate-200/40 overflow-hidden w-full">
+        <div className="max-w-container-max mx-auto px-gutter">
+          
+          <div className="mb-16 text-center">
+            <h2 
+              className="text-3xl sm:text-4xl font-extrabold text-[#0e1a38]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              Milestones of Trust &amp; Growth
+            </h2>
+            <p className="text-slate-500 text-sm font-semibold mt-2">
+              Follow our journey from local roots to global impact
+            </p>
+          </div>
+
+          <div className="relative pt-6 pb-12">
+            {/* Horizontal Timeline Progress Line */}
+            <div className="absolute top-[38px] left-8 right-8 h-1 bg-linear-to-r from-[#7d5800] to-[#0e1a38] opacity-25 rounded-full hidden md:block"></div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative text-left">
+              
+              {/* 2020 */}
+              <div className="relative bg-white p-6 rounded-2xl border border-slate-150 shadow-xs md:bg-transparent md:border-0 md:shadow-none md:p-0">
+                <div className="w-8 h-8 rounded-full bg-[#7d5800] border-4 border-slate-50 shadow-md mb-4 hidden md:block"></div>
+                <div>
+                  <span className="text-xs font-black text-[#7d5800] uppercase tracking-wider mb-2 block">
+                    2020
+                  </span>
+                  <h5 className="text-lg font-bold text-[#0e1a38] mb-2">The Foundation</h5>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-medium">
+                    Established in Jaffna with a mission to democratize access to international education for local students.
+                  </p>
+                </div>
+              </div>
+
+              {/* 2022 */}
+              <div className="relative bg-white p-6 rounded-2xl border border-slate-150 shadow-xs md:bg-transparent md:border-0 md:shadow-none md:p-0">
+                <div className="w-8 h-8 rounded-full bg-[#0e1a38] border-4 border-slate-50 shadow-md mb-4 hidden md:block"></div>
+                <div>
+                  <span className="text-xs font-black text-[#7d5800] uppercase tracking-wider mb-2 block">
+                    2022
+                  </span>
+                  <h5 className="text-lg font-bold text-[#0e1a38] mb-2">Expansion</h5>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-medium">
+                    Forged partnerships with 50+ tier-1 universities in the UK and Canada, doubling our success rate.
+                  </p>
+                </div>
+              </div>
+
+              {/* 2024 */}
+              <div className="relative bg-white p-6 rounded-2xl border border-slate-150 shadow-xs md:bg-transparent md:border-0 md:shadow-none md:p-0">
+                <div className="w-8 h-8 rounded-full bg-[#0e1a38] border-4 border-slate-50 shadow-md mb-4 hidden md:block"></div>
+                <div>
+                  <span className="text-xs font-black text-[#7d5800] uppercase tracking-wider mb-2 block">
+                    2024
+                  </span>
+                  <h5 className="text-lg font-bold text-[#0e1a38] mb-2">Milestone</h5>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-medium">
+                    Reached 1,000+ successful student placements and expanded physical presence to Batticaloa.
+                  </p>
+                </div>
+              </div>
+
+              {/* Today */}
+              <div className="relative bg-white p-6 rounded-2xl border border-slate-150 shadow-xs md:bg-transparent md:border-0 md:shadow-none md:p-0">
+                <div className="w-8 h-8 rounded-full bg-[#0e1a38] border-4 border-slate-50 shadow-md mb-4 hidden md:block"></div>
+                <div>
+                  <span className="text-xs font-black text-[#7d5800] uppercase tracking-wider mb-2 block">
+                    TODAY
+                  </span>
+                  <h5 className="text-lg font-bold text-[#0e1a38] mb-2">Global Hub</h5>
+                  <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-medium">
+                    Now operating as a comprehensive digital portal with end-to-end post-arrival support across 5 countries.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-[#0e1a38] text-white text-center w-full">
+        <div className="max-w-3xl mx-auto px-gutter">
+          <h2 
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6"
+            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+          >
+            Ready to Start Your Journey?
+          </h2>
+          <p className="text-base sm:text-lg text-[#bac6ec] mb-10 max-w-2xl mx-auto leading-relaxed">
+            Join thousands of successful students who have achieved their dreams with Next Level Education. Your future starts with a single conversation.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              href="/contact-us"
+              className="w-full sm:w-auto bg-[#ffc65a] text-[#271900] px-10 py-4 rounded-xl font-bold hover:bg-[#efbd5a] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md text-sm"
+            >
+              Book a Free Consultation
+              <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+            </Link>
+            
+            <Link 
+              href="/services"
+              className="w-full sm:w-auto border-2 border-[#7d5800] text-[#ffdea9] hover:text-white px-10 py-4 rounded-xl font-bold hover:bg-[#7d5800]/25 transition-all text-sm block"
+            >
+              View Our Services
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <Footer />

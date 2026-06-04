@@ -27,7 +27,7 @@ const navItems = [
       { label: 'New Zealand', href: '/new-zealand' },
     ]
   },
-  { label: 'Testimonial', href: '#testimonials' },
+  { label: 'Testimonial', href: '/#testimonials' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact Us', href: '/contact-us' },
   { label: 'Course Finder', href: '/courses' }
