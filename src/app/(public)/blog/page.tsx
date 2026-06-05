@@ -11,6 +11,7 @@ import connectDb from '@/lib/db'
 import Image from 'next/image'
 import Blog from '@/models/Blog'
 import { ArrowRight, Clock, UserCircle } from 'lucide-react'
+import Footer from '@/components/layout/footer'
 
 // Force dynamic rendering to prevent build-time API calls
 export const dynamic = 'force-dynamic'
@@ -93,7 +94,7 @@ export default async function BlogPage({
   const filterCategories = ['All Posts', ...allCategories]
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 pb-24">
+    <div className="min-h-screen bg-white text-slate-800">
       {/* Container for the page */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-22 sm:pt-26">
 
@@ -319,6 +320,7 @@ export default async function BlogPage({
         )}
 
       </div>
+      <Footer/>
     </div>
   )
 }
