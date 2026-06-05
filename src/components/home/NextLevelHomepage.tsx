@@ -10,6 +10,7 @@ import Footer from '../layout/footer'
 // import FlyingAeroplane from './FlyingAeroplane'
 import FAQSection from './FAQSection'
 import VisaConsultationForm from './VisaConsultationForm'
+import { universitiesData } from '@/lib/mockData'
 
 
 
@@ -537,7 +538,8 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
-        {/* <section className="bg-slate-50 border-y border-[#ece8df]/40 py-16 sm:py-20 relative overflow-hidden">
+        {/* Featured Partner Universities Section */}
+        <section className="bg-slate-50 border-y border-[#ece8df]/40 py-10 relative overflow-hidden">
           <div aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 opacity-30">
             <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1.25rem_1.25rem]" />
           </div>
@@ -546,72 +548,88 @@ export default function NextLevelHomepage() {
           </div>
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
-            <div className="text-center max-w-3xl mx-auto">
-              <Eyebrow>Study Levels</Eyebrow>
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <Eyebrow>Top Institutions</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
               >
-                Types Of Courses Available <span className="text-gradient-gold">For International Students</span>
+                Featured <span className="text-[#d7a23a]">Partner Universities</span>
               </h2>
               <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
-                Choose from wide ranging undergraduate and postgraduate courses, continuing professional development (CPD), online distance learning and short courses offered by our partner universities.
+                Explore our elite partner institutions from around the globe. Get direct admissions assistance, visa processing support, and scholarship options.
               </p>
             </div>
 
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-              {courseTypes.map(course => {
-                const Icon = course.icon
-                return (
-                  <article
-                    key={course.title}
-                    className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-linear-to-br from-[#061331] to-[#0b1f4d] p-6 text-white shadow-[0_12px_36px_rgba(6,19,49,0.12)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(215,162,58,0.18)]"
-                    style={{ borderTop: '3px solid rgba(215, 162, 58, 0.7)' }}
-                  >
-                   
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(215,162,58,0.1),transparent_60%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                    <div className="relative z-10">
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[#d7a23a] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
-                          <Icon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-6" />
-                        </span>
-                        <h3 className="text-base font-bold leading-tight group-hover:text-[#d7a23a] transition-colors duration-300">
-                          {course.title}
-                        </h3>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {Object.values(universitiesData).slice(0, 3).map((univ: any) => (
+                <div
+                  key={univ.name}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(6,19,49,0.12)]"
+                >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <img
+                      src={univ.coverImage}
+                      alt={`${univ.name} Campus`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                    <span className="absolute top-4 right-4 bg-[#d7a23a] text-[#061331] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm z-10">
+                      Rank {univ.worldRank}
+                    </span>
+                    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
+                      <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-black text-sm text-[#081638] uppercase">
+                        {univ.logo}
                       </div>
-
-                      <p className="mt-4 text-xs leading-relaxed text-white/70 min-h-[48px]">
-                        {course.description}
-                      </p>
-
-                      <div className="mt-6 space-y-2.5 border-t border-white/10 pt-5">
-                        <div className="flex items-center gap-2.5 text-xs text-white/80">
-                          <UserCheck className="h-4 w-4 shrink-0 text-[#d7a23a]" />
-                          <span className="font-medium text-white/90">{course.eligibility}</span>
-                        </div>
-                        <div className="flex items-center gap-2.5 text-xs text-white/80">
-                          <Clock className="h-4 w-4 shrink-0 text-[#d7a23a]" />
-                          <span className="font-medium text-white/90">{course.duration}</span>
-                        </div>
+                      <div className="text-white">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-200 leading-none">Est. {univ.established}</p>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="mt-6 pt-2 relative z-10">
+                  <div className="p-6 flex flex-col justify-between grow text-left">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400 font-semibold mb-2">
+                        <span>{univ.flag}</span>
+                        <span>{univ.location}, {univ.country}</span>
+                      </div>
+                      <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
+                        {univ.name}
+                      </h3>
+                      <p className="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-6">
+                        {univ.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-auto">
+                      <div className="text-left">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Students</span>
+                        <span className="text-xs font-black text-[#081638]">{univ.students}</span>
+                      </div>
                       <Link
-                        href="/contact-us"
-                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-white/5 py-2 text-xs font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331]"
+                        href={`/universities/${encodeURIComponent(univ.name)}`}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
                       >
-                        Apply Now
-                        <ArrowRight className="h-3 w-3" />
+                        View Profile
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>
-                  </article>
-                )
-              })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <Link
+                href="/courses"
+                className="inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md"
+              >
+                Browse All Universities & Courses
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
-        </section> */}
+        </section>
 
         <section className="bg-[#031336] py-10">
           <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-10">
