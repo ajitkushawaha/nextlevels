@@ -19,12 +19,12 @@ const navItems = [
   { label: 'About Us', href: '/about-us' },
   {
     label: 'Study Abroad',
-    href: '#programs',
+    href: '/courses',
     dropdownItems: [
-      { label: 'United Kingdom', href: '/uk' },
-      { label: 'Canada', href: '/canada' },
-      { label: 'Australia', href: '/australia' },
-      { label: 'New Zealand', href: '/new-zealand' },
+      { label: 'United Kingdom', href: '/courses?search=United%20Kingdom' },
+      { label: 'Canada', href: '/courses?search=Canada' },
+      { label: 'Australia', href: '/courses?search=Australia' },
+      { label: 'New Zealand', href: '/courses?search=New%20Zealand' },
     ]
   },
   { label: 'Testimonial', href: '/#testimonials' },

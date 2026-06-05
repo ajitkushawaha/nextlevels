@@ -201,7 +201,7 @@ export default function RecentBlogs({ blogs: propBlogs }: RecentBlogsProps) {
                 >
                   <div className="flex flex-col lg:flex-row h-full">
                     {/* Fixed size image container */}
-                    <div className="w-full lg:w-48 h-60 relative overflow-hidden flex-shrink-0 bg-gray-100">
+                    <div className="w-full lg:w-48 h-60 relative overflow-hidden shrink-0  bg-gray-100">
                       <Image
                         src={
                           !blog.image || imageErrors[blog.title]

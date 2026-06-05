@@ -147,7 +147,7 @@ export default function ServicesInteractiveHub() {
   return (
     <div className="w-full">
       {/* Services Grid Layout */}
-      <section className="py-10 " id="services">
+      <section className="" id="services">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {servicesData.map((service, index) => {
             const Icon = service.icon
@@ -166,7 +166,7 @@ export default function ServicesInteractiveHub() {
                     src={service.image}
                     alt={service.title}
                     fill
-                    className="object-contain p-6 transition-transform duration-700 group-hover:scale-105"
+                    className="object-contain transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 380px"
                   />
                   <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs border border-slate-100 rounded-full px-3 py-1 text-xs font-black text-[#d7a23a] tracking-wider">
@@ -194,7 +194,7 @@ export default function ServicesInteractiveHub() {
       </section>
 
       {/* Why Next Level Stands Out */}
-      <section className="py-10 bg-slate-50/50 rounded-3xl border border-slate-100 p-8 sm:p-12 mt-16">
+      <section className="py-10 bg-white/70 rounded-3xl border border-slate-100 p-8 sm:p-12 mt-16">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           <div className="lg:w-1/2">
             <div className="text-[#081638] text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">

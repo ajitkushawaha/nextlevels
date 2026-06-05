@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, Suspense } from 'react'
+import { useState, useMemo, Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import {
   Search,
@@ -20,221 +20,29 @@ import {
   User,
   AlertCircle,
   Loader2,
-  CheckCircle
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  ArrowUpDown,
+  SlidersHorizontal
 } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/layout/footer'
 
-// ── Types ────────────────────────────────────────────────────────────
-interface Course {
-  id: string
-  title: string
-  university: string
-  location: string
-  country: string
-  flag: string
-  field: string
-  level: string
-  duration: string
-  tuitionFee: string
-  intakes: string[]
-  visaSuccess: string
-  description: string
-}
+import { coursesData, scholarshipsData, universitiesData } from '@/lib/mockData'
+import type { Course } from '@/lib/mockData'
 
-// ── Course Dataset ───────────────────────────────────────────────────
-const coursesData: Course[] = [
-  {
-    id: '1',
-    title: 'MSc Data Science & Artificial Intelligence',
-    university: 'Coventry University',
-    location: 'Coventry',
-    country: 'United Kingdom',
-    flag: '🇬🇧',
-    field: 'Information Technology',
-    level: 'Postgraduate',
-    duration: '1 Year',
-    tuitionFee: '£16,500 - £18,900 / year',
-    intakes: ['January', 'May', 'September'],
-    visaSuccess: 'Very High',
-    description: 'Specialised postgraduate program covering deep learning, machine learning, neural networks, and modern data visualization techniques.'
-  },
-  {
-    id: '2',
-    title: 'Bachelor of Computer Science',
-    university: 'University of New South Wales',
-    location: 'Sydney',
-    country: 'Australia',
-    flag: '🇦🇺',
-    field: 'Information Technology',
-    level: 'Undergraduate',
-    duration: '3 Years',
-    tuitionFee: 'A$45,000 - A$49,000 / year',
-    intakes: ['February', 'June', 'September'],
-    visaSuccess: 'High',
-    description: 'World-renowned undergraduate degree providing a solid foundation in software engineering, algorithms, database systems, and cyber security.'
-  },
-  {
-    id: '3',
-    title: 'Master of Business Administration (MBA)',
-    university: 'University of Toronto',
-    location: 'Toronto',
-    country: 'Canada',
-    flag: '🇨🇦',
-    field: 'Business & Management',
-    level: 'Postgraduate',
-    duration: '2 Years',
-    tuitionFee: 'C$58,000 - C$62,000 / year',
-    intakes: ['September'],
-    visaSuccess: 'High',
-    description: 'Premier executive MBA focusing on global leadership, venture creation, strategic consulting, finance, and corporate management.'
-  },
-  {
-    id: '4',
-    title: 'BSc Nursing (Honours)',
-    university: 'Humber College',
-    location: 'Toronto',
-    country: 'Canada',
-    flag: '🇨🇦',
-    field: 'Health & Medicine',
-    level: 'Undergraduate',
-    duration: '4 Years',
-    tuitionFee: 'C$21,000 - C$24,000 / year',
-    intakes: ['January', 'September'],
-    visaSuccess: 'Very High',
-    description: 'Hands-on clinical training, critical care diagnostics, patient care ethics, and research-led healthcare practices.'
-  },
-  {
-    id: '5',
-    title: 'Master of Professional Engineering',
-    university: 'University of Western Australia',
-    location: 'Perth',
-    country: 'Australia',
-    flag: '🇦🇺',
-    field: 'Engineering',
-    level: 'Postgraduate',
-    duration: '2 Years',
-    tuitionFee: 'A$41,000 - A$44,000 / year',
-    intakes: ['February', 'July'],
-    visaSuccess: 'High',
-    description: 'Accredited professional engineering degree specializing in civil, mechanical, environmental, or electrical engineering.'
-  },
-  {
-    id: '6',
-    title: 'Bachelor of Software Engineering (Hons)',
-    university: 'Auckland University of Technology',
-    location: 'Auckland',
-    country: 'New Zealand',
-    flag: '🇳🇿',
-    field: 'Information Technology',
-    level: 'Undergraduate',
-    duration: '4 Years',
-    tuitionFee: 'NZ$38,000 - NZ$42,000 / year',
-    intakes: ['March', 'July'],
-    visaSuccess: 'Very High',
-    description: 'Core project-based engineering program with a major focus on full stack web apps, mobile systems, Agile methodology, and DevOps.'
-  },
-  {
-    id: '7',
-    title: 'MSc International Business & Management',
-    university: 'Manchester Metropolitan University',
-    location: 'Manchester',
-    country: 'United Kingdom',
-    flag: '🇬🇧',
-    field: 'Business & Management',
-    level: 'Postgraduate',
-    duration: '1 Year',
-    tuitionFee: '£17,000 - £19,500 / year',
-    intakes: ['January', 'September'],
-    visaSuccess: 'Very High',
-    description: 'Advanced master\'s program analyzing global trade markets, multinational operations, digital trade, and supply chain logistics.'
-  },
-  {
-    id: '8',
-    title: 'Bachelor of Business Analytics',
-    university: 'Deakin University',
-    location: 'Melbourne',
-    country: 'Australia',
-    flag: '🇦🇺',
-    field: 'Business & Management',
-    level: 'Undergraduate',
-    duration: '3 Years',
-    tuitionFee: 'A$35,000 - A$38,000 / year',
-    intakes: ['March', 'July', 'November'],
-    visaSuccess: 'High',
-    description: 'Integrating business decisions with data analytics, predictive modeling, data visualization, and statistics.'
-  },
-  {
-    id: '9',
-    title: 'Master of Public Health (MPH)',
-    university: 'University of Auckland',
-    location: 'Auckland',
-    country: 'New Zealand',
-    flag: '🇳🇿',
-    field: 'Health & Medicine',
-    level: 'Postgraduate',
-    duration: '1.5 Years',
-    tuitionFee: 'NZ$43,000 - NZ$46,000 / year',
-    intakes: ['February', 'July'],
-    visaSuccess: 'Very High',
-    description: 'Postgraduate public health research program investigating epidemiology, biostatistics, health systems policy, and global health action.'
-  },
-  {
-    id: '10',
-    title: 'MSc Cybersecurity & Cloud Computing',
-    university: 'Arizona State University',
-    location: 'Phoenix, AZ',
-    country: 'United States',
-    flag: '🇺🇸',
-    field: 'Information Technology',
-    level: 'Postgraduate',
-    duration: '2 Years',
-    tuitionFee: '$28,000 - $32,000 / year',
-    intakes: ['January', 'August'],
-    visaSuccess: 'High',
-    description: 'Cutting-edge program designed to protect digital infrastructure, addressing cloud security architecture, cryptography, and network defense.'
-  },
-  {
-    id: '11',
-    title: 'Diploma in Hospitality & Tourism Management',
-    university: 'Capilano University',
-    location: 'Vancouver',
-    country: 'Canada',
-    flag: '🇨🇦',
-    field: 'Hospitality & Tourism',
-    level: 'Diploma',
-    duration: '2 Years',
-    tuitionFee: 'C$16,000 - C$18,000 / year',
-    intakes: ['January', 'May', 'September'],
-    visaSuccess: 'High',
-    description: 'Fast-track industry-focused program providing co-op training options in hotels, resorts, and tourism organizations.'
-  },
-  {
-    id: '12',
-    title: 'BEng Creative Technologies & Design',
-    university: 'University of Colorado Boulder',
-    location: 'Boulder, CO',
-    country: 'United States',
-    flag: '🇺🇸',
-    field: 'Creative Arts & Design',
-    level: 'Undergraduate',
-    duration: '4 Years',
-    tuitionFee: '$38,000 - $42,000 / year',
-    intakes: ['August'],
-    visaSuccess: 'High',
-    description: 'Interdisciplinary degree combining engineering principles with visual arts, design, UX/UI, animation, and digital fabrication.'
-  }
-]
-
-const countries = ['United Kingdom', 'Canada', 'Australia', 'New Zealand', 'United States']
+const countries = ['United Kingdom', 'Canada', 'Australia', 'New Zealand', 'United States', 'Germany']
 const fields = [
   'Information Technology',
   'Business & Management',
   'Health & Medicine',
   'Engineering',
+  'Law',
   'Hospitality & Tourism',
   'Creative Arts & Design'
 ]
+const degreeTypes = ['BSc', 'MSc', 'MBA', 'BEng', 'LLB', 'LLM', 'Diploma']
 const levels = ['Undergraduate', 'Postgraduate', 'Diploma']
 
 function CourseFinderContent() {
@@ -253,9 +61,41 @@ function CourseFinderContent() {
 
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState(matchedCountry ? '' : initialSearch)
-  const [selectedCountry, setSelectedCountry] = useState(matchedCountry)
-  const [selectedField, setSelectedField] = useState('')
-  const [selectedLevel, setSelectedLevel] = useState('')
+  const [selectedCountries, setSelectedCountries] = useState<string[]>(matchedCountry ? [matchedCountry] : [])
+  const [selectedFields, setSelectedFields] = useState<string[]>([])
+  const [selectedDegreeTypes, setSelectedDegreeTypes] = useState<string[]>([])
+  const [selectedUniversities, setSelectedUniversities] = useState<string[]>([])
+
+  // Sync state with URL parameter changes
+  useEffect(() => {
+    if (matchedCountry) {
+      setSelectedCountries([matchedCountry])
+      setSearchTerm('')
+    } else if (initialSearch) {
+      setSearchTerm(initialSearch)
+      setSelectedCountries([])
+    } else {
+      setSelectedCountries([])
+      setSearchTerm('')
+    }
+  }, [matchedCountry, initialSearch])
+
+  const [sortBy, setSortBy] = useState('popularity')
+  const [activeTab, setActiveTab] = useState<'programmes' | 'universities' | 'scholarships'>('programmes')
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [showMobileSort, setShowMobileSort] = useState(false)
+
+  const [openSections, setOpenSections] = useState({
+    location: true,
+    field: true,
+    degree: true,
+    university: true
+  })
+
+  const [searchDestinationQuery, setSearchDestinationQuery] = useState('')
+  const [searchFieldQuery, setSearchFieldQuery] = useState('')
+  const [searchDegreeQuery, setSearchDegreeQuery] = useState('')
+  const [searchUniversityQuery, setSearchUniversityQuery] = useState('')
 
   // Wizard / Matcher States
   const [showWizard, setShowWizard] = useState(false)
@@ -285,13 +125,125 @@ function CourseFinderContent() {
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
       
-      const matchCountry = selectedCountry ? course.country === selectedCountry : true
-      const matchField = selectedField ? course.field === selectedField : true
-      const matchLevel = selectedLevel ? course.level === selectedLevel : true
+      const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
+      const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
+      const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
+      const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
 
-      return matchSearch && matchCountry && matchField && matchLevel
+      return matchSearch && matchCountry && matchField && matchLevel && matchUniversity
     })
-  }, [searchTerm, selectedCountry, selectedField, selectedLevel])
+  }, [searchTerm, selectedCountries, selectedFields, selectedDegreeTypes, selectedUniversities])
+
+  // Count active filters
+  const activeFiltersCount = useMemo(() => {
+    let count = 0
+    if (selectedCountries.length > 0) count += selectedCountries.length
+    if (selectedFields.length > 0) count += selectedFields.length
+    if (selectedDegreeTypes.length > 0) count += selectedDegreeTypes.length
+    if (selectedUniversities.length > 0) count += selectedUniversities.length
+    if (searchTerm) count += 1
+    return count
+  }, [selectedCountries, selectedFields, selectedDegreeTypes, selectedUniversities, searchTerm])
+
+  // Sorted list of matching programs
+  const sortedCourses = useMemo(() => {
+    const courses = [...filteredCourses]
+    if (sortBy === 'fee_asc') {
+      const getNumericFee = (feeStr: string) => {
+        if (feeStr.includes('€0')) return 0
+        const match = feeStr.replace(/,/g, '').match(/\d+/)
+        return match ? parseInt(match[0]) : 999999
+      }
+      return courses.sort((a, b) => getNumericFee(a.tuitionFee) - getNumericFee(b.tuitionFee))
+    }
+    if (sortBy === 'fee_desc') {
+      const getNumericFee = (feeStr: string) => {
+        if (feeStr.includes('€0')) return 0
+        const match = feeStr.replace(/,/g, '').match(/\d+/)
+        return match ? parseInt(match[0]) : 0
+      }
+      return courses.sort((a, b) => getNumericFee(b.tuitionFee) - getNumericFee(a.tuitionFee))
+    }
+    if (sortBy === 'duration_asc') {
+      const getDurationVal = (dStr: string) => {
+        const match = dStr.match(/\d+(\.\d+)?/)
+        return match ? parseFloat(match[0]) : 99
+      }
+      return courses.sort((a, b) => getDurationVal(a.duration) - getDurationVal(b.duration))
+    }
+    return courses // popularity
+  }, [filteredCourses, sortBy])
+
+  // Count helper functions for options
+  const getCountryCount = (country: string) => {
+    return coursesData.filter(course => {
+      const matchSearch =
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.country.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
+      const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
+      const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
+
+      return matchSearch && course.country === country && matchField && matchLevel && matchUniversity
+    }).length
+  }
+
+  const getFieldCount = (field: string) => {
+    return coursesData.filter(course => {
+      const matchSearch =
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.country.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
+      const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
+      const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
+
+      return matchSearch && matchCountry && course.field === field && matchLevel && matchUniversity
+    }).length
+  }
+
+  const getDegreeCount = (degreeType: string) => {
+    return coursesData.filter(course => {
+      const matchSearch =
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.country.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
+      const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
+      const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
+
+      return matchSearch && matchCountry && matchField && course.degreeType === degreeType && matchUniversity
+    }).length
+  }
+
+  const getUniversityCount = (university: string) => {
+    return coursesData.filter(course => {
+      const matchSearch =
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.country.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
+      const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
+      const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
+
+      return matchSearch && matchCountry && matchField && matchLevel && course.university === university
+    }).length
+  }
+
+  // Get list of unique universities
+  const universitiesList = useMemo(() => {
+    const list = coursesData.map(c => c.university)
+    return Array.from(new Set(list))
+  }, [])
 
   // Handle Wizard Match click
   const handleWizardSelect = (key: 'country' | 'field' | 'level', value: string) => {
@@ -299,9 +251,14 @@ function CourseFinderContent() {
     if (wizardStep < 2) {
       setWizardStep(s => s + 1)
     } else {
-      setSelectedCountry(wizardAnswers.country || (key === 'country' ? value : ''))
-      setSelectedField(wizardAnswers.field || (key === 'field' ? value : ''))
-      setSelectedLevel(wizardAnswers.level || (key === 'level' ? value : ''))
+      setSelectedCountries(wizardAnswers.country ? [wizardAnswers.country] : (key === 'country' ? [value] : []))
+      setSelectedFields(wizardAnswers.field ? [wizardAnswers.field] : (key === 'field' ? [value] : []))
+      if (wizardAnswers.level || key === 'level') {
+        const lvl = wizardAnswers.level || value
+        if (lvl === 'Undergraduate') setSelectedDegreeTypes(['BSc', 'BEng', 'LLB'])
+        else if (lvl === 'Postgraduate') setSelectedDegreeTypes(['MSc', 'MBA', 'LLM'])
+        else setSelectedDegreeTypes(['Diploma'])
+      }
       setShowWizard(false)
       const listEl = document.getElementById('courses-list')
       if (listEl) {
@@ -313,9 +270,10 @@ function CourseFinderContent() {
   // Reset all filters
   const resetFilters = () => {
     setSearchTerm('')
-    setSelectedCountry('')
-    setSelectedField('')
-    setSelectedLevel('')
+    setSelectedCountries([])
+    setSelectedFields([])
+    setSelectedDegreeTypes([])
+    setSelectedUniversities([])
     setWizardAnswers({ country: '', field: '', level: '' })
     setWizardStep(0)
   }
@@ -368,59 +326,279 @@ function CourseFinderContent() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between pt-20">
+  // Render filters in sidebar or mobile drawer
+  const renderSidebarFilters = () => (
+    <div className="bg-white rounded-3xl border border-slate-200/60 p-5 shadow-[0_8px_30px_rgba(8,22,56,0.02)] text-left space-y-6">
       
-      {/* Hero section */}
-      <section className="relative bg-white overflow-hidden border-b border-slate-100 py-16 sm:py-24">
-        <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-[#f0f7ff] rounded-full blur-[90px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#fffcf4] rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
-        
-        <div className="relative max-w-[1200px] mx-auto px-6 sm:px-8 text-center z-10">
-          <nav className="flex justify-center items-center gap-2 mb-6 text-xs font-bold uppercase tracking-widest text-[#061331]/50">
-            <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
-            <span className="opacity-50">/</span>
-            <span className="text-[#d7a23a]">Course Finder</span>
-          </nav>
+      {/* Header */}
+      <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+        <h3 className="font-extrabold text-[#081638] text-lg">Filters</h3>
+        {(searchTerm || selectedCountries.length > 0 || selectedFields.length > 0 || selectedDegreeTypes.length > 0 || selectedUniversities.length > 0) && (
+          <button
+            onClick={resetFilters}
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors cursor-pointer"
+          >
+            <RotateCcw className="w-3 h-3" /> Clear all
+          </button>
+        )}
+      </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-black text-[#081638] tracking-tight leading-[1.1] mb-6">
-            Find Your Dream <br />
-            <span className="text-[#d7a23a] relative inline-block mt-2">
-              Global Course
-              <span className="absolute bottom-2 left-0 w-full h-[4px] bg-[#d7a23a] rounded-full opacity-30"></span>
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed mb-10">
-            Search, match, and filter through top undergraduate, postgraduate, and diploma degrees in the UK, Canada, Australia, New Zealand, and USA. 
-          </p>
-
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={() => {
-                setShowWizard(true)
-                setWizardStep(0)
-              }}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#081638] to-[#1e3a75] hover:from-[#1e3a75] hover:to-[#081638] px-6 py-3 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-[#d7a23a]" />
-              Start Course Matcher Quiz
-            </button>
-            
-            {showWizard && (
-              <button
-                onClick={() => setShowWizard(false)}
-                className="inline-flex items-center gap-2 rounded-full bg-slate-100 hover:bg-slate-200 px-6 py-3 text-sm font-semibold text-[#061331] transition-colors cursor-pointer"
-              >
-                Close Matcher
-              </button>
-            )}
-          </div>
+      {/* Keyword Search */}
+      <div className="space-y-2">
+        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Search Keywords</label>
+        <div className="relative">
+          <Search className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 rounded-full border border-slate-200/80 text-xs focus:outline-none focus:border-[#d7a23a] focus:ring-1 focus:ring-[#d7a23a]/10 bg-slate-50/50"
+          />
         </div>
-      </section>
+      </div>
+
+      {/* 1. Location / Destination Accordion */}
+      <div className="border-t border-slate-100 pt-4">
+        <button
+          onClick={() => setOpenSections(prev => ({ ...prev, location: !prev.location }))}
+          className="w-full flex items-center justify-between font-extrabold text-[#081638] text-sm py-1.5 focus:outline-none"
+        >
+          <span>Location</span>
+          {openSections.location ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+        
+        {openSections.location && (
+          <div className="mt-3 space-y-3.5 transition-all">
+            <div className="relative">
+              <select
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 text-xs font-bold text-slate-500 bg-slate-50/50 focus:outline-none appearance-none cursor-pointer"
+                value=""
+                onChange={e => {
+                  const val = e.target.value
+                  if (val && !selectedCountries.includes(val)) {
+                    setSelectedCountries(prev => [...prev, val])
+                  }
+                }}
+              >
+                <option value="">Search by Study Destination</option>
+                {countries.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <div className="absolute right-4 top-3.5 pointer-events-none flex items-center text-slate-400">
+                <ChevronDown className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Narrow by Country or Region</p>
+              {countries.map(country => {
+                const flags: { [k: string]: string } = {
+                  'United Kingdom': '🇬🇧',
+                  'Canada': '🇨🇦',
+                  'Australia': '🇦🇺',
+                  'New Zealand': '🇳🇿',
+                  'United States': '🇺🇸',
+                  'Germany': '🇩🇪'
+                }
+                const isChecked = selectedCountries.includes(country)
+                return (
+                  <label key={country} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
+                    <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638]">
+                      {flags[country] || '🌍'} {country}
+                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-black text-slate-400">{getCountryCount(country)}</span>
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => {
+                          setSelectedCountries(prev =>
+                            prev.includes(country)
+                              ? prev.filter(c => c !== country)
+                              : [...prev, country]
+                          )
+                        }}
+                        className="h-4 w-4 rounded border-slate-300 text-[#081638] focus:ring-[#d7a23a] cursor-pointer"
+                      />
+                    </div>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 2. Field of Study Accordion */}
+      <div className="border-t border-slate-100 pt-4">
+        <button
+          onClick={() => setOpenSections(prev => ({ ...prev, field: !prev.field }))}
+          className="w-full flex items-center justify-between font-extrabold text-[#081638] text-sm py-1.5 focus:outline-none"
+        >
+          <span>Field of Study</span>
+          {openSections.field ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        {openSections.field && (
+          <div className="mt-3 space-y-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search fields..."
+                value={searchFieldQuery}
+                onChange={e => setSearchFieldQuery(e.target.value)}
+                className="w-full pl-8 pr-4 py-2 rounded-full border border-slate-200/80 text-xs focus:outline-none focus:border-[#d7a23a] bg-slate-50/30"
+              />
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            </div>
+
+            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+              {fields
+                .filter(f => f.toLowerCase().includes(searchFieldQuery.toLowerCase()))
+                .map(field => {
+                  const isChecked = selectedFields.includes(field)
+                  return (
+                    <label key={field} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-[140px]">{field}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black text-slate-400">{getFieldCount(field)}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            setSelectedFields(prev =>
+                              prev.includes(field)
+                                ? prev.filter(f => f !== field)
+                                : [...prev, field]
+                            )
+                          }}
+                          className="h-4 w-4 rounded border-slate-300 text-[#081638] focus:ring-[#d7a23a] cursor-pointer"
+                        />
+                      </div>
+                    </label>
+                  )
+                })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 3. Degree Type Accordion */}
+      <div className="border-t border-slate-100 pt-4">
+        <button
+          onClick={() => setOpenSections(prev => ({ ...prev, degree: !prev.degree }))}
+          className="w-full flex items-center justify-between font-extrabold text-[#081638] text-sm py-1.5 focus:outline-none"
+        >
+          <span>Degree Type</span>
+          {openSections.degree ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        {openSections.degree && (
+          <div className="mt-3 space-y-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search degrees..."
+                value={searchDegreeQuery}
+                onChange={e => setSearchDegreeQuery(e.target.value)}
+                className="w-full pl-8 pr-4 py-2 rounded-full border border-slate-200/80 text-xs focus:outline-none focus:border-[#d7a23a] bg-slate-50/30"
+              />
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            </div>
+
+            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+              {degreeTypes
+                .filter(d => d.toLowerCase().includes(searchDegreeQuery.toLowerCase()))
+                .map(deg => {
+                  const isChecked = selectedDegreeTypes.includes(deg)
+                  return (
+                    <label key={deg} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638]">{deg}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black text-slate-400">{getDegreeCount(deg)}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            setSelectedDegreeTypes(prev =>
+                              prev.includes(deg)
+                                ? prev.filter(d => d !== deg)
+                                : [...prev, deg]
+                            )
+                          }}
+                          className="h-4 w-4 rounded border-slate-300 text-[#081638] focus:ring-[#d7a23a] cursor-pointer"
+                        />
+                      </div>
+                    </label>
+                  )
+                })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 4. University Accordion */}
+      <div className="border-t border-slate-100 pt-4">
+        <button
+          onClick={() => setOpenSections(prev => ({ ...prev, university: !prev.university }))}
+          className="w-full flex items-center justify-between font-extrabold text-[#081638] text-sm py-1.5 focus:outline-none"
+        >
+          <span>University</span>
+          {openSections.university ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        {openSections.university && (
+          <div className="mt-3 space-y-3">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search universities..."
+                value={searchUniversityQuery}
+                onChange={e => setSearchUniversityQuery(e.target.value)}
+                className="w-full pl-8 pr-4 py-2 rounded-full border border-slate-200/80 text-xs focus:outline-none focus:border-[#d7a23a] bg-slate-50/30"
+              />
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            </div>
+
+            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+              {universitiesList
+                .filter(u => u.toLowerCase().includes(searchUniversityQuery.toLowerCase()))
+                .map(uni => {
+                  const isChecked = selectedUniversities.includes(uni)
+                  return (
+                    <label key={uni} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-[140px]">{uni}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black text-slate-400">{getUniversityCount(uni)}</span>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            setSelectedUniversities(prev =>
+                              prev.includes(uni)
+                                ? prev.filter(u => u !== uni)
+                                : [...prev, uni]
+                            )
+                          }}
+                          className="h-4 w-4 rounded border-slate-300 text-[#081638] focus:ring-[#d7a23a] cursor-pointer"
+                        />
+                      </div>
+                    </label>
+                  )
+                })}
+            </div>
+          </div>
+        )}
+      </div>
+
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between pt-10">
 
       <main className="w-full grow py-12 lg:py-16">
-        <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-14">
 
           {/* Interactive Matcher Wizard */}
           {showWizard && (
@@ -522,180 +700,525 @@ function CourseFinderContent() {
             </div>
           )}
 
-          {/* Search bar and filters */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-xs mb-8">
-            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          {/* 2-Column Search layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Left Column: Filter Sidebar (Desktop only) */}
+            <aside className="hidden lg:block lg:col-span-3 space-y-6 lg:sticky lg:top-24 max-h-[85vh] overflow-y-auto pr-1">
+              {renderSidebarFilters()}
+            </aside>
+
+            {/* Right Column: Search Results List */}
+            <section className="lg:col-span-9 space-y-6">
               
-              <div className="relative w-full lg:w-96">
-                <Search className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search course title or university..."
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#d7a23a] focus:ring-2 focus:ring-[#d7a23a]/10 transition-all bg-slate-50"
-                />
-              </div>
+              {/* Results count & Header stats with dynamic tabs and mobile actions */}
+              <div className="sticky top-[80px] bg-slate-50 z-20 pb-4 pt-4 flex flex-col gap-4 border-b border-slate-200 text-left">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="font-extrabold text-[#081638] text-xl sm:text-2xl">
+                      Search Degrees
+                    </h2>
+                    <p className="text-slate-400 text-xs font-semibold mt-1 uppercase tracking-wider">
+                      {activeTab === 'programmes' && (
+                        <>Found <span className="text-[#081638] font-bold">{filteredCourses.length}</span> matching programs</>
+                      )}
+                      {activeTab === 'universities' && (
+                        <>Found <span className="text-[#081638] font-bold">{universitiesList.length}</span> partner institutions</>
+                      )}
+                      {activeTab === 'scholarships' && (
+                        <>Found <span className="text-[#081638] font-bold">{scholarshipsData.filter(s => selectedCountries.length === 0 || selectedCountries.includes(s.country)).length}</span> scholarships available</>
+                      )}
+                    </p>
+                  </div>
+                  
+                  {/* Premium Tab switcher directly in the header */}
+                  <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <div className="bg-slate-100 p-1 rounded-xl flex gap-1 items-center">
+                      <button 
+                        onClick={() => setActiveTab('programmes')}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                          activeTab === 'programmes' 
+                            ? 'bg-[#081638] text-white shadow-sm' 
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                        }`}
+                      >
+                        Programmes
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('universities')}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                          activeTab === 'universities' 
+                            ? 'bg-[#081638] text-white shadow-sm' 
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                        }`}
+                      >
+                        Universities
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab('scholarships')}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                          activeTab === 'scholarships' 
+                            ? 'bg-[#081638] text-white shadow-sm' 
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                        }`}
+                      >
+                        Scholarships
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto grow max-w-2xl">
-                <select
-                  value={selectedCountry}
-                  onChange={e => setSelectedCountry(e.target.value)}
-                  className="w-full px-3 py-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-slate-50 focus:outline-none focus:border-[#d7a23a] appearance-none"
-                >
-                  <option value="">All Destinations</option>
-                  {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-
-                <select
-                  value={selectedField}
-                  onChange={e => setSelectedField(e.target.value)}
-                  className="w-full px-3 py-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-slate-50 focus:outline-none focus:border-[#d7a23a] appearance-none"
-                >
-                  <option value="">All Fields</option>
-                  {fields.map(f => <option key={f} value={f}>{f}</option>)}
-                </select>
-
-                <select
-                  value={selectedLevel}
-                  onChange={e => setSelectedLevel(e.target.value)}
-                  className="w-full px-3 py-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 bg-slate-50 focus:outline-none focus:border-[#d7a23a] appearance-none"
-                >
-                  <option value="">All Levels</option>
-                  {levels.map(l => <option key={l} value={l}>{l}</option>)}
-                </select>
-              </div>
-
-              {(searchTerm || selectedCountry || selectedField || selectedLevel) && (
-                <button
-                  onClick={resetFilters}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-slate-300 text-xs font-bold text-[#061331] transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  Reset
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Directory Listings */}
-          <div id="courses-list" className="scroll-mt-24">
-            <div className="flex justify-between items-center mb-6">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Found <span className="text-[#061331]">{filteredCourses.length}</span> matching courses
-              </p>
-            </div>
-
-            {filteredCourses.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredCourses.map(course => {
-                  const universityInitials = course.university
-                    .split(' ')
-                    .filter(w => w !== 'of' && w !== 'University' && w !== 'College')
-                    .map(w => w[0])
-                    .join('')
-                    .substring(0, 3)
-
-                  return (
-                    <div
-                      key={course.id}
-                      className="group bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                {/* Sub-header controls for sorting and filters */}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="hidden lg:flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-400">Sort by:</span>
+                    <select
+                      value={sortBy}
+                      onChange={e => setSortBy(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-[#081638] bg-white focus:outline-none focus:border-[#d7a23a] cursor-pointer"
                     >
-                      <div className="p-6 pb-4">
-                        <div className="flex items-start justify-between gap-4 mb-4">
-                          <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center text-xs font-black text-[#061331] border border-slate-200/50 uppercase">
-                            {universityInitials}
-                          </div>
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Visa: {course.visaSuccess}
-                          </span>
-                        </div>
+                      <option value="popularity">Popularity</option>
+                      <option value="fee_asc">Tuition Fee: Low to High</option>
+                      <option value="fee_desc">Tuition Fee: High to Low</option>
+                      <option value="duration_asc">Duration: Shortest first</option>
+                    </select>
+                  </div>
 
-                        <h3 className="font-bold text-[#061331] text-base leading-snug group-hover:text-[#d7a23a] transition-colors line-clamp-2 min-h-[44px]">
-                          {course.title}
-                        </h3>
-                        <p className="text-xs font-semibold text-slate-400 mt-1.5 flex items-center gap-1">
-                          {course.university}
+                  {/* Mobile Trigger buttons */}
+                  <div className="lg:hidden flex gap-2 w-full justify-between sm:justify-end">
+                    <button
+                      onClick={() => setShowMobileFilters(true)}
+                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#081638] text-white font-bold text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    >
+                      <Filter className="w-3.5 h-3.5" /> Filter {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+                    </button>
+                    <button
+                      onClick={() => setShowMobileSort(true)}
+                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl border border-slate-200 text-[#081638] font-bold text-[11px] uppercase tracking-wider bg-white flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    >
+                      <ArrowUpDown className="w-3.5 h-3.5" /> Sort
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Conditional tab body rendering */}
+              <div className="space-y-6">
+                {activeTab === 'programmes' && (
+                  <div className="space-y-6">
+                    {sortedCourses.length > 0 ? (
+                      sortedCourses.map(course => {
+                        const universityInitials = course.university
+                          .split(' ')
+                          .filter(w => w !== 'of' && w !== 'University' && w !== 'College')
+                          .map(w => w[0])
+                            return (
+                          <div
+                            key={course.id}
+                            className="bg-white rounded-3xl border border-slate-200/60 p-6 hover:shadow-xl hover:border-slate-300/80 transition-all duration-300 flex flex-col gap-5 text-left relative"
+                          >
+                            {/* Top Row: Logo & Organisation Info */}
+                            <div className="flex gap-4 items-start">
+                              <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs">
+                                {universityInitials}
+                              </div>
+                              <div className="grow space-y-0.5 min-w-0">
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                  <strong className="text-xs font-black text-[#081638] hover:text-[#d7a23a] transition-colors truncate max-w-[220px] sm:max-w-none">
+                                    <Link href={`/universities/${encodeURIComponent(course.university)}`} className="hover:underline">
+                                      {course.university}
+                                    </Link>
+                                  </strong>
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-slate-400 shrink-0">
+                                    <span className="text-[#d7a23a]">★</span> 4.0 <span className="text-slate-300 font-semibold">(50)</span>
+                                  </span>
+                                </div>
+                                <p className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+                                  <span>{course.flag}</span> {course.location}, {course.country}
+                                </p>
+                                <span className="inline-block text-[9px] font-black text-[#d7a23a] bg-[#d7a23a]/5 px-2 py-0.5 rounded border border-[#d7a23a]/15 uppercase tracking-wider mt-1">
+                                  Top 5% Worldwide
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Middle Row: Title & description */}
+                            <div className="space-y-1.5">
+                              <h2 className="font-extrabold text-[#081638] text-lg sm:text-xl leading-snug hover:text-[#d7a23a] transition-colors">
+                                <Link href={`/courses/${course.id}`} className="hover:underline">
+                                  {course.title}
+                                </Link>
+                              </h2>
+                              <p className="text-slate-500 text-xs leading-relaxed max-w-3xl line-clamp-2">
+                                {course.description}
+                              </p>
+                            </div>
+
+                            {/* Facts Row: Tags */}
+                            <div className="flex flex-wrap gap-1.5">
+                              <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-[#081638]/5 text-[#081638]/90">
+                                {course.level}
+                              </span>
+                              <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-[#d7a23a]/10 text-[#a37517]">
+                                {course.field}
+                              </span>
+                              <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-slate-100 text-slate-600">
+                                Full-time
+                              </span>
+                              <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-slate-100 text-slate-600">
+                                On-campus
+                              </span>
+                            </div>
+
+                            {/* Bottom Row: Price, Duration, and Call to Actions */}
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-100 mt-1">
+                              <div className="flex flex-wrap items-baseline gap-2">
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{course.duration}</span>
+                                <span className="text-[#081638] font-black text-sm sm:text-base">{course.tuitionFee}</span>
+                              </div>
+
+                              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                                <button
+                                  onClick={() => setSelectedCourseForEnquiry(course)}
+                                  className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors whitespace-nowrap text-center"
+                                >
+                                  Enquire Now
+                                </button>
+                                <Link
+                                  href={`/courses/${course.id}`}
+                                  className="inline-flex items-center justify-center gap-1 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-xs whitespace-nowrap text-center"
+                                >
+                                  View Programme Information
+                                  <ArrowRight className="w-3 h-3" />
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })
+                    ) : (
+                      <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center max-w-xl mx-auto shadow-xs">
+                        <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                          <Search className="h-6 w-6 text-slate-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-[#061331]">No Courses Found</h3>
+                        <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+                          We couldn&apos;t find any courses matching your specific search or filter combinations. Try resetting filters or request a custom university plan.
                         </p>
-                        
-                        <div className="flex flex-wrap gap-1.5 mt-3">
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#061331]/5 text-[#061331]/80">
-                            {course.level}
-                          </span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#d7a23a]/10 text-[#a37517]">
-                            {course.field}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="px-6 py-4 border-y border-slate-50 bg-slate-50/50 grid grid-cols-2 gap-3 text-xs">
-                        <div className="flex items-center gap-2 text-slate-500">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          <div>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase leading-none">Duration</p>
-                            <p className="font-semibold text-[#061331] mt-0.5">{course.duration}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-slate-500">
-                          <Globe2 className="w-3.5 h-3.5 text-slate-400" />
-                          <div>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase leading-none">Country</p>
-                            <p className="font-semibold text-[#061331] mt-0.5">{course.flag} {course.country}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-slate-500 col-span-2">
-                          <DollarSign className="w-3.5 h-3.5 text-slate-400" />
-                          <div>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase leading-none">Est. Tuition Fees</p>
-                            <p className="font-semibold text-[#061331] mt-0.5">{course.tuitionFee}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-6 pt-4 flex items-center justify-between gap-4 mt-auto">
-                        <div className="flex flex-col">
-                          <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Intakes</span>
-                          <span className="text-[11px] font-bold text-slate-600 truncate max-w-[120px]">
-                            {course.intakes.join(', ')}
-                          </span>
-                        </div>
-
                         <button
-                          onClick={() => setSelectedCourseForEnquiry(course)}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#061331] hover:bg-[#d7a23a] text-white hover:text-[#061331] text-xs font-bold transition-all duration-300 cursor-pointer shadow-md shadow-[#061331]/5"
+                          onClick={resetFilters}
+                          className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#061331] hover:bg-[#d7a23a] text-white hover:text-[#061331] text-xs font-bold transition-all cursor-pointer"
                         >
-                          Enquire Now
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <RotateCcw className="w-4 h-4" /> Reset Filters
                         </button>
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
-            ) : (
-              <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center max-w-xl mx-auto shadow-xs">
-                <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
-                  <Search className="h-6 w-6 text-slate-400" />
-                </div>
-                <h3 className="text-lg font-bold text-[#061331]">No Courses Found</h3>
-                <p className="text-sm text-slate-400 mt-2 leading-relaxed">
-                  We couldn&apos;t find any courses matching your specific search or filter combinations. Try resetting filters or request a custom university plan.
-                </p>
-                <button
-                  onClick={resetFilters}
-                  className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#061331] hover:bg-[#d7a23a] text-white hover:text-[#061331] text-xs font-bold transition-all cursor-pointer"
-                >
-                  <RotateCcw className="w-4 h-4" /> Reset Filters
-                </button>
-              </div>
-            )}
-          </div>
+                    )}
+                  </div>
+                )}
 
+                {activeTab === 'universities' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {universitiesList.map(uni => {
+                      const count = coursesData.filter(c => c.university === uni).length
+                      const sampleCourse = coursesData.find(c => c.university === uni)
+                      const country = sampleCourse ? sampleCourse.country : ''
+                      const flag = sampleCourse ? sampleCourse.flag : '🏛️'
+                      const isSelected = selectedUniversities.includes(uni)
+                      
+                      const uniDetails = universitiesData[uni] || {
+                        worldRank: '#900+',
+                        location: sampleCourse ? sampleCourse.location : 'Global Campus',
+                        established: '1970'
+                      }
+                      const logoInitials = uni.split(' ').filter(w => w !== 'of' && w !== 'University' && w !== 'College').map(w => w[0]).join('').substring(0, 3)
+
+                      return (
+                        <div 
+                          key={uni}
+                          onClick={() => {
+                            setSelectedUniversities(prev => 
+                              prev.includes(uni) ? prev.filter(u => u !== uni) : [...prev, uni]
+                            )
+                            setActiveTab('programmes')
+                          }}
+                          className={`bg-white rounded-3xl border p-6 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between gap-5 hover:shadow-xl ${
+                            isSelected 
+                              ? 'border-[#d7a23a] bg-[#d7a23a]/2 shadow-sm' 
+                              : 'border-slate-200/60 hover:border-slate-300'
+                          }`}
+                        >
+                          {/* Header section */}
+                          <header className="flex gap-4 items-start">
+                            <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs">
+                              {logoInitials}
+                            </div>
+                            <div className="space-y-0.5 min-w-0 grow">
+                              <h2 className="font-extrabold text-[#081638] text-base truncate">
+                                <Link 
+                                  href={`/universities/${encodeURIComponent(uni)}`} 
+                                  onClick={(e) => e.stopPropagation()} 
+                                  className="hover:underline hover:text-[#d7a23a] transition-colors"
+                                >
+                                  {uni}
+                                </Link>
+                              </h2>
+                              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400">
+                                <strong className="text-[#081638] font-extrabold">4.1</strong>
+                                <span className="text-[#d7a23a]">★</span>
+                                <span className="text-slate-300 font-semibold">(107 reviews)</span>
+                              </div>
+                            </div>
+                          </header>
+
+                          {/* Content section */}
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
+                              <div className="space-y-1">
+                                <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Location</div>
+                                <div className="text-[#081638] font-bold truncate">{flag} {uniDetails.location || country}</div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Attendance</div>
+                                <div className="text-[#081638] font-bold">Online / On campus</div>
+                              </div>
+                            </div>
+
+                            {/* QuickFacts icons row */}
+                            <div className="grid grid-cols-2 gap-y-3 gap-x-4 border-t border-slate-100 pt-4 text-xs">
+                              <div className="flex items-center gap-2 text-slate-500 font-semibold">
+                                <span className="text-base">📊</span>
+                                <div>
+                                  <div className="text-slate-400 text-[9px] font-black uppercase tracking-wider">Global Rank</div>
+                                  <div className="text-[#081638] font-extrabold text-[11px]">{uniDetails.worldRank}</div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-500 font-semibold">
+                                <span className="text-base">🏫</span>
+                                <div>
+                                  <div className="text-slate-400 text-[9px] font-black uppercase tracking-wider">Type</div>
+                                  <div className="text-[#081638] font-extrabold text-[11px]">Public</div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-500 font-semibold">
+                                <span className="text-base">📚</span>
+                                <div>
+                                  <div className="text-slate-400 text-[9px] font-black uppercase tracking-wider">Bachelors</div>
+                                  <div className="text-[#081638] font-extrabold text-[11px]">{count} Programs</div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 text-slate-500 font-semibold">
+                                <span className="text-base">🎓</span>
+                                <div>
+                                  <div className="text-slate-400 text-[9px] font-black uppercase tracking-wider">Scholarships</div>
+                                  <div className="text-[#081638] font-extrabold text-[11px]">Available</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footer section */}
+                          <footer className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-1">
+                            <Link 
+                              href={`/universities/${encodeURIComponent(uni)}`} 
+                              onClick={(e) => e.stopPropagation()} 
+                              className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors text-center whitespace-nowrap"
+                            >
+                              Visit University Page
+                            </Link>
+
+                            <div className="flex gap-1.5 flex-wrap self-end sm:self-center">
+                              <span className="text-[9px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-wider">
+                                Global Top 5%
+                              </span>
+                              <span className="text-[9px] font-black text-[#d7a23a] bg-[#d7a23a]/5 px-2 py-0.5 rounded border border-[#d7a23a]/15 uppercase tracking-wider">
+                                Featured
+                              </span>
+                            </div>
+                          </footer>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {activeTab === 'scholarships' && (
+                  <div className="space-y-6">
+                    {scholarshipsData
+                      .filter(s => selectedCountries.length === 0 || selectedCountries.includes(s.country))
+                      .map(sch => (
+                        <div 
+                          key={sch.id}
+                          className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-xs hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between gap-5 relative"
+                        >
+                          {/* Top Provider Tag */}
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-[#081638] text-white">
+                              {sch.type}
+                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded bg-slate-100 text-slate-500">
+                              Independent Provider
+                            </span>
+                          </div>
+
+                          {/* Quick Facts section */}
+                          <div className="grid grid-cols-2 gap-4 border-b border-slate-100 pb-4 text-xs font-semibold">
+                            <div className="space-y-1">
+                              <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Grant / Award</div>
+                              <div className="text-emerald-600 font-extrabold truncate">{sch.award}</div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Deadline</div>
+                              <div className="text-amber-600 font-extrabold">{sch.deadline}</div>
+                            </div>
+                          </div>
+
+                          {/* Middle Section: Title & Description */}
+                          <div className="space-y-2">
+                            <h2 className="font-extrabold text-[#081638] text-lg sm:text-xl leading-snug hover:text-[#d7a23a] transition-colors">
+                              <Link href={`/scholarships/${sch.id}`} className="hover:underline">
+                                {sch.title}
+                              </Link>
+                            </h2>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md inline-block">
+                              Merit-based
+                            </p>
+                            <p className="text-slate-500 text-xs leading-relaxed max-w-3xl line-clamp-2">
+                              {sch.eligibility}
+                            </p>
+                            <Link 
+                              href={`/scholarships/${sch.id}`}
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors mt-2"
+                            >
+                              Read more about eligibility <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
+
+                          {/* Footer Provider Info & Actions */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-1">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-lg bg-[#081638]/5 flex items-center justify-center shrink-0 text-base">
+                                🏛️
+                              </div>
+                              <div>
+                                <div className="text-[11px] font-extrabold text-[#081638]">Global Scholarship Office</div>
+                                <div className="text-[10px] text-slate-400 font-bold">{sch.country}</div>
+                              </div>
+                            </div>
+
+                            <button
+                              onClick={() => setSelectedCourseForEnquiry({
+                                id: sch.id,
+                                title: `${sch.title} Application`,
+                                university: sch.type,
+                                location: 'Global Scholarship Office',
+                                country: sch.country,
+                                flag: '🏆',
+                                field: 'Scholarships & Bursaries',
+                                level: 'Funding Assistance',
+                                duration: 'Academic Year',
+                                tuitionFee: sch.award,
+                                intakes: [sch.deadline],
+                                visaSuccess: 'Guaranteed Assistance',
+                                description: sch.eligibility,
+                                degreeType: 'Scholarship'
+                              })}
+                              className="px-5 py-2.5 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all cursor-pointer shadow-xs text-center"
+                            >
+                              Enquire For Scholarship
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
         </div>
+        
       </main>
+
+      {/* Mobile Filters Drawer */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-50 bg-[#061331]/80 backdrop-blur-xs flex justify-end">
+          <div className="bg-white w-full max-w-md h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-[#081638] text-white">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-[#d7a23a]" />
+                <h3 className="font-bold text-base">Filter Search</h3>
+              </div>
+              <button 
+                onClick={() => setShowMobileFilters(false)}
+                className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center cursor-pointer hover:bg-white/20"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="grow overflow-y-auto p-6 space-y-6 text-left">
+              {renderSidebarFilters()}
+            </div>
+            
+            <div className="p-4 border-t border-slate-100 flex gap-3">
+              <button
+                onClick={resetFilters}
+                className="flex-1 py-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
+              >
+                Reset All
+              </button>
+              <button
+                onClick={() => setShowMobileFilters(false)}
+                className="flex-1 py-3 rounded-xl bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-xs font-bold transition-all cursor-pointer"
+              >
+                Show {filteredCourses.length} Results
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Sort Bottom Sheet */}
+      {showMobileSort && (
+        <div className="fixed inset-0 z-50 bg-[#061331]/60 backdrop-blur-xs flex items-end justify-center">
+          <div className="absolute inset-0" onClick={() => setShowMobileSort(false)}></div>
+          <div className="relative bg-white w-full rounded-t-3xl max-w-lg p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 z-50">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+              <h3 className="font-bold text-[#081638] text-base">Sort Options</h3>
+              <button 
+                onClick={() => setShowMobileSort(false)}
+                className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center cursor-pointer"
+              >
+                <X className="w-4 h-4 text-slate-500" />
+              </button>
+            </div>
+            
+            <div className="space-y-2">
+              {[
+                { value: 'popularity', label: 'Popularity' },
+                { value: 'fee_asc', label: 'Tuition Fee: Low to High' },
+                { value: 'fee_desc', label: 'Tuition Fee: High to Low' },
+                { value: 'duration_asc', label: 'Duration: Shortest first' }
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => {
+                    setSortBy(opt.value)
+                    setShowMobileSort(false)
+                  }}
+                  className={`w-full text-left py-3.5 px-4 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                    sortBy === opt.value 
+                      ? 'bg-[#081638]/5 text-[#081638]' 
+                      : 'hover:bg-slate-50 text-slate-600'
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {sortBy === opt.value && <CheckCircle className="w-4 h-4 text-[#d7a23a]" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Enquiry modal */}
       {selectedCourseForEnquiry && (
@@ -704,7 +1227,7 @@ function CourseFinderContent() {
             
             <div className="bg-[#061331] px-6 py-5 flex justify-between items-center">
               <div>
-                <span className="text-[10px] font-bold text-[#d7a23a] uppercase tracking-widest">Selected Course Inquiry</span>
+                <span className="text-[10px] font-bold text-[#d7a23a] uppercase tracking-widest">Selected Course/Scholarship Inquiry</span>
                 <h3 className="text-white font-bold text-lg leading-tight mt-0.5 line-clamp-1">
                   {selectedCourseForEnquiry.title}
                 </h3>

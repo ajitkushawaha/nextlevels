@@ -193,50 +193,50 @@ export default async function BlogPostPage({ params }: Props) {
 
   const headerCTA = hasCTA(postData.headerCTA)
     ? {
-        title:
-          postData.headerCTA.title ||
-          blogConfig?.headerCTA?.title ||
-          'Ready to Start Your Study Abroad Journey?',
-        buttonText:
-          postData.headerCTA.buttonText ||
-          blogConfig?.headerCTA?.buttonText ||
-          'Book Free Consultation',
-        buttonLink:
-          postData.headerCTA.buttonLink ||
-          blogConfig?.headerCTA?.buttonLink ||
-          '/contact-us',
-        travelersText:
-          postData.headerCTA.travelersText ||
-          blogConfig?.headerCTA?.travelersText ||
-          DEFAULT_TRAVELERS_TEXT,
-        trustText:
-          postData.headerCTA.trustText ||
-          blogConfig?.headerCTA?.trustText ||
-          DEFAULT_TRUST_TEXT,
-        travelerImages:
-          postData.headerCTA.travelerImages &&
+      title:
+        postData.headerCTA.title ||
+        blogConfig?.headerCTA?.title ||
+        'Ready to Start Your Study Abroad Journey?',
+      buttonText:
+        postData.headerCTA.buttonText ||
+        blogConfig?.headerCTA?.buttonText ||
+        'Book Free Consultation',
+      buttonLink:
+        postData.headerCTA.buttonLink ||
+        blogConfig?.headerCTA?.buttonLink ||
+        '/contact-us',
+      travelersText:
+        postData.headerCTA.travelersText ||
+        blogConfig?.headerCTA?.travelersText ||
+        DEFAULT_TRAVELERS_TEXT,
+      trustText:
+        postData.headerCTA.trustText ||
+        blogConfig?.headerCTA?.trustText ||
+        DEFAULT_TRUST_TEXT,
+      travelerImages:
+        postData.headerCTA.travelerImages &&
           postData.headerCTA.travelerImages.length > 0
-            ? postData.headerCTA.travelerImages
-            : blogConfig?.headerCTA?.travelerImages &&
-                blogConfig?.headerCTA?.travelerImages.length > 0
-              ? blogConfig?.headerCTA?.travelerImages
-              : DEFAULT_TRAVELER_IMAGES,
-        isActive: postData.headerCTA.isActive === true,
-      }
+          ? postData.headerCTA.travelerImages
+          : blogConfig?.headerCTA?.travelerImages &&
+            blogConfig?.headerCTA?.travelerImages.length > 0
+            ? blogConfig?.headerCTA?.travelerImages
+            : DEFAULT_TRAVELER_IMAGES,
+      isActive: postData.headerCTA.isActive === true,
+    }
     : {
-        title:
-          blogConfig?.headerCTA?.title ||
-          'Ready to Start Your Study Abroad Journey?',
-        buttonText:
-          blogConfig?.headerCTA?.buttonText || 'Book Free Consultation',
-        buttonLink: blogConfig?.headerCTA?.buttonLink || '/contact-us',
-        travelersText:
-          blogConfig?.headerCTA?.travelersText || DEFAULT_TRAVELERS_TEXT,
-        trustText: blogConfig?.headerCTA?.trustText || DEFAULT_TRUST_TEXT,
-        travelerImages:
-          blogConfig?.headerCTA?.travelerImages || DEFAULT_TRAVELER_IMAGES,
-        isActive: blogConfig?.headerCTA?.isActive === true,
-      }
+      title:
+        blogConfig?.headerCTA?.title ||
+        'Ready to Start Your Study Abroad Journey?',
+      buttonText:
+        blogConfig?.headerCTA?.buttonText || 'Book Free Consultation',
+      buttonLink: blogConfig?.headerCTA?.buttonLink || '/contact-us',
+      travelersText:
+        blogConfig?.headerCTA?.travelersText || DEFAULT_TRAVELERS_TEXT,
+      trustText: blogConfig?.headerCTA?.trustText || DEFAULT_TRUST_TEXT,
+      travelerImages:
+        blogConfig?.headerCTA?.travelerImages || DEFAULT_TRAVELER_IMAGES,
+      isActive: blogConfig?.headerCTA?.isActive === true,
+    }
 
   // Fetch visa details if visaPlanCTA has selectedVisaId
   let visaDetails: any = null
@@ -337,87 +337,87 @@ Please help me with the admission consultation process.`
 
   const visaPlanCTA = hasCTA(postData.visaPlanCTA)
     ? {
-        badgeText:
-          postData.visaPlanCTA.badgeText ||
-          blogConfig?.visaPlanCTA?.badgeText ||
-          'Popular',
-        planName: getPlanName(),
-        showPopularBadge: shouldShowPopularBadge(),
-        title:
-          postData.visaPlanCTA.title ||
-          blogConfig?.visaPlanCTA?.title ||
-          'Choose Your Consultation Plan',
-        description:
-          postData.visaPlanCTA.description ||
-          blogConfig?.visaPlanCTA?.description ||
-          'Get expert guidance on admissions and visas',
-        processingTime:
-          postData.visaPlanCTA.processingTime ||
-          blogConfig?.visaPlanCTA?.processingTime ||
-          'Within 24 Hours',
-        price:
-          postData.visaPlanCTA.price ||
-          blogConfig?.visaPlanCTA?.price ||
-          'Free Consultation',
-        buttonText:
-          postData.visaPlanCTA.buttonText ||
-          blogConfig?.visaPlanCTA?.buttonText ||
-          'Book Now',
-        buttonLink:
-          postData.visaPlanCTA.buttonLink ||
-          blogConfig?.visaPlanCTA?.buttonLink ||
-          '/contact-us',
-        whatsappLink:
-          postData.visaPlanCTA.whatsappLink || DEFAULT_WHATSAPP_LINK,
-        phoneLink: postData.visaPlanCTA.phoneLink || DEFAULT_PHONE_LINK,
-        isActive: postData.visaPlanCTA.isActive === true,
-      }
+      badgeText:
+        postData.visaPlanCTA.badgeText ||
+        blogConfig?.visaPlanCTA?.badgeText ||
+        'Popular',
+      planName: getPlanName(),
+      showPopularBadge: shouldShowPopularBadge(),
+      title:
+        postData.visaPlanCTA.title ||
+        blogConfig?.visaPlanCTA?.title ||
+        'Choose Your Consultation Plan',
+      description:
+        postData.visaPlanCTA.description ||
+        blogConfig?.visaPlanCTA?.description ||
+        'Get expert guidance on admissions and visas',
+      processingTime:
+        postData.visaPlanCTA.processingTime ||
+        blogConfig?.visaPlanCTA?.processingTime ||
+        'Within 24 Hours',
+      price:
+        postData.visaPlanCTA.price ||
+        blogConfig?.visaPlanCTA?.price ||
+        'Free Consultation',
+      buttonText:
+        postData.visaPlanCTA.buttonText ||
+        blogConfig?.visaPlanCTA?.buttonText ||
+        'Book Now',
+      buttonLink:
+        postData.visaPlanCTA.buttonLink ||
+        blogConfig?.visaPlanCTA?.buttonLink ||
+        '/contact-us',
+      whatsappLink:
+        postData.visaPlanCTA.whatsappLink || DEFAULT_WHATSAPP_LINK,
+      phoneLink: postData.visaPlanCTA.phoneLink || DEFAULT_PHONE_LINK,
+      isActive: postData.visaPlanCTA.isActive === true,
+    }
     : {
-        badgeText: blogConfig?.visaPlanCTA?.badgeText || 'Popular',
-        planName: 'Standard',
-        showPopularBadge: blogConfig?.visaPlanCTA?.badgeText === 'Popular',
-        title: blogConfig?.visaPlanCTA?.title || 'Choose Your Consultation Plan',
-        description:
-          blogConfig?.visaPlanCTA?.description ||
-          'Get expert guidance on admissions and visas',
-        processingTime: blogConfig?.visaPlanCTA?.processingTime || 'Within 24 Hours',
-        price: blogConfig?.visaPlanCTA?.price || 'Free Consultation',
-        buttonText: blogConfig?.visaPlanCTA?.buttonText || 'Book Now',
-        buttonLink: blogConfig?.visaPlanCTA?.buttonLink || '/contact-us',
-        whatsappLink: DEFAULT_WHATSAPP_LINK,
-        phoneLink: DEFAULT_PHONE_LINK,
-        isActive: blogConfig?.visaPlanCTA?.isActive === true,
-      }
+      badgeText: blogConfig?.visaPlanCTA?.badgeText || 'Popular',
+      planName: 'Standard',
+      showPopularBadge: blogConfig?.visaPlanCTA?.badgeText === 'Popular',
+      title: blogConfig?.visaPlanCTA?.title || 'Choose Your Consultation Plan',
+      description:
+        blogConfig?.visaPlanCTA?.description ||
+        'Get expert guidance on admissions and visas',
+      processingTime: blogConfig?.visaPlanCTA?.processingTime || 'Within 24 Hours',
+      price: blogConfig?.visaPlanCTA?.price || 'Free Consultation',
+      buttonText: blogConfig?.visaPlanCTA?.buttonText || 'Book Now',
+      buttonLink: blogConfig?.visaPlanCTA?.buttonLink || '/contact-us',
+      whatsappLink: DEFAULT_WHATSAPP_LINK,
+      phoneLink: DEFAULT_PHONE_LINK,
+      isActive: blogConfig?.visaPlanCTA?.isActive === true,
+    }
 
   const footerCTA = hasCTA(postData.footerCTA)
     ? {
-        title:
-          postData.footerCTA.title ||
-          blogConfig?.footerCTA?.title ||
-          'Ready to Study Abroad?',
-        description:
-          postData.footerCTA.description ||
-          blogConfig?.footerCTA?.description ||
-          'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
-        buttonText:
-          postData.footerCTA.buttonText ||
-          blogConfig?.footerCTA?.buttonText ||
-          'Get Started',
-        buttonLink:
-          postData.footerCTA.buttonLink ||
-          blogConfig?.footerCTA?.buttonLink ||
-          '/contact-us',
-        isActive: postData.footerCTA.isActive === true,
-      }
+      title:
+        postData.footerCTA.title ||
+        blogConfig?.footerCTA?.title ||
+        'Ready to Study Abroad?',
+      description:
+        postData.footerCTA.description ||
+        blogConfig?.footerCTA?.description ||
+        'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
+      buttonText:
+        postData.footerCTA.buttonText ||
+        blogConfig?.footerCTA?.buttonText ||
+        'Get Started',
+      buttonLink:
+        postData.footerCTA.buttonLink ||
+        blogConfig?.footerCTA?.buttonLink ||
+        '/contact-us',
+      isActive: postData.footerCTA.isActive === true,
+    }
     : {
-        title: blogConfig?.footerCTA?.title || 'Ready to Study Abroad?',
-        description:
-          blogConfig?.footerCTA?.description ||
-          'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
-        buttonText: blogConfig?.footerCTA?.buttonText || 'Get Started',
-        buttonLink: blogConfig?.footerCTA?.buttonLink || '/contact-us',
-        isActive: blogConfig?.footerCTA?.isActive === true,
-      }
+      title: blogConfig?.footerCTA?.title || 'Ready to Study Abroad?',
+      description:
+        blogConfig?.footerCTA?.description ||
+        'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
+      buttonText: blogConfig?.footerCTA?.buttonText || 'Get Started',
+      buttonLink: blogConfig?.footerCTA?.buttonLink || '/contact-us',
+      isActive: blogConfig?.footerCTA?.isActive === true,
+    }
 
   // Get traveler images (up to 3) - use defaults if not enough provided
   const travelerImages =
@@ -430,7 +430,7 @@ Please help me with the admission consultation process.`
   while (finalTravelerImages.length < 3) {
     finalTravelerImages.push(
       DEFAULT_TRAVELER_IMAGES[finalTravelerImages.length] ||
-        DEFAULT_TRAVELER_IMAGES[0]
+      DEFAULT_TRAVELER_IMAGES[0]
     )
   }
 
@@ -534,7 +534,7 @@ Please help me with the admission consultation process.`
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-8">
             <div className="flex items-center gap-2 text-sm md:text-base text-slate-600">
               {authorConfig?.profileImage ? (
-                <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border-2 border-slate-200">
+                <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 border-2 border-slate-200">
                   <Image
                     src={authorConfig.profileImage}
                     alt={authorConfig.name}
@@ -544,7 +544,7 @@ Please help me with the admission consultation process.`
                   />
                 </div>
               ) : (
-                <div className="w-14 h-14 bg-gradient-to-br from-[#d7a23a] to-[#b8812f] rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-14 h-14 bg-linear-to-br from-[#d7a23a] to-[#b8812f] rounded-full flex items-center justify-center shrink-0 ">
                   <span className="text-white text-xl md:text-2xl font-bold">
                     {(authorConfig?.name || post.author || 'A')?.charAt(0)}
                   </span>
@@ -563,10 +563,10 @@ Please help me with the admission consultation process.`
               <span className="font-medium">
                 {post.publishedAt
                   ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
                   : 'Recently'}
               </span>
             </div>
@@ -577,7 +577,7 @@ Please help me with the admission consultation process.`
 
           {/* Header CTA Card */}
           {headerCTA.isActive && (
-            <div className="bg-gradient-to-r from-[#061331]/5 to-[#061331]/10 rounded-2xl p-4 mb-10 max-w-6xl mx-auto border border-[#061331]/10 shadow-sm">
+            <div className="bg-linear-to-r from-[#061331]/5 to-[#061331]/10 rounded-2xl p-4 mb-10 max-w-6xl mx-auto border border-[#061331]/10 shadow-sm">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <p className="text-md pl-2 font-semibold text-[#061331] mb-0 text-left">
                   {headerCTA.title}
@@ -772,7 +772,7 @@ Please help me with the admission consultation process.`
 
             {/* CTA Box - Visa Application */}
             {footerCTA.isActive && (
-              <div className="mt-8 bg-gradient-to-br from-[#061331]/5 to-[#061331]/10 rounded-2xl p-6 md:p-8 border border-[#061331]/10 shadow-[0_12px_36px_rgba(8,22,56,0.03)] text-[#061331]">
+              <div className="mt-8 bg-linear-to-brr from-[#061331]/5 to-[#061331]/10 rounded-2xl p-6 md:p-8 border border-[#061331]/10 shadow-[0_12px_36px_rgba(8,22,56,0.03)] text-[#061331]">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex-1 text-center md:text-left">
                     <h3 className="text-xl md:text-2xl font-bold mb-2 font-serif text-[#061331]">
@@ -784,7 +784,7 @@ Please help me with the admission consultation process.`
                       </p>
                     )}
                   </div>
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0 ">
                     <Link
                       href={footerCTA.buttonLink}
                       className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-[#061331] text-white font-bold text-base md:text-lg rounded-lg hover:bg-[#0d2459] transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -832,7 +832,7 @@ Please help me with the admission consultation process.`
 
                     <div className="flex items-start gap-4">
                       {/* Document Icon */}
-                      <div className="flex-shrink-0 w-12 h-12 bg-[#d7a23a]/10 border border-[#d7a23a]/30 rounded-lg flex items-center justify-center">
+                      <div className="shrink-0  w-12 h-12 bg-[#d7a23a]/10 border border-[#d7a23a]/30 rounded-lg flex items-center justify-center">
                         <FileText className="w-6 h-6 text-[#d7a23a]" />
                       </div>
 
@@ -918,7 +918,7 @@ Please help me with the admission consultation process.`
                         className="group block"
                       >
                         <div className="flex gap-3 items-start hover:bg-[#061331]/5 p-2.5 md:p-3 rounded-lg transition-all duration-200">
-                          <div className="w-14 h-14 md:w-16 md:h-16 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
+                          <div className="w-14 h-14 md:w-16 md:h-16 shrink-0  rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
                             <RelatedBlogImage
                               src={item.image || '/placeholder.svg'}
                               alt={item.title || 'Blog'}
@@ -942,7 +942,7 @@ Please help me with the admission consultation process.`
                 <div className="bg-white rounded-xl p-5 md:p-6 border border-[#ece8df] shadow-[0_12px_36px_rgba(8,22,56,0.05)]">
                   <div className="flex flex-col items-center justify-center gap-4">
                     {authorConfig?.profileImage ? (
-                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#061331]/10">
+                      <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden shrink-0 border-2 border-[#061331]/10">
                         <Image
                           src={authorConfig.profileImage}
                           alt={authorConfig.name}
@@ -952,7 +952,7 @@ Please help me with the admission consultation process.`
                         />
                       </div>
                     ) : (
-                      <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-[#d7a23a] to-[#b8812f] rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-14 h-14 md:w-16 md:h-16 bg-linear-to-br from-[#d7a23a] to-[#b8812f] rounded-full flex items-center justify-center shrink-0">
                         <span className="text-white text-xl md:text-2xl font-bold">
                           {(authorConfig?.name || post.author || 'A')?.charAt(
                             0
@@ -976,7 +976,7 @@ Please help me with the admission consultation process.`
               {/* Secure Your Visa CTA */}
               {false && blogConfig?.sidebarCTA?.isActive !== false && (
                 <div className="mt-8">
-                  <div className="bg-gradient-to-br from-[#061331]/5 to-[#061331]/10 rounded-2xl p-6 shadow-sm border border-[#061331]/10 text-center space-y-4">
+                  <div className="bg-linear-to-br from-[#061331]/5 to-[#061331]/10 rounded-2xl p-6 shadow-sm border border-[#061331]/10 text-center space-y-4">
                     <h3 className="text-lg font-bold text-[#061331] font-serif">
                       {blogConfig?.sidebarCTA?.title ||
                         'Secure Your Visa in 4 Quick Steps'}

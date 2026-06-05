@@ -220,7 +220,7 @@ export default function FAQSection() {
   const totalDots = faqCards.length - cardsToShow + 1
 
   return (
-    <section className="bg-white py-10 text-[#081638] overflow-hidden select-none">
+    <section className="bg-white/45 py-10 text-[#081638] overflow-hidden select-none">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         
         {/* Header Block */}

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import ServicesInteractiveHub from '@/components/services/ServicesInteractiveHub'
 import {
@@ -11,7 +12,10 @@ import {
   MessageSquare,
   ArrowRight,
   Sparkles,
-  ArrowDown
+  GraduationCap,
+  BookOpen,
+  Users,
+  Globe
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -23,132 +27,68 @@ export async function generateMetadata() {
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-[#fbf8fc] text-[#1b1b1e] flex flex-col justify-between select-none">
-      {/* Hero Header */}
-      <section className="relative overflow-hidden bg-white py-10  border-b border-slate-100">
-        {/* Subtle light background blobs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#f0f7ff] rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#fbf8fc] rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+    <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
+      
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden bg-[url('/shero.png')] bg-cover bg-top pt-32 pb-0 lg:pt-60 lg:pb-36 border-b border-slate-100/60">
+        {/* Soft overlay on mobile to ensure legibility */}
+        <div className="absolute inset-0 bg-white/20 lg:bg-transparent pointer-events-none"></div>
 
-        <div className="relative px-5 pt-28 pb-12 sm:px-8 sm:pt-36 lg:px-10 max-w-container-max mx-auto text-center z-10">
-          {/* Eyebrow Badge */}
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#ffdea9] text-[#271900] text-xs font-bold tracking-widest uppercase mb-6 shadow-xs">
-            <Sparkles className="h-4 w-4 mr-2 text-[#7d5800]" />
-            TRANSFORMING FUTURES
-          </div>
-          
-          <h1 
-            className="text-[40px] sm:text-5xl lg:text-[64px] font-extrabold text-[#061331] mb-6 tracking-tight leading-tight"
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-          >
-            Our Professional Services
-          </h1>
-          
-          <p className="text-base sm:text-lg lg:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed mb-10">
-            Empowering your global academic aspirations through end-to-end, <strong className="text-[#061331]">100% free</strong> guidance. From university matching to landing safely in your dream destination.
-          </p>
+        <div className="relative px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Left Content Column */}
+            <div className="lg:col-span-6 space-y-2 text-left">
+              {/* Eyebrow Badge */}
+              <div className=" flex w-fit items-center px-4 py-2 rounded-full bg-[#f6ebdc] text-[#7d5800] text-[10px] font-bold tracking-widest uppercase">
+                <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#d7a23a]" />
+                TRANSFORMING FUTURES
+              </div>
+              
+              <div className="space-y-10 md:space-y-8 relative inline-block">
+                <h1 
+                  className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-[#081638] tracking-tight leading-[1.1]"
+                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                >
+                  Our Professional<br />
+                  <span className="text-[#d7a23a]">Services</span>
+                </h1>
+                {/* Decorative gold line */}
+                <div className="w-24 h-1 bg-[#d7a23a] rounded-full mt-1.5 opacity-60"></div>
+              </div>
+              
+              <p className="text-slate-650 text-sm sm:text-base leading-relaxed max-w-lg font-medium">
+                Empowering your global academic aspirations through end-to-end, <strong className="text-[#061331] font-bold">100% free</strong> guidance. From university matching to landing safely in your dream destination.
+              </p>
+ 
+              <div className="pt-2">
+                <a 
+                  href="#services" 
+                  className="inline-flex items-center justify-center gap-2 bg-[#081638] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-slate-900 active:scale-95 transition-all text-sm shadow-md"
+                >
+                  <span>View Offerings</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
+                </a>
+              </div>
+            </div>
 
-          <div className="flex justify-center">
-            <a 
-              href="#services" 
-              className="bg-[#061331] text-white px-8 py-4 rounded-xl font-bold hover:shadow-lg hover:bg-slate-900 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm text-sm"
-            >
-              View Offerings
-              <ArrowDown className="h-4 w-4" />
-            </a>
+            {/* Right Column: Empty to allow the background image's students to display cleanly */}
+            <div className="hidden lg:col-span-6 lg:block h-[350px]"></div>
+
           </div>
         </div>
       </section>
 
+
       {/* Main Content: Interactive Dashboard Hub */}
       <main className="w-full grow py-10 bg-[#fbf8fc]">
-        <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8">
           
           {/* Renders client-side stateful tabs and bento network */}
           <ServicesInteractiveHub />
 
           {/* Premium Call to Action Banner */}
-          <section className="mt-10 relative rounded-3xl overflow-hidden bg-linear-to-br from-[#061331] to-[#0b1f4d] text-white p-8 sm:p-12 md:p-16 shadow-[0_24px_50px_rgba(6,19,49,0.2)] border border-white/5">
-            {/* Ambient Background Lights */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#d7a23a]/15 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#d7a23a]/10 rounded-full blur-3xl"></div>
-            
-            {/* Decorative dot grids */}
-            <div className="absolute top-8 left-8 opacity-10">
-              <div className="h-16 w-32 bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] bg-size-[0.75rem_0.75rem]" />
-            </div>
-
-            <div className="relative z-10 text-center max-w-3xl mx-auto">
-              <h2 
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
-              >
-                Ready to Take the Next Step?
-              </h2>
-              
-              <p className="text-white/70 text-[15px] sm:text-base leading-relaxed mb-10 max-w-2xl mx-auto">
-                Consult with our dedicated counselors to evaluate your profile, select target universities, and start your application. Our services are <strong className="text-[#d7a23a]">100% Free</strong> for students.
-              </p>
-
-              {/* Consultation Options Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8 text-left">
-                {/* Option 1: WhatsApp */}
-                <a 
-                  href="https://wa.me/94775198195" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:bg-white/10 hover:border-[#d7a23a]/30 group"
-                >
-                  <div className="h-12 w-12 rounded-lg bg-[#25D366]/10 text-[#25D366] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <MessageSquare className="h-5 w-5 fill-[#25D366]" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider">WhatsApp Chat</p>
-                    <p className="text-sm font-bold text-white mt-0.5">+94 77 519 8195</p>
-                  </div>
-                </a>
-
-                {/* Option 2: Phone */}
-                <a 
-                  href="tel:+94775198195"
-                  className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:bg-white/10 hover:border-[#d7a23a]/30 group"
-                >
-                  <div className="h-12 w-12 rounded-lg bg-[#d7a23a]/10 text-[#d7a23a] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <Phone className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Call Center</p>
-                    <p className="text-sm font-bold text-white mt-0.5">+94 77 519 8195</p>
-                  </div>
-                </a>
-
-                {/* Option 3: Email */}
-                <a 
-                  href="mailto:help@nextlevel.edu.lk"
-                  className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 transition-all duration-300 hover:bg-white/10 hover:border-[#d7a23a]/30 group sm:col-span-2 md:col-span-1"
-                >
-                  <div className="h-12 w-12 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <Mail className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Email Support</p>
-                    <p className="text-sm font-bold text-white mt-0.5 truncate">help@nextlevel.edu.lk</p>
-                  </div>
-                </a>
-              </div>
-
-              {/* Booking CTA Button */}
-              <div className="flex justify-center mt-6">
-                <Link
-                  href="/contact-us"
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-[#d7a23a] px-8 py-3 text-sm font-bold text-[#061331] shadow-[0_12px_30px_rgba(215,162,58,0.28)] transition-all duration-300 hover:bg-[#efbd5a] hover:scale-[1.03] active:scale-[0.98]"
-                >
-                  Book Free Consultation
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </section>
+       
 
         </div>
       </main>

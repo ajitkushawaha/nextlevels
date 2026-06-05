@@ -80,7 +80,7 @@ export default function AboutInteractiveHub() {
         <div className="relative max-w-4xl mx-auto mb-10 px-4">
           {/* Connecting Line */}
           <div className="absolute top-1/2 left-8 right-8 h-0.5 bg-slate-200 -translate-y-1/2 z-0 hidden sm:block"></div>
-          <div 
+          <div
             className="absolute top-1/2 left-8 h-0.5 bg-[#d7a23a] -translate-y-1/2 z-0 transition-all duration-500 hidden sm:block"
             style={{
               width: `${(activeMilestone / (milestones.length - 1)) * 90}%`
@@ -99,19 +99,17 @@ export default function AboutInteractiveHub() {
                 >
                   {/* Circle Indicator */}
                   <div
-                    className={`h-12 w-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                      isActive
+                    className={`h-12 w-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${isActive
                         ? 'bg-[#061331] border-[#d7a23a] text-[#d7a23a] scale-110 shadow-lg shadow-[#061331]/20'
                         : 'bg-white border-slate-200 text-slate-400 group-hover:border-[#061331] group-hover:text-[#061331]'
-                    }`}
+                      }`}
                   >
                     <span className="text-xs font-bold">{milestone.year}</span>
                   </div>
-                  
+
                   {/* Year Label */}
-                  <span className={`text-xs font-bold mt-2 transition-colors duration-300 ${
-                    isActive ? 'text-[#061331]' : 'text-slate-400 group-hover:text-[#061331]'
-                  }`}>
+                  <span className={`text-xs font-bold mt-2 transition-colors duration-300 ${isActive ? 'text-[#061331]' : 'text-slate-400 group-hover:text-[#061331]'
+                    }`}>
                     {milestone.title.split(' ')[0]}
                   </span>
                 </button>
@@ -133,7 +131,7 @@ export default function AboutInteractiveHub() {
               </div>
 
               {/* Text Info */}
-              <div className="flex-grow">
+              <div className="grow">
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-0">
                   <h3
                     className="text-xl sm:text-2xl font-bold text-[#061331]"
@@ -145,7 +143,7 @@ export default function AboutInteractiveHub() {
                     {currentMilestone.stats}
                   </span>
                 </div>
-                
+
                 <p className="text-sm leading-relaxed text-[#59616f] mt-4">
                   {currentMilestone.description}
                 </p>
@@ -156,14 +154,14 @@ export default function AboutInteractiveHub() {
       </div>
 
       {/* Dynamic Vision vs Mission Showcase */}
-      <div className="mb-24 bg-gradient-to-b from-[#061331] to-[#0a1e47] rounded-3xl text-white p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
+      <div className="mb-24 bg-linear-to-br from-[#061331] to-[#0a1e47] rounded-3xl text-white p-8 sm:p-12 md:p-16 relative overflow-hidden shadow-2xl">
         {/* Glow lights */}
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#d7a23a]/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#d7a23a]/10 rounded-full blur-3xl"></div>
 
         {/* Decorative Grid */}
         <div className="absolute top-6 left-6 opacity-5">
-          <div className="h-16 w-32 bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] [background-size:0.75rem_0.75rem]" />
+          <div className="h-16 w-32 bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] bg-size-[0.75rem_0.75rem]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
@@ -171,17 +169,15 @@ export default function AboutInteractiveHub() {
           <div className="flex bg-white/5 border border-white/10 rounded-full p-1 mb-10 w-full max-w-[320px] relative shadow-inner">
             <button
               onClick={() => setActivePurposeTab('vision')}
-              className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-300 relative z-10 cursor-pointer ${
-                activePurposeTab === 'vision' ? 'bg-[#d7a23a] text-[#061331]' : 'text-white hover:text-[#d7a23a]'
-              }`}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-300 relative z-10 cursor-pointer ${activePurposeTab === 'vision' ? 'bg-[#d7a23a] text-[#061331]' : 'text-white hover:text-[#d7a23a]'
+                }`}
             >
               Our Vision
             </button>
             <button
               onClick={() => setActivePurposeTab('mission')}
-              className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-300 relative z-10 cursor-pointer ${
-                activePurposeTab === 'mission' ? 'bg-[#d7a23a] text-[#061331]' : 'text-white hover:text-[#d7a23a]'
-              }`}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-300 relative z-10 cursor-pointer ${activePurposeTab === 'mission' ? 'bg-[#d7a23a] text-[#061331]' : 'text-white hover:text-[#d7a23a]'
+                }`}
             >
               Our Mission
             </button>

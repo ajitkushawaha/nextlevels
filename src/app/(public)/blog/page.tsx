@@ -34,104 +34,71 @@ export default async function BlogPage({
   const page = typeof params.page === 'string' ? parseInt(params.page) : 1
   const postsPerPage = 6
 
-  // Call API directly (server-side)
   let blogPosts = []
   let totalPages = 1
-
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-
-    // Build query parameters
-    const params = new URLSearchParams()
-    if (search) params.append('search', search)
-    if (category && category !== 'All Posts')
-      params.append('category', category)
-    params.append('page', page.toString())
-    params.append('limit', postsPerPage.toString())
-
-    const res = await fetch(`${baseUrl}/api/public/blog?${params}`, {
-      cache: 'no-store', // ensures fresh data, not cached
-    })
-
-    if (res.ok) {
-      const data = await res.json()
-      blogPosts = data.blogs || []
-      totalPages = data.pagination?.pages || 1
-    } else {
-      console.error('Failed to fetch blogs:', res.status)
-    }
-  } catch (error) {
-    console.error('Error fetching blogs:', error)
-    blogPosts = []
-  }
-
-  // Ensure blogPosts is an array and has at least one item
-  if (!Array.isArray(blogPosts) || blogPosts.length === 0) {
-    blogPosts = []
-  }
-
-  // Since we're now using server-side filtering and pagination,
-  // we don't need client-side filtering anymore
-  const filteredPosts = blogPosts
-  const paginatedPosts = blogPosts
-
-  // Fetch unique categories from published blogs
   let allCategories: string[] = []
+
   try {
+    // 1. Connect to DB
     await connectDb()
-    const categories = await (Blog as any).distinct('category', { status: 'published' })
-    // Filter out null/undefined/empty categories and sort
-    allCategories = categories
-      .filter((cat): cat is string => Boolean(cat && cat.trim()))
-      .sort()
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    // Fallback to default categories if database fetch fails
-    allCategories = [
-      'Visa Guides',
-      'Travel Tips',
-      'Student Visas',
-      'Business Travel',
-      'Our Updates',
-    ]
-  }
 
-  // Add 'All Posts' at the beginning for the filter
-  const filterCategories = ['All Posts', ...allCategories]
-
-  // Fetch recent blogs for the grid section (exclude already displayed posts)
-  let recentBlogs = []
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const recentRes = await fetch(`${baseUrl}/api/public/blog?limit=20`, {
-      cache: 'no-store',
-    })
-
-    if (recentRes.ok) {
-      const recentData = await recentRes.json()
-      const allRecentBlogs = recentData.blogs || []
-
-      // Get IDs of already displayed posts to exclude them
-      const displayedPostIds = new Set(
-        paginatedPosts.map((post: any) => post._id?.toString())
-      )
-
-      // Filter out already displayed posts and take first 8
-      recentBlogs = allRecentBlogs
-        .filter((blog: any) => !displayedPostIds.has(blog._id?.toString()))
-        .slice(0, 8)
+    // 2. Fetch categories
+    try {
+      const categories = await (Blog as any).distinct('category', { status: 'published' })
+      allCategories = categories
+        .filter((cat: any): cat is string => Boolean(cat && cat.trim()))
+        .sort()
+    } catch (catError) {
+      console.error('Error fetching categories from DB:', catError)
+      allCategories = [
+        'Visa Guides',
+        'Travel Tips',
+        'Student Visas',
+        'Business Travel',
+        'Our Updates',
+      ]
     }
+
+    // 3. Build query
+    const query: any = { status: 'published' }
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+        { excerpt: { $regex: search, $options: 'i' } }
+      ]
+    }
+    if (category && category !== 'All Posts') {
+      query.category = category
+    }
+
+    // 4. Fetch blogs with pagination
+    const skip = (page - 1) * postsPerPage
+    const blogs = await (Blog as any).find(query)
+      .sort({ publishedAt: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(postsPerPage)
+      .lean()
+
+    const total = await (Blog as any).countDocuments(query)
+    totalPages = Math.ceil(total / postsPerPage)
+
+    blogPosts = JSON.parse(JSON.stringify(blogs))
   } catch (error) {
-    console.error('Error fetching recent blogs:', error)
+    console.error('Error querying blogs from DB:', error)
+    blogPosts = []
   }
+
+  const paginatedPosts = blogPosts
+  const filterCategories = ['All Posts', ...allCategories]
 
   return (
     <div className="min-h-screen bg-white text-slate-800 pb-24">
       {/* Container for the page */}
-      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-32 sm:pt-40">
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-22 sm:pt-26">
 
         {/* New Hero Section (Rounded Banner) */}
-        <div className="relative w-full rounded-[32px] overflow-hidden bg-gradient-to-r from-[#061331] to-[#0a2357] shadow-2xl mb-16">
+        <div className="relative w-full rounded-[32px] overflow-hidden bg-linear-to-r from-[#061331] to-[#0a2357] shadow-xs mb-10">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light pointer-events-none"></div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[350px] lg:min-h-[400px]">
@@ -143,8 +110,33 @@ export default async function BlogPage({
               <p className="text-white/80 text-base sm:text-lg max-w-md mb-8 leading-relaxed">
                 Stay informed with the latest updates on international education, university guides, and study abroad tips from our expert consultancy team.
               </p>
-              <div className="w-full max-w-sm">
+              {/* <div className="w-full max-w-sm">
                 <BlogSearch />
+              </div> */}
+
+              {/* Search Categories Grid */}
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                {filterCategories.map(cat => (
+                  <Link
+                    key={cat}
+                    href={
+                      cat === 'All Posts'
+                        ? '/blog'
+                        : `/blog?category=${encodeURIComponent(cat)}`
+                    }
+                  >
+                    <Button
+                      variant={cat === category ? 'default' : 'outline'}
+                      size="sm"
+                      className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
+                        ? 'border-slate-200 text-[#061331]/70 bg-white hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
+                        : 'bg-[#061331] border-slate-200 text-white  shadow-md hover:scale-[1.02]'
+                        }`}
+                    >
+                      {cat} 
+                    </Button> 
+                  </Link>
+                ))}
               </div>
             </div>
 
@@ -156,7 +148,7 @@ export default async function BlogPage({
                 alt="Next Level Education Insights"
                 width={200}
                 height={200}
-                className="relative z-10 object-cover h-[100%] w-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] translate-y-2 translate-x-4"
+                className="relative z-10 object-cover h-full w-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] translate-y-2 translate-x-4"
                 priority
               />
             </div>
@@ -164,38 +156,15 @@ export default async function BlogPage({
         </div>
 
         {/* Search Results Count */}
-        {search && (
+        {/* {search && (
           <div className="mb-10 text-center lg:text-left">
             <p className="text-[#061331] font-bold text-lg">
               Found {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''} for "{search}"
             </p>
           </div>
-        )}
+        )} */}
 
-        {/* Search Categories Grid */}
-        <div className="flex flex-wrap gap-3 mb-12 justify-center lg:justify-start">
-          {filterCategories.map(cat => (
-            <Link
-              key={cat}
-              href={
-                cat === 'All Posts'
-                  ? '/blog'
-                  : `/blog?category=${encodeURIComponent(cat)}`
-              }
-            >
-              <Button
-                variant={cat === category ? 'default' : 'outline'}
-                size="sm"
-                className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
-                  ? 'bg-[#061331] text-white border-[#061331] shadow-md hover:scale-[1.02]'
-                  : 'border-slate-200 text-[#061331]/70 bg-white hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
-                  }`}
-              >
-                {cat}
-              </Button>
-            </Link>
-          ))}
-        </div>
+
 
         {/* All Posts Section */}
         <div className="mb-8">
