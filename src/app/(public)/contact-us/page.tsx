@@ -15,6 +15,8 @@ import {
   PhoneCall
 } from 'lucide-react'
 
+import Image from 'next/image'
+
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
 export default function ContactUsPage() {
@@ -93,37 +95,65 @@ export default function ContactUsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#081638] text-[#081638] font-sans flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen bg-white text-[#061331] font-sans flex flex-col justify-between">
       
-      {/* Background Graphic Patterns */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Glowing Orbs */}
-        <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,#d7a23a_10%,transparent_60%)] opacity-[0.08] blur-3xl"></div>
-        <div className="absolute top-20 left-[-200px] w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.03)_10%,transparent_60%)] blur-2xl"></div>
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+        
+        {/* Background Image */}
+        <Image
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200"
+          alt="Contact Us Banner"
+          fill
+          priority
+          className="object-cover object-center absolute inset-0 z-0"
+        />
 
-        {/* Global Connection / Flight Path SVG Line */}
-        <svg className="absolute top-10 right-10 w-full max-w-[600px] h-[400px] opacity-15" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 50 350 C 150 150, 350 100, 550 50" stroke="#d7a23a" strokeWidth="2" strokeDasharray="8 8" />
-          <path d="M 100 380 C 250 250, 400 150, 500 120" stroke="#d7a23a" strokeWidth="1" strokeDasharray="4 4" />
-          <circle cx="550" cy="50" r="4" fill="#d7a23a" />
-          <circle cx="500" cy="120" r="3" fill="#d7a23a" />
-          <circle cx="50" cy="350" r="4" fill="#d7a23a" />
-        </svg>
-
-        {/* Subtle grid of dots */}
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.015)_1px,transparent_1px)] bg-size-[24px_24px]"></div>
-      </div>
-
-      {/* Main Container */}
-      <main className="w-full grow pt-24 pb-16 relative z-10">
-        <div className="max-w-7xl mx-auto">
+        {/* Content Container */}
+        <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Navigation Path */}
-          <nav className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/50 mb-8 px-6 sm:px-8 lg:px-14">
-            <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-[#d7a23a]">Contact Us</span>
-          </nav>
+          {/* Top Breadcrumb */}
+          <div className="max-w-[750px]">
+            <nav aria-label="Breadcrumb">
+              <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
+                <li>
+                  <Link href="/" className="hover:text-[#d7a23a] transition-colors">
+                    Home
+                  </Link>
+                  <span className="ml-1.5 text-white/60">/</span>
+                </li>
+                <li className="pointer-events-none text-white font-semibold">
+                  <span>Contact Us</span>
+                </li>
+              </ol>
+            </nav>
+          </div>
+
+          {/* Bottom Title & Badge */}
+          <div className="mt-auto space-y-3 pt-6 text-left">
+            <div>
+              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
+                Get In Touch
+              </span>
+            </div>
+            
+            <h1 
+              className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              Contact Us
+            </h1>
+            
+            <p className="text-white/80 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+              Email, call, or complete the form to learn how Next Level Education can guide your study abroad journey.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="w-full grow py-16 bg-[#fbf8fc] relative z-10">
+        <div className="max-w-7xl mx-auto">
           
           {/* Top Section: Title & Form */}
           <div className="grid grid-cols-1 pb-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start px-6 sm:px-8 lg:px-14">
@@ -131,53 +161,56 @@ export default function ContactUsPage() {
             {/* Left Column: Heading and info details */}
             <div className="lg:col-span-7 text-left space-y-12 mt-6">
               <div className="space-y-3">
-                <h1 className="text-5xl sm:text-6xl font-black text-[#ffff] tracking-tight leading-tight">
-                  Contact <span className='text-[#d7a23a]'> Us</span>
-                </h1>
-                <p className="text-white/80 text-lg leading-relaxed max-w-xl">
-                  Email, call, or complete the form to learn how Next Level Education can guide your study abroad journey.
+                <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest block">
+                  Reach Out To Us
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                  We'd Love to Hear From You
+                </h2>
+                <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-xl font-medium">
+                  Have questions about university options, scholarships, or the visa application process? Our expert counselors are here to help.
                 </p>
               </div>
 
               {/* Core Email/Phone Contacts */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <a 
                   href="mailto:info@nextleveleducation.com" 
-                  className="block text-xl font-bold text-[#fff] hover:text-[#d7a23a] transition-colors"
+                  className="block text-xl font-bold text-[#081638] hover:text-[#d7a23a] transition-colors"
                 >
                   info@nextleveleducation.com
                 </a>
-               <div className="hidden lg:flex items-center">
-            <a
-              href="tel:+91883456789"
-              className="flex items-center gap-3 rounded-md border border-[#d7a23a] px-4 py-1.5 transition duration-300 hover:bg-[#061331]/5"
-            >
-              <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] leading-tight transition duration-300 text-[#d7a23a]">Call Anytime</span>
-                <span className="text-[13px] font-bold text-[#d7a23a] leading-tight">+94775198195</span>
-              </div>
-            </a>
-          </div>
+                <div className="flex items-center">
+                  <a
+                    href="tel:+94775198195"
+                    className="flex items-center gap-3 rounded-md border border-[#d7a23a] px-4 py-1.5 transition duration-300 hover:bg-[#061331]/5"
+                  >
+                    <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
+                    <div className="flex flex-col text-left">
+                      <span className="text-[10px] leading-tight text-slate-400">Call Anytime</span>
+                      <span className="text-[13px] font-bold text-[#081638] leading-tight">+94775198195</span>
+                    </div>
+                  </a>
+                </div>
               </div>
 
               {/* Lower Channels Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-10 border-t border-white/20">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-10 border-t border-slate-200">
                 <div className="space-y-2">
-                  <h4 className="font-bold text-[#ffff] text-base">Student Support</h4>
-                  <p className="text-slate-300 text-xs leading-relaxed">
+                  <h4 className="font-bold text-[#081638] text-base">Student Support</h4>
+                  <p className="text-slate-500 text-xs leading-relaxed font-medium">
                     Our support team is available to help with university applications and visa questions.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-bold text-[#ffff] text-base">Feedback & Suggestions</h4>
-                  <p className="text-slate-300 text-xs leading-relaxed">
+                  <h4 className="font-bold text-[#081638] text-base">Feedback & Suggestions</h4>
+                  <p className="text-slate-500 text-xs leading-relaxed font-medium">
                     We value your input to continuously refine and improve our counseling services.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-bold text-[#ffff] text-base">Institutional Inquiries</h4>
-                  <p className="text-slate-300 text-xs leading-relaxed">
+                  <h4 className="font-bold text-[#081638] text-base">Institutional Inquiries</h4>
+                  <p className="text-slate-500 text-xs leading-relaxed font-medium">
                     For university partnerships or administrative queries, contact us directly.
                   </p>
                 </div>
@@ -187,7 +220,7 @@ export default function ContactUsPage() {
             {/* Right Column: "Get in Touch" Card Form */}
             <div 
               id="contact-form-card"
-              className="lg:col-span-5 bg-white border border-slate-200/60 rounded-xl p-6 sm:p-8 shadow-[0_15px_50px_rgba(8,22,56,0.05)] text-left relative"
+              className="lg:col-span-5 bg-white border border-slate-200/60 rounded-[32px] p-6 sm:p-8 shadow-[0_15px_50px_rgba(8,22,56,0.03)] text-left relative"
             >
               <div className="mb-5">
                 <h2 className="text-2xl font-extrabold text-[#081638]">
@@ -314,7 +347,7 @@ export default function ContactUsPage() {
                     placeholder="How can we help?"
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-50/50 border border-slate-200/80 rounded-[16px] p-4 text-sm text-[#081638] placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#081638] focus:ring-1 focus:ring-[#081638]/5 transition-all resize-none pb-7"
+                    className="w-full bg-slate-50/50 border border-slate-200/80 rounded-[24px] p-4 text-sm text-[#081638] placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#081638] focus:ring-1 focus:ring-[#081638]/5 transition-all resize-none pb-7"
                   />
                   <span className="absolute bottom-2.5 right-4 text-[9px] font-bold text-slate-400">
                     {formData.message.length}/{charLimit}
@@ -345,7 +378,7 @@ export default function ContactUsPage() {
           </div>
 
           {/* Bottom Section: Side-by-side Map & Office details */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-10 border-t bg-white  border-slate-200 px-6 sm:px-8 lg:px-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-10 border-t bg-white border-slate-200 px-6 sm:px-8 lg:px-14 mt-16 rounded-[32px] shadow-[0_10px_35px_rgba(8,22,56,0.02)]">
             
             {/* Left: Beautiful Round Map Frame */}
             <div className="lg:col-span-7 w-full h-[400px] relative rounded-[32px] overflow-hidden border border-slate-200/80 shadow-md">
@@ -367,7 +400,7 @@ export default function ContactUsPage() {
                 <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest block">
                   Our Location
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
                   Connecting Near and Far
                 </h2>
               </div>

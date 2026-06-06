@@ -176,7 +176,7 @@ const faqCards: FAQCard[] = [
 
 export default function FAQSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [cardsToShow, setCardsToShow] = useState(4)
+  const [cardsToShow, setCardsToShow] = useState(3)
 
   // Adjust responsiveness
   useEffect(() => {
@@ -186,7 +186,7 @@ export default function FAQSection() {
       } else if (window.innerWidth < 1024) {
         setCardsToShow(2)
       } else {
-        setCardsToShow(4)
+        setCardsToShow(3)
       }
     }
     handleResize()
@@ -220,7 +220,7 @@ export default function FAQSection() {
   const totalDots = faqCards.length - cardsToShow + 1
 
   return (
-    <section className="bg-white/45 py-10 text-[#081638] overflow-hidden select-none">
+    <section className="bg-slate-50 py-10 text-[#081638] overflow-hidden select-none">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         
         {/* Header Block */}
@@ -281,25 +281,15 @@ export default function FAQSection() {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className="flex flex-col justify-between items-center bg-white rounded-3xl border border-slate-100/80 shadow-[0_10px_35px_rgba(8,22,56,0.05)] p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-center h-full">
-                    {/* Circle Illustration */}
-                    <div className="mb-4">
-                      {faq.illustration}
-                    </div>
-
+                  <div className=" bg-white rounded-3xl border border-slate-100/80 shadow-[0_10px_35px_rgba(8,22,56,0.05)] p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left h-full">
+                   
                     {/* Question */}
-                    <h3 className="text-base sm:text-[17px] font-extrabold text-[#081638] leading-snug px-2 min-h-[52px] flex items-center justify-center">
+                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug  min-h-[52px] ">
                       {faq.question}
                     </h3>
 
-                    {/* Colored Indicator Line */}
-                    <div 
-                      className="my-4 h-[3px] w-10 rounded-full" 
-                      style={{ backgroundColor: faq.color }}
-                    />
-
                     {/* Answer Summary */}
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium min-h-[64px] mb-6 flex items-center justify-center">
+                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium min-h-[64px] mb-6 ">
                       {faq.answer}
                     </p>
 

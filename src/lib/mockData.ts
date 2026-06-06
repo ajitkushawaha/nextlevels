@@ -500,7 +500,7 @@ export const universitiesData: Record<string, University> = {
   'University of New South Wales': {
     name: 'University of New South Wales',
     logo: 'UNSW',
-    coverImage: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200',
+    coverImage: 'https://images.unsplash.com/photo-1728206313441-281ef4ea5d62?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dW5pdmVyc2l0eSUyMG9mJTIwbmV3JTIwc291dGglMjB3YWxlc3xlbnwwfHwwfHx8MA%3D%3D',
     worldRank: '#19',
     students: '64,000+',
     established: '1949',

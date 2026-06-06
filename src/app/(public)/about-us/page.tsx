@@ -30,10 +30,49 @@ export default function AboutUsPage() {
   return (
     <div className="min-h-screen bg-white text-[#061331] font-sans flex flex-col justify-between">
 
-      {/* Main Content Wrapper */}
-      <main className="grow pt-16 pb-10">
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+        <Image
+          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200"
+          alt="About Us Banner"
+          fill
+          priority
+          className="object-cover object-center absolute inset-0 z-0"
+        />
+        <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[750px]">
+            <nav aria-label="Breadcrumb">
+              <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
+                <li>
+                  <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
+                  <span className="ml-1.5 text-white/60">/</span>
+                </li>
+                <li className="pointer-events-none text-white font-semibold">
+                  <span>About Us</span>
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div className="mt-auto space-y-3 pt-6">
+            <div>
+              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
+                Rooted in Jaffna, Focused Globally
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15] font-serif">
+              About Next Level
+            </h1>
+            <p className="text-white/80 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+              We believe that global education transforms lives, which is why we provide counseling and application support completely 100% free of charge.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        {/* Hero & Story Section */}
+      {/* Main Content Wrapper */}
+      <main className="grow pb-10">
+
+        {/* Story Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-12 ">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
@@ -45,10 +84,9 @@ export default function AboutUsPage() {
                 </span>
 
                 <div className="relative inline-block">
-                  <h1 className="text-4xl sm:text-5xl font-bold font-serif text-[#061331] leading-[1.15] tracking-tight">
-                    Rooted in Jaffna,<br />Focused Globally
-                  </h1>
-                  {/* Gold curved decorative stroke */}
+                  <h2 className="text-3xl sm:text-4xl font-bold font-serif text-[#061331] leading-[1.15] tracking-tight">
+                    Our Story &amp; Vision
+                  </h2>
                   <div className="absolute -bottom-2 left-0 w-28 h-1.5 bg-[#d7a23a] rounded-full"></div>
                 </div>
               </div>

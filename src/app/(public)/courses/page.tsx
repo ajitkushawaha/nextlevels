@@ -48,6 +48,7 @@ const levels = ['Undergraduate', 'Postgraduate', 'Diploma']
 function CourseFinderContent() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
+  const initialUniversity = searchParams.get('university') || ''
 
   // Map initial search to a specific country filter if it matches country names/abbreviations
   const matchedCountry = useMemo(() => {
@@ -64,7 +65,7 @@ function CourseFinderContent() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>(matchedCountry ? [matchedCountry] : [])
   const [selectedFields, setSelectedFields] = useState<string[]>([])
   const [selectedDegreeTypes, setSelectedDegreeTypes] = useState<string[]>([])
-  const [selectedUniversities, setSelectedUniversities] = useState<string[]>([])
+  const [selectedUniversities, setSelectedUniversities] = useState<string[]>(initialUniversity ? [initialUniversity] : [])
 
   // Sync state with URL parameter changes
   useEffect(() => {
@@ -78,7 +79,11 @@ function CourseFinderContent() {
       setSelectedCountries([])
       setSearchTerm('')
     }
-  }, [matchedCountry, initialSearch])
+
+    if (initialUniversity) {
+      setSelectedUniversities([initialUniversity])
+    }
+  }, [matchedCountry, initialSearch, initialUniversity])
 
   const [sortBy, setSortBy] = useState('popularity')
   const [activeTab, setActiveTab] = useState<'programmes' | 'universities' | 'scholarships'>('programmes')
@@ -124,7 +129,7 @@ function CourseFinderContent() {
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
-      
+
       const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
       const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
       const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
@@ -182,7 +187,7 @@ function CourseFinderContent() {
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
-      
+
       const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
       const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
       const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
@@ -198,7 +203,7 @@ function CourseFinderContent() {
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
-      
+
       const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
       const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
       const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
@@ -214,7 +219,7 @@ function CourseFinderContent() {
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
-      
+
       const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
       const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
       const matchUniversity = selectedUniversities.length > 0 ? selectedUniversities.includes(course.university) : true
@@ -230,7 +235,7 @@ function CourseFinderContent() {
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.field.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.country.toLowerCase().includes(searchTerm.toLowerCase())
-      
+
       const matchCountry = selectedCountries.length > 0 ? selectedCountries.includes(course.country) : true
       const matchField = selectedFields.length > 0 ? selectedFields.includes(course.field) : true
       const matchLevel = selectedDegreeTypes.length > 0 ? selectedDegreeTypes.includes(course.degreeType) : true
@@ -329,7 +334,7 @@ function CourseFinderContent() {
   // Render filters in sidebar or mobile drawer
   const renderSidebarFilters = () => (
     <div className="bg-white rounded-3xl border border-slate-200/60 p-5 shadow-[0_8px_30px_rgba(8,22,56,0.02)] text-left space-y-6">
-      
+
       {/* Header */}
       <div className="flex justify-between items-center pb-4 border-b border-slate-100">
         <h3 className="font-extrabold text-[#081638] text-lg">Filters</h3>
@@ -367,7 +372,7 @@ function CourseFinderContent() {
           <span>Location</span>
           {openSections.location ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
         </button>
-        
+
         {openSections.location && (
           <div className="mt-3 space-y-3.5 transition-all">
             <div className="relative">
@@ -604,7 +609,7 @@ function CourseFinderContent() {
           {showWizard && (
             <div className="mb-12 bg-[#061331] rounded-3xl border border-white/10 p-6 sm:p-10 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#d7a23a]/5 rounded-full blur-[80px] pointer-events-none"></div>
-              
+
               <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/10">
                 <div>
                   <span className="text-[10px] font-bold text-[#d7a23a] uppercase tracking-widest">Step {wizardStep + 1} of 3</span>
@@ -614,9 +619,8 @@ function CourseFinderContent() {
                   {[0, 1, 2].map((idx) => (
                     <span
                       key={idx}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        idx === wizardStep ? 'w-8 bg-[#d7a23a]' : idx < wizardStep ? 'w-2 bg-[#d7a23a]/50' : 'w-2 bg-white/20'
-                      }`}
+                      className={`h-2 rounded-full transition-all duration-300 ${idx === wizardStep ? 'w-8 bg-[#d7a23a]' : idx < wizardStep ? 'w-2 bg-[#d7a23a]/50' : 'w-2 bg-white/20'
+                        }`}
                     />
                   ))}
                 </div>
@@ -702,7 +706,7 @@ function CourseFinderContent() {
 
           {/* 2-Column Search layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Left Column: Filter Sidebar (Desktop only) */}
             <aside className="hidden lg:block lg:col-span-3 space-y-6 lg:sticky lg:top-24 max-h-[85vh] overflow-y-auto pr-1">
               {renderSidebarFilters()}
@@ -710,7 +714,7 @@ function CourseFinderContent() {
 
             {/* Right Column: Search Results List */}
             <section className="lg:col-span-9 space-y-6">
-              
+
               {/* Results count & Header stats with dynamic tabs and mobile actions */}
               <div className="sticky top-[80px] bg-slate-50 z-20 pb-4 pt-4 flex flex-col gap-4 border-b border-slate-200 text-left">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -730,37 +734,34 @@ function CourseFinderContent() {
                       )}
                     </p>
                   </div>
-                  
+
                   {/* Premium Tab switcher directly in the header */}
                   <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
                     <div className="bg-slate-100 p-1 rounded-xl flex gap-1 items-center">
-                      <button 
+                      <button
                         onClick={() => setActiveTab('programmes')}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                          activeTab === 'programmes' 
-                            ? 'bg-[#081638] text-white shadow-sm' 
-                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                        }`}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'programmes'
+                          ? 'bg-[#081638] text-white shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                          }`}
                       >
                         Programmes
                       </button>
-                      <button 
+                      <button
                         onClick={() => setActiveTab('universities')}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                          activeTab === 'universities' 
-                            ? 'bg-[#081638] text-white shadow-sm' 
-                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                        }`}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'universities'
+                          ? 'bg-[#081638] text-white shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                          }`}
                       >
                         Universities
                       </button>
-                      <button 
+                      <button
                         onClick={() => setActiveTab('scholarships')}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                          activeTab === 'scholarships' 
-                            ? 'bg-[#081638] text-white shadow-sm' 
-                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                        }`}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'scholarships'
+                          ? 'bg-[#081638] text-white shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                          }`}
                       >
                         Scholarships
                       </button>
@@ -812,7 +813,7 @@ function CourseFinderContent() {
                           .split(' ')
                           .filter(w => w !== 'of' && w !== 'University' && w !== 'College')
                           .map(w => w[0])
-                            return (
+                        return (
                           <div
                             key={course.id}
                             className="bg-white rounded-3xl border border-slate-200/60 p-6 hover:shadow-xl hover:border-slate-300/80 transition-all duration-300 flex flex-col gap-5 text-left relative"
@@ -924,7 +925,7 @@ function CourseFinderContent() {
                       const country = sampleCourse ? sampleCourse.country : ''
                       const flag = sampleCourse ? sampleCourse.flag : '🏛️'
                       const isSelected = selectedUniversities.includes(uni)
-                      
+
                       const uniDetails = universitiesData[uni] || {
                         worldRank: '#900+',
                         location: sampleCourse ? sampleCourse.location : 'Global Campus',
@@ -933,19 +934,18 @@ function CourseFinderContent() {
                       const logoInitials = uni.split(' ').filter(w => w !== 'of' && w !== 'University' && w !== 'College').map(w => w[0]).join('').substring(0, 3)
 
                       return (
-                        <div 
+                        <div
                           key={uni}
                           onClick={() => {
-                            setSelectedUniversities(prev => 
+                            setSelectedUniversities(prev =>
                               prev.includes(uni) ? prev.filter(u => u !== uni) : [...prev, uni]
                             )
                             setActiveTab('programmes')
                           }}
-                          className={`bg-white rounded-3xl border p-6 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between gap-5 hover:shadow-xl ${
-                            isSelected 
-                              ? 'border-[#d7a23a] bg-[#d7a23a]/2 shadow-sm' 
-                              : 'border-slate-200/60 hover:border-slate-300'
-                          }`}
+                          className={`bg-white rounded-3xl border p-6 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between gap-5 hover:shadow-xl ${isSelected
+                            ? 'border-[#d7a23a] bg-[#d7a23a]/2 shadow-sm'
+                            : 'border-slate-200/60 hover:border-slate-300'
+                            }`}
                         >
                           {/* Header section */}
                           <header className="flex gap-4 items-start">
@@ -954,9 +954,9 @@ function CourseFinderContent() {
                             </div>
                             <div className="space-y-0.5 min-w-0 grow">
                               <h2 className="font-extrabold text-[#081638] text-base truncate">
-                                <Link 
-                                  href={`/universities/${encodeURIComponent(uni)}`} 
-                                  onClick={(e) => e.stopPropagation()} 
+                                <Link
+                                  href={`/universities/${encodeURIComponent(uni)}`}
+                                  onClick={(e) => e.stopPropagation()}
                                   className="hover:underline hover:text-[#d7a23a] transition-colors"
                                 >
                                   {uni}
@@ -1018,9 +1018,9 @@ function CourseFinderContent() {
 
                           {/* Footer section */}
                           <footer className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-1">
-                            <Link 
-                              href={`/universities/${encodeURIComponent(uni)}`} 
-                              onClick={(e) => e.stopPropagation()} 
+                            <Link
+                              href={`/universities/${encodeURIComponent(uni)}`}
+                              onClick={(e) => e.stopPropagation()}
                               className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors text-center whitespace-nowrap"
                             >
                               Visit University Page
@@ -1046,7 +1046,7 @@ function CourseFinderContent() {
                     {scholarshipsData
                       .filter(s => selectedCountries.length === 0 || selectedCountries.includes(s.country))
                       .map(sch => (
-                        <div 
+                        <div
                           key={sch.id}
                           className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-xs hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between gap-5 relative"
                         >
@@ -1085,7 +1085,7 @@ function CourseFinderContent() {
                             <p className="text-slate-500 text-xs leading-relaxed max-w-3xl line-clamp-2">
                               {sch.eligibility}
                             </p>
-                            <Link 
+                            <Link
                               href={`/scholarships/${sch.id}`}
                               className="inline-flex items-center gap-1.5 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors mt-2"
                             >
@@ -1135,7 +1135,7 @@ function CourseFinderContent() {
             </section>
           </div>
         </div>
-        
+
       </main>
 
       {/* Mobile Filters Drawer */}
@@ -1147,18 +1147,18 @@ function CourseFinderContent() {
                 <SlidersHorizontal className="w-4 h-4 text-[#d7a23a]" />
                 <h3 className="font-bold text-base">Filter Search</h3>
               </div>
-              <button 
+              <button
                 onClick={() => setShowMobileFilters(false)}
                 className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center cursor-pointer hover:bg-white/20"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            
+
             <div className="grow overflow-y-auto p-6 space-y-6 text-left">
               {renderSidebarFilters()}
             </div>
-            
+
             <div className="p-4 border-t border-slate-100 flex gap-3">
               <button
                 onClick={resetFilters}
@@ -1184,14 +1184,14 @@ function CourseFinderContent() {
           <div className="relative bg-white w-full rounded-t-3xl max-w-lg p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 z-50">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <h3 className="font-bold text-[#081638] text-base">Sort Options</h3>
-              <button 
+              <button
                 onClick={() => setShowMobileSort(false)}
                 className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center cursor-pointer"
               >
                 <X className="w-4 h-4 text-slate-500" />
               </button>
             </div>
-            
+
             <div className="space-y-2">
               {[
                 { value: 'popularity', label: 'Popularity' },
@@ -1205,11 +1205,10 @@ function CourseFinderContent() {
                     setSortBy(opt.value)
                     setShowMobileSort(false)
                   }}
-                  className={`w-full text-left py-3.5 px-4 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
-                    sortBy === opt.value 
-                      ? 'bg-[#081638]/5 text-[#081638]' 
-                      : 'hover:bg-slate-50 text-slate-600'
-                  }`}
+                  className={`w-full text-left py-3.5 px-4 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${sortBy === opt.value
+                    ? 'bg-[#081638]/5 text-[#081638]'
+                    : 'hover:bg-slate-50 text-slate-600'
+                    }`}
                 >
                   <span>{opt.label}</span>
                   {sortBy === opt.value && <CheckCircle className="w-4 h-4 text-[#d7a23a]" />}
@@ -1224,7 +1223,7 @@ function CourseFinderContent() {
       {selectedCourseForEnquiry && (
         <div className="fixed inset-0 z-50 bg-[#061331]/80 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative border border-slate-100">
-            
+
             <div className="bg-[#061331] px-6 py-5 flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-[#d7a23a] uppercase tracking-widest">Selected Course/Scholarship Inquiry</span>
@@ -1275,7 +1274,7 @@ function CourseFinderContent() {
               </div>
             ) : (
               <form onSubmit={handleEnquirySubmit} className="p-6 space-y-4">
-                
+
                 <div className="space-y-1">
                   <label className="block text-[11px] font-bold text-[#061331] uppercase tracking-wider">Full Name <span className="text-rose-500">*</span></label>
                   <div className="relative">
@@ -1377,7 +1376,7 @@ function CourseFinderContent() {
 
               </form>
             )}
-            
+
           </div>
         </div>
       )}

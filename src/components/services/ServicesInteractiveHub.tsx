@@ -148,7 +148,7 @@ export default function ServicesInteractiveHub() {
     <div className="w-full">
       {/* Services Grid Layout */}
       <section className="" id="services">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {servicesData.map((service, index) => {
             const Icon = service.icon
             return (
@@ -166,7 +166,7 @@ export default function ServicesInteractiveHub() {
                     src={service.image}
                     alt={service.title}
                     fill
-                    className="object-contain transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 380px"
                   />
                   <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs border border-slate-100 rounded-full px-3 py-1 text-xs font-black text-[#d7a23a] tracking-wider">
@@ -201,18 +201,18 @@ export default function ServicesInteractiveHub() {
               <div className="w-8 h-[2px] bg-[#d7a23a]"></div>
               OUR CREDENTIALS
             </div>
-            
-            <h2 
+
+            <h2
               className="text-3xl sm:text-4xl font-extrabold text-[#081638] mb-6 leading-tight"
               style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
             >
               Why Next Level Stands Out
             </h2>
-            
+
             <p className="text-base text-slate-500 mb-10 leading-relaxed">
               Providing unique, personalized guidance that eliminates study abroad stress entirely. We operate with high compliance rigor and a commitment to transparent, zero-fee support.
             </p>
-            
+
             <div className="space-y-8">
               <div className="flex gap-6">
                 <div className="shrink-0 w-12 h-12 rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/5 flex items-center justify-center text-[#d7a23a]">
@@ -223,7 +223,7 @@ export default function ServicesInteractiveHub() {
                   <p className="text-slate-500 text-sm leading-relaxed">Direct relationships with over 150+ highly ranked universities across Australia, Canada, UK, and New Zealand.</p>
                 </div>
               </div>
-              
+
               <div className="flex gap-6">
                 <div className="shrink-0 w-12 h-12 rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/5 flex items-center justify-center text-[#d7a23a]">
                   <Check className="h-5 w-5 stroke-[2.5]" />
@@ -235,28 +235,28 @@ export default function ServicesInteractiveHub() {
               </div>
             </div>
           </div>
-          
+
           <div className="lg:w-1/2 grid grid-cols-2 gap-4 w-full">
             <div className="bg-[#081638] p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
               <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">150+</span>
               <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Partner Colleges</span>
             </div>
-            
+
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
               <span className="text-[#081638] text-4xl font-extrabold mb-1">5+</span>
               <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Destinations</span>
             </div>
-            
+
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
               <span className="text-[#081638] text-4xl font-extrabold mb-1">100%</span>
               <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Direct Channels</span>
             </div>
-            
+
             <div className="bg-[#081638] p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
               <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">98%</span>
               <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Visa Approvals</span>
             </div>
-            
+
             <div className="col-span-2 bg-[#fffcf0] border border-[#d7a23a]/20 p-8 rounded-2xl flex items-center justify-between shadow-sm">
               <div className="flex flex-col">
                 <span className="text-[#d7a23a] text-[10px] uppercase font-extrabold tracking-widest">COMPLETELY ZERO FEES</span>
@@ -273,16 +273,16 @@ export default function ServicesInteractiveHub() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-[#081638]/60 backdrop-blur-xs transition-opacity" 
+          <div
+            className="absolute inset-0 bg-[#081638]/60 backdrop-blur-xs transition-opacity"
             onClick={() => setIsModalOpen(false)}
           ></div>
-          
+
           {/* Modal Content */}
           <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl z-10 animate-in fade-in zoom-in-95 duration-200">
-            
+
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[#081638] hover:bg-slate-100 shadow-sm transition-all cursor-pointer"
             >

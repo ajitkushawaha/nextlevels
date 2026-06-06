@@ -94,67 +94,87 @@ export default async function BlogPage({
   const filterCategories = ['All Posts', ...allCategories]
 
   return (
-    <div className="min-h-screen bg-white text-slate-800">
-      {/* Container for the page */}
-      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-22 sm:pt-26">
+    <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
+      
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+        
+        {/* Background Image */}
+        <Image
+          src="/visa/blog1.png"
+          alt="Our Blog Banner"
+          fill
+          priority
+          className="object-cover object-center absolute inset-0 z-0"
+        />
 
-        {/* New Hero Section (Rounded Banner) */}
-        <div className="relative w-full rounded-[32px] overflow-hidden bg-linear-to-r from-[#061331] to-[#0a2357] shadow-xs mb-10">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light pointer-events-none"></div>
+        {/* Content Container */}
+        <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Top Breadcrumb */}
+          <div className="max-w-[750px]">
+            <nav aria-label="Breadcrumb">
+              <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
+                <li>
+                  <Link href="/" className="hover:text-[#d7a23a] transition-colors">Home</Link>
+                  <span className="ml-1.5 text-white/60">/</span>
+                </li>
+                <li className="pointer-events-none text-white font-semibold">
+                  <span>Blog</span>
+                </li>
+              </ol>
+            </nav>
+          </div>
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[350px] lg:min-h-[400px]">
-            {/* Left Content */}
-            <div className="flex flex-col justify-center px-8 py-12 lg:p-16">
-              <h1 className="text-[40px] sm:text-5xl lg:text-[56px] font-extrabold text-white mb-6 leading-[1.15]">
-                Our Blog
-              </h1>
-              <p className="text-white/80 text-base sm:text-lg max-w-md mb-8 leading-relaxed">
-                Stay informed with the latest updates on international education, university guides, and study abroad tips from our expert consultancy team.
-              </p>
-              {/* <div className="w-full max-w-sm">
-                <BlogSearch />
-              </div> */}
-
-              {/* Search Categories Grid */}
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                {filterCategories.map(cat => (
-                  <Link
-                    key={cat}
-                    href={
-                      cat === 'All Posts'
-                        ? '/blog'
-                        : `/blog?category=${encodeURIComponent(cat)}`
-                    }
-                  >
-                    <Button
-                      variant={cat === category ? 'default' : 'outline'}
-                      size="sm"
-                      className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
-                        ? 'border-slate-200 text-[#061331]/70 bg-white hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
-                        : 'bg-[#061331] border-slate-200 text-white  shadow-md hover:scale-[1.02]'
-                        }`}
-                    >
-                      {cat} 
-                    </Button> 
-                  </Link>
-                ))}
-              </div>
+          {/* Bottom Title & Badge */}
+          <div className="mt-auto space-y-3 pt-6 text-left">
+            <div>
+              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
+                Latest Insights &amp; Updates
+              </span>
             </div>
-
-            {/* Right Image */}
-            <div className="relative hidden lg:flex items-end justify-center pt-8">
-              <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-[#d7a23a]/20 rounded-full blur-[80px]"></div>
-              <Image
-                src="/blog-hero.png"
-                alt="Next Level Education Insights"
-                width={200}
-                height={200}
-                className="relative z-10 object-cover h-full w-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] translate-y-2 translate-x-4"
-                priority
-              />
-            </div>
+            
+            <h1 
+              className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15] font-serif"
+            >
+              Our Blog
+            </h1>
+            
+            <p className="text-white/80 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+              Stay informed with the latest updates on international education, university guides, and study abroad tips from our expert consultancy team.
+            </p>
           </div>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="w-full grow py-12 bg-slate-50/40">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8">
+          
+          {/* Category Filter list */}
+          <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-12">
+            {filterCategories.map(cat => (
+              <Link
+                key={cat}
+                href={
+                  cat === 'All Posts'
+                    ? '/blog'
+                    : `/blog?category=${encodeURIComponent(cat)}`
+                }
+              >
+                <Button
+                  variant={cat === category ? 'default' : 'outline'}
+                  size="sm"
+                  className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
+                    ? 'border-slate-200 text-[#061331]/70 bg-white hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
+                    : 'bg-[#061331] border-slate-200 text-white  shadow-md hover:scale-[1.02]'
+                    }`}
+                >
+                  {cat} 
+                </Button> 
+              </Link>
+            ))}
+          </div>
 
         {/* Search Results Count */}
         {/* {search && (
@@ -170,7 +190,7 @@ export default async function BlogPage({
         {/* All Posts Section */}
         <div className="mb-8">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#061331] flex items-center gap-2 mb-10">
-            <span className="text-[#d7a23a]">Related</span> Blog Posts
+             Blog Posts
           </h2>
 
           {paginatedPosts.length > 0 ? (
@@ -318,9 +338,9 @@ export default async function BlogPage({
             )}
           </div>
         )}
-
       </div>
-      <Footer/>
-    </div>
-  )
+    </main>
+    <Footer/>
+  </div>
+)
 }

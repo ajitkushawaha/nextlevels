@@ -78,7 +78,7 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold transition duration-300 text-[#061331] ${pathname === item.href
-                    ? 'border-[#d7a23a] !text-[#d7a23a]'
+                    ? 'border-[#d7a23a] text-[#d7a23a]!'
                     : 'border-transparent hover:border-[#d7a23a] hover:text-[#d7a23a]'
                     }`}
                 >

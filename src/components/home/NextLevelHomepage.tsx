@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ServicesCarousel from './ServiceSection'
 import StudentTestimonialsCarousel from './StudentTestimonialsCarousel'
-import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck } from 'lucide-react'
+import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck, Lock } from 'lucide-react'
 import Footer from '../layout/footer'
 // import FlyingAeroplane from './FlyingAeroplane'
 import FAQSection from './FAQSection'
@@ -126,10 +126,70 @@ const blogs = [
     date: 'Apr 28, 2024',
     image: '/visa/blog4.png',
   },
+]
+
+const ambassadors = [
   {
-    title: 'Study in Australia: Courses, Fees and Opportunities',
-    date: 'Apr 28, 2024',
-    image: '/visa/blog5.png',
+    name: 'Aastha Paudel',
+    program: 'Information Tech...',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    link: '/contact-us',
+  },
+  {
+    name: 'Geraldine Penarete',
+    program: 'Geology',
+    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&auto=format&fit=crop&q=80',
+    link: '/contact-us',
+  },
+  {
+    name: 'Yumi Wan',
+    program: 'Physiotherapy ...',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    link: '/contact-us',
+  },
+  {
+    name: 'Tiara D Souza',
+    program: 'Occupational T...',
+    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    link: '/contact-us',
+  },
+   {
+    name: 'Yumi Wans',
+    program: 'Physiotherapys ...',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    link: '/contact-us',
+  },
+]
+
+const studentLifeVideos = [
+  {
+    title: 'What does a typical student day look like at CQU?',
+    studentName: 'Jean Manreal',
+    studentAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&auto=format&fit=crop&q=80',
+    textOverlay: 'Day in a life of an International MBM Student in AUS 🇵🇭 🇳🇿 (School Day Edition)',
+    isLocked: false,
+  },
+  {
+    title: 'Fav spot in campus',
+    studentName: 'Nayla Hafeeza Putri',
+    studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&auto=format&fit=crop&q=80',
+    isLocked: false,
+  },
+  {
+    title: 'What kind of food options are there on campus?',
+    studentName: 'Kun Deng',
+    studentAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=400&auto=format&fit=crop&q=80',
+    isLocked: true,
+  },
+  {
+    title: 'How are different cultures and events celebrated on campus?',
+    studentName: 'Tioluwalase Arowolo',
+    studentAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&auto=format&fit=crop&q=80',
+    isLocked: true,
   },
 ]
 
@@ -212,19 +272,19 @@ function AnimatedCounter({ target, suffix = '', duration = 2000 }: { target: num
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true
           let startTimestamp: number | null = null
-          
+
           const step = (timestamp: number) => {
             if (!startTimestamp) startTimestamp = timestamp
             const progress = Math.min((timestamp - startTimestamp) / duration, 1)
             const easeProgress = 1 - Math.pow(1 - progress, 3) // Cubic ease out
-            
+
             setCount(Math.floor(easeProgress * target))
-            
+
             if (progress < 1) {
               window.requestAnimationFrame(step)
             }
           }
-          
+
           window.requestAnimationFrame(step)
         }
       },
@@ -271,8 +331,8 @@ export default function NextLevelHomepage() {
             <div className="flex flex-col justify-center z-10 text-left px-2">
               <h1 className="text-4xl sm:text-5xl text-[#081638]  lg:text-[56px] font-black   leading-[1.1] tracking-tight">
                 <span className="text-[#081638]  block mb-1">Free Student Visa</span>
-                Consultation to 
-             <span className=" text-[#d7a23a] block mb-1">Study Abroad</span>
+                Consultation to
+                <span className=" text-[#d7a23a] block mb-1">Study Abroad</span>
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-[#59616f] font-medium">
                 By taking our expert guidance for your global education journey, you can build your profile and save time. Starting right now.
@@ -288,11 +348,11 @@ export default function NextLevelHomepage() {
               {/* Main Image Box */}
               <div className="relative  z-6 w-[280px] h-[400px] sm:w-[340px] py-4 sm:h-[450px] lg:w-[480px] lg:h-[600px] rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
                 <Image
-                  src="/image3.png"
+                  src="/image.png"
                   alt="Student with Suitcase"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 480px"
-                  className="object-cover object-center hover:scale-105 transition-transform duration-700"
+                  className="object-contain  object-top hover:scale-100 transition-transform duration-700"
                   priority
                 />
               </div>
@@ -390,16 +450,16 @@ export default function NextLevelHomepage() {
               >
                 Find the Right Program in Top Universities
               </h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-[#59616f] sm:text-base">
+              <p className="mt-1 max-w-xl text-sm leading-7 text-[#59616f] sm:text-base">
                 We help you choose the right course and university that matches
                 your goals and future aspirations.
               </p>
 
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-3 space-y-1">
                 {programBenefits.map(benefit => (
                   <li
                     key={benefit}
-                    className="flex items-start gap-3 text-sm font-medium text-[#273149]"
+                    className="flex items-start gap-1 text-sm font-medium text-[#273149]"
                   >
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 fill-[#061331] text-white" />
                     <span>{benefit}</span>
@@ -409,7 +469,7 @@ export default function NextLevelHomepage() {
 
               <Link
                 href="/services"
-                className="mt-8 inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0d2459]"
+                className="mt-5 inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0d2459]"
               >
                 Explore Programs
                 <ArrowRight className="h-4 w-4" />
@@ -444,7 +504,7 @@ export default function NextLevelHomepage() {
                 <div
                   key={country.name}
                   className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
-                  style={{ position: 'relative', height: '360px' }}
+                  style={{ position: 'relative', height: '300px' }}
                 >
                   <Image
                     src={country.image}
@@ -455,7 +515,7 @@ export default function NextLevelHomepage() {
                   />
                   {/* Dark overlay with transition */}
                   <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/45" />
-                  
+
                   {/* Country Name Centered */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <h3 className="text-2xl font-bold text-white tracking-wide drop-shadow-md text-center transition-transform duration-500 group-hover:scale-105">
@@ -573,7 +633,7 @@ export default function NextLevelHomepage() {
                       alt={`${univ.name} Campus`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"></div>
                     <span className="absolute top-4 right-4 bg-[#d7a23a] text-[#061331] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm z-10">
                       Rank {univ.worldRank}
                     </span>
@@ -655,9 +715,10 @@ export default function NextLevelHomepage() {
           </div>
         </section>
 
+        {/* Testimonials, Ambassador & Student Life Container */}
         <section id="testimonials" className=" py-10  overflow-hidden bg-amber-50">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <div className="text-center">
+            <div className="text-center mb-10">
               <Eyebrow>Testimonials</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
@@ -668,6 +729,114 @@ export default function NextLevelHomepage() {
             </div>
 
             <StudentTestimonialsCarousel testimonials={testimonials} />
+          </div>
+        </section>
+
+        {/* Student Ambassador & Life Combined Section */}
+        <section className="bg-white py-10 px-5 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl">
+            {/* Chat to a Student Ambassador Subsection */}
+            <div className="mb-5">
+              <div className="text-left mb-5">
+                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                  Chat to a student ambassador
+                </h2>
+                <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
+                  Speak to Next Level ambassadors today!
+                </p>
+              </div>
+
+              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                {ambassadors.map((ambassador) => (
+                  <div
+                    key={ambassador.name}
+                    className="bg-white border border-[#ece8df] rounded-3xl p-8 flex flex-col items-center justify-between text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="flex flex-col items-center w-full">
+                      <div className="relative w-20 h-20 rounded-full overflow-hidden mb-2 border-2 border-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+                        <img
+                          src={ambassador.image}
+                          alt={ambassador.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <h3 className="text-base font-bold text-[#081638] mb-2">
+                        {ambassador.name}
+                      </h3>
+                      <span className="bg-[#eff6ff] text-[#1e40af] text-[11px] font-bold px-3.5 py-1 rounded-full mb-3 max-w-[160px] truncate block">
+                        {ambassador.program}
+                      </span>
+                    </div>
+                    <Link
+                      href={ambassador.link}
+                      className="inline-flex items-center gap-1 text-sm font-bold text-[#0f54b6] hover:text-[#0b3e87] transition-colors"
+                    >
+                      Chat with me <span className="font-semibold">&gt;</span>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Student Life Videos Subsection */}
+            <div className="pt-3 border-t border-[#ece8df]/60">
+              <div className="text-left mb-5">
+                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                  Student life
+                </h2>
+                <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
+                  Hear from past students!
+                </p>
+              </div>
+
+              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                {studentLifeVideos.map((video) => (
+                  <div
+                    key={video.title}
+                    className="bg-white rounded-3xl border border-[#ece8df] overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                  >
+                    {/* Video Thumbnail Area */}
+                    <div className="relative h-64 w-full bg-slate-100 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="w-full h-full object-cover"
+                      />
+                    
+                        <div className="absolute inset-0 bg-black/15 flex items-center justify-center group/play cursor-pointer hover:bg-black/25 transition-all">
+                          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/play:scale-110">
+                            <CirclePlay className="w-12 h-12 text-[#081638] fill-white" />
+                          </div>
+                          {video.textOverlay && (
+                            <div className="absolute top-4 left-4 right-4 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold p-2 rounded-lg leading-normal">
+                              {video.textOverlay}
+                            </div>
+                          )}
+                        </div>
+                   
+                    </div>
+
+                    {/* Content below image */}
+                    <div className="p-5 flex flex-col justify-between grow text-left">
+                      <h4 className="text-sm font-bold text-[#081638] leading-snug mb-5 line-clamp-2">
+                        {video.title}
+                      </h4>
+                      
+                      <div className="flex items-center gap-2 border-t border-slate-100 pt-3.5">
+                        <img
+                          src={video.studentAvatar}
+                          alt={video.studentName}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                        <span className="text-xs font-semibold text-[#59616f]">
+                          {video.studentName}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -694,7 +863,7 @@ export default function NextLevelHomepage() {
               </Link>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
               {blogs.map((blog, index) => (
                 <article
                   key={`${blog.title}-${index}`}

@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import Footer from '@/components/layout/footer'
 
 // ── Types ────────────────────────────────────────────────────────────
 interface FAQItem {
@@ -135,108 +138,155 @@ export default function FAQPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/10 text-[#061331] flex items-center justify-center pt-20 pb-4 lg:py-8 relative overflow-hidden select-none">
+    <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
       
-      {/* ── MAIN CARD CONTAINER ──────────────────────────────────────── */}
-      <div className="w-full max-w-6xl mx-4 sm:mx-8 bg-white/70 backdrop-blur-md rounded-[24px] lg:rounded-[32px] border border-white/50 p-5 sm:p-8 lg:p-12 z-10 flex flex-col lg:h-[calc(100vh-140px)] lg:max-h-[calc(100vh-140px)] overflow-y-auto lg:overflow-hidden relative">
-     
-        {/* Centered Header */}
-        <div className="text-center mb-6 lg:mb-10 max-w-3xl mx-auto shrink-0 relative z-10">
-          <h1 className="text-2xl sm:text-4xl lg:text-[40px] font-bold text-[#061331] tracking-tight leading-tight">
-            Frequently Asked <span className="text-[#d7a23a]">Questions</span>
-          </h1>
-          <p className="text-[11px] sm:text-sm lg:text-[14px] text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto mt-2 lg:mt-4">
-            Our platform is built to help you navigate your study abroad journey, not make it harder. It adapts to your needs and supports your goals. Make the most of every feature.
-          </p>
-        </div>
+      {/* Hero Header Section */}
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+        
+        {/* Background Image */}
+        <Image
+          src="https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=1200"
+          alt="FAQ Banner"
+          fill
+          priority
+          className="object-cover object-center absolute inset-0 z-0"
+        />
 
-        {/* FAQ Grid (Switches layouts on mobile/desktop) */}
-        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.8fr] gap-4 lg:gap-10 flex-1 min-h-0 items-stretch relative z-10">
+        {/* Content Container */}
+        <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Categories Tab Bar: Horizontal scroll on mobile, Vertical stack on desktop */}
-          <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2.5 lg:pb-0 shrink-0 scrollbar-none snap-x -mx-1 px-1">
-            {faqCategories.map(cat => {
-              const isActive = activeCategory === cat.id
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCategoryChange(cat.id)}
-                  className={`flex items-center justify-center lg:justify-between px-4 py-2.5 lg:px-6 lg:py-4.5 rounded-xl lg:rounded-2xl text-left transition-all duration-300 cursor-pointer shrink-0 snap-start group border ${
-                    isActive
-                      ? 'bg-[#061331] text-white border-slate-100 lg:bg-white lg:text-[#061331] font-bold lg:shadow-md lg:border-[#d7a23a] scale-[1.01]'
-                      : 'bg-white/40 text-[#061331]/75 border-slate-200/20 lg:bg-white/30 lg:hover:bg-white/60 lg:text-slate-400 lg:hover:text-slate-500'
-                  }`}
-                >
-                  <span className="text-xs sm:text-sm lg:text-[15px] font-semibold lg:font-bold tracking-tight">{cat.name}</span>
-                  <span className={`hidden lg:inline transition-transform duration-300 ${isActive ? 'translate-x-0.5 text-[#061331]' : 'text-slate-300 group-hover:text-slate-400'}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                  </span>
-                </button>
-              )
-            })}
+          {/* Top Breadcrumb */}
+          <div className="max-w-[750px]">
+            <nav aria-label="Breadcrumb">
+              <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
+                <li>
+                  <Link href="/" className="hover:text-[#d7a23a] transition-colors">
+                    Home
+                  </Link>
+                  <span className="ml-1.5 text-white/60">/</span>
+                </li>
+                <li className="pointer-events-none text-white font-semibold">
+                  <span>FAQ</span>
+                </li>
+              </ol>
+            </nav>
           </div>
 
-          {/* Questions list (Scrollable internally on desktop) */}
-          <div className="space-y-3 flex-1 overflow-y-auto lg:pr-3 lg:max-h-[calc(100vh-320px)] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
-            {activeItems.map((item, index) => {
-              const isOpen = openIndex === index
-              return (
-                <div
-                  key={index}
-                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
-                    isOpen
-                      ? 'border-[#e2e8f0]/40 bg-white shadow-[0_10px_30px_rgba(6,19,49,0.03)] lg:shadow-[0_15px_45px_-8px_rgba(6,19,49,0.05)]'
-                      : 'border-[#e2e8f0]/20 bg-[#f0f7ff]/40 hover:bg-[#f0f7ff]/60'
-                  }`}
-                >
-                  <button
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="flex w-full items-center justify-between p-4 lg:p-5 text-left focus:outline-none cursor-pointer group"
-                    aria-expanded={isOpen}
-                  >
-                    <span
-                      className={`font-bold text-[13px] lg:text-[15px] pr-6 transition-colors duration-200 ${
-                        isOpen ? 'text-[#061331]' : 'text-[#061331]/80 group-hover:text-[#d7a23a]'
-                      }`}
-                    >
-                      {item.question}
-                    </span>
-                    <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors">
-                      {isOpen ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5 text-[#061331]">
-                          <path d="M18 6 6 18M6 6l12 12"/>
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5 text-[#061331]">
-                          <path d="M5 12h14M12 5v14"/>
-                        </svg>
-                      )}
-                    </span>
-                  </button>
+          {/* Bottom Title & Badge */}
+          <div className="mt-auto space-y-3 pt-6 text-left">
+            <div>
+              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
+                Got Questions?
+              </span>
+            </div>
+            
+            <h1 
+              className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            >
+              Frequently Asked Questions
+            </h1>
+            
+            <p className="text-white/80 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+              Find answers to common questions about admissions, student visas, scholarships, and our consultancy services.
+            </p>
+          </div>
+        </div>
+      </section>
 
-                  {/* Content Height Transition */}
-                  <div
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+      {/* Main Content */}
+      <main className="w-full grow py-12 lg:py-16 bg-[#fbf8fc]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* FAQ Grid */}
+          <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.8fr] gap-6 lg:gap-10 items-start">
+            
+            {/* Categories Tab Bar */}
+            <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2.5 lg:pb-0 shrink-0 w-full lg:w-auto scrollbar-none snap-x sticky top-[80px] z-10 bg-[#fbf8fc]/90 backdrop-blur-xs py-2 lg:py-0">
+              {faqCategories.map(cat => {
+                const isActive = activeCategory === cat.id
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategoryChange(cat.id)}
+                    className={`flex items-center justify-center lg:justify-between px-4 py-2.5 lg:px-6 lg:py-4.5 rounded-xl lg:rounded-2xl text-left transition-all duration-300 cursor-pointer shrink-0 snap-start group border w-full ${
+                      isActive
+                        ? 'bg-[#061331] text-white border-slate-100 lg:bg-white lg:text-[#061331] font-bold lg:shadow-md lg:border-[#d7a23a] scale-[1.01]'
+                        : 'bg-white/70 text-[#061331]/75 border-slate-200/40 lg:bg-white/40 lg:hover:bg-white/80 lg:text-slate-400 lg:hover:text-slate-500'
                     }`}
                   >
-                    <div className="overflow-hidden">
-                      <div className="px-4 pb-4 lg:px-5 lg:pb-5 text-[12px] lg:text-sm leading-relaxed text-slate-500 pt-1 border-t border-slate-50 mt-1 font-medium animate-in fade-in duration-200">
-                        {item.answer}
+                    <span className="text-xs sm:text-sm lg:text-[15px] font-semibold lg:font-bold tracking-tight">{cat.name}</span>
+                    <span className={`hidden lg:inline transition-transform duration-300 ${isActive ? 'translate-x-0.5 text-[#061331]' : 'text-slate-300 group-hover:text-slate-400'}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5">
+                        <path d="m9 18 6-6-6-6"/>
+                      </svg>
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Questions list */}
+            <div className="space-y-3 w-full">
+              {activeItems.map((item, index) => {
+                const isOpen = openIndex === index
+                return (
+                  <div
+                    key={index}
+                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                      isOpen
+                        ? 'border-[#e2e8f0]/40 bg-white shadow-[0_10px_30px_rgba(6,19,49,0.03)]'
+                        : 'border-[#e2e8f0]/20 bg-white/70 hover:bg-white'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setOpenIndex(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between p-4 lg:p-5 text-left focus:outline-none cursor-pointer group"
+                      aria-expanded={isOpen}
+                    >
+                      <span
+                        className={`font-bold text-[13px] lg:text-[15px] pr-6 transition-colors duration-200 ${
+                          isOpen ? 'text-[#061331]' : 'text-[#061331]/80 group-hover:text-[#d7a23a]'
+                        }`}
+                      >
+                        {item.question}
+                      </span>
+                      <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors">
+                        {isOpen ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5 text-[#061331]">
+                            <path d="M18 6 6 18M6 6l12 12"/>
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5 text-[#061331]">
+                            <path d="M5 12h14M12 5v14"/>
+                          </svg>
+                        )}
+                      </span>
+                    </button>
+
+                    {/* Content Height Transition */}
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="px-4 pb-4 lg:px-5 lg:pb-5 text-[12px] lg:text-sm leading-relaxed text-slate-500 pt-1 border-t border-slate-50 mt-1 font-medium animate-in fade-in duration-200">
+                          {item.answer}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+
           </div>
 
         </div>
+      </main>
 
-      </div>
-
+      <Footer />
     </div>
   )
 }
