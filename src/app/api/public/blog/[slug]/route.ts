@@ -7,8 +7,6 @@ export const revalidate = 3600 // Revalidate every hour
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   try {
-    const client = await clientPromise
-    await client.connect() // ensure connected
     const post = await (Blog as any).findOne({ slug: slug, status: 'published' }).lean()
    
     if (!post) return NextResponse.json({ message: 'Not found' }, { status: 404 })

@@ -21,7 +21,29 @@ import {
 import JsonLd from '@/components/seo/JsonLd'
 
 // Enable ISR (Incremental Static Regeneration) - revalidate every hour
-export const revalidate = 0
+export const revalidate = 3600
+
+// Pre-generate static pages for all published blogs at build time
+export async function generateStaticParams() {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/admin/blog/create`, {
+      cache: 'no-store',
+    })
+
+    if (!res.ok) return []
+
+    const blogs = await res.json()
+    return (blogs || [])
+      .filter((blog: any) => blog.status === 'published')
+      .map((blog: any) => ({
+        slug: blog.slug,
+      }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
 
 type Blog = {
   _id: string
