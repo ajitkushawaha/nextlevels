@@ -6,7 +6,7 @@
 @source not "../../public";
 
 @theme inline {
-  /* Inter font — matches IDP India's typography system */
+  /* Inter for body text, Farro for headings */
   --font-sans: var(--font-inter);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -26,6 +26,18 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading,
+.heading-primary,
+.heading-secondary {
+  font-family: var(--font-farro), Farro, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

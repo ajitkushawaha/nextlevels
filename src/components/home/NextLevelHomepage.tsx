@@ -322,9 +322,9 @@ export default function NextLevelHomepage() {
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-center bg-no-repeat bg-cover mix-blend-multiply" style={{ backgroundImage: "url('/visa/map.png')" }}></div>
 
           {/* Decorative Dashed Circles */}
-          <div className="absolute bottom-[-150px] left-[-150px] w-[500px] h-[500px] rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
-          <div className="absolute bottom-[-100px] left-[-100px] w-[400px] h-[400px] rounded-full border border-[#081638]/3 border-dashed pointer-events-none"></div>
-          <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
+          <div className="absolute -bottom-37.5 -left-37.5 w-125 h-125 rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
+          <div className="absolute -bottom-25 -left-25 w-100 h-100 rounded-full border border-[#081638]/3 border-dashed pointer-events-none"></div>
+          <div className="absolute -top-50 -right-50 w-150 h-150 rounded-full border border-[#081638]/5 border-dashed pointer-events-none"></div>
 
           <div className="relative z-30 mx-auto grid max-w-6xl items-center gap-8 lg:gap-12 lg:grid-cols-[1.15fr_0.95fr]">
             {/* Left Column */}
@@ -346,7 +346,7 @@ export default function NextLevelHomepage() {
             <div className="relative  flex items-center justify-center  w-full overflow-visible">
 
               {/* Main Image Box */}
-              <div className="relative  z-6 w-[280px] h-[400px] sm:w-[340px] py-4 sm:h-[450px] lg:w-[480px] lg:h-[600px] rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
+              <div className="relative  z-6 w-70 h-100 sm:w-85 py-4 sm:h-112.5 lg:w-120 lg:h-150 rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
                 <Image
                   src="/image.png"
                   alt="Student with Suitcase"
@@ -367,7 +367,7 @@ export default function NextLevelHomepage() {
                 return (
                   <article
                     key={feature.title}
-                    className="group flex min-h-[105px] items-center gap-4 rounded-md border border-[#ece8df] bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(6,19,49,0.08)] hover:border-[#d7a23a]/50"
+                    className="group flex min-h-26.25 items-center gap-4 rounded-md border border-[#ece8df] bg-white p-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_rgba(6,19,49,0.08)] hover:border-[#d7a23a]/50"
                   >
                     <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-[#061331] text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-[#d7a23a] group-hover:text-[#061331]">
                       <Icon className="h-7 w-7" />
@@ -402,7 +402,7 @@ export default function NextLevelHomepage() {
             <div className="h-16 w-32 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1rem_1rem]" />
           </div>
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-10">
-            <div className="relative min-h-[360px] sm:min-h-[430px]">
+            <div className="relative min-h-90 sm:min-h-107.5">
               <div className="absolute left-0 top-0 h-48 w-72 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
                 <Image
                   src="/home2/happy-ma.png"
@@ -433,7 +433,7 @@ export default function NextLevelHomepage() {
               <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-[#061331] px-8 py-5 text-center shadow-[0_16px_36px_rgba(6,19,49,0.22)]">
                 <p
                   className="text-xl font-bold leading-6 text-white"
-                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                  style={{ fontFamily: 'Farro, sans-serif' }}
                 >
                   Your Future
                   <br />
@@ -446,7 +446,7 @@ export default function NextLevelHomepage() {
               <Eyebrow>WHO WE ARE</Eyebrow>
               <h2
                 className="mt-3 max-w-lg text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 Find the Right Program in Top Universities
               </h2>
@@ -483,11 +483,11 @@ export default function NextLevelHomepage() {
           <div className="mx-auto max-w-7xl">
             {/* Title Section */}
             <div className="mb-10 text-left">
-              <h2 className="text-3xl font-extrabold text-[#081638] sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              <h2 className="text-3xl font-extrabold text-[#081638] sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                 Your dream study destination awaits
               </h2>
               {/* Short thick accent line */}
-              <div className="mt-3 h-[5px] w-12 bg-[#d7a23a] rounded" />
+              <div className="mt-3 h-1.25 w-12 bg-[#d7a23a] rounded" />
               <p className="mt-5 text-sm leading-relaxed text-[#59616f] sm:text-base font-medium">
                 Start your inspiring academic journey in these vibrant and welcoming study destinations!
               </p>
@@ -534,7 +534,7 @@ export default function NextLevelHomepage() {
               <div className="relative inline-block pb-2.5 mb-2">
                 <Eyebrow>Why Choose Next Level Education</Eyebrow>
                 <svg
-                  className="absolute left-0 bottom-0 w-full h-[8px] text-[#d7a23a] pointer-events-none"
+                  className="absolute left-0 bottom-0 w-full h-2 text-[#d7a23a] pointer-events-none"
                   viewBox="0 0 100 10"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -551,7 +551,7 @@ export default function NextLevelHomepage() {
               </div>
               <h2
                 className="mt-1 text-3xl font-bold leading-tight sm:text-4xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 We Make Your Study Abroad Journey Easy
               </h2>
@@ -587,7 +587,7 @@ export default function NextLevelHomepage() {
               <Eyebrow>Our Services</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 How We Can Help You Succeed
               </h2>
@@ -612,7 +612,7 @@ export default function NextLevelHomepage() {
               <Eyebrow>Top Institutions</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 Featured <span className="text-[#d7a23a]">Partner Universities</span>
               </h2>
@@ -656,7 +656,7 @@ export default function NextLevelHomepage() {
                       <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
                         {univ.name}
                       </h3>
-                      <p className="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-6">
+                      <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-6">
                         {univ.description}
                       </p>
                     </div>
@@ -722,7 +722,7 @@ export default function NextLevelHomepage() {
               <Eyebrow>Testimonials</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 What Our Students Say
               </h2>
@@ -738,7 +738,7 @@ export default function NextLevelHomepage() {
             {/* Chat to a Student Ambassador Subsection */}
             <div className="mb-5">
               <div className="text-left mb-5">
-                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   Chat to a student ambassador
                 </h2>
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
@@ -763,7 +763,7 @@ export default function NextLevelHomepage() {
                       <h3 className="text-base font-bold text-[#081638] mb-2">
                         {ambassador.name}
                       </h3>
-                      <span className="bg-[#eff6ff] text-[#1e40af] text-[11px] font-bold px-3.5 py-1 rounded-full mb-3 max-w-[160px] truncate block">
+                      <span className="bg-[#eff6ff] text-[#1e40af] text-[11px] font-bold px-3.5 py-1 rounded-full mb-3 max-w-40 truncate block">
                         {ambassador.program}
                       </span>
                     </div>
@@ -781,7 +781,7 @@ export default function NextLevelHomepage() {
             {/* Student Life Videos Subsection */}
             <div className="pt-3 border-t border-[#ece8df]/60">
               <div className="text-left mb-5">
-                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   Student life
                 </h2>
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
@@ -804,8 +804,8 @@ export default function NextLevelHomepage() {
                       />
                     
                         <div className="absolute inset-0 bg-black/15 flex items-center justify-center group/play cursor-pointer hover:bg-black/25 transition-all">
-                          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/play:scale-110">
-                            <CirclePlay className="w-12 h-12 text-[#081638] fill-white" />
+                          <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/play:scale-110">
+                            <CirclePlay className="w-12 h-12 text-[#ffffff] " />
                           </div>
                           {video.textOverlay && (
                             <div className="absolute top-4 left-4 right-4 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold p-2 rounded-lg leading-normal">
@@ -849,7 +849,7 @@ export default function NextLevelHomepage() {
                 <Eyebrow>Latest From Our Blog</Eyebrow>
                 <h2
                   className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
-                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                  style={{ fontFamily: 'Farro, sans-serif' }}
                 >
                   Tips &amp; Updates for Students
                 </h2>
@@ -867,7 +867,7 @@ export default function NextLevelHomepage() {
               {blogs.map((blog, index) => (
                 <article
                   key={`${blog.title}-${index}`}
-                  className="overflow-hidden rounded-lg border border-[#ece8df] bg-white shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:scale-[1.025] hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(8,22,56,0.12)] hover:border-[#d7a23a]/40"
+                  className="overflow-hidden rounded-3xl border border-[#ece8df] bg-white shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:scale-[1.025] hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(8,22,56,0.12)] hover:border-[#d7a23a]/40"
                 >
                   <div className="relative h-40">
                     <Image
@@ -884,7 +884,7 @@ export default function NextLevelHomepage() {
                       <CalendarDays className="h-3.5 w-3.5" />
                       {blog.date}
                     </p>
-                    <h3 className="mt-3 min-h-[58px] text-sm font-bold leading-5 text-[#081638]">
+                    <h3 className="mt-3 min-h-14.5 text-sm font-bold leading-5 text-[#081638]">
                       {blog.title}
                     </h3>
                     <Link

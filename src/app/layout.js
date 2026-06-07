@@ -1,10 +1,17 @@
-import { Inter } from "next/font/google";
+import { Farro, Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const farro = Farro({
+  variable: "--font-farro",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
   display: "swap",
 });
 
@@ -22,7 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${farro.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col relative">
         {children}

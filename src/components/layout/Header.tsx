@@ -42,7 +42,7 @@ function Logo() {
         width={150}
         height={74}
         priority
-        className="h-auto w-[116px] sm:w-[132px] transition-all duration-300"
+        className="h-auto w-29 sm:w-33 transition-all duration-300"
       />
     </Link>
   )
@@ -67,7 +67,7 @@ export default function Header() {
         : 'bg-white shadow-xs'
         }`}
     >
-      <nav className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-5 sm:px-8 lg:px-10">
+      <nav className="mx-auto flex h-20 max-w-350 items-center justify-between px-5 sm:px-8 lg:px-10">
         <Logo />
 
         <div className="hidden items-center gap-6 lg:flex xl:gap-8">
@@ -115,7 +115,7 @@ export default function Header() {
             >
               Course Finder
               <svg
-                className="absolute left-0 bottom-[-4px] w-full h-[8px] text-[#d7a23a] pointer-events-none"
+                className="absolute left-0 -bottom-1 w-full h-2 text-[#d7a23a] pointer-events-none"
                 viewBox="0 0 100 10"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] sm:w-[350px] bg-[#061331] text-white border-l border-white/10 p-6 flex flex-col justify-between focus-visible:outline-none"
+              className="w-75 sm:w-87.5 bg-[#061331] text-white border-l border-white/10 p-6 flex flex-col justify-between focus-visible:outline-none"
             >
               <div className="flex flex-col gap-6">
                 <SheetHeader className="text-left border-b border-white/10 pb-4">

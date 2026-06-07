@@ -237,7 +237,7 @@ export default function FAQSection() {
             {/* Main Title */}
             <h2 
               className="text-3xl font-extrabold text-[#081638] sm:text-4xl"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               Frequently Asked Questions
             </h2>

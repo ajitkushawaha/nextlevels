@@ -18,7 +18,7 @@ export default function NotFound() {
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#081638]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
             We're working on it!
           </h1>
           

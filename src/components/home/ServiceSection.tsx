@@ -95,7 +95,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                     <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-slate-500 text-xs leading-relaxed line-clamp-3 mb-6">
+                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-6">
                       {service.description}
                     </p>
                   </div>

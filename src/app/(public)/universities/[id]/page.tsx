@@ -256,7 +256,7 @@ export default async function UniversityDetailPage({ params }: Props) {
 
             <h1
               className="text-2xl sm:text-4xl lg:text-[40px] font-bold text-white tracking-tight leading-[1.15]"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               {university.name}
             </h1>
@@ -548,7 +548,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                               {course.title}
                             </Link>
                           </h3>
-                          <p className="text-slate-500 text-xs leading-relaxed max-w-3xl line-clamp-2">
+                          <p className="text-slate-500 text-sm leading-relaxed max-w-3xl line-clamp-2">
                             {course.description}
                           </p>
                         </div>

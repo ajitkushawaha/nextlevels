@@ -139,7 +139,7 @@ export default function ContactUsPage() {
             
             <h1 
               className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15]"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               Contact Us
             </h1>
@@ -164,7 +164,7 @@ export default function ContactUsPage() {
                 <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest block">
                   Reach Out To Us
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
                   We'd Love to Hear From You
                 </h2>
                 <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-xl font-medium">
@@ -400,7 +400,7 @@ export default function ContactUsPage() {
                 <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest block">
                   Our Location
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
                   Connecting Near and Far
                 </h2>
               </div>

@@ -7,12 +7,12 @@ function Logo({ footer = false }: { footer?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-2" aria-label="Home">
       <Image
-        src="/logo1.png"
+        src="/logo.png"
         alt="Next Level Education"
         width={150}
         height={74}
         priority={!footer}
-        className="h-auto w-[116px] brightness-0 invert sm:w-[132px]"
+        className="h-auto w-29 brightness-0 invert sm:w-33"
       />
     </Link>
   )
@@ -25,11 +25,11 @@ export default function Footer() {
       <div className="border-b border-white/10 pb-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 sm:px-8 lg:flex-row lg:px-10">
           <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f6da73] text-[#061331]">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#d7a23a] text-[#d7a23a]">
               <PhoneCall className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="text-xl font-bold leading-tight sm:text-2xl" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              <h2 className="text-xl font-bold leading-tight sm:text-2xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                 Ready to Start Your Journey?
               </h2>
               <p className="mt-1 text-sm text-white/75">
@@ -38,7 +38,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/contact-us" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[#f6da73] px-6 py-2 text-sm font-bold text-[#061331] transition hover:bg-[#e3c761]">
+            <Link href="/contact-us" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[#d7a23a] px-6 py-2 text-sm font-bold text-[#d7a23a] transition hover:bg-white hover:text-black">
               Book a Free Consultation
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -49,33 +49,14 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 sm:px-8 grid-cols-2 lg:grid-cols-4 lg:px-10">
+      <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 sm:px-8 grid-cols-2 lg:grid-cols-5 lg:px-10">
         {/* Logo & Description */}
         <div className="lg:col-span-1">
           <Logo footer />
           <p className="mt-5 text-[13px] leading-6 text-white/70 pr-4">
             Your trusted partner for global education. We help you achieve your dreams and build a better future.
           </p>
-          <div className="mt-6 flex gap-3">
-            {[
-              { icon: FaFacebook, label: 'Facebook' },
-              { icon: FaInstagram, label: 'Instagram' },
-              { icon: FaLinkedin, label: 'LinkedIn' },
-              { icon: FaYoutube, label: 'YouTube' },
-            ].map(item => {
-              const Icon = item.icon
-              return (
-                <a
-                  key={item.label}
-                  href="#"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 text-white/80 transition hover:border-[#f6da73] hover:text-[#f6da73]"
-                  aria-label={item.label}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                </a>
-              )
-            })}
-          </div>
+         
         </div>
 
         {/* Quick Links */}
@@ -117,6 +98,21 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Branches */}
+        <div>
+          <h3 className="text-[15px] font-bold">Branches</h3>
+          <ul className="mt-6 space-y-4 text-[13px] text-white/70">
+            <li>
+              <h4 className="text-sm font-bold">Jaffna Head Office</h4>
+              <p className="mt-1 text-[13px] text-white/70">Palali Road, Kondavil, Jaffna, Sri Lanka</p>
+            </li>
+            <li>
+              <h4 className="text-sm font-bold">Batticaloa Branch</h4>
+              <p className="mt-1 text-[13px] text-white/70">Main Street, Batticaloa, Sri Lanka</p>
+            </li>
+          </ul>
+        </div>
+
         {/* Contact Us */}
         <div>
           <h3 className="text-[15px] font-bold">Contact Us</h3>
@@ -129,9 +125,27 @@ export default function Footer() {
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
               <span>info@nextleveleducation.com</span>
             </li>
-            <li className="flex gap-3 items-start">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
-              <span>123, Education Street<br />Dream City, Country</span>
+            <li>
+              <div className="mt-3 flex items-center gap-3">
+                {[
+                  { icon: FaFacebook, label: 'Facebook', href: '#' },
+                  { icon: FaInstagram, label: 'Instagram', href: '#' },
+                  { icon: FaLinkedin, label: 'LinkedIn', href: '#' },
+                  { icon: FaYoutube, label: 'YouTube', href: '#' },
+                ].map(item => {
+                  const Icon = item.icon
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-white/80 transition hover:border-[#f6da73] hover:text-[#f6da73]"
+                      aria-label={item.label}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                    </a>
+                  )
+                })}
+              </div>
             </li>
           </ul>
         </div>

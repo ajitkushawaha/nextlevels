@@ -87,7 +87,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
 
             <h1
               className="text-2xl sm:text-4xl lg:text-[40px] font-bold text-white tracking-tight leading-[1.15]"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               {scholarship.title}
             </h1>

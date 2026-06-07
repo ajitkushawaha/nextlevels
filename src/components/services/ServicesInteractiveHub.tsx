@@ -204,7 +204,7 @@ export default function ServicesInteractiveHub() {
 
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-[#081638] mb-6 leading-tight"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               Why Next Level Stands Out
             </h2>
@@ -320,7 +320,7 @@ export default function ServicesInteractiveHub() {
               {/* Service Title */}
               <h2
                 className="text-2xl sm:text-3xl font-bold text-[#081638] leading-tight mb-4"
-                style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 {activeService.title}
               </h2>

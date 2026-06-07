@@ -67,7 +67,7 @@ export default function AboutInteractiveHub() {
           </span>
           <h2
             className="text-3xl font-bold text-[#061331] mt-3"
-            style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+            style={{ fontFamily: 'Farro, sans-serif' }}
           >
             Milestones of Trust & Growth
           </h2>
@@ -135,7 +135,7 @@ export default function AboutInteractiveHub() {
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-0">
                   <h3
                     className="text-xl sm:text-2xl font-bold text-[#061331]"
-                    style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                    style={{ fontFamily: 'Farro, sans-serif' }}
                   >
                     {currentMilestone.title} ({currentMilestone.year})
                   </h3>
@@ -192,7 +192,7 @@ export default function AboutInteractiveHub() {
                 </div>
                 <h3
                   className="text-3xl sm:text-4xl font-bold text-white leading-tight"
-                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                  style={{ fontFamily: 'Farro, sans-serif' }}
                 >
                   Empowering Futures Globally
                 </h3>
@@ -210,7 +210,7 @@ export default function AboutInteractiveHub() {
                 </div>
                 <h3
                   className="text-3xl sm:text-4xl font-bold text-white leading-tight"
-                  style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+                  style={{ fontFamily: 'Farro, sans-serif' }}
                 >
                   Uncompromising Support & Trust
                 </h3>

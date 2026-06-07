@@ -71,7 +71,7 @@ export default function ServicesPage() {
             
             <h1 
               className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15]"
-              style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+              style={{ fontFamily: 'Farro, sans-serif' }}
             >
               Our Professional Services
             </h1>

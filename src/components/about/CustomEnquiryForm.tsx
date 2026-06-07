@@ -88,7 +88,7 @@ export default function CustomEnquiryForm() {
         <div className="bg-[#061331] px-8 py-5 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">Next Level Education</p>
-            <h3 className="text-white font-bold text-lg mt-0.5" style={{ fontFamily: 'Georgia, serif' }}>
+            <h3 className="text-white font-bold text-lg mt-0.5" style={{ fontFamily: 'Farro, sans-serif' }}>
               Profile Assessment Form
             </h3>
           </div>
@@ -100,7 +100,7 @@ export default function CustomEnquiryForm() {
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50 ring-4 ring-emerald-100">
             <CheckCircle className="h-9 w-9 text-emerald-500" />
           </div>
-          <h3 className="text-2xl font-bold text-[#061331] mb-3" style={{ fontFamily: 'Georgia, serif' }}>
+          <h3 className="text-2xl font-bold text-[#061331] mb-3" style={{ fontFamily: 'Farro, sans-serif' }}>
             Registration Successful!
           </h3>
           <p className="text-sm text-slate-500 leading-relaxed max-w-sm mx-auto">
@@ -134,7 +134,7 @@ export default function CustomEnquiryForm() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">Next Level Education</p>
-            <h3 className="text-white font-bold text-lg mt-0.5" style={{ fontFamily: 'Georgia, serif' }}>
+            <h3 className="text-white font-bold text-lg mt-0.5" style={{ fontFamily: 'Farro, sans-serif' }}>
               Profile Assessment Form
             </h3>
           </div>
@@ -186,7 +186,7 @@ export default function CustomEnquiryForm() {
           <div className="space-y-5">
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-[#d7a23a] mb-1">Step 1 of 3</p>
-              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Georgia, serif' }}>Personal Details</h4>
+              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Farro, sans-serif' }}>Personal Details</h4>
               <p className="text-xs text-slate-400 mt-1">Basic information so our team can reach you directly.</p>
             </div>
             <Field icon={<User />} label="Full Name" required>
@@ -220,7 +220,7 @@ export default function CustomEnquiryForm() {
           <div className="space-y-5">
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-[#d7a23a] mb-1">Step 2 of 3</p>
-              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Georgia, serif' }}>Academic Profile</h4>
+              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Farro, sans-serif' }}>Academic Profile</h4>
               <p className="text-xs text-slate-400 mt-1">Tell us about your educational background.</p>
             </div>
 
@@ -262,7 +262,7 @@ export default function CustomEnquiryForm() {
           <div className="space-y-5">
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-[#d7a23a] mb-1">Step 3 of 3</p>
-              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Georgia, serif' }}>Study Destination</h4>
+              <h4 className="text-xl font-bold text-[#061331]" style={{ fontFamily: 'Farro, sans-serif' }}>Study Destination</h4>
               <p className="text-xs text-slate-400 mt-1">Where and when are you planning to study?</p>
             </div>
 
