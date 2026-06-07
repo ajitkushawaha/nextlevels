@@ -1,5 +1,5 @@
 // models/Blog.ts
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document, Model } from 'mongoose'
 
 export interface IBlogCTA {
   title?: string
@@ -123,4 +123,8 @@ const BlogSchema: Schema = new Schema(
 )
 
 // Prevent recompilation error in Next.js
-export default mongoose.models.Blog || mongoose.model<IBlog>('Blog', BlogSchema)
+const Blog =
+  (mongoose.models.Blog as Model<IBlog> | undefined) ||
+  mongoose.model<IBlog>('Blog', BlogSchema)
+
+export default Blog
