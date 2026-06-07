@@ -26,19 +26,12 @@ export const revalidate = 3600
 // Pre-generate static pages for all published blogs at build time
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/admin/blog/create`, {
-      cache: 'no-store',
-    })
-
-    if (!res.ok) return []
-
-    const blogs = await res.json()
-    return (blogs || [])
-      .filter((blog: any) => blog.status === 'published')
-      .map((blog: any) => ({
-        slug: blog.slug,
-      }))
+    await import('@/lib/db').then(mod => mod.default())
+    const Blog = (await import('@/models/Blog')).default
+    const blogs = await Blog.find({ status: 'published' }).select('slug').lean()
+    return (blogs || []).map((blog: any) => ({
+      slug: blog.slug,
+    }))
   } catch (error) {
     console.error('Error generating static params:', error)
     return []
