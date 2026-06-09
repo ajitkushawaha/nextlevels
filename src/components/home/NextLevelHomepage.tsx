@@ -131,31 +131,36 @@ const blogs = [
 const ambassadors = [
   {
     name: 'Aastha Paudel',
-    program: 'Information Tech...',
+    program: 'Information Technology',
+    university: 'University of Colombo',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
     link: '/contact-us',
   },
   {
     name: 'Geraldine Penarete',
     program: 'Geology',
+    university: 'University of Peradeniya',
     image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&auto=format&fit=crop&q=80',
     link: '/contact-us',
   },
   {
     name: 'Yumi Wan',
-    program: 'Physiotherapy ...',
+    program: 'Physiotherapy',
+    university: 'University of Sydney',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     link: '/contact-us',
   },
   {
     name: 'Tiara D Souza',
-    program: 'Occupational T...',
+    program: 'Occupational Therapy',
+    university: 'Monash University',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
     link: '/contact-us',
   },
    {
     name: 'Yumi Wans',
-    program: 'Physiotherapys ...',
+    program: 'Physiotherapy',
+    university: 'University of Melbourne',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     link: '/contact-us',
   },
@@ -621,8 +626,8 @@ export default function NextLevelHomepage() {
               </p>
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {Object.values(universitiesData).slice(0, 3).map((univ: any) => (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {Object.values(universitiesData).slice(0, 4).map((univ: any) => (
                 <div
                   key={univ.name}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(6,19,49,0.12)]"
@@ -656,7 +661,7 @@ export default function NextLevelHomepage() {
                       <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
                         {univ.name}
                       </h3>
-                      <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-6">
+                      <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-3">
                         {univ.description}
                       </p>
                     </div>
@@ -763,6 +768,9 @@ export default function NextLevelHomepage() {
                       <h3 className="text-base font-bold text-[#081638] mb-2">
                         {ambassador.name}
                       </h3>
+                      <span className="text-[11px] font-semibold text-slate-500 mb-2 block">
+                        {ambassador.university}
+                      </span>
                       <span className="bg-[#eff6ff] text-[#1e40af] text-[11px] font-bold px-3.5 py-1 rounded-full mb-3 max-w-40 truncate block">
                         {ambassador.program}
                       </span>
@@ -782,7 +790,7 @@ export default function NextLevelHomepage() {
             <div className="pt-3 border-t border-[#ece8df]/60">
               <div className="text-left mb-5">
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  Student life
+                  Success Stories
                 </h2>
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
                   Hear from past students!

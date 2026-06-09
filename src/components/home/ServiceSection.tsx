@@ -34,7 +34,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
     <div className="relative w-full services-swiper">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={10}
+        spaceBetween={1}
         slidesPerView={1}
         loop={true}
         autoplay={{ delay: 5000 }}
@@ -49,7 +49,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
             slidesPerView: 2,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
         className="pb-16!"
@@ -88,14 +88,11 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                 {/* Card Content & Details */}
                 <div className="p-6 flex flex-col justify-between grow text-left">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 font-semibold mb-2">
-                      <span>✨</span>
-                      <span>Next Level Consultancy</span>
-                    </div>
+                   
                     <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-6">
+                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-3">
                       {service.description}
                     </p>
                   </div>

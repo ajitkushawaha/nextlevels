@@ -56,7 +56,7 @@ export default function Footer() {
           <p className="mt-5 text-[13px] leading-6 text-white/70 pr-4">
             Your trusted partner for global education. We help you achieve your dreams and build a better future.
           </p>
-         
+
         </div>
 
         {/* Quick Links */}
@@ -101,22 +101,19 @@ export default function Footer() {
         {/* Branches */}
         <div>
           <h3 className="text-[15px] font-bold">Branches</h3>
-          <ul className="mt-6 space-y-4 text-[13px] text-white/70">
-            <li>
-              <h4 className="text-sm font-bold">Jaffna Head Office</h4>
-              <p className="mt-1 text-[13px] text-white/70">Palali Road, Kondavil, Jaffna, Sri Lanka</p>
-            </li>
-            <li>
-              <h4 className="text-sm font-bold">Batticaloa Branch</h4>
-              <p className="mt-1 text-[13px] text-white/70">Main Street, Batticaloa, Sri Lanka</p>
-            </li>
+          <ul className="mt-6 space-y-3 text-[13px] text-white/70">
+            {['Jaffna', 'Batticaloa', 'Colombo', 'Vavuniya'].map(branch => (
+              <li key={branch} className="text-[13px] text-white/70">
+                {branch}
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Contact Us */}
         <div>
           <h3 className="text-[15px] font-bold">Contact Us</h3>
-          <ul className="mt-6 space-y-4 text-[13px] text-white/70">
+          <ul className="mt-3 space-y-4 text-[13px] text-white/70">
             <li className="flex gap-3 items-start">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
               <span>123 456 7890</span>
@@ -124,6 +121,11 @@ export default function Footer() {
             <li className="flex gap-3 items-start">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
               <span>info@nextleveleducation.com</span>
+            </li>
+            <li className="flex gap-3 items-start">
+              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
+              <span>
+                Palali Road, Kondavil, Jaffna, Sri Lanka</span>
             </li>
             <li>
               <div className="mt-3 flex items-center gap-3">

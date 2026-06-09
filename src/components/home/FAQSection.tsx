@@ -176,7 +176,7 @@ const faqCards: FAQCard[] = [
 
 export default function FAQSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [cardsToShow, setCardsToShow] = useState(3)
+  const [cardsToShow, setCardsToShow] = useState(4)
 
   // Adjust responsiveness
   useEffect(() => {
@@ -186,7 +186,7 @@ export default function FAQSection() {
       } else if (window.innerWidth < 1024) {
         setCardsToShow(2)
       } else {
-        setCardsToShow(3)
+        setCardsToShow(4)
       }
     }
     handleResize()
@@ -281,10 +281,9 @@ export default function FAQSection() {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className=" bg-white rounded-3xl border border-slate-100/80 shadow-[0_10px_35px_rgba(8,22,56,0.05)] p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left h-full">
-                   
+                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left aspect-square flex flex-col justify-between overflow-hidden">
                     {/* Question */}
-                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug  min-h-[52px] ">
+                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-[52px]">
                       {faq.question}
                     </h3>
 
