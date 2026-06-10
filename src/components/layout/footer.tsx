@@ -84,14 +84,14 @@ export default function Footer() {
           <h3 className="text-[15px] font-bold">Study Abroad</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
             {[
-              'United Kingdom',
-              'Canada',
-              'Australia',
-              'New Zealand',
-            ].map(item => (
-              <li key={item}>
-                <Link href="#" className="transition hover:text-white">
-                  {item}
+              ['United Kingdom', '/study-abroad/uk'],
+              ['Canada', '/study-abroad/canada'],
+              ['Australia', '/study-abroad/australia'],
+              ['New Zealand', '/study-abroad/new-zealand'],
+            ].map(([label, href]) => (
+              <li key={label}>
+                <Link href={href} className="transition hover:text-white">
+                  {label}
                 </Link>
               </li>
             ))}
