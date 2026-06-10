@@ -19,6 +19,10 @@ import {
   Send,
 } from 'lucide-react'
 import JsonLd from '@/components/seo/JsonLd'
+import connectDB from '@/lib/db'
+import BlogModel from '@/models/Blog'
+import BlogConfigModel from '@/models/BlogConfig'
+import VisaModel from '@/models/Visa'
 
 // Enable ISR (Incremental Static Regeneration) - revalidate every hour
 export const revalidate = 3600
@@ -72,26 +76,112 @@ type RelatedBlog = {
 
 type Props = { params: Promise<{ slug: string }> }
 
+const defaultBlogConfig = {
+  authors: [],
+  headerCTA: {
+    title: 'Ready to Start Your Study Abroad Journey?',
+    buttonText: 'Book Free Consultation',
+    buttonLink: '/contact-us',
+    travelersCount: '10,000+',
+    travelersText: 'Join 10,000+ Students',
+    trustText: 'who trust our admissions guidance.',
+    travelerImages: [],
+    isActive: true,
+  },
+  visaPlanCTA: {
+    badgeText: 'Popular',
+    title: 'Choose Your Consultation Plan',
+    description: 'Get expert guidance on admissions and visas',
+    processingTime: 'Within 24 Hours',
+    price: 'Free Consultation',
+    buttonText: 'Book Now',
+    buttonLink: '/contact-us',
+    whatsappLink: 'https://wa.me/9822553417',
+    phoneLink: 'tel:+919822553417',
+    isActive: true,
+  },
+  footerCTA: {
+    title: 'Ready to Study Abroad?',
+    description:
+      'Get expert assistance with university applications, course selection, and student visa guidance. Our team is here to help you every step of the way.',
+    buttonText: 'Get Started',
+    buttonLink: '/contact-us',
+    isActive: true,
+  },
+}
+
+function formatDate(dateValue: any): string {
+  try {
+    if (!dateValue) return 'Recently'
+    const date = new Date(dateValue)
+    if (isNaN(date.getTime())) return 'Recently'
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+  } catch {
+    return 'Recently'
+  }
+}
+
+function serializeBlog(blog: any): Blog {
+  return {
+    ...blog,
+    _id: blog._id?.toString?.() || String(blog._id || ''),
+    publishedAt: blog.publishedAt?.toISOString?.() || blog.publishedAt,
+    updatedAt: blog.updatedAt?.toISOString?.() || blog.updatedAt,
+    createdAt: blog.createdAt?.toISOString?.() || blog.createdAt,
+  }
+}
+
 export async function getPostBySlug(slug: string): Promise<Blog | null> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/public/blog/${slug}`, {
-      cache: 'no-store',
-      next: { revalidate: 0 },
-    })
+    await connectDB()
+    const post = await (BlogModel as any)
+      .findOne({ slug, status: 'published' })
+      .lean()
 
-    if (!res.ok) return null
-
-    const text = await res.text()
-    try {
-      const data = JSON.parse(text)
-      return data ?? null // assuming your API returns { blog: {...} }
-    } catch {
-      return null // not JSON → 404
-    }
+    return post ? serializeBlog(post) : null
   } catch (e) {
     console.error('Error fetching post:', e)
     return null
+  }
+}
+
+async function getRelatedBlogs(): Promise<RelatedBlog[]> {
+  try {
+    await connectDB()
+    const blogs = await (BlogModel as any)
+      .find({ status: 'published' })
+      .sort({ publishedAt: -1, createdAt: -1 })
+      .limit(6)
+      .select('title slug excerpt featuredImage author category publishedAt createdAt')
+      .lean()
+
+    return blogs.map((blog: any) => ({
+      title: blog.title,
+      date: formatDate(blog.publishedAt || blog.createdAt),
+      author: blog.author || 'Admin',
+      excerpt: blog.excerpt || '',
+      image: blog.featuredImage || '/visa/blog-placeholder.png',
+      href: `/blog/${blog.slug}`,
+      category: blog.category || '',
+    }))
+  } catch (error) {
+    console.error('Error fetching related posts:', error)
+    return []
+  }
+}
+
+async function getBlogConfig() {
+  try {
+    await connectDB()
+    const config = await (BlogConfigModel as any).findOne({}).lean()
+    return config || defaultBlogConfig
+  } catch (error) {
+    console.error('Error fetching blog config:', error)
+    return defaultBlogConfig
   }
 }
 
@@ -135,26 +225,7 @@ export default async function BlogPostPage({ params }: Props) {
   // Calculate reading time
   const readingTime = calculateReadingTime(post.content)
 
-  // fetch related posts (latest 6 published)
-  let related: RelatedBlog[] = []
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const relatedRes = await fetch(`${baseUrl}/api/public/recent-blogs`, {
-      cache: 'no-store',
-      next: { revalidate: 0 },
-    })
-    if (relatedRes.ok) {
-      try {
-        const recentblog = await relatedRes.json()
-        related = (recentblog?.blogs || []).slice(0, 6)
-      } catch {
-        related = []
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching related posts:', error)
-    related = []
-  }
+  const related = await getRelatedBlogs()
 
   // Get all unique tags for the sidebar - use fallback if none exist
   const allTags =
@@ -162,20 +233,7 @@ export default async function BlogPostPage({ params }: Props) {
       ? post.tags
       : ['Visa Application', 'Travel Tips', 'Immigration', 'Documents Required']
 
-  // Fetch blog configuration for author profiles (optional)
-  let blogConfig = null
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const configRes = await fetch(`${baseUrl}/api/public/blog-config`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
-    if (configRes.ok) {
-      const configData = await configRes.json()
-      blogConfig = configData.success ? configData.data : null
-    }
-  } catch (error) {
-    console.error('Error fetching blog config:', error)
-  }
+  const blogConfig = await getBlogConfig()
 
   // Get author from config or use post author
   const authorConfig =
@@ -253,21 +311,13 @@ export default async function BlogPostPage({ params }: Props) {
       isActive: blogConfig?.headerCTA?.isActive === true,
     }
 
-  // Fetch visa details if visaPlanCTA has selectedVisaId
   let visaDetails: any = null
   if (postData.visaPlanCTA?.selectedVisaId) {
     try {
-      const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-      const visaRes = await fetch(
-        `${baseUrl}/api/public/visa/${postData.visaPlanCTA.selectedVisaId}`,
-        {
-          next: { revalidate: 3600 }, // Revalidate every hour
-        }
-      )
-      if (visaRes.ok) {
-        const response = await visaRes.json()
-        visaDetails = response.success ? response.data : response
-      }
+      await connectDB()
+      visaDetails = await (VisaModel as any)
+        .findById(postData.visaPlanCTA.selectedVisaId)
+        .lean()
     } catch (error) {
       console.error('Error fetching visa details:', error)
     }

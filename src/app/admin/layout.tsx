@@ -131,15 +131,15 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               {!isCollapsed && <p className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Content Management</p>}
               <nav className="space-y-0.5">
                 {[
-                  { label: 'Home Page', href: '/admin/cms/home', icon: Home },
-                  { label: 'About Page', href: '/admin/cms/about', icon: Layers },
-                  { label: 'Contact Page', href: '/admin/cms/contact', icon: Layers },
+                  { label: 'CMS Dashboard', href: '/admin/cms', icon: FileCode },
                   { label: 'Services', href: '/admin/services', icon: Briefcase },
                   { label: 'Courses', href: '/admin/courses', icon: GraduationCap },
-                  { label: 'All Public Pages', href: '/admin/cms', icon: FileCode },
                 ].map((item) => {
                   const Icon = item.icon
-                  const isActive = pathname === item.href
+                  const isActive =
+                    item.href === '/admin/cms'
+                      ? pathname.startsWith('/admin/cms')
+                      : pathname === item.href
                   return (
                     <Link
                       key={item.label}

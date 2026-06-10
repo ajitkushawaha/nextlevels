@@ -1,5 +1,9 @@
-import NextLevelHomepage from "@/components/home/NextLevelHomepage";
+import PageRenderer from '@/components/cms/PageRenderer'
+import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
+import { getPublishedCmsContent } from '@/lib/cms/pages'
 
-export default function Home() {
-  return <NextLevelHomepage />;
+export default async function Home() {
+  const content = (await getPublishedCmsContent('/')) || defaultHomePageContent
+
+  return <PageRenderer slug="/" content={content} />
 }

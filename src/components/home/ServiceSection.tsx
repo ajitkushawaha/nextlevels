@@ -36,6 +36,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={1}
         slidesPerView={1}
+        breakpointsBase="container"
         loop={true}
         autoplay={{ delay: 5000 }}
         pagination={{ clickable: true }}

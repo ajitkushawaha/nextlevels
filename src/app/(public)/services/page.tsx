@@ -85,15 +85,10 @@ export default function ServicesPage() {
 
 
       {/* Main Content: Interactive Dashboard Hub */}
-      <main className="w-full grow py-10 bg-[#fbf8fc]">
+      <main className="w-full grow  bg-[#fbf8fc]">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
-          
           {/* Renders client-side stateful tabs and bento network */}
           <ServicesInteractiveHub />
-
-          {/* Premium Call to Action Banner */}
-       
-
         </div>
       </main>
 

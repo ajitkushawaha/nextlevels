@@ -1,14 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react'
+import type { HomeFaqsSection } from '@/lib/cms/types'
 
 interface FAQCard {
   question: string
   answer: string
   color: string
-  illustration: React.ReactNode
+  illustration?: React.ReactNode
 }
 
 const faqCards: FAQCard[] = [
@@ -174,28 +175,46 @@ const faqCards: FAQCard[] = [
   }
 ]
 
-export default function FAQSection() {
+export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
+  const sectionRef = useRef<HTMLElement>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [cardsToShow, setCardsToShow] = useState(4)
+  const cards = section?.faqs?.length
+    ? section.faqs.map((faq, index) => ({
+        ...faq,
+        illustration: faqCards[index % faqCards.length]?.illustration,
+      }))
+    : faqCards
 
-  // Adjust responsiveness
+  // Measure the section itself so admin iframe previews use the right layout.
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
+    const section = sectionRef.current
+    if (!section) return
+
+    const updateCardsToShow = (width: number) => {
+      if (width < 640) {
         setCardsToShow(1)
-      } else if (window.innerWidth < 1024) {
+      } else if (width < 1024) {
         setCardsToShow(2)
       } else {
         setCardsToShow(4)
       }
     }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+
+    updateCardsToShow(section.offsetWidth)
+
+    const resizeObserver = new ResizeObserver(entries => {
+      const [entry] = entries
+      updateCardsToShow(entry.contentRect.width)
+    })
+
+    resizeObserver.observe(section)
+
+    return () => resizeObserver.disconnect()
   }, [])
 
   const nextSlide = () => {
-    if (currentIndex < faqCards.length - cardsToShow) {
+    if (safeCurrentIndex < maxIndex) {
       setCurrentIndex(prev => prev + 1)
     } else {
       // Loop back to start
@@ -204,11 +223,11 @@ export default function FAQSection() {
   }
 
   const prevSlide = () => {
-    if (currentIndex > 0) {
+    if (safeCurrentIndex > 0) {
       setCurrentIndex(prev => prev - 1)
     } else {
       // Loop to end
-      setCurrentIndex(faqCards.length - cardsToShow)
+      setCurrentIndex(maxIndex)
     }
   }
 
@@ -217,10 +236,12 @@ export default function FAQSection() {
   }
 
   // Calculate total number of slide pages/dots
-  const totalDots = faqCards.length - cardsToShow + 1
+  const maxIndex = Math.max(cards.length - cardsToShow, 0)
+  const safeCurrentIndex = Math.min(currentIndex, maxIndex)
+  const totalDots = maxIndex + 1
 
   return (
-    <section className="bg-slate-50 py-10 text-[#081638] overflow-hidden select-none">
+    <section ref={sectionRef} className="bg-slate-50 py-10 text-[#081638] overflow-hidden select-none">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         
         {/* Header Block */}
@@ -229,7 +250,7 @@ export default function FAQSection() {
             {/* Eyebrow / LATEST FAQS */}
             <div className="inline-block mb-3">
               <span className="text-xs font-bold uppercase tracking-widest text-[#d7a23a]">
-                LATEST FAQS
+                {section?.eyebrow || 'LATEST FAQS'}
               </span>
               <div className="mt-1 h-[3px] w-8 bg-[#d7a23a] rounded" />
             </div>
@@ -239,7 +260,7 @@ export default function FAQSection() {
               className="text-3xl font-extrabold text-[#081638] sm:text-4xl"
               style={{ fontFamily: 'Farro, sans-serif' }}
             >
-              Frequently Asked Questions
+              {section?.title || 'Frequently Asked Questions'}
             </h2>
           </div>
 
@@ -270,10 +291,10 @@ export default function FAQSection() {
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
-                transform: `translateX(-${currentIndex * (100 / cardsToShow)}%)`,
+                transform: `translateX(-${safeCurrentIndex * (100 / cardsToShow)}%)`,
               }}
             >
-              {faqCards.map((faq, index) => (
+              {cards.map((faq, index) => (
                 <div
                   key={index}
                   className="w-full shrink-0 px-3"
@@ -281,7 +302,7 @@ export default function FAQSection() {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left aspect-square flex flex-col justify-between overflow-hidden">
+                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left min-h-[260px] sm:aspect-square flex flex-col justify-between overflow-hidden">
                     {/* Question */}
                     <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-[52px]">
                       {faq.question}
@@ -324,7 +345,7 @@ export default function FAQSection() {
                 key={i}
                 onClick={() => selectSlide(i)}
                 className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  currentIndex === i ? 'w-6 bg-[#081638]' : 'w-2.5 bg-slate-200'
+                  safeCurrentIndex === i ? 'w-6 bg-[#081638]' : 'w-2.5 bg-slate-200'
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
               />

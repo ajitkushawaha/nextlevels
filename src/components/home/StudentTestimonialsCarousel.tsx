@@ -91,6 +91,7 @@ export default function StudentTestimonialsCarousel({
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={28}
           slidesPerView={1}
+          breakpointsBase="container"
           loop={true}
           watchOverflow={false}
           autoplay={{ delay: 5000 }}

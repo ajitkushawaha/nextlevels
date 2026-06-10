@@ -11,61 +11,44 @@ import Footer from '../layout/footer'
 import FAQSection from './FAQSection'
 import VisaConsultationForm from './VisaConsultationForm'
 import { universitiesData } from '@/lib/mockData'
+import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
+import type {
+  CmsPageContent,
+  HomeAmbassadorsSection as HomeAmbassadorsSectionData,
+  HomeBlogSection as HomeBlogSectionData,
+  HomeDestinationsSection as HomeDestinationsSectionData,
+  HomeFaqsSection as HomeFaqsSectionData,
+  HomeHeroSection as HomeHeroSectionData,
+  HomeProgramSection as HomeProgramSectionData,
+  HomeServicesSection as HomeServicesSectionData,
+  HomeStatsSection as HomeStatsSectionData,
+  HomeTestimonialsSection as HomeTestimonialsSectionData,
+  HomeUniversitiesSection as HomeUniversitiesSectionData,
+  HomeWhyChooseUsSection as HomeWhyChooseUsSectionData,
+} from '@/lib/cms/types'
 
 
 
-const heroFeatures = [
-  {
-    icon: Headphones,
-    title: 'Free Visa Consultation',
-    text: '1-on-1 guidance from visa experts.',
-  },
-  {
-    icon: FileCheck2,
-    title: 'End-to-End Support',
-    text: 'From application to arrival, we are with you.',
-  },
-  {
-    icon: GraduationCap,
-    title: '1000+ Students Placed',
-    text: 'Trusted by students worldwide.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'High Success Rate',
-    text: 'We maximize your chances of success.',
-  },
-]
+const heroIconMap = {
+  Headphones,
+  FileCheck2,
+  GraduationCap,
+  ShieldCheck,
+}
 
-const programBenefits = [
-  'Wide range of programs and universities',
-  'Personalized career counseling',
-  'Scholarship & application assistance',
-  'Test preparation support',
-]
+const whyChooseUsIconMap = {
+  UsersRound,
+  BookOpenCheck,
+  Globe2,
+  Headphones,
+}
 
-const whyChooseUs = [
-  {
-    icon: UsersRound,
-    title: 'Expert Advisors',
-    text: 'Get guidance from experienced counsellors who care about your future.',
-  },
-  {
-    icon: BookOpenCheck,
-    title: 'Clear Process',
-    text: 'Simple, transparent and hassle-free process from start to finish.',
-  },
-  {
-    icon: Globe2,
-    title: 'Global Opportunities',
-    text: 'Access to top universities across the USA, UK, Canada, Australia and more.',
-  },
-  {
-    icon: Headphones,
-    title: 'Personalized Support',
-    text: 'Tailored support at every step to ensure your success.',
-  },
-]
+const statsIconMap = {
+  UsersRound,
+  Building2,
+  Globe2,
+  Award,
+}
 
 const stats = [
   { icon: UsersRound, targetValue: 1000, suffix: '+', label: 'Students Placed' },
@@ -134,35 +117,35 @@ const ambassadors = [
     program: 'Information Technology',
     university: 'University of Colombo',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    link: '/contact-us',
-  },
+    link: '/chat?name=Aastha%20Paudel',
+  }, 
   {
     name: 'Geraldine Penarete',
     program: 'Geology',
     university: 'University of Peradeniya',
     image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&auto=format&fit=crop&q=80',
-    link: '/contact-us',
+    link: '/chat?name=Geraldine%20Penarete',
   },
   {
     name: 'Yumi Wan',
     program: 'Physiotherapy',
     university: 'University of Sydney',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    link: '/contact-us',
+    link: '/chat?name=Yumi%20Wan',
   },
   {
     name: 'Tiara D Souza',
     program: 'Occupational Therapy',
     university: 'Monash University',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
-    link: '/contact-us',
+    link: '/chat?name=Tiara%20D%20Souza',
   },
    {
     name: 'Yumi Wans',
     program: 'Physiotherapy',
     university: 'University of Melbourne',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    link: '/contact-us',
+    link: '/chat?name=Yumi%20Wans',
   },
 ]
 
@@ -317,11 +300,143 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function NextLevelHomepage() {
+function getHomeHeroSection(content: CmsPageContent): HomeHeroSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeHero' && section.enabled
+    ) as HomeHeroSectionData | undefined
+  ) || (defaultHomePageContent.sections[0] as HomeHeroSectionData)
+}
+
+function getHomeProgramSection(content: CmsPageContent): HomeProgramSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeProgram' && section.enabled
+    ) as HomeProgramSectionData | undefined
+  ) || (defaultHomePageContent.sections[1] as HomeProgramSectionData)
+}
+
+function getHomeDestinationsSection(content: CmsPageContent): HomeDestinationsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeDestinations' && section.enabled
+    ) as HomeDestinationsSectionData | undefined
+  ) || (defaultHomePageContent.sections[2] as HomeDestinationsSectionData)
+}
+
+function getHomeWhyChooseUsSection(content: CmsPageContent): HomeWhyChooseUsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeWhyChooseUs' && section.enabled
+    ) as HomeWhyChooseUsSectionData | undefined
+  ) || (defaultHomePageContent.sections[3] as HomeWhyChooseUsSectionData)
+}
+
+function getHomeServicesSection(content: CmsPageContent): HomeServicesSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeServices' && section.enabled
+    ) as HomeServicesSectionData | undefined
+  ) || (defaultHomePageContent.sections[4] as HomeServicesSectionData)
+}
+
+function getHomeUniversitiesSection(content: CmsPageContent): HomeUniversitiesSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeUniversities' && section.enabled
+    ) as HomeUniversitiesSectionData | undefined
+  ) || (defaultHomePageContent.sections[5] as HomeUniversitiesSectionData)
+}
+
+function getHomeStatsSection(content: CmsPageContent): HomeStatsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeStats' && section.enabled
+    ) as HomeStatsSectionData | undefined
+  ) || (defaultHomePageContent.sections[6] as HomeStatsSectionData)
+}
+
+function getHomeTestimonialsSection(content: CmsPageContent): HomeTestimonialsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeTestimonials' && section.enabled
+    ) as HomeTestimonialsSectionData | undefined
+  ) || (defaultHomePageContent.sections[7] as HomeTestimonialsSectionData)
+}
+
+function getHomeAmbassadorsSection(content: CmsPageContent): HomeAmbassadorsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeAmbassadors' && section.enabled
+    ) as HomeAmbassadorsSectionData | undefined
+  ) || (defaultHomePageContent.sections[8] as HomeAmbassadorsSectionData)
+}
+
+function getHomeFaqsSection(content: CmsPageContent): HomeFaqsSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeFaqs' && section.enabled
+    ) as HomeFaqsSectionData | undefined
+  ) || (defaultHomePageContent.sections[9] as HomeFaqsSectionData)
+}
+
+function getHomeBlogSection(content: CmsPageContent): HomeBlogSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeBlog' && section.enabled
+    ) as HomeBlogSectionData | undefined
+  ) || (defaultHomePageContent.sections[10] as HomeBlogSectionData)
+}
+
+interface NextLevelHomepageProps {
+  content?: CmsPageContent
+  includeFooter?: boolean
+  renderHero?: boolean
+  renderProgram?: boolean
+  renderDestinations?: boolean
+  renderWhyChooseUs?: boolean
+  renderServices?: boolean
+  renderUniversities?: boolean
+  renderStats?: boolean
+  renderTestimonials?: boolean
+  renderAmbassadors?: boolean
+  renderFaqs?: boolean
+  renderBlog?: boolean
+  renderStaticSections?: boolean
+}
+
+export default function NextLevelHomepage({
+  content = defaultHomePageContent,
+  includeFooter = true,
+  renderHero = true,
+  renderProgram = true,
+  renderDestinations = true,
+  renderWhyChooseUs = true,
+  renderServices = true,
+  renderUniversities = true,
+  renderStats = true,
+  renderTestimonials = true,
+  renderAmbassadors = true,
+  renderFaqs = true,
+  renderBlog = true,
+  renderStaticSections = true,
+}: NextLevelHomepageProps) {
+  const heroSection = getHomeHeroSection(content)
+  const programSection = getHomeProgramSection(content)
+  const destinationsSection = getHomeDestinationsSection(content)
+  const whyChooseUsSection = getHomeWhyChooseUsSection(content)
+  const servicesSection = getHomeServicesSection(content)
+  const universitiesSection = getHomeUniversitiesSection(content)
+  const statsSection = getHomeStatsSection(content)
+  const testimonialsSection = getHomeTestimonialsSection(content)
+  const ambassadorsSection = getHomeAmbassadorsSection(content)
+  const faqsSection = getHomeFaqsSection(content)
+  const blogSection = getHomeBlogSection(content)
+
   return (
     <div className="bg-white text-[#081638]">
       <main>
-        <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-5 sm:px-8 lg:px-10">
+        {renderHero && <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-5 sm:px-8 lg:px-10">
           {/* Subtle light background matrix dots & world map overlay */}
           <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(#081638 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-center bg-no-repeat bg-cover mix-blend-multiply" style={{ backgroundImage: "url('/visa/map.png')" }}></div>
@@ -335,12 +450,12 @@ export default function NextLevelHomepage() {
             {/* Left Column */}
             <div className="flex flex-col justify-center z-10 text-left px-2">
               <h1 className="text-4xl sm:text-5xl text-[#081638]  lg:text-[56px] font-black   leading-[1.1] tracking-tight">
-                <span className="text-[#081638]  block mb-1">Free Student Visa</span>
-                Consultation to
-                <span className=" text-[#d7a23a] block mb-1">Study Abroad</span>
+                <span className="text-[#081638]  block mb-1">{heroSection.titleLine1}</span>
+                {heroSection.titleLine2}
+                <span className=" text-[#d7a23a] block mb-1">{heroSection.highlightedTitle}</span>
               </h1>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-[#59616f] font-medium">
-                By taking our expert guidance for your global education journey, you can build your profile and save time. Starting right now.
+                {heroSection.description}
               </p>
 
               {/* Interactive consultation lookup and action selectors */}
@@ -353,8 +468,8 @@ export default function NextLevelHomepage() {
               {/* Main Image Box */}
               <div className="relative  z-6 w-70 h-100 sm:w-85 py-4 sm:h-112.5 lg:w-120 lg:h-150 rounded-2xl overflow-hidden    transition-all duration-500 hover:scale-[1.00]">
                 <Image
-                  src="/image.png"
-                  alt="Student with Suitcase"
+                  src={heroSection.image.src}
+                  alt={heroSection.image.alt}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 480px"
                   className="object-contain  object-top hover:scale-100 transition-transform duration-700"
@@ -367,8 +482,8 @@ export default function NextLevelHomepage() {
           <div className="relative z-20 mx-auto max-w-7xl mb-4 sm:mb-0 ">
             {/* Features Highlight Grid */}
             <div className="grid  gap-3 rounded-lg bg-white p-4 text-[#081638] shadow-[0_20px_55px_rgba(6,19,49,0.14)] sm:grid-cols-2 lg:grid-cols-4">
-              {heroFeatures.map(feature => {
-                const Icon = feature.icon
+              {heroSection.features.map(feature => {
+                const Icon = heroIconMap[feature.icon] || Headphones
                 return (
                   <article
                     key={feature.title}
@@ -391,8 +506,9 @@ export default function NextLevelHomepage() {
             </div>
           </div>
           {/* <FlyingAeroplane /> */}
-        </section>
+        </section>}
 
+        {renderProgram && (
         <section id="programs" className="relative bg-white py-10  overflow-hidden">
           <div
             aria-hidden="true"
@@ -409,27 +525,27 @@ export default function NextLevelHomepage() {
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:px-10">
             <div className="relative min-h-90 sm:min-h-107.5">
               <div className="absolute left-0 top-0 h-48 w-72 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
-                <Image
-                  src="/home2/happy-ma.png"
-                  alt="Students discussing study abroad options"
+	                <Image
+	                  src={programSection.images[0].src}
+	                  alt={programSection.images[0].alt}
                   fill
                   className="object-cover"
                   sizes="320px"
                 />
               </div>
               <div className="absolute right-0 -top-10 h-56 w-72 translate-y-[50%] overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
-                <Image
-                  src="/home2/happy-team.png"
-                  alt="Students with passports"
+	                <Image
+	                  src={programSection.images[1].src}
+	                  alt={programSection.images[1].alt}
                   fill
                   className="object-cover"
                   sizes="384px"
                 />
               </div>
               <div className="absolute bottom-0 -right-24 h-48 w-80 -translate-x-1/2 overflow-hidden rounded-lg shadow-[0_16px_42px_rgba(8,22,56,0.15)] border-2 border-transparent transition-all duration-300 hover:scale-105 hover:z-20 hover:border-[#d7a23a]">
-                <Image
-                  src="/home2/happy-gi.png"
-                  alt="Visa application documents"
+	                <Image
+	                  src={programSection.images[2].src}
+	                  alt={programSection.images[2].alt}
                   fill
                   className="object-cover"
                   sizes="320px"
@@ -440,28 +556,27 @@ export default function NextLevelHomepage() {
                   className="text-xl font-bold leading-6 text-white"
                   style={{ fontFamily: 'Farro, sans-serif' }}
                 >
-                  Your Future
-                  <br />
-                  Starts Here
+	                  {programSection.badge.line1}
+	                  <br />
+	                  {programSection.badge.line2}
                 </p>
               </div>
             </div>
 
             <div>
-              <Eyebrow>WHO WE ARE</Eyebrow>
+              <Eyebrow>{programSection.eyebrow}</Eyebrow>
               <h2
                 className="mt-3 max-w-lg text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
-                Find the Right Program in Top Universities
+                {programSection.title}
               </h2>
               <p className="mt-1 max-w-xl text-sm leading-7 text-[#59616f] sm:text-base">
-                We help you choose the right course and university that matches
-                your goals and future aspirations.
+                {programSection.description}
               </p>
 
               <ul className="mt-3 space-y-1">
-                {programBenefits.map(benefit => (
+                {programSection.benefits.map(benefit => (
                   <li
                     key={benefit}
                     className="flex items-start gap-1 text-sm font-medium text-[#273149]"
@@ -472,40 +587,36 @@ export default function NextLevelHomepage() {
                 ))}
               </ul>
 
-              <Link
-                href="/services"
+	              <Link
+	                href={programSection.cta.href}
                 className="mt-5 inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0d2459]"
               >
-                Explore Programs
+	                {programSection.cta.label}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
         </section>
+        )}
 
-        {/* Study Destinations Section */}
+        {renderDestinations && (
         <section className="bg-slate-50 py-10 px-5 sm:px-8 lg:px-10">
           <div className="mx-auto max-w-7xl">
             {/* Title Section */}
             <div className="mb-10 text-left">
               <h2 className="text-3xl font-extrabold text-[#081638] sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                Your dream study destination awaits
+                {destinationsSection.title}
               </h2>
               {/* Short thick accent line */}
               <div className="mt-3 h-1.25 w-12 bg-[#d7a23a] rounded" />
               <p className="mt-5 text-sm leading-relaxed text-[#59616f] sm:text-base font-medium">
-                Start your inspiring academic journey in these vibrant and welcoming study destinations!
+                {destinationsSection.description}
               </p>
             </div>
 
             {/* Country Cards Grid */}
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { name: 'Australia', image: '/destinations_australia.png' },
-                { name: 'Canada', image: '/destinations_canada.png' },
-                { name: 'New Zealand', image: '/destinations_nz.png' },
-                { name: 'United Kingdom', image: '/destinations_uk.png' },
-              ].map((country) => (
+              {destinationsSection.destinations.map((country) => (
                 <div
                   key={country.name}
                   className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
@@ -513,7 +624,7 @@ export default function NextLevelHomepage() {
                 >
                   <Image
                     src={country.image}
-                    alt={country.name}
+                    alt={country.alt || country.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -532,12 +643,14 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
+        )}
 
+        {renderWhyChooseUs && (
         <section className="bg-[#061331] py-10 text-white ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
               <div className="relative inline-block pb-2.5 mb-2">
-                <Eyebrow>Why Choose Next Level Education</Eyebrow>
+                <Eyebrow>{whyChooseUsSection.eyebrow}</Eyebrow>
                 <svg
                   className="absolute left-0 bottom-0 w-full h-2 text-[#d7a23a] pointer-events-none"
                   viewBox="0 0 100 10"
@@ -558,13 +671,13 @@ export default function NextLevelHomepage() {
                 className="mt-1 text-3xl font-bold leading-tight sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
-                We Make Your Study Abroad Journey Easy
+                {whyChooseUsSection.title}
               </h2>
             </div>
 
             <div className="mt-10 grid gap-6 lg:grid-cols-4">
-              {whyChooseUs.map(item => {
-                const Icon = item.icon
+              {whyChooseUsSection.items.map(item => {
+                const Icon = whyChooseUsIconMap[item.icon] || Headphones
                 return (
                   <article
                     key={item.title}
@@ -585,25 +698,32 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
+        )}
 
+        {renderStaticSections && (
+          <>
+
+        {renderServices && (
         <section className="bg-white py-10 ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center">
-              <Eyebrow>Our Services</Eyebrow>
+              <Eyebrow>{servicesSection.eyebrow}</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
-                How We Can Help You Succeed
+                {servicesSection.title}
               </h2>
             </div>
             <div className="mt-10">
-              <ServicesCarousel services={services} />
+              <ServicesCarousel services={servicesSection.services} />
             </div>
           </div>
         </section>
+        )}
 
         {/* Featured Partner Universities Section */}
+        {renderUniversities && (
         <section className="bg-slate-50 border-y border-[#ece8df]/40 py-10 relative overflow-hidden">
           <div aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 opacity-30">
             <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1.25rem_1.25rem]" />
@@ -614,15 +734,15 @@ export default function NextLevelHomepage() {
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-12">
-              <Eyebrow>Top Institutions</Eyebrow>
+              <Eyebrow>{universitiesSection.eyebrow}</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
-                Featured <span className="text-[#d7a23a]">Partner Universities</span>
+                {universitiesSection.title} <span className="text-[#d7a23a]">{universitiesSection.highlightedTitle}</span>
               </h2>
               <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
-                Explore our elite partner institutions from around the globe. Get direct admissions assistance, visa processing support, and scholarship options.
+                {universitiesSection.description}
               </p>
             </div>
 
@@ -686,20 +806,22 @@ export default function NextLevelHomepage() {
 
             <div className="mt-12 text-center">
               <Link
-                href="/courses"
+                href={universitiesSection.cta.href}
                 className="inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md"
               >
-                Browse All Universities & Courses
+                {universitiesSection.cta.label}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
         </section>
+        )}
 
+        {renderStats && (
         <section className="bg-[#031336] py-10">
           <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-10">
-            {stats.map(stat => {
-              const Icon = stat.icon
+            {statsSection.stats.map(stat => {
+              const Icon = statsIconMap[stat.icon] || UsersRound
               return (
                 <article
                   key={stat.label}
@@ -719,40 +841,44 @@ export default function NextLevelHomepage() {
             })}
           </div>
         </section>
+        )}
 
         {/* Testimonials, Ambassador & Student Life Container */}
+        {renderTestimonials && (
         <section id="testimonials" className=" py-10  overflow-hidden bg-amber-50">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="text-center mb-10">
-              <Eyebrow>Testimonials</Eyebrow>
+              <Eyebrow>{testimonialsSection.eyebrow}</Eyebrow>
               <h2
                 className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
-                What Our Students Say
+                {testimonialsSection.title}
               </h2>
             </div>
 
-            <StudentTestimonialsCarousel testimonials={testimonials} />
+            <StudentTestimonialsCarousel testimonials={testimonialsSection.testimonials} />
           </div>
         </section>
+        )}
 
         {/* Student Ambassador & Life Combined Section */}
+        {renderAmbassadors && (
         <section className="bg-white py-10 px-5 sm:px-8 lg:px-10">
           <div className="mx-auto max-w-7xl">
             {/* Chat to a Student Ambassador Subsection */}
             <div className="mb-5">
               <div className="text-left mb-5">
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  Chat to a student ambassador
+                  {ambassadorsSection.ambassadorTitle}
                 </h2>
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
-                  Speak to Next Level ambassadors today!
+                  {ambassadorsSection.ambassadorDescription}
                 </p>
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
-                {ambassadors.map((ambassador) => (
+                {ambassadorsSection.ambassadors.map((ambassador) => (
                   <div
                     key={ambassador.name}
                     className="bg-white border border-[#ece8df] rounded-3xl p-8 flex flex-col items-center justify-between text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
@@ -790,15 +916,15 @@ export default function NextLevelHomepage() {
             <div className="pt-3 border-t border-[#ece8df]/60">
               <div className="text-left mb-5">
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  Success Stories
+                  {ambassadorsSection.storiesTitle}
                 </h2>
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
-                  Hear from past students!
+                  {ambassadorsSection.storiesDescription}
                 </p>
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                {studentLifeVideos.map((video) => (
+                {ambassadorsSection.videos.map((video) => (
                   <div
                     key={video.title}
                     className="bg-white rounded-3xl border border-[#ece8df] overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
@@ -847,32 +973,34 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
+        )}
 
-        <FAQSection />
+        {renderFaqs && <FAQSection section={faqsSection} />}
 
+        {renderBlog && (
         <section className="bg-white py-10 ">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <Eyebrow>Latest From Our Blog</Eyebrow>
+                <Eyebrow>{blogSection.eyebrow}</Eyebrow>
                 <h2
                   className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                   style={{ fontFamily: 'Farro, sans-serif' }}
                 >
-                  Tips &amp; Updates for Students
+                  {blogSection.title}
                 </h2>
               </div>
               <Link
-                href="/blog"
+                href={blogSection.cta.href}
                 className="inline-flex items-center gap-2 text-sm font-bold text-[#061331] transition hover:text-[#d7a23a]"
               >
-                View All Blogs
+                {blogSection.cta.label}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              {blogs.map((blog, index) => (
+              {blogSection.posts.map((blog, index) => (
                 <article
                   key={`${blog.title}-${index}`}
                   className="overflow-hidden rounded-3xl border border-[#ece8df] bg-white shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:scale-[1.025] hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(8,22,56,0.12)] hover:border-[#d7a23a]/40"
@@ -896,7 +1024,7 @@ export default function NextLevelHomepage() {
                       {blog.title}
                     </h3>
                     <Link
-                      href="/blog"
+                      href={blog.href}
                       className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#061331] transition hover:text-[#d7a23a]"
                     >
                       Read More
@@ -908,11 +1036,14 @@ export default function NextLevelHomepage() {
             </div>
           </div>
         </section>
+        )}
+          </>
+        )}
 
 
       </main>
 
-      <Footer />
+      {includeFooter && <Footer />}
     </div>
   )
 }
