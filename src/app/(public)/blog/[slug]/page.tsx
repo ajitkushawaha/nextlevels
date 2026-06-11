@@ -568,10 +568,10 @@ Please help me with the admission consultation process.`
       <ReadingProgress />
 
       {/* ── HERO BANNER ── */}
-      <section className="relative bg-[#081638] overflow-hidden min-h-[420px] sm:min-h-[480px] flex flex-col justify-end">
+      <section className="relative  bg-[#081638] overflow-hidden min-h-105 sm:min-h-120 flex flex-col justify-end">
         {/* Background Image */}
         {post.featuredImage && (
-          <div className="absolute inset-0 z-0">
+          <div className="absolute  inset-0 z-0">
             <Image
               src={post.featuredImage}
               alt={post.featuredImageAlt || post.title}
@@ -588,7 +588,7 @@ Please help me with the admission consultation process.`
         <div className="absolute inset-0 z-10 opacity-20"
           style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, #d7a23a 0%, transparent 50%)' }}
         />
-        <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-14">
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-14">
           {/* Breadcrumb */}
           <nav className="mb-5 flex items-center gap-2 text-xs text-slate-300/80">
             <Link href="/" className="hover:text-[#d7a23a] transition-colors font-medium">Home</Link>
@@ -653,8 +653,8 @@ Please help me with the admission consultation process.`
       </section>
 
       {/* ── MAIN BODY ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
 
           {/* ── LEFT: CONTENT ── */}
           <div className="lg:col-span-8">
@@ -677,25 +677,24 @@ Please help me with the admission consultation process.`
             {/* Article Content */}
             <article
               id="blog-content"
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8 md:p-10
-              prose prose-base md:prose-lg max-w-none font-sans
-              prose-headings:text-[#081638] prose-headings:font-bold prose-headings:font-serif
-              prose-h1:text-3xl prose-h1:font-extrabold prose-h1:mb-6 prose-h1:mt-0 prose-h1:leading-tight prose-h1:border-b-4 prose-h1:border-[#d7a23a] prose-h1:pb-3 prose-h1:text-[#081638]
-              prose-h2:text-2xl prose-h2:font-extrabold prose-h2:mb-4 prose-h2:mt-10 prose-h2:leading-tight prose-h2:text-[#081638] prose-h2:border-l-4 prose-h2:border-[#d7a23a] prose-h2:pl-4
-              prose-h3:text-xl prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:leading-tight prose-h3:text-[#0d2459]
-              prose-h4:text-lg prose-h4:font-bold prose-h4:mb-2 prose-h4:mt-6 prose-h4:text-slate-700 prose-h4:px-4 prose-h4:py-1.5 prose-h4:rounded prose-h4:border-l-4 prose-h4:border-[#d7a23a] prose-h4:bg-slate-50
-              prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-5 prose-p:text-base md:prose-p:text-[17px]
-              prose-a:text-[#d7a23a] prose-a:no-underline prose-a:font-semibold hover:prose-a:underline
-              prose-strong:text-[#081638] prose-strong:font-bold
-              prose-ul:text-slate-700 prose-ul:mb-5 prose-ul:pl-0 prose-ul:space-y-2 prose-ul:list-none
-              prose-li:text-slate-700 prose-li:mb-2 prose-li:leading-relaxed prose-li:relative prose-li:pl-6
-              prose-ol:text-slate-700 prose-ol:mb-5 prose-ol:pl-6 prose-ol:space-y-2
-              prose-blockquote:border-l-4 prose-blockquote:border-[#d7a23a] prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r-xl prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:text-slate-600 prose-blockquote:bg-amber-50
-              prose-img:rounded-xl prose-img:shadow-md prose-img:my-6 prose-img:w-full
-              prose-table:text-sm prose-table:border-collapse prose-table:border prose-table:border-slate-200 prose-table:rounded-xl prose-table:overflow-hidden prose-table:my-6
-              prose-th:bg-[#081638] prose-th:text-white prose-th:border prose-th:border-slate-300 prose-th:px-4 prose-th:py-3 prose-th:font-bold prose-th:text-left
-              prose-td:border prose-td:border-slate-200 prose-td:px-4 prose-td:py-3 prose-td:text-slate-700
-              prose-hr:border-slate-200 prose-hr:my-8 prose-hr:border-t-2"
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 sm:p-8 lg:p-10 font-sans
+              [&_.blog-content>*:first-child]:mt-0
+              [&_.blog-content_h1]:mt-0 [&_.blog-content_h1]:mb-6 [&_.blog-content_h1]:text-3xl [&_.blog-content_h1]:font-extrabold [&_.blog-content_h1]:leading-tight [&_.blog-content_h1]:text-[#081638]
+              [&_.blog-content_h2]:mt-10 [&_.blog-content_h2]:mb-4 [&_.blog-content_h2]:text-2xl [&_.blog-content_h2]:font-extrabold [&_.blog-content_h2]:leading-tight [&_.blog-content_h2]:text-[#081638]
+              [&_.blog-content_h3]:mt-7 [&_.blog-content_h3]:mb-3 [&_.blog-content_h3]:rounded-md [&_.blog-content_h3]:bg-slate-50 [&_.blog-content_h3]:px-4 [&_.blog-content_h3]:py-2 [&_.blog-content_h3]:text-lg [&_.blog-content_h3]:font-bold [&_.blog-content_h3]:leading-tight [&_.blog-content_h3]:text-[#0d2459]
+              [&_.blog-content_h4]:mt-6 [&_.blog-content_h4]:mb-2 [&_.blog-content_h4]:text-base [&_.blog-content_h4]:font-bold [&_.blog-content_h4]:text-[#081638]
+              [&_.blog-content_p]:mb-4 [&_.blog-content_p]:text-base [&_.blog-content_p]:leading-8 [&_.blog-content_p]:text-slate-700 md:[&_.blog-content_p]:text-[17px]
+              [&_.blog-content_a]:font-semibold [&_.blog-content_a]:text-[#d7a23a] [&_.blog-content_a]:no-underline hover:[&_.blog-content_a]:underline
+              [&_.blog-content_strong]:font-bold [&_.blog-content_strong]:text-[#081638]
+              [&_.blog-content_ul]:mb-5 [&_.blog-content_ul]:list-disc [&_.blog-content_ul]:space-y-2 [&_.blog-content_ul]:pl-7 [&_.blog-content_ul]:text-slate-700
+              [&_.blog-content_ol]:mb-5 [&_.blog-content_ol]:list-decimal [&_.blog-content_ol]:space-y-2 [&_.blog-content_ol]:pl-7 [&_.blog-content_ol]:text-slate-700
+              [&_.blog-content_li]:pl-1 [&_.blog-content_li]:leading-7 [&_.blog-content_li]:text-slate-700 [&_.blog-content_li_p]:mb-1
+              [&_.blog-content_blockquote]:my-6 [&_.blog-content_blockquote]:rounded-xl [&_.blog-content_blockquote]:bg-amber-50 [&_.blog-content_blockquote]:p-5 [&_.blog-content_blockquote]:italic [&_.blog-content_blockquote]:text-slate-600
+              [&_.blog-content_img]:my-6 [&_.blog-content_img]:w-full [&_.blog-content_img]:rounded-xl [&_.blog-content_img]:shadow-md
+              [&_.blog-content_table]:my-6 [&_.blog-content_table]:w-full [&_.blog-content_table]:border-collapse [&_.blog-content_table]:overflow-hidden [&_.blog-content_table]:rounded-xl [&_.blog-content_table]:border [&_.blog-content_table]:border-slate-200 [&_.blog-content_table]:text-sm
+              [&_.blog-content_th]:border [&_.blog-content_th]:border-slate-300 [&_.blog-content_th]:bg-[#081638] [&_.blog-content_th]:px-4 [&_.blog-content_th]:py-3 [&_.blog-content_th]:text-left [&_.blog-content_th]:font-bold [&_.blog-content_th]:text-white
+              [&_.blog-content_td]:border [&_.blog-content_td]:border-slate-200 [&_.blog-content_td]:px-4 [&_.blog-content_td]:py-3 [&_.blog-content_td]:text-slate-700
+              [&_.blog-content_hr]:my-8 [&_.blog-content_hr]:border-t-2 [&_.blog-content_hr]:border-slate-200"
             >
               <section
                 className="blog-content"
@@ -777,7 +776,7 @@ Please help me with the admission consultation process.`
 
           {/* ── RIGHT: SIDEBAR ── */}
           <div className="lg:col-span-4">
-            <div className="sticky top-8 space-y-6">
+            <div className="sticky top-24 space-y-6">
 
               {/* Free Consultation CTA */}
               <div className="bg-linear-to-br from-[#081638] to-[#0d2459] rounded-2xl p-6 text-white shadow-lg text-center space-y-4">

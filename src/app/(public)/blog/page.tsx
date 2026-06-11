@@ -97,7 +97,7 @@ export default async function BlogPage({
     <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
       
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative max-w-7xl w-full mx-auto overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
         
         {/* Background Image */}
         <Image
@@ -112,7 +112,7 @@ export default async function BlogPage({
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Top Breadcrumb */}
-          <div className="max-w-[750px]">
+          <div className="max-w-7xl">
             <nav aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
                 <li>
@@ -148,8 +148,8 @@ export default async function BlogPage({
       </section>
 
       {/* Main Content */}
-      <main className="w-full grow py-12 bg-slate-50/40">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8">
+      <main className="max-w-7xl mx-auto grow py-12 bg-slate-50/40">
+        <div className="w-full max-w-300 mx-auto px-5 sm:px-8">
           
           {/* Category Filter list */}
           <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-12">
@@ -305,7 +305,7 @@ export default async function BlogPage({
                     >
                       <Button
                         variant={pageNum === page ? 'default' : 'outline'}
-                        className={`h-10 min-w-[40px] px-3 rounded-full font-bold transition-all shadow-sm ${pageNum === page
+                        className={`h-10 min-w-10 px-3 rounded-full font-bold transition-all shadow-sm ${pageNum === page
                           ? 'bg-[#d7a23a] text-[#061331] border-[#d7a23a] hover:bg-[#efbd5a]'
                           : 'border-slate-200 text-[#061331] hover:bg-slate-50'
                           }`}

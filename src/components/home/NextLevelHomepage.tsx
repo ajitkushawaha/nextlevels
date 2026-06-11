@@ -26,6 +26,7 @@ import type {
   HomeUniversitiesSection as HomeUniversitiesSectionData,
   HomeWhyChooseUsSection as HomeWhyChooseUsSectionData,
 } from '@/lib/cms/types'
+import { Button } from '../ui/button'
 
 
 
@@ -566,7 +567,7 @@ export default function NextLevelHomepage({
             <div>
               <Eyebrow>{programSection.eyebrow}</Eyebrow>
               <h2
-                className="mt-3 max-w-lg text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
+                className="mt-3 max-w-lg text-3xl font-bold  text-[#081638] sm:text-4xl"
                 style={{ fontFamily: 'Farro, sans-serif' }}
               >
                 {programSection.title}
@@ -864,11 +865,11 @@ export default function NextLevelHomepage({
 
         {/* Student Ambassador & Life Combined Section */}
         {renderAmbassadors && (
-        <section className="bg-white py-10 px-5 sm:px-8 lg:px-10">
+        <section className="bg-white ">
           <div className="mx-auto max-w-7xl">
             {/* Chat to a Student Ambassador Subsection */}
-            <div className="mb-5">
-              <div className="text-left mb-5">
+            <div className="mb-5 py-10 px-5 sm:px-8 lg:px-10">
+              <div className="text-center mb-10">
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   {ambassadorsSection.ambassadorTitle}
                 </h2>
@@ -912,15 +913,26 @@ export default function NextLevelHomepage({
               </div>
             </div>
 
-            {/* Student Life Videos Subsection */}
-            <div className="pt-3 border-t border-[#ece8df]/60">
-              <div className="text-left mb-5">
-                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+            {/* Success Story Videos Subsection */}
+            <div className=" bg-[#081638] py-10 px-5 sm:px-8 lg:px-10">
+              <div className="flex justify-between items-center mb-5">
+                <div>
+                  <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   {ambassadorsSection.storiesTitle}
                 </h2>
-                <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
+                <p className="mt-1 text-sm text-white/80 font-semibold sm:text-base">
                   {ambassadorsSection.storiesDescription}
                 </p>
+                </div>
+                <div>
+                <Button 
+                className="bg-[#fffff] text-white px-4 py-2 rounded-md font-bold hover:text-[#d7a23a]"
+                onClick={() => {
+                  window.location.href = '/faq'
+                }}
+                >View All <ArrowRight className="w-4 h-4 " /></Button>
+                
+                </div>
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

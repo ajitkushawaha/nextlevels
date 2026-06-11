@@ -30,7 +30,7 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
       
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
         
         {/* Background Image */}
         <Image
@@ -45,7 +45,7 @@ export default function ServicesPage() {
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Top Breadcrumb */}
-          <div className="max-w-[750px]">
+          <div className="max-w-187.5">
             <nav aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
                 <li>
@@ -85,7 +85,7 @@ export default function ServicesPage() {
 
 
       {/* Main Content: Interactive Dashboard Hub */}
-      <main className="w-full grow  bg-[#fbf8fc]">
+      <main className="w-full grow py-10  bg-[#fbf8fc]">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
           {/* Renders client-side stateful tabs and bento network */}
           <ServicesInteractiveHub />

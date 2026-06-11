@@ -2,11 +2,13 @@
  * Processes blog content HTML to ensure links are clickable and properly configured
  */
 export function processBlogContent(htmlContent: string): string {
+  const normalizedContent = normalizeBlogContent(htmlContent)
+
   // Check if we're in a browser environment
   if (typeof window === 'undefined') {
     // Server-side: use regex to process links
     // This regex handles both self-closing and regular anchor tags
-    return htmlContent.replace(
+    return normalizedContent.replace(
       /<a\s+([^>]*?href=["']([^"']+)["'][^>]*?)>(.*?)<\/a>/gi,
       (match, attributes, href, content) => {
         if (!href) {
@@ -73,7 +75,7 @@ export function processBlogContent(htmlContent: string): string {
 
   // Client-side: use DOMParser
   const parser = new DOMParser()
-  const doc = parser.parseFromString(htmlContent, 'text/html')
+  const doc = parser.parseFromString(normalizedContent, 'text/html')
   const links = doc.querySelectorAll('a[href]')
 
   links.forEach(link => {
@@ -100,4 +102,39 @@ export function processBlogContent(htmlContent: string): string {
   })
 
   return doc.body.innerHTML
+}
+
+function normalizeBlogContent(content: string): string {
+  if (!content) return ''
+
+  const trimmed = content.trim()
+  const hasBlockHtml = /<\/?(p|div|section|article|h[1-6]|ul|ol|li|blockquote|table|figure|img)\b/i.test(trimmed)
+
+  if (hasBlockHtml) return trimmed
+
+  return trimmed
+    .replace(/<br\s*\/?>/gi, '\n')
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map((line, index) => {
+      const escaped = escapeHtml(line)
+      const isHeading =
+        index === 0 ||
+        line.endsWith(':') ||
+        /^week\s+\d+\s*:/i.test(line) ||
+        /^(final thoughts|common mistakes to avoid|sample daily study schedule|before the exam)$/i.test(line)
+
+      return isHeading ? `<h2>${escaped}</h2>` : `<p>${escaped}</p>`
+    })
+    .join('\n')
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }

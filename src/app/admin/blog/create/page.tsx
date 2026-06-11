@@ -630,7 +630,7 @@ export default function CreateBlogPage() {
       </div>
 
       <div className="space-y-6">
-        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden">
+        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />

@@ -124,7 +124,7 @@ export default function AboutCMSPage() {
 
             <CardContent className="p-6 bg-slate-100/50 flex justify-center items-center overflow-x-auto">
               {viewportMode === 'mobile' ? (
-                <div className="w-full max-w-[270px] bg-white border border-slate-300 rounded-3xl shadow-xl p-3 flex flex-col justify-between aspect-9/16 relative transition-all duration-300">
+                <div className="w-full max-w-67.5 bg-white border border-slate-300 rounded-3xl shadow-xl p-3 flex flex-col justify-between aspect-9/16 relative transition-all duration-300">
                   <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-4 bg-slate-900 rounded-full flex items-center justify-center">
                     <div className="w-2 h-2 bg-slate-800 rounded-full mr-2"></div>
                     <div className="w-1.5 h-1.5 bg-slate-800 rounded-full"></div>

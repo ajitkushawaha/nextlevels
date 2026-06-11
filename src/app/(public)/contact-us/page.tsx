@@ -108,7 +108,7 @@ export default function ContactUsPage() {
           </div>
 
           {/* New Free Counselling Form Component */}
-          <div className="bg-white  rounded-4xl p-6 sm:p-8 lg:p-12 shadow-[0_15px_50px_rgba(8,22,56,0.03)] ">
+          <div className="bg-white rounded-4xl p-4 sm:p-5 lg:p-6 shadow-[0_15px_50px_rgba(8,22,56,0.03)] ">
             <FreeCounsellingForm />
           </div>
 

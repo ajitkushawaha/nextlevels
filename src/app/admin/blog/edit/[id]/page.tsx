@@ -708,7 +708,7 @@ export default function EditBlogPage() {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  the blog post "{originalData?.title}" and remove all
+                  the blog post &quot;{originalData?.title}&quot; and remove all
                   associated data.
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -762,7 +762,7 @@ export default function EditBlogPage() {
       </div>
 
       <div className="space-y-6">
-        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden">
+        <Card className="border border-slate-200 shadow-sm bg-white rounded-2xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />

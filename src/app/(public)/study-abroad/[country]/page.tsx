@@ -526,7 +526,7 @@ export default async function StudyDestinationPage({ params }: Params) {
 
         <section className="bg-[#E9EFF6] py-10">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <div className="rounded-md bg-white/40 p-4 sm:p-6">
+            <div className="rounded-md bg-white/40 p-3 sm:p-4">
               <FreeCounsellingForm />
             </div>
           </div>

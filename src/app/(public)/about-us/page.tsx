@@ -27,11 +27,13 @@ export async function generateMetadata() {
 }
 
 export default function AboutUsPage() {
+  const teamImagePositions = ['0% 50%', '33.333% 50%', '66.666% 50%', '100% 50%']
+
   return (
     <div className="min-h-screen bg-white text-[#061331] font-sans flex flex-col justify-between">
 
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
         <Image
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200"
           alt="About Us Banner"
@@ -40,7 +42,7 @@ export default function AboutUsPage() {
           className="object-cover object-center absolute inset-0 z-0"
         />
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-[750px]">
+          <div className="max-w-187.5">
             <nav aria-label="Breadcrumb">
               <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
                 <li>
@@ -131,12 +133,12 @@ export default function AboutUsPage() {
               <div className="absolute -top-6 -left-6 w-24 h-24 bg-[radial-gradient(#d7a23a_2px,transparent_2px)] bg-size-[12px_12px] opacity-40"></div>
 
               {/* Image Frame with Offset Outline */}
-              <div className="relative w-full max-w-[520px] aspect-16/10 sm:aspect-[1.5] rounded-tl-[140px] rounded-br-[140px] rounded-tr-[40px] rounded-bl-[40px] border border-[#d7a23a]/30 shadow-2xl hover:-translate-y-1 transition-all duration-300">
+              <div className="relative w-full max-w-130 aspect-16/10 sm:aspect-[1.5] rounded-tl-[140px] rounded-br-[140px] rounded-tr-[40px] rounded-bl-[40px] border border-[#d7a23a]/30 shadow-2xl hover:-translate-y-1 transition-all duration-300">
                 <div className="absolute inset-0 border-2 border-[#d7a23a]/30 rounded-tl-[140px] rounded-br-[140px] rounded-tr-[40px] rounded-bl-[40px] transform translate-x-4.5 translate-y-4.5 -z-10 transition-transform duration-300"></div>
                 <div className="relative w-full h-full overflow-hidden rounded-tl-[136px] rounded-br-[136px] rounded-tr-[36px] rounded-bl-[36px]">
                   <Image
-                    alt="Education Consultancy Consultation"
-                    src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1000"
+                    alt="Next Level Education counsellor reviewing study abroad documents with students"
+                    src="/about-team-counselling.png"
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 520px"
@@ -151,7 +153,7 @@ export default function AboutUsPage() {
 
         {/* Vision & Mission Section (Light Container Banner) */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 ">
-          <div className="bg-[#fdfbf7] border border-[#f5efe4] rounded-[32px] p-8 md:p-12 shadow-[0_10px_35px_rgba(6,19,49,0.02)]">
+          <div className="bg-[#fdfbf7] border border-[#f5efe4] rounded-4xl p-8 md:p-12 shadow-[0_10px_35px_rgba(6,19,49,0.02)]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start relative">
 
               {/* Vision */}
@@ -187,6 +189,90 @@ export default function AboutUsPage() {
           </div>
         </section>
 
+        {/* Our Team Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-10">
+          <div>
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[#d7a23a] block">
+                Our Team
+              </span>
+              <h2 className="mt-3 text-3xl sm:text-4xl font-bold font-serif text-[#061331] leading-[1.15]">
+                The people guiding every student journey.
+              </h2>
+              <div className="mx-auto mt-4 h-1.5 w-20 bg-[#d7a23a] rounded-full" />
+              <p className="mt-5 text-sm sm:text-base leading-relaxed text-slate-500 font-medium">
+                Our team brings counselling, admissions, documentation, and student support together so every application is handled with care from first conversation to offer stage.
+              </p>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                {
+                  title: 'Education Counsellors',
+                  subtitle: 'Student Guidance Team',
+                  text: 'Help students choose suitable countries, courses, universities, and intakes based on profile and goals.',
+                  icon: UserCheck,
+                },
+                {
+                  title: 'Admissions Coordinators',
+                  subtitle: 'University Application Team',
+                  text: 'Prepare applications, communicate with partner universities, and keep each offer process moving.',
+                  icon: Building,
+                },
+                {
+                  title: 'Visa & Document Advisors',
+                  subtitle: 'Compliance Review Team',
+                  text: 'Review academic, financial, identity, and statement documents with a compliance-first mindset.',
+                  icon: Shield,
+                },
+                {
+                  title: 'Student Success Support',
+                  subtitle: 'Follow-Up & Care Team',
+                  text: 'Guide students through follow-ups, practical next steps, and pre-departure readiness.',
+                  icon: Heart,
+                },
+              ].map((member, index) => {
+                const Icon = member.icon
+
+                return (
+                  <div
+                    key={member.title}
+                    className="group overflow-hidden rounded-3xl border border-[#f2ece2]/80 bg-white text-left shadow-[0_8px_30px_rgba(6,19,49,0.015)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_34px_rgba(6,19,49,0.05)]"
+                  >
+                    <div
+                      className="h-56 bg-cover bg-slate-100 bg-no-repeat sm:h-52 lg:h-48"
+                      role="img"
+                      aria-label={`${member.title} team member`}
+                      style={{
+                        backgroundImage: "url('/about-team-members.png')",
+                        backgroundPosition: teamImagePositions[index],
+                        backgroundSize: '400% 100%',
+                      }}
+                    />
+
+                    <div className="p-5">
+                      <div className="mb-4 flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#061331] text-[#d7a23a] shadow-lg shadow-[#061331]/10">
+                          <Icon className="h-5 w-5 stroke-2" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#d7a23a]">
+                          {member.subtitle}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-[#061331]">
+                        {member.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-500 font-medium">
+                        {member.text}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* Core Pillars Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-10">
           <div className="text-center mb-4">
@@ -199,7 +285,7 @@ export default function AboutUsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             {/* Student-First Approach */}
-            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-[24px] shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
+            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-3xl shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
               <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#061331] border border-slate-100 shrink-0 shadow-xs">
                 <UserCheck className="w-6 h-6 stroke-2" />
               </div>
@@ -214,7 +300,7 @@ export default function AboutUsPage() {
             </div>
 
             {/* 100% Free Services */}
-            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-[24px] shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
+            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-3xl shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
               <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#061331] border border-slate-100 shrink-0 shadow-xs">
                 <Heart className="w-6 h-6 stroke-2" />
               </div>
@@ -229,7 +315,7 @@ export default function AboutUsPage() {
             </div>
 
             {/* Ethical & Transparent */}
-            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-[24px] shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
+            <div className="flex gap-5 p-6 bg-white border border-[#f2ece2]/80 rounded-3xl shadow-[0_8px_30px_rgba(6,19,49,0.015)] hover:shadow-[0_8px_30px_rgba(6,19,49,0.03)] hover:-translate-y-1 transition-all duration-300 text-left items-start">
               <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#061331] border border-slate-100 shrink-0 shadow-xs">
                 <Shield className="w-6 h-6 stroke-2" />
               </div>
@@ -247,8 +333,8 @@ export default function AboutUsPage() {
         </section>
 
         {/* CTA Banner Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-linear-to-r from-[#02133f] via-[#052062] to-[#0a3297] text-white rounded-[24px] p-8 md:p-12 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10">
+        <section className="max-w-7xl mx-auto px-4 ">
+          <div className="bg-linear-to-r from-[#02133f] via-[#052062] to-[#0a3297] text-white rounded-3xl py-2 px-10  relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10">
             {/* Background decoration */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(215,162,58,0.1),transparent_40%)] pointer-events-none"></div>
 
@@ -284,24 +370,12 @@ export default function AboutUsPage() {
                   </div>
                 </Link>
 
-                <Link
-                  href="/services"
-                  className="group flex items-center justify-between gap-6 px-6 py-4 border border-white/20 bg-[#061331]/40 text-white font-bold rounded-2xl hover:bg-[#061331]/60 transition-all text-sm w-full sm:w-auto"
-                >
-                  <div className="flex items-center gap-3">
-                    <Building className="w-5 h-5 text-white/90" />
-                    <span>View Our Services</span>
-                  </div>
-                  <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[#061331] transition-transform group-hover:translate-x-1 shrink-0">
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </Link>
               </div>
             </div>
 
             {/* Right Graphic Column */}
             <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative z-10">
-              <div className="relative w-full max-w-[480px] aspect-square lg:scale-110">
+              <div className="relative w-full max-w-120 aspect-square lg:scale-110">
                 <Image
                   src="/study-abrode-cta-globe.png"
                   alt="Study Abroad Destination Illustration"

@@ -80,7 +80,7 @@ export default function UniversityEnquiryForm({ university }: Props) {
           <CheckCircle className="h-6 w-6 text-emerald-500" />
         </div>
         <h4 className="text-sm font-extrabold text-[#061331]">Request Submitted!</h4>
-        <p className="text-[11px] text-slate-500 leading-relaxed max-w-[240px] mx-auto">
+        <p className="text-[11px] text-slate-500 leading-relaxed max-w-60 mx-auto">
           Thank you! A dedicated study abroad advisor will evaluate your profile mapping for <strong>{university.name}</strong> and contact you on WhatsApp/Email.
         </p>
       </div>

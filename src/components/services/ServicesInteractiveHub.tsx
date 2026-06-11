@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Wallet
 } from 'lucide-react'
+import { slugFromServiceTitle } from '@/lib/serviceDetails'
 
 interface ServiceItem {
   id: number
@@ -123,6 +124,132 @@ const servicesData: ServiceItem[] = [
     ],
     stats: '1-on-1 Coaching',
     color: '#06b6d4'
+  },
+  {
+    id: 5,
+    number: '06',
+    title: 'Student Counselling',
+    shortDesc: 'Get one-on-one guidance to choose the right country, course, university, and intake based on your profile.',
+    description:
+      'Our student counselling sessions help you understand realistic study abroad pathways based on your academics, budget, career goals, and preferred destination. We simplify the process into clear next steps so you know exactly what to prepare.',
+    image: '/home2/happy-team.png',
+    icon: UsersRound,
+    benefits: [
+      'Profile evaluation and destination guidance',
+      'Course and pathway clarity before applying',
+      'Budget-aware planning for students and parents',
+      'Clear document and timeline roadmap',
+    ],
+    stats: 'Free Guidance',
+    color: '#d7a23a'
+  },
+  {
+    id: 6,
+    number: '07',
+    title: 'Documents Check',
+    shortDesc: 'Avoid delays with a careful review of academic, financial, identity, and application documents.',
+    description:
+      'Before you submit applications or visa files, our team reviews your documents for completeness, consistency, and compliance. This helps reduce avoidable mistakes and improves readiness for admissions and visa processing.',
+    image: '/home2/visaappp.png',
+    icon: FileText,
+    benefits: [
+      'Academic document checklist review',
+      'Financial and sponsor document checks',
+      'Application form consistency review',
+      'Gap and correction guidance before submission',
+    ],
+    stats: 'Compliance Review',
+    color: '#84cc16'
+  },
+  {
+    id: 7,
+    number: '08',
+    title: 'Course Selection',
+    shortDesc: 'Compare study fields, entry requirements, career outcomes, and university options before you decide.',
+    description:
+      'Choosing a course is more than picking a subject. We help you compare entry criteria, progression routes, work outcomes, scholarship fit, and long-term migration relevance where applicable.',
+    image: '/home2/univercity.png',
+    icon: GraduationCap,
+    benefits: [
+      'Course matching by academic background',
+      'Career outcome and pathway comparison',
+      'Entry requirement and English test guidance',
+      'University shortlist preparation',
+    ],
+    stats: 'Smart Matching',
+    color: '#a855f7'
+  },
+  {
+    id: 8,
+    number: '09',
+    title: 'Financial Aid Support',
+    shortDesc: 'Plan tuition, living costs, sponsor documents, payment schedules, and eligible funding options.',
+    description:
+      'We help students and families understand study costs clearly, prepare financial documents, identify funding options, and avoid last-minute surprises during admission and visa stages.',
+    image: '/home2/scollership.png',
+    icon: Wallet,
+    benefits: [
+      'Tuition and living cost planning',
+      'Sponsor document guidance',
+      'Scholarship and discount mapping',
+      'Payment timeline planning',
+    ],
+    stats: 'Budget Planning',
+    color: '#f59e0b'
+  },
+  {
+    id: 9,
+    number: '10',
+    title: 'Accommodation Assistance',
+    shortDesc: 'Find safe housing options near campus and plan your arrival with more confidence.',
+    description:
+      'Moving abroad is easier when accommodation is planned early. We guide students through university housing, private rentals, location checks, and arrival preparation.',
+    image: '/home2/pre-deparcher.png',
+    icon: Building,
+    benefits: [
+      'Campus and private housing guidance',
+      'Location and commute comparison',
+      'Arrival checklist support',
+      'Basic settling-in guidance',
+    ],
+    stats: 'Arrival Ready',
+    color: '#06b6d4'
+  },
+  {
+    id: 10,
+    number: '11',
+    title: 'PSW Visa Guidance',
+    shortDesc: 'Understand post-study work options, eligibility basics, and how your course choice affects future pathways.',
+    description:
+      'Post-study work rules differ by destination and change over time. We help you understand the broad pathway, course relevance, duration expectations, and documents to monitor.',
+    image: '/home2/happy-ma.png',
+    icon: ShieldCheck,
+    benefits: [
+      'Post-study pathway overview',
+      'Course and level relevance guidance',
+      'Work rights awareness',
+      'Document readiness planning',
+    ],
+    stats: 'Future Pathways',
+    color: '#d7a23a'
+  },
+  {
+    id: 11,
+    number: '12',
+    title: 'Ambassador Program',
+    shortDesc: 'Connect with student ambassadors and hear real study abroad experiences before making decisions.',
+    description:
+      'Our ambassador support helps prospective students learn from real student journeys, understand campus life, and ask practical questions about studying abroad.',
+    image: '/home2/happy-gi.png',
+    icon: Sparkles,
+    benefits: [
+      'Student experience conversations',
+      'Campus life and city insights',
+      'Peer guidance before departure',
+      'Confidence-building real stories',
+    ],
+    stats: 'Student Stories',
+    color: '#84cc16'
   }
 ]
 
@@ -152,13 +279,10 @@ export default function ServicesInteractiveHub() {
           {servicesData.map((service, index) => {
             const Icon = service.icon
             return (
-              <div
+              <Link
                 key={service.id}
-                onClick={() => {
-                  setActiveTab(index)
-                  setIsModalOpen(true)
-                }}
-                className="bg-white border border-slate-200/80 rounded-3xl flex flex-col overflow-hidden h-full group hover:translate-y-[-4px] hover:border-[#d7a23a] transition-all duration-300 shadow-[0_10px_35px_rgba(8,22,56,0.03)] hover:shadow-[0_20px_50px_rgba(8,22,56,0.08)] cursor-pointer"
+                href={`/services/${slugFromServiceTitle(service.title)}`}
+                className="bg-white border border-slate-200/80 rounded-3xl flex flex-col overflow-hidden h-full group hover:-translate-y-1 hover:border-[#d7a23a] transition-all duration-300 shadow-[0_10px_35px_rgba(8,22,56,0.03)] hover:shadow-[0_20px_50px_rgba(8,22,56,0.08)] cursor-pointer"
               >
                 {/* Large Illustration Header */}
                 <div className="relative h-48 w-full bg-slate-50/80 border-b border-slate-100 overflow-hidden flex items-center justify-center">
@@ -187,7 +311,7 @@ export default function ServicesInteractiveHub() {
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>
@@ -195,10 +319,10 @@ export default function ServicesInteractiveHub() {
 
       {/* Why Next Level Stands Out */}
       <section className="py-10 bg-white/70 rounded-3xl border border-slate-100 p-8 sm:p-12 mt-16">
-        <div className="flex flex-col lg:flex-row gap-16 items-start">
-          <div className="lg:w-1/2">
+        <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div>
             <div className="text-[#081638] text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-              <div className="w-8 h-[2px] bg-[#d7a23a]"></div>
+              <div className="w-8 h-0.5 bg-[#d7a23a]"></div>
               OUR CREDENTIALS
             </div>
 
@@ -236,35 +360,54 @@ export default function ServicesInteractiveHub() {
             </div>
           </div>
 
-          <div className="lg:w-1/2 grid grid-cols-2 gap-4 w-full">
-            <div className="bg-[#081638] p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
-              <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">150+</span>
-              <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Partner Colleges</span>
+          <div className="relative min-h-90 overflow-hidden rounded-3xl border border-slate-200 bg-[#E9EFF6] shadow-[0_24px_60px_rgba(8,22,56,0.12)]">
+            <Image
+              src="/services-credentials.png"
+              alt="Next Level student counselling advisor"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 1024px) 100vw, 520px"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-[#061331]/65 via-[#061331]/10 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <p className="text-xs font-black uppercase tracking-wider text-[#d7a23a]">
+                Zero-fee guidance
+              </p>
+              <p className="mt-2 max-w-sm text-lg font-extrabold leading-snug">
+                Profile review, admissions planning, and visa readiness in one place.
+              </p>
             </div>
+          </div>
+        </div>
 
-            <div className="bg-white border border-slate-200/60 p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
-              <span className="text-[#081638] text-4xl font-extrabold mb-1">5+</span>
-              <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Destinations</span>
-            </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
+            <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">150+</span>
+            <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Partner Colleges</span>
+          </div>
 
-            <div className="bg-white border border-slate-200/60 p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
-              <span className="text-[#081638] text-4xl font-extrabold mb-1">100%</span>
-              <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Direct Channels</span>
-            </div>
+          <div className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
+            <span className="text-[#081638] text-4xl font-extrabold mb-1">5+</span>
+            <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Destinations</span>
+          </div>
 
-            <div className="bg-[#081638] p-8 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
-              <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">98%</span>
-              <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Visa Approvals</span>
-            </div>
+          <div className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
+            <span className="text-[#081638] text-4xl font-extrabold mb-1">100%</span>
+            <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Direct Channels</span>
+          </div>
 
-            <div className="col-span-2 bg-[#fffcf0] border border-[#d7a23a]/20 p-8 rounded-2xl flex items-center justify-between shadow-sm">
-              <div className="flex flex-col">
-                <span className="text-[#d7a23a] text-[10px] uppercase font-extrabold tracking-widest">COMPLETELY ZERO FEES</span>
-                <span className="text-[#081638] text-3xl font-black mt-2">LKR 0</span>
-                <span className="text-slate-500 text-xs font-semibold mt-1">Student Service Costs</span>
-              </div>
-              <Wallet className="h-14 w-14 text-[#d7a23a] opacity-30 stroke-[1.5]" />
+          <div className="bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
+            <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">98%</span>
+            <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Visa Approvals</span>
+          </div>
+
+          <div className="bg-[#fffcf0] border border-[#d7a23a]/20 p-6 rounded-2xl flex items-center justify-between shadow-sm sm:col-span-2 lg:col-span-1">
+            <div className="flex flex-col">
+              <span className="text-[#d7a23a] text-[10px] uppercase font-extrabold tracking-widest">ZERO FEES</span>
+              <span className="text-[#081638] text-3xl font-black mt-2">LKR 0</span>
+              <span className="text-slate-500 text-xs font-semibold mt-1">Student Service Costs</span>
             </div>
+            <Wallet className="h-12 w-12 text-[#d7a23a] opacity-30 stroke-[1.5]" />
           </div>
         </div>
       </section>

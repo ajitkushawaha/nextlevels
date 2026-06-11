@@ -327,7 +327,7 @@ export default function CustomEnquiryForm() {
                 placeholder="Any specific questions, requirements or notes for our team..."
                 value={formData.message}
                 onChange={e => set('message', e.target.value)}
-                className={inputCls + ' resize-none min-h-[80px]'}
+                className={inputCls + ' resize-none min-h-20'}
               />
             </Field>
           </div>

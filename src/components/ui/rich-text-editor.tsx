@@ -52,22 +52,39 @@ interface RichTextEditorProps {
   className?: string
 }
 
+type MenuButtonProps = {
+  onClick: () => void
+  isActive?: boolean
+  children: React.ReactNode
+  title: string
+}
+
+function MenuButton({ onClick, isActive, children, title }: MenuButtonProps) {
+  return (
+    <Button
+      type="button"
+      variant={isActive ? 'default' : 'outline'}
+      size="sm"
+      onClick={onClick}
+      title={title}
+      className={`h-8 w-8 p-0 ${isActive ? 'bg-[#081638] text-[#d7a23a] hover:bg-[#081638]' : 'bg-white hover:bg-slate-100'}`}
+    >
+      {children}
+    </Button>
+  )
+}
+
 export function RichTextEditor({
   content,
   onChange,
   placeholder = 'Start writing...',
   className = '',
 }: RichTextEditorProps) {
-  const [isMounted, setIsMounted] = useState(false)
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [linkUrl, setLinkUrl] = useState('')
   const [linkRel, setLinkRel] = useState<'nofollow' | 'dofollow'>('dofollow')
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
 
   const editor = useEditor({
     extensions: [
@@ -110,7 +127,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[300px] p-4',
+          'ProseMirror max-w-none focus:outline-none min-h-[300px] p-5 text-sm leading-7 text-slate-700 [&_p]:my-3 [&_h1]:mt-6 [&_h1]:mb-4 [&_h1]:text-3xl [&_h1]:font-extrabold [&_h1]:text-[#081638] [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#081638] [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-[#081638] [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-7 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-7 [&_li]:my-1.5 [&_li]:pl-1 [&_li_p]:my-1 [&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-[#d7a23a] [&_blockquote]:bg-amber-50 [&_blockquote]:py-3 [&_blockquote]:pl-4 [&_table]:my-4 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-slate-200 [&_td]:p-2 [&_th]:border [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:p-2',
       },
     },
     immediatelyRender: false,
@@ -123,7 +140,7 @@ export function RichTextEditor({
     }
   }, [content, editor])
 
-  if (!isMounted || !editor) {
+  if (!editor) {
     return (
       <div className={`border border-gray-200 rounded-lg ${className}`}>
         <div className="p-4 min-h-[300px] flex items-center justify-center">
@@ -161,35 +178,12 @@ export function RichTextEditor({
     }
   }
 
-  const MenuButton = ({
-    onClick,
-    isActive,
-    children,
-    title,
-  }: {
-    onClick: () => void
-    isActive?: boolean
-    children: React.ReactNode
-    title: string
-  }) => (
-    <Button
-      type="button"
-      variant={isActive ? 'default' : 'outline'}
-      size="sm"
-      onClick={onClick}
-      title={title}
-      className="h-8 w-8 p-0"
-    >
-      {children}
-    </Button>
-  )
-
   return (
     <div
-      className={`rich-text-editor border border-gray-200 rounded-lg ${className}`}
+      className={`rich-text-editor max-h-[calc(100vh-150px)] overflow-y-auto border border-gray-200 rounded-lg ${className}`}
     >
       {/* Toolbar */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-2 flex flex-wrap gap-1">
+      <div className="sticky top-0 z-30 rounded-t-lg border-b border-gray-200 bg-white/95 p-2.5 shadow-md backdrop-blur flex flex-wrap gap-1">
         {/* Table Operations */}
         <div className="flex gap-1 border-r border-gray-200 pr-2 mr-2">
           <MenuButton
