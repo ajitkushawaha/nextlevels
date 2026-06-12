@@ -85,9 +85,8 @@ export default function ServicesPage() {
 
 
       {/* Main Content: Interactive Dashboard Hub */}
-      <main className="w-full grow py-10  bg-[#fbf8fc]">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8">
-          {/* Renders client-side stateful tabs and bento network */}
+      <main className="w-full grow bg-[#fbf8fc] py-10">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <ServicesInteractiveHub />
         </div>
       </main>

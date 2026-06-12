@@ -11,6 +11,7 @@ interface BlogImageProps {
   height?: number
   className?: string
   priority?: boolean
+  sizes?: string
 }
 
 export default function BlogImage({
@@ -21,6 +22,7 @@ export default function BlogImage({
   height,
   className,
   priority,
+  sizes,
 }: BlogImageProps) {
   const [imageError, setImageError] = useState(false)
 
@@ -35,6 +37,7 @@ export default function BlogImage({
       height={height}
       className={className}
       priority={priority}
+      sizes={sizes}
       onError={() => setImageError(true)}
     />
   )

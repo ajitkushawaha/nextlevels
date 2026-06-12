@@ -16,7 +16,6 @@ import {
   ArrowRight,
   GraduationCap,
   Calendar,
-  Building
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -27,8 +26,6 @@ export async function generateMetadata() {
 }
 
 export default function AboutUsPage() {
-  const teamImagePositions = ['0% 50%', '33.333% 50%', '66.666% 50%', '100% 50%']
-
   return (
     <div className="min-h-screen bg-white text-[#061331] font-sans flex flex-col justify-between">
 
@@ -72,10 +69,10 @@ export default function AboutUsPage() {
       </section>
 
       {/* Main Content Wrapper */}
-      <main className="grow pb-10">
+      <main className="grow pb-10 px-4 sm:px-6 lg:px-8">
 
         {/* Story Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-12 ">
+        <section className="max-w-7xl mx-auto px-4 py-12 ">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
             {/* Left Column: Text & Stats */}
@@ -152,7 +149,7 @@ export default function AboutUsPage() {
         </section>
 
         {/* Vision & Mission Section (Light Container Banner) */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 ">
+        <section className="max-w-7xl mx-auto px-4  ">
           <div className="bg-[#fdfbf7] border border-[#f5efe4] rounded-4xl p-8 md:p-12 shadow-[0_10px_35px_rgba(6,19,49,0.02)]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start relative">
 
@@ -190,7 +187,7 @@ export default function AboutUsPage() {
         </section>
 
         {/* Our Team Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-10">
+        <section className="max-w-7xl mx-auto px-4  py-10">
           <div>
             <div className="mx-auto max-w-3xl text-center">
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#d7a23a] block">
@@ -200,81 +197,62 @@ export default function AboutUsPage() {
                 The people guiding every student journey.
               </h2>
               <div className="mx-auto mt-4 h-1.5 w-20 bg-[#d7a23a] rounded-full" />
-              <p className="mt-5 text-sm sm:text-base leading-relaxed text-slate-500 font-medium">
-                Our team brings counselling, admissions, documentation, and student support together so every application is handled with care from first conversation to offer stage.
-              </p>
+             
             </div>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {[
                 {
-                  title: 'Education Counsellors',
-                  subtitle: 'Student Guidance Team',
-                  text: 'Help students choose suitable countries, courses, universities, and intakes based on profile and goals.',
-                  icon: UserCheck,
+                  name: 'John',
+                  designation: 'Education Counsellors',
+                  image: '/service/team1.png',
                 },
                 {
-                  title: 'Admissions Coordinators',
-                  subtitle: 'University Application Team',
-                  text: 'Prepare applications, communicate with partner universities, and keep each offer process moving.',
-                  icon: Building,
+                  name: 'John',
+                  designation: 'Admissions Coordinators',
+                  image: '/service/team2.png',
                 },
                 {
-                  title: 'Visa & Document Advisors',
-                  subtitle: 'Compliance Review Team',
-                  text: 'Review academic, financial, identity, and statement documents with a compliance-first mindset.',
-                  icon: Shield,
+                  name: 'John',
+                  designation: 'Visa & Document Advisors',
+                  image: '/service/team3.png',
                 },
                 {
-                  title: 'Student Success Support',
-                  subtitle: 'Follow-Up & Care Team',
-                  text: 'Guide students through follow-ups, practical next steps, and pre-departure readiness.',
-                  icon: Heart,
+                  name: 'John',
+                  designation: 'Student Success Support',
+                  image: '/service/team4.png',
                 },
-              ].map((member, index) => {
-                const Icon = member.icon
-
-                return (
-                  <div
-                    key={member.title}
-                    className="group overflow-hidden rounded-3xl border border-[#f2ece2]/80 bg-white text-left shadow-[0_8px_30px_rgba(6,19,49,0.015)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_34px_rgba(6,19,49,0.05)]"
-                  >
-                    <div
-                      className="h-56 bg-cover bg-slate-100 bg-no-repeat sm:h-52 lg:h-48"
-                      role="img"
-                      aria-label={`${member.title} team member`}
-                      style={{
-                        backgroundImage: "url('/about-team-members.png')",
-                        backgroundPosition: teamImagePositions[index],
-                        backgroundSize: '400% 100%',
-                      }}
+              ].map(member => (
+                <div
+                  key={member.image}
+                  className="group overflow-hidden rounded-3xl border border-[#f2ece2]/80 bg-white text-center shadow-[0_8px_30px_rgba(6,19,49,0.015)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_34px_rgba(6,19,49,0.05)]"
+                >
+                  <div className="relative h-64 bg-slate-100 sm:h-58 lg:h-56">
+                    <Image
+                      src={member.image}
+                      alt={`${member.name} - ${member.designation}`}
+                      fill
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
-
-                    <div className="p-5">
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#061331] text-[#d7a23a] shadow-lg shadow-[#061331]/10">
-                          <Icon className="h-5 w-5 stroke-2" />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-[#d7a23a]">
-                          {member.subtitle}
-                        </span>
-                      </div>
-                      <h3 className="text-lg font-bold text-[#061331]">
-                        {member.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-500 font-medium">
-                        {member.text}
-                      </p>
-                    </div>
                   </div>
-                )
-              })}
+
+                  <div className="px-5 py-5">
+                    <h3 className="text-lg font-bold text-[#061331]">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-sm font-bold text-[#d7a23a]">
+                      {member.designation}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Core Pillars Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-10">
+        <section className="max-w-7xl mx-auto px-4 py-10">
           <div className="text-center mb-4">
             <h2 className="text-3xl font-bold font-serif text-[#061331]">
               Our Core Pillars

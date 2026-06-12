@@ -27,7 +27,7 @@ const navItems = [
       { label: 'New Zealand', href: '/study-abroad/new-zealand' },
     ]
   },
-  { label: 'Testimonial', href: '/#testimonials' },
+  { label: 'Testimonial', href: '/testimonial' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact Us', href: '/contact-us' },
   { label: 'Course Finder', href: '/courses' }

@@ -183,7 +183,7 @@ export default async function ServiceDetailPage({ params }: Params) {
                       style={{
                         backgroundImage: "url('/service-cover-strip.png')",
                         backgroundPosition: stripPositions[index],
-                        backgroundSize: '400% 100%',
+                        backgroundSize: '400% auto',
                       }}
                     />
                     <div className="px-6 pb-7">
@@ -241,7 +241,7 @@ export default async function ServiceDetailPage({ params }: Params) {
                         style={{
                           backgroundImage: "url('/service-process-strip.png')",
                           backgroundPosition: stripPositions[index],
-                          backgroundSize: '420% 112%',
+                          backgroundSize: '400% auto',
                         }}
                       />
                     </div>
@@ -287,7 +287,7 @@ export default async function ServiceDetailPage({ params }: Params) {
                     style={{
                       backgroundImage: "url('/service-outcomes-strip.png')",
                       backgroundPosition: stripPositions[index],
-                      backgroundSize: '400% 100%',
+                      backgroundSize: '400% auto',
                     }}
                   />
                   <h3 className="mx-auto mt-4 max-w-58 text-xl font-black leading-7 text-[#12174F]">

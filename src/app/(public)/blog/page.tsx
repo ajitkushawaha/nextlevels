@@ -97,7 +97,7 @@ export default async function BlogPage({
     <div className="min-h-screen bg-white text-slate-800 flex flex-col justify-between">
       
       {/* Hero Header Section */}
-      <section className="relative max-w-7xl w-full mx-auto overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative  w-full mx-auto overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
         
         {/* Background Image */}
         <Image
@@ -127,7 +127,7 @@ export default async function BlogPage({
           </div>
 
           {/* Bottom Title & Badge */}
-          <div className="mt-auto space-y-3 pt-6 text-left">
+          <div className="mt-auto space-y-3 pt-2 text-left">
             <div>
               <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
                 Latest Insights &amp; Updates
@@ -148,8 +148,8 @@ export default async function BlogPage({
       </section>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto grow py-12 bg-slate-50/40">
-        <div className="w-full max-w-300 mx-auto px-5 sm:px-8">
+      <main className=" grow py-12 bg-slate-50/40">
+        <div className="w-full max-w-300 mx-auto ">
           
           {/* Category Filter list */}
           <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-12">
@@ -166,8 +166,8 @@ export default async function BlogPage({
                   variant={cat === category ? 'default' : 'outline'}
                   size="sm"
                   className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
-                    ? 'border-slate-200 text-[#061331]/70 bg-white hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
-                    : 'bg-[#061331] border-slate-200 text-white  shadow-md hover:scale-[1.02]'
+                    ? 'border-slate-200 text-white bg-[#061331] hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
+                    : 'bg-white border-slate-200 text-[#061331]/70  shadow-md hover:scale-[1.02]'
                     }`}
                 >
                   {cat} 
@@ -207,6 +207,7 @@ export default async function BlogPage({
                       src={post.featuredImage || '/placeholder.svg'}
                       alt={post.title}
                       fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
                   </div>

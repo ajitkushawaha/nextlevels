@@ -437,7 +437,7 @@ export default function NextLevelHomepage({
   return (
     <div className="bg-white text-[#081638]">
       <main>
-        {renderHero && <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-5 sm:px-8 lg:px-10">
+        {renderHero && <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-4 sm:px-8 ">
           {/* Subtle light background matrix dots & world map overlay */}
           <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(#081638 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-center bg-no-repeat bg-cover mix-blend-multiply" style={{ backgroundImage: "url('/visa/map.png')" }}></div>
@@ -601,7 +601,7 @@ export default function NextLevelHomepage({
         )}
 
         {renderDestinations && (
-        <section className="bg-slate-50 py-10 px-5 sm:px-8 lg:px-10">
+        <section className="bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             {/* Title Section */}
             <div className="mb-10 text-left">
@@ -648,7 +648,7 @@ export default function NextLevelHomepage({
 
         {renderWhyChooseUs && (
         <section className="bg-[#061331] py-10 text-white ">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <div className="relative inline-block pb-2.5 mb-2">
                 <Eyebrow>{whyChooseUsSection.eyebrow}</Eyebrow>
@@ -706,7 +706,7 @@ export default function NextLevelHomepage({
 
         {renderServices && (
         <section className="bg-white py-10 ">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <Eyebrow>{servicesSection.eyebrow}</Eyebrow>
               <h2
@@ -843,11 +843,13 @@ export default function NextLevelHomepage({
           </div>
         </section>
         )}
+          </>
+        )}
 
         {/* Testimonials, Ambassador & Student Life Container */}
         {renderTestimonials && (
         <section id="testimonials" className=" py-10  overflow-hidden bg-amber-50">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <Eyebrow>{testimonialsSection.eyebrow}</Eyebrow>
               <h2
@@ -868,7 +870,7 @@ export default function NextLevelHomepage({
         <section className="bg-white ">
           <div className="mx-auto max-w-7xl">
             {/* Chat to a Student Ambassador Subsection */}
-            <div className="mb-5 py-10 px-5 sm:px-8 lg:px-10">
+            <div className="mb-5 py-10 px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   {ambassadorsSection.ambassadorTitle}
@@ -913,8 +915,11 @@ export default function NextLevelHomepage({
               </div>
             </div>
 
-            {/* Success Story Videos Subsection */}
-            <div className=" bg-[#081638] py-10 px-5 sm:px-8 lg:px-10">
+          </div>
+
+          {/* Success Story Videos Subsection */}
+          <div className="bg-[#081638] py-10">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center mb-5">
                 <div>
                   <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
@@ -1048,8 +1053,6 @@ export default function NextLevelHomepage({
             </div>
           </div>
         </section>
-        )}
-          </>
         )}
 
 
