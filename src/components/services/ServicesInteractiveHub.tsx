@@ -19,239 +19,37 @@ import {
   ShieldCheck,
   Wallet
 } from 'lucide-react'
-import { slugFromServiceTitle } from '@/lib/serviceDetails'
+import { serviceDetails, type ServiceDetail } from '@/lib/serviceDetails'
 
-interface ServiceItem {
+type ServiceItem = ServiceDetail & {
   id: number
-  number: string
-  title: string
-  shortDesc: string
-  description: string
-  image: string
   icon: React.ComponentType<{ className?: string }>
-  benefits: string[]
-  stats: string
   color: string
 }
 
-const servicesData: ServiceItem[] = [
-  {
-    id: 0,
-    number: '01',
-    title: 'University Selection & Admissions',
-    shortDesc: 'Match with 150+ world-class partner institutions and secure admissions through our direct channels.',
-    description:
-      'Choosing the right university is the foundation of your international career. Our experienced counselors analyze your academic background, financial limits, and career goals to match you with top-tier universities across the UK, Canada, Australia, New Zealand, and Germany. We guide you through compiling credentials, crafting high-impact Statements of Purpose (SOP), and drafting recommendations to ensure your application stands out to admission boards.',
-    image: '/home2/univercity.png',
-    icon: GraduationCap,
-    benefits: [
-      'Personalized profile assessment and course matching',
-      'Professional SOP editing and review services',
-      'Fast-track application processing with partner universities',
-      'Direct admissions follow-up and offer letter securement',
-    ],
-    stats: '150+ Partners',
-    color: '#d7a23a'
-  },
-  {
-    id: 1,
-    number: '02',
-    title: 'Visa Guidance & Application Support',
-    shortDesc: 'Navigate complex student visa requirements with professional compliance audits and a 98% success rate.',
-    description:
-      'Immigration policies are detailed and constantly changing. Our dedicated visa compliance team helps demystify the visa application process. We provide customized checklists for financial sponsorship presentation, document legalizations, and health check-ups. Our specialists carefully inspect all application forms and supporting financial portfolios before submission to ensure complete alignment with government regulations.',
-    image: '/home2/visaappp.png',
-    icon: FileText,
-    benefits: [
-      'Expert advice on sponsor funds and liquid assets presentation',
-      'Custom checklists for UK, Canada, Australia, and Schengen visas',
-      'Meticulous application auditing prior to final submission',
-      'High approval rates driven by up-to-date compliance standards',
-    ],
-    stats: '98% Success',
-    color: '#84cc16'
-  },
-  {
-    id: 2,
-    number: '03',
-    title: 'Scholarship Assistance',
-    shortDesc: 'Identify merit-based grants and university-specific funding opportunities to significantly reduce your tuition burden.',
-    description:
-      'A global education is a significant life investment, but you don\'t have to bear the full cost. We actively research and identify university grants, merit scholarships, and state-funded bursaries suited to your achievements. We help you write winning scholarship essays, emphasize your leadership and community involvements, and guide you on obtaining English proficiency waivers where available.',
-    image: '/home2/scollership.png',
-    icon: Award,
-    benefits: [
-      'Tailored searches for merit-based and need-based university scholarships',
-      'Comprehensive editing for scholarship personal statements',
-      'Advising on IELTS/TOEFL requirements and waiver pathways',
-      'Maximizing tuition discounts and partial funding opportunities',
-    ],
-    stats: 'Up to 50% Off',
-    color: '#a855f7'
-  },
-  {
-    id: 3,
-    number: '04',
-    title: 'Pre-Departure & Post-Arrival Guidance',
-    shortDesc: 'Transition smoothly to your new life with support for accommodation booking, bank setups, and local orientation.',
-    description:
-      'Succeeding abroad goes beyond classroom lectures. Our pre-departure briefings prepare you for the cultural, financial, and climate adjustments of your destination. We assist you in searching for secure student accommodations, sourcing student health insurance, and planning your travel logistics. Once you land, our networks help you coordinate airport pickups, open local bank accounts, and connect with peer groups.',
-    image: '/home2/pre-deparcher.png',
-    icon: Compass,
-    benefits: [
-      'Detailed briefings on local regulations, student work rights, and lifestyle',
-      'Assistance with verified student accommodation bookings',
-      'Support in setting up international health coverage',
-      'Connection to local student support groups upon arrival',
-    ],
-    stats: 'End-to-End Support',
-    color: '#f59e0b'
-  },
-  {
-    id: 4,
-    number: '05',
-    title: 'Mock Interviews & Confidence Coaching',
-    shortDesc: 'Prepare for intense university admissions and visa officer credibility interviews with realistic simulations.',
-    description:
-      'A visa or admissions interview can be the final gating step. Our mock interview program replicates real credibility questioning. We hold mock sessions to coach you on clarity of intent, communication style, and confidence. Our coaches provide constructive, video-reviewed feedback on body language and answer structuring, ensuring you feel prepared and relaxed when facing official interviews.',
-    image: '/home2/mock-interview.png',
-    icon: UsersRound,
-    benefits: [
-      'Realistic mock interviews matching embassy formats',
-      'Coaching on answering credibility and financial questions',
-      'Personalized review on body language, tone, and pacing',
-      'Interactive sessions to eliminate interview anxiety',
-    ],
-    stats: '1-on-1 Coaching',
-    color: '#06b6d4'
-  },
-  {
-    id: 5,
-    number: '06',
-    title: 'Student Counselling',
-    shortDesc: 'Get one-on-one guidance to choose the right country, course, university, and intake based on your profile.',
-    description:
-      'Our student counselling sessions help you understand realistic study abroad pathways based on your academics, budget, career goals, and preferred destination. We simplify the process into clear next steps so you know exactly what to prepare.',
-    image: '/home2/happy-team.png',
-    icon: UsersRound,
-    benefits: [
-      'Profile evaluation and destination guidance',
-      'Course and pathway clarity before applying',
-      'Budget-aware planning for students and parents',
-      'Clear document and timeline roadmap',
-    ],
-    stats: 'Free Guidance',
-    color: '#d7a23a'
-  },
-  {
-    id: 6,
-    number: '07',
-    title: 'Documents Check',
-    shortDesc: 'Avoid delays with a careful review of academic, financial, identity, and application documents.',
-    description:
-      'Before you submit applications or visa files, our team reviews your documents for completeness, consistency, and compliance. This helps reduce avoidable mistakes and improves readiness for admissions and visa processing.',
-    image: '/home2/visaappp.png',
-    icon: FileText,
-    benefits: [
-      'Academic document checklist review',
-      'Financial and sponsor document checks',
-      'Application form consistency review',
-      'Gap and correction guidance before submission',
-    ],
-    stats: 'Compliance Review',
-    color: '#84cc16'
-  },
-  {
-    id: 7,
-    number: '08',
-    title: 'Course Selection',
-    shortDesc: 'Compare study fields, entry requirements, career outcomes, and university options before you decide.',
-    description:
-      'Choosing a course is more than picking a subject. We help you compare entry criteria, progression routes, work outcomes, scholarship fit, and long-term migration relevance where applicable.',
-    image: '/home2/univercity.png',
-    icon: GraduationCap,
-    benefits: [
-      'Course matching by academic background',
-      'Career outcome and pathway comparison',
-      'Entry requirement and English test guidance',
-      'University shortlist preparation',
-    ],
-    stats: 'Smart Matching',
-    color: '#a855f7'
-  },
-  {
-    id: 8,
-    number: '09',
-    title: 'Financial Aid Support',
-    shortDesc: 'Plan tuition, living costs, sponsor documents, payment schedules, and eligible funding options.',
-    description:
-      'We help students and families understand study costs clearly, prepare financial documents, identify funding options, and avoid last-minute surprises during admission and visa stages.',
-    image: '/home2/scollership.png',
-    icon: Wallet,
-    benefits: [
-      'Tuition and living cost planning',
-      'Sponsor document guidance',
-      'Scholarship and discount mapping',
-      'Payment timeline planning',
-    ],
-    stats: 'Budget Planning',
-    color: '#f59e0b'
-  },
-  {
-    id: 9,
-    number: '10',
-    title: 'Accommodation Assistance',
-    shortDesc: 'Find safe housing options near campus and plan your arrival with more confidence.',
-    description:
-      'Moving abroad is easier when accommodation is planned early. We guide students through university housing, private rentals, location checks, and arrival preparation.',
-    image: '/home2/pre-deparcher.png',
-    icon: Building,
-    benefits: [
-      'Campus and private housing guidance',
-      'Location and commute comparison',
-      'Arrival checklist support',
-      'Basic settling-in guidance',
-    ],
-    stats: 'Arrival Ready',
-    color: '#06b6d4'
-  },
-  {
-    id: 10,
-    number: '11',
-    title: 'PSW Visa Guidance',
-    shortDesc: 'Understand post-study work options, eligibility basics, and how your course choice affects future pathways.',
-    description:
-      'Post-study work rules differ by destination and change over time. We help you understand the broad pathway, course relevance, duration expectations, and documents to monitor.',
-    image: '/home2/happy-ma.png',
-    icon: ShieldCheck,
-    benefits: [
-      'Post-study pathway overview',
-      'Course and level relevance guidance',
-      'Work rights awareness',
-      'Document readiness planning',
-    ],
-    stats: 'Future Pathways',
-    color: '#d7a23a'
-  },
-  {
-    id: 11,
-    number: '12',
-    title: 'Ambassador Program',
-    shortDesc: 'Connect with student ambassadors and hear real study abroad experiences before making decisions.',
-    description:
-      'Our ambassador support helps prospective students learn from real student journeys, understand campus life, and ask practical questions about studying abroad.',
-    image: '/home2/happy-gi.png',
-    icon: Sparkles,
-    benefits: [
-      'Student experience conversations',
-      'Campus life and city insights',
-      'Peer guidance before departure',
-      'Confidence-building real stories',
-    ],
-    stats: 'Student Stories',
-    color: '#84cc16'
-  }
+const serviceIcons = [
+  UsersRound,
+  FileText,
+  GraduationCap,
+  Building,
+  ShieldCheck,
+  Award,
+  Wallet,
+  UsersRound,
+  Building,
+  Plane,
+  ShieldCheck,
+  Sparkles,
 ]
+
+const serviceColors = ['#d7a23a', '#84cc16', '#a855f7', '#f59e0b', '#06b6d4']
+
+const servicesData: ServiceItem[] = serviceDetails.map((service, index) => ({
+  ...service,
+  id: index,
+  icon: serviceIcons[index] || GraduationCap,
+  color: serviceColors[index % serviceColors.length],
+}))
 
 export default function ServicesInteractiveHub() {
   const [activeTab, setActiveTab] = useState(0)
@@ -281,7 +79,7 @@ export default function ServicesInteractiveHub() {
             return (
               <Link
                 key={service.id}
-                href={`/services/${slugFromServiceTitle(service.title)}`}
+                href={`/services/${service.slug}`}
                 className="bg-white border border-slate-200/80 rounded-3xl flex flex-col overflow-hidden h-full group hover:-translate-y-1 hover:border-[#d7a23a] transition-all duration-300 shadow-[0_10px_35px_rgba(8,22,56,0.03)] hover:shadow-[0_20px_50px_rgba(8,22,56,0.08)] cursor-pointer"
               >
                 {/* Large Illustration Header */}

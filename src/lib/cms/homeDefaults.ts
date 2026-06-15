@@ -1,4 +1,5 @@
 import type { CmsPageContent } from './types'
+import { serviceDetails } from '@/lib/serviceDetails'
 
 export const defaultHomePageContent: CmsPageContent = {
   version: 1,
@@ -55,7 +56,7 @@ export const defaultHomePageContent: CmsPageContent = {
       ],
       cta: {
         label: 'Explore Programs',
-        href: '/services',
+        href: '/courses',
       },
       images: [
         {
@@ -141,32 +142,11 @@ export const defaultHomePageContent: CmsPageContent = {
       enabled: true,
       eyebrow: 'Our Services',
       title: 'How We Can Help You Succeed',
-      services: [
-        {
-          title: 'University Selection and Application Assistance',
-          description:
-            'At Next Level Education Consultancy, we understand that choosing the right university can be overwhelming. Our experienced counselors work closely with you to identify institutions that match your academic goals, interests, and budget. We provide comprehensive support throughout the application process.',
-          image: '/home2/univercity.png',
-        },
-        {
-          title: 'Visa Guidance and Application Support',
-          description:
-            'Visa application process can be complex and stressful. Our dedicated team offers personalized assistance to help you understand the visa requirements for your chosen destination. We guide you through each step of the application process, from gathering necessary documentation to filling out forms, ensuring that you meet all deadlines with regulations.',
-          image: '/home2/visaappp.png',
-        },
-        {
-          title: 'Scholarship Assistance',
-          description:
-            'Education can be costly, but our scholarship assistance service helps lighten the financial burden. We conduct thorough research to identify suitable scholarships and funding opportunities. Our experts guide you in crafting compelling scholarship applications that highlight your strengths and increase your chances of securing financial support for your studies.',
-          image: '/home2/scollership.png',
-        },
-        {
-          title: 'Pre-Departure and Post-Arrival Support',
-          description:
-            'Preparing to study abroad involves more than just academics. We provide essential pre-departure briefings that cover cultural and practical tips for adjusting to life in a new country. After you arrive, our post-arrival support ensures that you have access to resources and guidance as you settle into your new environment, helping you adapt smoothly to student life.',
-          image: '/home2/pre-deparcher.png',
-        },
-      ],
+      services: serviceDetails.map(service => ({
+        title: service.title,
+        description: service.shortDesc,
+        image: service.image,
+      })),
     },
     {
       id: 'home-universities',

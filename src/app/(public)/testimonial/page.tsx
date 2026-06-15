@@ -95,6 +95,9 @@ export default async function TestimonialPage() {
         renderFaqs={false}
         renderBlog={false}
         renderStaticSections={false}
+        showAmbassadorViewAll={false}
+        showSuccessStoriesViewAll={false}
+        ambassadorSectionBottomGap
       />
     </div>
   )

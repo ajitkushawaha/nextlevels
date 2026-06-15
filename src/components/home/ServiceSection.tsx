@@ -14,6 +14,9 @@ interface Service {
   title: string
   description: string
   image: string
+  href?: string
+  number?: string
+  stats?: string
 }
 
 interface ServicesCarouselProps {
@@ -28,7 +31,7 @@ const serviceMeta = [
 ]
 
 export default function ServicesCarousel({ services }: ServicesCarouselProps) {
-  const displayServices = [...services, ...services]
+  const displayServices = services
 
   return (
     <div className="relative w-full services-swiper">
@@ -59,6 +62,8 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
           const metaIndex = idx % services.length
           const meta = serviceMeta[metaIndex] || { number: '01', icon: GraduationCap, stats: '100% Free' }
           const Icon = meta.icon
+          const serviceNumber = service.number || meta.number
+          const serviceStats = service.stats || meta.stats
 
           return (
             <SwiperSlide key={`${service.title}-${idx}`} className="h-auto! p-2">
@@ -74,7 +79,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"></div>
                   <span className="absolute top-4 right-4 bg-[#d7a23a] text-[#061331] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm z-10">
-                    Service {meta.number}
+                    Service {serviceNumber}
                   </span>
                   <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
                     <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-black text-sm text-[#081638] uppercase">
@@ -102,10 +107,10 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                   <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-auto">
                     <div className="text-left">
                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Scope</span>
-                      <span className="text-xs font-black text-[#081638]">{meta.stats}</span>
+                      <span className="text-xs font-black text-[#081638]">{serviceStats}</span>
                     </div>
                     <Link
-                      href="/services"
+                      href={service.href || '/services'}
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
                     >
                       Read More

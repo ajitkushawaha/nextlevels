@@ -87,7 +87,7 @@ const homeServicesSectionSchema = z.object({
     title: z.string().trim().min(1).max(180),
     description: z.string().trim().min(1).max(900),
     image: z.string().trim().min(1).max(500),
-  })).min(1).max(8),
+  })).min(1).max(12),
 })
 
 const homeUniversitiesSectionSchema = z.object({

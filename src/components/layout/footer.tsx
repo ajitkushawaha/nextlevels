@@ -102,9 +102,20 @@ export default function Footer() {
         <div>
           <h3 className="text-[15px] font-bold">Branches</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
-            {['Jaffna', 'Batticaloa', 'Colombo', 'Vavuniya'].map(branch => (
+            {[
+              ['Jaffna', '/branches/jaffna'],
+              ['Batticaloa', '/branches/batticaloa'],
+              ['Colombo', '#'],
+              ['Vavuniya', '#'],
+            ].map(([branch, href]) => (
               <li key={branch} className="text-[13px] text-white/70">
-                {branch}
+                {href === '#' ? (
+                  branch
+                ) : (
+                  <Link href={href} className="transition hover:text-white">
+                    {branch}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -116,11 +127,11 @@ export default function Footer() {
           <ul className="mt-3 space-y-4 text-[13px] text-white/70">
             <li className="flex gap-3 items-start">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
-              <span>123 456 7890</span>
+              <span>+94775198195</span>
             </li>
             <li className="flex gap-3 items-start">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
-              <span>info@nextleveleducation.com</span>
+              <span>info@nextlevel.edu.lk</span>
             </li>
             <li className="flex gap-3 items-start">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />

@@ -12,6 +12,7 @@ import FAQSection from './FAQSection'
 import VisaConsultationForm from './VisaConsultationForm'
 import { universitiesData } from '@/lib/mockData'
 import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
+import { serviceDetails } from '@/lib/serviceDetails'
 import type {
   CmsPageContent,
   HomeAmbassadorsSection as HomeAmbassadorsSectionData,
@@ -26,7 +27,6 @@ import type {
   HomeUniversitiesSection as HomeUniversitiesSectionData,
   HomeWhyChooseUsSection as HomeWhyChooseUsSectionData,
 } from '@/lib/cms/types'
-import { Button } from '../ui/button'
 
 
 
@@ -57,6 +57,22 @@ const stats = [
   { icon: Globe2, targetValue: 20, suffix: '+', label: 'Countries Covered' },
   { icon: Award, targetValue: 98, suffix: '%', label: 'Visa Success Rate' },
 ]
+
+const approvedHomeServices = serviceDetails.map(service => ({
+  title: service.title,
+  description: service.shortDesc,
+  image: service.image,
+  number: service.number,
+  stats: service.stats,
+  href: `/services/${service.slug}`,
+}))
+
+const destinationHrefMap: Record<string, string> = {
+  Australia: '/study-abroad/australia',
+  Canada: '/study-abroad/canada',
+  'New Zealand': '/study-abroad/new-zealand',
+  'United Kingdom': '/study-abroad/uk',
+}
 
 const testimonials = [
   {
@@ -404,6 +420,9 @@ interface NextLevelHomepageProps {
   renderFaqs?: boolean
   renderBlog?: boolean
   renderStaticSections?: boolean
+  showAmbassadorViewAll?: boolean
+  showSuccessStoriesViewAll?: boolean
+  ambassadorSectionBottomGap?: boolean
 }
 
 export default function NextLevelHomepage({
@@ -421,6 +440,9 @@ export default function NextLevelHomepage({
   renderFaqs = true,
   renderBlog = true,
   renderStaticSections = true,
+  showAmbassadorViewAll = true,
+  showSuccessStoriesViewAll = true,
+  ambassadorSectionBottomGap = false,
 }: NextLevelHomepageProps) {
   const heroSection = getHomeHeroSection(content)
   const programSection = getHomeProgramSection(content)
@@ -437,7 +459,7 @@ export default function NextLevelHomepage({
   return (
     <div className="bg-white text-[#081638]">
       <main>
-        {renderHero && <section className="relative overflow-hidden bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-4 sm:px-8 ">
+        {renderHero && <section className="relative overflow-visible bg-[#E9EFF6] text-[#061331] pt-40 md:pt-20  lg:pt-28  px-4 sm:px-8 ">
           {/* Subtle light background matrix dots & world map overlay */}
           <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "radial-gradient(#081638 1px, transparent 1px)", backgroundSize: "24px 24px" }}></div>
           <div className="absolute inset-0 opacity-5 pointer-events-none bg-center bg-no-repeat bg-cover mix-blend-multiply" style={{ backgroundImage: "url('/visa/map.png')" }}></div>
@@ -480,9 +502,9 @@ export default function NextLevelHomepage({
             </div>
           </div>
 
-          <div className="relative z-20 mx-auto max-w-7xl mb-4 sm:mb-0 ">
+          <div className="relative z-10 mx-auto max-w-7xl mb-4 sm:mb-0 ">
             {/* Features Highlight Grid */}
-            <div className="grid  gap-3 rounded-lg bg-white p-4 text-[#081638] shadow-[0_20px_55px_rgba(6,19,49,0.14)] sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid  gap-3 rounded-lg bg-white p-4 text-[#081638]  sm:grid-cols-2 lg:grid-cols-4">
               {heroSection.features.map(feature => {
                 const Icon = heroIconMap[feature.icon] || Headphones
                 return (
@@ -589,7 +611,7 @@ export default function NextLevelHomepage({
               </ul>
 
 	              <Link
-	                href={programSection.cta.href}
+	                href="/courses"
                 className="mt-5 inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0d2459]"
               >
 	                {programSection.cta.label}
@@ -618,8 +640,9 @@ export default function NextLevelHomepage({
             {/* Country Cards Grid */}
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {destinationsSection.destinations.map((country) => (
-                <div
+                <Link
                   key={country.name}
+                  href={destinationHrefMap[country.name] || `/courses?search=${encodeURIComponent(country.name)}`}
                   className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
                   style={{ position: 'relative', height: '300px' }}
                 >
@@ -639,7 +662,7 @@ export default function NextLevelHomepage({
                       {country.name}
                     </h3>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -717,7 +740,7 @@ export default function NextLevelHomepage({
               </h2>
             </div>
             <div className="mt-10">
-              <ServicesCarousel services={servicesSection.services} />
+              <ServicesCarousel services={approvedHomeServices} />
             </div>
           </div>
         </section>
@@ -867,7 +890,7 @@ export default function NextLevelHomepage({
 
         {/* Student Ambassador & Life Combined Section */}
         {renderAmbassadors && (
-        <section className="bg-white ">
+        <section id="ambassadors" className={`bg-white scroll-mt-24 ${ambassadorSectionBottomGap ? 'pb-10 sm:pb-14' : ''}`}>
           <div className="mx-auto max-w-7xl">
             {/* Chat to a Student Ambassador Subsection */}
             <div className="mb-5 py-10 px-4 sm:px-6 lg:px-8">
@@ -875,6 +898,7 @@ export default function NextLevelHomepage({
                 <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   {ambassadorsSection.ambassadorTitle}
                 </h2>
+                <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-[#0f54b6]" />
                 <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
                   {ambassadorsSection.ambassadorDescription}
                 </p>
@@ -913,12 +937,23 @@ export default function NextLevelHomepage({
                   </div>
                 ))}
               </div>
+              {showAmbassadorViewAll && (
+              <div className="mt-8 text-center">
+                <Link
+                  href="/testimonial#ambassadors"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#081638] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f54b6]"
+                >
+                  View All Ambassadors
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              )}
             </div>
 
           </div>
 
           {/* Success Story Videos Subsection */}
-          <div className="bg-[#081638] py-10">
+          <div id="success-stories" className="bg-[#081638] py-10 scroll-mt-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center mb-5">
                 <div>
@@ -929,15 +964,18 @@ export default function NextLevelHomepage({
                   {ambassadorsSection.storiesDescription}
                 </p>
                 </div>
+                {showSuccessStoriesViewAll && (
                 <div>
-                <Button 
-                className="bg-[#fffff] text-white px-4 py-2 rounded-md font-bold hover:text-[#d7a23a]"
-                onClick={() => {
-                  window.location.href = '/faq'
-                }}
-                >View All <ArrowRight className="w-4 h-4 " /></Button>
+                <Link
+                  href="/testimonial#success-stories"
+                  className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-white transition hover:text-[#d7a23a]"
+                >
+                  View All Success Stories
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
                 
                 </div>
+                )}
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

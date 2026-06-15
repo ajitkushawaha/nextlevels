@@ -77,8 +77,8 @@ export default function ContactUsPage() {
                   Our support team is available to help with university applications and visa questions.
                 </p>
               </div>
-              <a href="mailto:info@nextleveleducation.com" className="text-xs font-bold text-[#d7a23a] mt-4 hover:underline flex items-center gap-1">
-                info@nextleveleducation.com <ArrowRight className="h-3.5 w-3.5" />
+              <a href="mailto:info@nextlevel.edu.lk" className="text-xs font-bold text-[#d7a23a] mt-4 hover:underline flex items-center gap-1">
+                info@nextlevel.edu.lk <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
 
