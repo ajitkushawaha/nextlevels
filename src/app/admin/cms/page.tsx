@@ -82,14 +82,14 @@ export default function CMSDashboardPage() {
         })}
       </div>
 
-      <div className="space-y-8">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         {filteredPages.map(page => {
           const PageIcon = page.icon
 
           return (
             <section
               key={page.key}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
+              className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
             >
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex items-start gap-4">
@@ -121,14 +121,14 @@ export default function CMSDashboardPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="flex-1 space-y-2">
                 {page.sections.map(section => {
                   const SectionIcon = getCmsSectionIcon(section.id)
 
                   return (
                     <Link
                       key={section.id}
-                      href={`/admin/cms/${page.key}/${section.id}`}
+                      href={section.customHref || `/admin/cms/${page.key}/${section.id}`}
                       className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-4 transition hover:border-slate-300 hover:bg-slate-50"
                     >
                       <div className="flex min-w-0 items-center gap-3">

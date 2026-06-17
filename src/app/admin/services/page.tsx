@@ -1,309 +1,472 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Search, Plus, Trash2, Edit3, Briefcase, ToggleLeft, ToggleRight, Sparkles } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import {
+  ArrowRight,
+  Briefcase,
+  Edit3,
+  Eye,
+  Plus,
+  RefreshCw,
+  Save,
+  Search,
+  Trash2,
+  Monitor,
+  Smartphone,
+} from 'lucide-react'
 import { toast } from 'sonner'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { serviceDetails, slugFromServiceTitle, type ServiceDetail } from '@/lib/serviceDetails'
+import ServiceDetailFormEditor from '@/components/cms/section-editors/ServiceDetailFormEditor'
+import ServiceDetailPreview from '@/components/services/ServiceDetailPreview'
+import ResponsivePreviewFrame, {
+  previewDevices,
+  type PreviewViewportMode,
+} from '@/components/cms/ResponsivePreviewFrame'
 
-interface Service {
+type AdminServicePage = {
   id: string
+  slug: string
   title: string
-  excerpt: string
-  description: string
-  status: 'active' | 'inactive'
+  data: ServiceDetail
+  status: 'draft' | 'published'
+  updatedAt?: string
+  publishedAt?: string
+}
+
+const newServiceTemplate: ServiceDetail = {
+  slug: 'new-service',
+  number: '13',
+  title: 'New Service',
+  shortDesc: 'Add a short summary for this service.',
+  description: 'Add the full service description here.',
+  image: '/home2/happy-team.png',
+  stats: 'Free Guidance',
+  benefits: [
+    'Add benefit one',
+    'Add benefit two',
+    'Add benefit three',
+    'Add benefit four',
+  ],
+  process: [
+    'Review student profile',
+    'Prepare the right plan',
+    'Submit and follow up',
+    'Guide next steps',
+  ],
+  outcomes: [
+    'Clear next steps',
+    'Better readiness',
+    'Reduced confusion',
+  ],
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : 'Something went wrong'
 }
 
 export default function ServicesManager() {
-  const [services, setServices] = useState<Service[]>([
-    {
-      id: 'srv_1',
-      title: 'Visa Application Support',
-      excerpt: 'Comprehensive visa guidance and documentation services.',
-      description: 'Our expert visa counselors help you compile and submit all required embassy documents for UK, Canada, Australia, and USA. We also conduct mock interviews.',
-      status: 'active'
-    },
-    {
-      id: 'srv_2',
-      title: 'IELTS Coaching Center',
-      excerpt: 'Online and offline training programs for IELTS exams.',
-      description: 'Prepare with certified IELTS tutors. Weekly practice tests, customized study planners, mock exams, and resources to help secure 7.5 bands and above.',
-      status: 'active'
-    },
-    {
-      id: 'srv_3',
-      title: 'University Admission Guidance',
-      excerpt: 'End-to-end guidance from university shortlisting to enrollments.',
-      description: 'Get matched with hundreds of courses matching your academic background. We guide you on writing SOPs, resumes, and securing letters of recommendation.',
-      status: 'active'
-    },
-    {
-      id: 'srv_4',
-      title: 'Pre-Departure Briefings',
-      excerpt: 'Orientations to help you settle in top study destinations.',
-      description: 'Orientations on housing, student accounts, part-time work compliance, and custom checklists for international destinations.',
-      status: 'inactive'
-    }
-  ])
-
+  const [services, setServices] = useState<AdminServicePage[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [editingService, setEditingService] = useState<Service | null>(null)
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState<string>('')
+  const [editorData, setEditorData] = useState<ServiceDetail | null>(null)
+  const [status, setStatus] = useState<'draft' | 'published'>('draft')
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
+  const [viewportMode, setViewportMode] = useState<PreviewViewportMode>('laptop')
 
-  // Fields for new service
-  const [newTitle, setNewTitle] = useState('')
-  const [newExcerpt, setNewExcerpt] = useState('')
-  const [newDesc, setNewDesc] = useState('')
-
-  const handleToggleStatus = (id: string) => {
-    setServices(services.map(s => 
-      s.id === id ? { ...s, status: s.status === 'active' ? 'inactive' : 'active' } : s
-    ))
-    toast.success('Service status updated successfully (Mock)')
-  }
-
-  const handleDelete = (id: string) => {
-    setServices(services.filter(s => s.id !== id))
-    toast.success('Service removed successfully (Mock)')
-  }
-
-  const handleAddService = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newTitle || !newExcerpt) {
-      toast.error('Title and short excerpt are required')
-      return
-    }
-
-    const srv: Service = {
-      id: `srv_${Date.now()}`,
-      title: newTitle,
-      excerpt: newExcerpt,
-      description: newDesc,
-      status: 'active'
-    }
-
-    setServices([...services, srv])
-    toast.success('New service added (Mock)')
-    setIsAddOpen(false)
-    setNewTitle('')
-    setNewExcerpt('')
-    setNewDesc('')
-  }
-
-  const handleEditSave = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!editingService) return
-
-    setServices(services.map(s => s.id === editingService.id ? editingService : s))
-    toast.success('Service details saved (Mock)')
-    setEditingService(null)
-  }
-
-  const filteredServices = services.filter(s => 
-    s.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    s.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  const selectedService = useMemo(
+    () => services.find(service => service.id === selectedId),
+    [selectedId, services]
   )
 
+  const filteredServices = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase()
+    if (!query) return services
+
+    return services.filter(service => {
+      const data = service.data
+      return (
+        data.title.toLowerCase().includes(query) ||
+        data.shortDesc.toLowerCase().includes(query) ||
+        data.slug.toLowerCase().includes(query)
+      )
+    })
+  }, [searchTerm, services])
+
+  const loadServices = async () => {
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/admin/services')
+      const result = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Could not load services')
+      }
+
+      const nextServices = result.services || []
+      setServices(nextServices)
+
+      if (nextServices.length > 0) {
+        const nextSelected =
+          nextServices.find((service: AdminServicePage) => service.id === selectedId) ||
+          nextServices[0]
+        selectService(nextSelected)
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const selectService = (service: AdminServicePage) => {
+    setSelectedId(service.id)
+    setStatus(service.status)
+    setEditorData(service.data)
+  }
+
+  const saveService = async () => {
+    if (!selectedService || !editorData) return
+
+    setIsSaving(true)
+
+    try {
+      const response = await fetch(`/api/admin/services/${selectedService.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: editorData, status }),
+      })
+      const result = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Could not save service')
+      }
+
+      toast.success('Service saved')
+      await loadServices()
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const createService = async () => {
+    setIsCreating(true)
+
+    try {
+      const nextNumber = String(services.length + 1).padStart(2, '0')
+      const data = {
+        ...newServiceTemplate,
+        number: nextNumber,
+        slug: `new-service-${Date.now()}`,
+      }
+
+      const response = await fetch('/api/admin/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, status: 'draft' }),
+      })
+      const result = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Could not create service')
+      }
+
+      toast.success('New service created')
+      await loadServices()
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setIsCreating(false)
+    }
+  }
+
+  const deleteService = async (service: AdminServicePage) => {
+    if (!window.confirm(`Delete "${service.data.title}"?`)) return
+
+    try {
+      const response = await fetch(`/api/admin/services/${service.id}`, {
+        method: 'DELETE',
+      })
+      const result = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Could not delete service')
+      }
+
+      toast.success('Service deleted')
+      setSelectedId('')
+      setEditorData(null)
+      await loadServices()
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    }
+  }
+
+  useEffect(() => {
+    loadServices()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-    <div className="p-6 md:p-8 space-y-6 bg-slate-50 min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-5">
+    <div className="min-h-screen bg-slate-100 p-6 md:p-8">
+      <div className="mb-6 flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Service Management</h1>
-          <p className="text-slate-500 text-sm mt-0.5">Configure and list consultancy service cards shown on the website.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+            Service Details CMS
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Create, edit, publish, and manage service detail pages from the backend.
+          </p>
         </div>
-        <Button 
-          onClick={() => setIsAddOpen(true)}
-          className="bg-[#061331] hover:bg-slate-800 text-white font-medium text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition"
-        >
-          <Plus className="h-4 w-4" /> Add Service
-        </Button>
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={loadServices}
+            disabled={isLoading}
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
+          <Button
+            type="button"
+            onClick={createService}
+            disabled={isCreating}
+            className="bg-[#061331] text-white hover:bg-slate-800"
+          >
+            <Plus className="h-4 w-4" />
+            {isCreating ? 'Creating...' : 'Add Service'}
+          </Button>
+        </div>
       </div>
 
-      {/* Search Filter Controls */}
-      <div className="relative max-w-sm w-full">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-        <Input 
-          placeholder="Search services..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-9 text-xs h-9 bg-white border-slate-200"
-        />
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredServices.map((srv) => (
-          <Card key={srv.id} className="border border-slate-200 shadow-sm bg-white rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-md transition">
-            <CardHeader className="p-5 pb-0 flex flex-row items-start justify-between gap-4">
-              <div className="flex gap-3">
-                <div className="p-2.5 bg-amber-50 rounded-xl border border-amber-100 text-amber-600 shrink-0">
-                  <Briefcase className="h-4 w-4" />
-                </div>
-                <div>
-                  <CardTitle className="text-sm font-bold text-slate-800">{srv.title}</CardTitle>
-                  <CardDescription className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[200px]">{srv.excerpt}</CardDescription>
-                </div>
+      <div className="grid gap-6 xl:grid-cols-12">
+        {/* Left column: List of Services */}
+        <div className="xl:col-span-3">
+          <Card className="border-slate-200 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-100 p-4">
+              <CardTitle className="text-sm font-bold text-slate-800">
+                Services List
+              </CardTitle>
+              <div className="relative mt-2">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  value={searchTerm}
+                  onChange={event => setSearchTerm(event.target.value)}
+                  placeholder="Search services..."
+                  className="h-10 bg-white pl-9 text-xs"
+                />
               </div>
-              <Badge className={srv.status === 'active' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-slate-100 text-slate-500 border border-slate-200'}>
-                {srv.status}
-              </Badge>
             </CardHeader>
-            <CardContent className="p-5 space-y-4">
-              <p className="text-xs text-slate-500 leading-relaxed font-medium">{srv.description || 'No detailed description configured.'}</p>
-              
-              <hr className="border-slate-100" />
-              
-              <div className="flex justify-between items-center text-xs">
-                <button 
-                  onClick={() => handleToggleStatus(srv.id)}
-                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 transition"
-                >
-                  {srv.status === 'active' ? (
-                    <>
-                      <ToggleRight className="h-5 w-5 text-green-600 shrink-0" />
-                      Active status
-                    </>
-                  ) : (
-                    <>
-                      <ToggleLeft className="h-5 w-5 text-slate-400 shrink-0" />
-                      Inactive status
-                    </>
-                  )}
-                </button>
-                <div className="flex gap-1">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setEditingService(srv)}
-                    className="h-8 w-8 p-0 text-slate-400 hover:text-slate-700"
-                  >
-                    <Edit3 className="h-3.5 w-3.5" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => handleDelete(srv.id)}
-                    className="h-8 w-8 p-0 text-slate-400 hover:text-red-600"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+            <CardContent className="max-h-[calc(100vh-16rem)] space-y-2 overflow-y-auto p-3">
+              {isLoading ? (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs font-semibold text-slate-500">
+                  Loading services...
                 </div>
-              </div>
+              ) : filteredServices.length === 0 ? (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs font-semibold text-slate-500">
+                  No services found.
+                </div>
+              ) : (
+                filteredServices.map(service => (
+                  <button
+                    type="button"
+                    key={service.id}
+                    onClick={() => selectService(service)}
+                    className={`w-full rounded-xl border p-3 text-left transition ${
+                      selectedId === service.id
+                        ? 'border-[#d7a23a] bg-[#fff9ed]'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-black text-slate-900">
+                          {service.data.number}. {service.data.title}
+                        </p>
+                        <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                          /services/{service.data.slug}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className={`text-[9px] px-1.5 py-0 ${
+                          service.status === 'published'
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            : 'border-amber-200 bg-amber-50 text-amber-700'
+                        }`}
+                      >
+                        {service.status}
+                      </Badge>
+                    </div>
+                  </button>
+                ))
+              )}
             </CardContent>
           </Card>
-        ))}
+        </div>
+
+        {/* Center column: Form Editor */}
+        <div className="xl:col-span-5 space-y-6">
+          {selectedService && editorData ? (
+            <Card className="border-slate-200 bg-white shadow-sm">
+              <CardHeader className="border-b border-slate-100 p-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="mb-1.5 flex items-center gap-1.5">
+                      <Briefcase className="h-4 w-4 text-[#d7a23a]" />
+                      <Badge variant="outline" className="text-[10px]">Service Details Editor</Badge>
+                    </div>
+                    <CardTitle className="text-base font-black text-slate-950">
+                      Edit details page
+                    </CardTitle>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5">
+                    <Button asChild variant="outline" size="sm" className="h-8 text-xs">
+                      <Link href={`/services/${editorData.slug}`} target="_blank">
+                        <Eye className="h-3.5 w-3.5" />
+                        View Page
+                      </Link>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 text-xs text-red-600 hover:text-red-700"
+                      onClick={() => deleteService(selectedService)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Delete
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={saveService}
+                      disabled={isSaving}
+                      className="h-8 text-xs bg-[#061331] text-white hover:bg-slate-800"
+                    >
+                      <Save className="h-3.5 w-3.5" />
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="p-4 space-y-4">
+                {/* Main Settings */}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Service Number</Label>
+                      <Input
+                        value={editorData.number}
+                        onChange={e => setEditorData({ ...editorData, number: e.target.value })}
+                        placeholder="01"
+                        className="text-xs"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">Publishing Status</Label>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <Button
+                          type="button"
+                          variant={status === 'draft' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setStatus('draft')}
+                          className={`h-8 text-xs ${status === 'draft' ? 'bg-amber-600 text-white hover:bg-amber-700' : ''}`}
+                        >
+                          Draft
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={status === 'published' ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setStatus('published')}
+                          className={`h-8 text-xs ${status === 'published' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : ''}`}
+                        >
+                          Publish
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ServiceDetailFormEditor
+                  data={editorData}
+                  onChange={nextData => setEditorData(nextData)}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="border-slate-200 bg-white shadow-sm">
+              <CardContent className="p-8 text-center">
+                <Edit3 className="mx-auto h-10 w-10 text-slate-300" />
+                <h2 className="mt-4 text-base font-black text-slate-900">
+                  Select a service
+                </h2>
+                <p className="mt-2 text-xs text-slate-500">
+                  Choose a service from the left to edit its detail page content.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Right column: Live Preview Frame */}
+        <div className="xl:col-span-4">
+          {selectedService && editorData ? (
+            <Card className="overflow-hidden border-slate-200 bg-white shadow-sm xl:sticky xl:top-6">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 p-4">
+                <div>
+                  <CardTitle className="text-sm font-semibold text-slate-800">
+                    Live Preview
+                  </CardTitle>
+                  <CardDescription className="text-[10px]">
+                    Updates instantly as you type.
+                  </CardDescription>
+                </div>
+                <div className="flex rounded-lg border border-slate-200 bg-slate-100 p-0.5">
+                  {Object.entries(previewDevices).map(([mode, device]) => {
+                    const Icon = device.icon
+
+                    return (
+                      <Button
+                        key={mode}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setViewportMode(mode as PreviewViewportMode)}
+                        className={`h-7 gap-1 px-2 text-[10px] ${
+                          viewportMode === mode ? 'bg-white shadow-xs' : ''
+                        }`}
+                      >
+                        <Icon className="h-3 w-3" />
+                        <span className="hidden sm:inline">{device.label}</span>
+                      </Button>
+                    )
+                  })}
+                </div>
+              </CardHeader>
+              <CardContent className="bg-slate-100 p-0">
+                <ResponsivePreviewFrame device={viewportMode}>
+                  <ServiceDetailPreview service={editorData} />
+                </ResponsivePreviewFrame>
+              </CardContent>
+            </Card>
+          ) : null}
+        </div>
       </div>
-
-      {/* Add Service Dialog */}
-      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="max-w-md bg-white p-6 rounded-2xl border border-slate-200">
-          <DialogHeader className="border-b border-slate-100 pb-3">
-            <DialogTitle className="text-base font-bold text-slate-900">Add New Service</DialogTitle>
-            <DialogDescription className="text-[10px] text-slate-400">Configure new consulting service module details</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleAddService} className="space-y-4 py-4 text-xs">
-            <div className="space-y-1.5">
-              <Label htmlFor="srv-title">Service Title</Label>
-              <Input 
-                id="srv-title" 
-                value={newTitle} 
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="e.g. TOEFL Preparation Classes"
-                required
-                className="bg-slate-50 border-slate-200"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="srv-excerpt">Short Excerpt</Label>
-              <Input 
-                id="srv-excerpt" 
-                value={newExcerpt} 
-                onChange={(e) => setNewExcerpt(e.target.value)}
-                placeholder="e.g. Customized coaching sessions to clear TOEFL"
-                required
-                className="bg-slate-50 border-slate-200"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="srv-desc">Detailed Description</Label>
-              <Textarea 
-                id="srv-desc" 
-                value={newDesc} 
-                onChange={(e) => setNewDesc(e.target.value)}
-                placeholder="Detailed breakdown of the service elements..."
-                rows={3}
-                className="bg-slate-50 border-slate-200"
-              />
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => setIsAddOpen(false)} className="text-xs h-9">
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-[#061331] hover:bg-slate-800 text-white text-xs font-semibold rounded-lg h-9">
-                Add Service
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Service Dialog */}
-      {editingService && (
-        <Dialog open={!!editingService} onOpenChange={() => setEditingService(null)}>
-          <DialogContent className="max-w-md bg-white p-6 rounded-2xl border border-slate-200">
-            <DialogHeader className="border-b border-slate-100 pb-3">
-              <DialogTitle className="text-base font-bold text-slate-900">Edit Service — {editingService.title}</DialogTitle>
-              <DialogDescription className="text-[10px] text-slate-400">Modify service parameters and specifications</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleEditSave} className="space-y-4 py-4 text-xs">
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-title">Service Title</Label>
-                <Input 
-                  id="edit-title" 
-                  value={editingService.title} 
-                  onChange={(e) => setEditingService({ ...editingService, title: e.target.value })}
-                  required
-                  className="bg-slate-50 border-slate-200"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-excerpt">Short Excerpt</Label>
-                <Input 
-                  id="edit-excerpt" 
-                  value={editingService.excerpt} 
-                  onChange={(e) => setEditingService({ ...editingService, excerpt: e.target.value })}
-                  required
-                  className="bg-slate-50 border-slate-200"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-desc">Detailed Description</Label>
-                <Textarea 
-                  id="edit-desc" 
-                  value={editingService.description} 
-                  onChange={(e) => setEditingService({ ...editingService, description: e.target.value })}
-                  rows={4}
-                  className="bg-slate-50 border-slate-200"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setEditingService(null)} className="text-xs h-9">
-                  Cancel
-                </Button>
-                <Button type="submit" className="bg-[#061331] hover:bg-slate-800 text-white text-xs font-semibold rounded-lg h-9">
-                  Save Changes
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   )
 }

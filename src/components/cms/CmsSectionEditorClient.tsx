@@ -13,12 +13,18 @@ import HomeHeroEditor from '@/components/cms/section-editors/HomeHeroEditor'
 import HomeJsonSectionEditor from '@/components/cms/section-editors/HomeJsonSectionEditor'
 import HomeProgramEditor from '@/components/cms/section-editors/HomeProgramEditor'
 import HomeWhyChooseUsEditor from '@/components/cms/section-editors/HomeWhyChooseUsEditor'
+import ServicesListEditor from '@/components/cms/section-editors/ServicesListEditor'
+import HomeServicesEditor from '@/components/cms/section-editors/HomeServicesEditor'
+import HomeUniversitiesEditor from '@/components/cms/section-editors/HomeUniversitiesEditor'
+import HomeBlogEditor from '@/components/cms/section-editors/HomeBlogEditor'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
+import { defaultServicesPageContent } from '@/lib/cms/servicesDefaults'
+import { defaultAboutPageContent } from '@/lib/cms/aboutDefaults'
 import { getCmsPage, getCmsSection } from '@/lib/cms/sectionRegistry'
 import type {
   CmsPageContent,
@@ -27,6 +33,10 @@ import type {
   HomeHeroSection,
   HomeProgramSection,
   HomeWhyChooseUsSection,
+  ServicesListSection,
+  HomeServicesSection,
+  HomeUniversitiesSection,
+  HomeBlogSection,
 } from '@/lib/cms/types'
 import { toast } from 'sonner'
 
@@ -56,6 +66,12 @@ function getWhyChooseUs(content: CmsPageContent) {
 
 function getSectionById(content: CmsPageContent, sectionId: string) {
   return content.sections.find(section => section.id === sectionId)
+}
+
+function getDefaultContent(pageKey: string) {
+  if (pageKey === 'services') return defaultServicesPageContent
+  if (pageKey === 'about') return defaultAboutPageContent
+  return defaultHomePageContent
 }
 
 function updateHero(
@@ -132,9 +148,10 @@ export default function CmsSectionEditorClient({
 }) {
   const page = getCmsPage(pageKey)
   const section = getCmsSection(pageKey, sectionId)
+  const defaultContent = useMemo(() => getDefaultContent(pageKey), [pageKey])
   const [viewportMode, setViewportMode] = useState<PreviewViewportMode>('laptop')
   const [title, setTitle] = useState(page?.title || 'CMS Page')
-  const [content, setContent] = useState<CmsPageContent>(defaultHomePageContent)
+  const [content, setContent] = useState<CmsPageContent>(defaultContent)
   const [isLoading, setIsLoading] = useState(section?.status === 'ready')
   const [isSaving, setIsSaving] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
@@ -153,30 +170,40 @@ export default function CmsSectionEditorClient({
     pageKey === 'home' && sectionId === 'home-destinations'
   const isHomeWhyChooseUs =
     pageKey === 'home' && sectionId === 'home-why-choose-us'
+  const isHomeServices = pageKey === 'home' && sectionId === 'home-services'
+  const isHomeUniversities = pageKey === 'home' && sectionId === 'home-universities'
+  const isHomeBlog = pageKey === 'home' && sectionId === 'home-blog'
+  const isServicesList = pageKey === 'services' && sectionId === 'services-list'
   const isEditableHomeSection =
-    isHomeHero || isHomeProgram || isHomeDestinations || isHomeWhyChooseUs
-  const isJsonHomeSection =
-    pageKey === 'home' && section?.status === 'ready' && !isEditableHomeSection
-  const isReadyHomeSection = isEditableHomeSection || isJsonHomeSection
+    isHomeHero ||
+    isHomeProgram ||
+    isHomeDestinations ||
+    isHomeWhyChooseUs ||
+    isHomeServices ||
+    isHomeUniversities ||
+    isHomeBlog
+  const isEditableServicesSection = isServicesList
+  const isJsonReadySection = section?.status === 'ready' && !isEditableHomeSection && !isEditableServicesSection
+  const isReadySection = isEditableHomeSection || isEditableServicesSection || isJsonReadySection
 
   useEffect(() => {
-    if (!isReadyHomeSection) return
+    if (!isReadySection) return
 
     let isMounted = true
 
     async function loadPage() {
       try {
-        const response = await fetch('/api/admin/cms/pages/home')
+        const response = await fetch(`/api/admin/cms/pages/${pageKey}`)
         if (!response.ok) throw new Error('Unable to load CMS draft')
         const data = await response.json()
 
         if (!isMounted) return
 
-        setTitle(data.page.title || 'Home Page')
-        setContent(data.page.draftContent || defaultHomePageContent)
+        setTitle(data.page.title || page?.title || 'CMS Page')
+        setContent(data.page.draftContent || defaultContent)
       } catch (error) {
         console.error(error)
-        toast.error('Loaded default home content. Could not fetch saved draft.')
+        toast.error('Loaded default content. Could not fetch saved draft.')
       } finally {
         if (isMounted) setIsLoading(false)
       }
@@ -187,7 +214,7 @@ export default function CmsSectionEditorClient({
     return () => {
       isMounted = false
     }
-  }, [isReadyHomeSection])
+  }, [defaultContent, isReadySection, page?.title, pageKey])
 
   const setHeroField = <Key extends keyof HomeHeroSection>(
     key: Key,
@@ -425,7 +452,7 @@ export default function CmsSectionEditorClient({
     setIsSaving(true)
 
     try {
-      const response = await fetch('/api/admin/cms/pages/home', {
+      const response = await fetch(`/api/admin/cms/pages/${pageKey}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, draftContent: content }),
@@ -450,7 +477,7 @@ export default function CmsSectionEditorClient({
     try {
       await saveDraft()
 
-      const response = await fetch('/api/admin/cms/pages/home/publish', {
+      const response = await fetch(`/api/admin/cms/pages/${pageKey}/publish`, {
         method: 'POST',
       })
 
@@ -487,7 +514,7 @@ export default function CmsSectionEditorClient({
     )
   }
 
-  if (!isReadyHomeSection) {
+  if (!isReadySection) {
     return (
       <div className="min-h-screen bg-slate-50 p-6 md:p-8">
         <div className="mb-6 flex items-center gap-3">
@@ -545,7 +572,7 @@ export default function CmsSectionEditorClient({
         <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
-            onClick={() => setContent(defaultHomePageContent)}
+            onClick={() => setContent(defaultContent)}
             disabled={isLoading}
           >
             <RefreshCw className="h-4 w-4" />
@@ -641,7 +668,51 @@ export default function CmsSectionEditorClient({
                 />
               )}
 
-              {isJsonHomeSection && activeCmsSection && (
+              {isServicesList && activeCmsSection && (
+                <ServicesListEditor
+                  section={activeCmsSection as ServicesListSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isHomeServices && activeCmsSection && (
+                <HomeServicesEditor
+                  section={activeCmsSection as HomeServicesSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isHomeUniversities && activeCmsSection && (
+                <HomeUniversitiesEditor
+                  section={activeCmsSection as HomeUniversitiesSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isHomeBlog && activeCmsSection && (
+                <HomeBlogEditor
+                  section={activeCmsSection as HomeBlogSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isJsonReadySection && activeCmsSection && (
                 <HomeJsonSectionEditor
                   key={activeCmsSection.id}
                   section={activeCmsSection}
@@ -664,7 +735,7 @@ export default function CmsSectionEditorClient({
                   Live Preview
                 </CardTitle>
                 <CardDescription className="text-xs">
-                  Same PageRenderer used by the public homepage.
+                  Same PageRenderer used by the public page.
                 </CardDescription>
               </div>
               <div className="flex rounded-lg border border-slate-200 bg-slate-100 p-0.5">
@@ -690,12 +761,17 @@ export default function CmsSectionEditorClient({
             </CardHeader>
             <CardContent className="bg-slate-100 p-0">
               {isLoading ? (
-                <div className="flex h-[760px] items-center justify-center text-sm font-semibold text-slate-500">
+                <div className="flex h-190 items-center justify-center text-sm font-semibold text-slate-500">
                   Loading CMS draft...
                 </div>
               ) : (
                 <ResponsivePreviewFrame device={viewportMode}>
-                  <PageRenderer slug="/" content={content} sectionId={sectionId} />
+                  <PageRenderer
+                    slug={page.publicPath}
+                    content={content}
+                    sectionId={sectionId}
+                    includeFooter={false}
+                  />
                 </ResponsivePreviewFrame>
               )}
             </CardContent>

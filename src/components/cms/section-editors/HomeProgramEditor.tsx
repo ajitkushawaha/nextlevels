@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import type { HomeProgramSection } from '@/lib/cms/types'
+import CmsImageField from './CmsImageField'
 
 interface HomeProgramEditorProps {
   program: HomeProgramSection
@@ -152,11 +153,12 @@ export default function HomeProgramEditor({
             <p className="text-[11px] font-bold uppercase text-slate-400">
               Image {index + 1}
             </p>
-            <Input
+            <CmsImageField
+              id={`program-image-${index}`}
+              label="Image"
               value={image.src}
-              onChange={event =>
-                setProgramImageField(index, 'src', event.target.value)
-              }
+              folder="nextlevel/home/program"
+              onChange={value => setProgramImageField(index, 'src', value)}
             />
             <Input
               value={image.alt}

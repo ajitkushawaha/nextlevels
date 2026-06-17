@@ -12,11 +12,9 @@ import {
   Sparkles,
   UserRound,
 } from 'lucide-react'
+import * as LucideIcons from 'lucide-react'
 import Footer from '@/components/layout/footer'
-import {
-  getServiceDetail,
-  serviceDetails,
-} from '@/lib/serviceDetails'
+import { getPublishedServiceDetail, getPublishedServiceSlugs } from '@/lib/servicePages'
 
 type Params = {
   params: Promise<{
@@ -24,15 +22,17 @@ type Params = {
   }>
 }
 
-export function generateStaticParams() {
-  return serviceDetails.map(service => ({
-    slug: service.slug,
-  }))
+export const dynamic = 'force-dynamic'
+
+export async function generateStaticParams() {
+  const slugs = await getPublishedServiceSlugs()
+
+  return slugs.map(slug => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
-  const service = getServiceDetail(slug)
+  const service = await getPublishedServiceDetail(slug)
 
   if (!service) return { title: 'Service Not Found' }
 
@@ -47,11 +47,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Params) {
   const { slug } = await params
-  const service = getServiceDetail(slug)
+  const service = await getPublishedServiceDetail(slug)
 
   if (!service) notFound()
 
-  const stripPositions = ['0% 50%', '33.333% 50%', '66.666% 50%', '100% 50%']
   const coverIcons = [UserRound, PenLine, Rocket, PhoneCall]
   const coverDescriptions = [
     'We evaluate your academic background, interests, and goals to match you with the right courses and universities.',
@@ -75,6 +74,33 @@ export default async function ServiceDetailPage({ params }: Params) {
     'Improved chances with the right strategy and fewer setbacks.',
     'A smooth, guided process that saves time and brings peace of mind.',
   ]
+
+  const getCardDetails = (
+    item: any,
+    index: number,
+    sectionType: 'cover' | 'process' | 'outcome'
+  ) => {
+    if (typeof item === 'string') {
+      let defaultDesc = ''
+      if (sectionType === 'cover') defaultDesc = coverDescriptions[index] || ''
+      else if (sectionType === 'process') defaultDesc = processDescriptions[index] || ''
+      else if (sectionType === 'outcome') defaultDesc = outcomeDescriptions[index] || ''
+
+      return {
+        title: item,
+        description: defaultDesc,
+        image: `/service/${sectionType}-${index + 1}.png`,
+        iconName: undefined,
+      }
+    }
+
+    return {
+      title: item?.title || '',
+      description: item?.description || '',
+      image: item?.image || `/service/${sectionType}-${index + 1}.png`,
+      iconName: item?.iconName,
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white text-[#12174F]">
@@ -168,22 +194,25 @@ export default async function ServiceDetailPage({ params }: Params) {
             </div>
 
             <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {service.benefits.slice(0, 4).map((benefit, index) => {
-                const Icon = coverIcons[index]
+              {service.benefits.slice(0, 4).map((item, index) => {
+                const card = getCardDetails(item, index, 'cover')
+                const Icon =
+                  (card.iconName &&
+                    (LucideIcons[card.iconName as keyof typeof LucideIcons] as React.ComponentType<any>)) ||
+                  coverIcons[index] ||
+                  LucideIcons.HelpCircle
 
                 return (
                   <article
-                    key={benefit}
+                    key={index}
                     className="overflow-hidden rounded-[22px] border border-slate-200 bg-white text-center shadow-[0_16px_42px_rgba(18,23,79,0.08)]"
                   >
                     <div
-                      className="h-48 bg-white bg-no-repeat"
+                      className="h-48 bg-white bg-no-repeat bg-cover bg-center"
                       role="img"
                       aria-label={`${service.title} coverage ${index + 1}`}
                       style={{
-                        backgroundImage: "url('/service-cover-strip.png')",
-                        backgroundPosition: stripPositions[index],
-                        backgroundSize: '400% auto',
+                        backgroundImage: `url('${card.image}')`,
                       }}
                     />
                     <div className="px-6 pb-7">
@@ -191,10 +220,10 @@ export default async function ServiceDetailPage({ params }: Params) {
                         <Icon className="h-6 w-6" strokeWidth={2.6} />
                       </span>
                       <h3 className="mt-4 text-lg font-black leading-6 text-[#12174F]">
-                        {benefit}
+                        {card.title}
                       </h3>
                       <p className="mt-3 text-sm leading-6 text-[#424242]">
-                        {coverDescriptions[index]}
+                        {card.description}
                       </p>
                     </div>
                   </article>
@@ -228,32 +257,33 @@ export default async function ServiceDetailPage({ params }: Params) {
               <div className="pointer-events-none absolute left-[9%] right-[9%] top-19.5 hidden border-t-2 border-dashed border-white/55 xl:block" />
 
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-                {service.process.slice(0, 4).map((step, index) => (
-                  <article key={step} className="relative text-center">
-                    <div className="relative mx-auto h-42 w-42 rounded-full border-[9px] border-white bg-white shadow-[0_16px_34px_rgba(18,23,79,0.13)]">
-                      <span className="absolute -left-2 top-1 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FBC02D] text-sm font-black text-[#12174F] shadow-md">
-                        {index + 1}
-                      </span>
-                      <div
-                        className="absolute inset-2 rounded-full bg-[#F8F7FA] bg-no-repeat"
-                        role="img"
-                        aria-label={`${service.title} process ${index + 1}`}
-                        style={{
-                          backgroundImage: "url('/service-process-strip.png')",
-                          backgroundPosition: stripPositions[index],
-                          backgroundSize: '400% auto',
-                        }}
-                      />
-                    </div>
+                {service.process.slice(0, 4).map((item, index) => {
+                  const card = getCardDetails(item, index, 'process')
+                  return (
+                    <article key={index} className="relative text-center">
+                      <div className="relative mx-auto h-42 w-42 rounded-full border-[9px] border-white bg-white shadow-[0_16px_34px_rgba(18,23,79,0.13)]">
+                        <span className="absolute -left-2 top-1 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FBC02D] text-sm font-black text-[#12174F] shadow-md">
+                          {index + 1}
+                        </span>
+                        <div
+                          className="absolute inset-2 rounded-full bg-[#F8F7FA] bg-no-repeat bg-cover bg-center"
+                          role="img"
+                          aria-label={`${service.title} process ${index + 1}`}
+                          style={{
+                            backgroundImage: `url('${card.image}')`,
+                          }}
+                        />
+                      </div>
 
-                    <h3 className="mx-auto mt-4 max-w-58 text-xl font-black leading-7 text-white">
-                      {step}
-                    </h3>
-                    <p className="mx-auto mt-3 max-w-62 text-sm leading-6 text-white/75">
-                      {processDescriptions[index]}
-                    </p>
-                  </article>
-                ))}
+                      <h3 className="mx-auto mt-4 max-w-58 text-xl font-black leading-7 text-white">
+                        {card.title}
+                      </h3>
+                      <p className="mx-auto mt-3 max-w-62 text-sm leading-6 text-white/75">
+                        {card.description}
+                      </p>
+                    </article>
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -275,29 +305,30 @@ export default async function ServiceDetailPage({ params }: Params) {
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {expectedOutcomes.map((outcome, index) => (
-                <article
-                  key={outcome}
-                  className="relative text-center xl:border-r xl:border-[#E0E0E0] xl:last:border-r-0"
-                >
-                  <div
-                    className="mx-auto h-36 w-36 rounded-full bg-no-repeat"
-                    role="img"
-                    aria-label={`${service.title} outcome ${index + 1}`}
-                    style={{
-                      backgroundImage: "url('/service-outcomes-strip.png')",
-                      backgroundPosition: stripPositions[index],
-                      backgroundSize: '400% auto',
-                    }}
-                  />
-                  <h3 className="mx-auto mt-4 max-w-58 text-xl font-black leading-7 text-[#12174F]">
-                    {outcome}
-                  </h3>
-                  <p className="mx-auto mt-3 max-w-62 text-sm leading-6 text-[#424242]">
-                    {outcomeDescriptions[index]}
-                  </p>
-                </article>
-              ))}
+              {expectedOutcomes.map((item, index) => {
+                const card = getCardDetails(item, index, 'outcome')
+                return (
+                  <article
+                    key={index}
+                    className="relative text-center xl:border-r xl:border-[#E0E0E0] xl:last:border-r-0"
+                  >
+                    <div
+                      className="mx-auto h-36 w-36 rounded-full bg-no-repeat bg-cover bg-center"
+                      role="img"
+                      aria-label={`${service.title} outcome ${index + 1}`}
+                      style={{
+                        backgroundImage: `url('${card.image}')`,
+                      }}
+                    />
+                    <h3 className="mx-auto mt-4 max-w-58 text-xl font-black leading-7 text-[#12174F]">
+                      {card.title}
+                    </h3>
+                    <p className="mx-auto mt-3 max-w-62 text-sm leading-6 text-[#424242]">
+                      {card.description}
+                    </p>
+                  </article>
+                )
+              })}
             </div>
 
             <div className="mt-9 rounded-[18px] bg-[#12174F] px-6 py-5 text-white shadow-[0_20px_45px_rgba(18,23,79,0.16)] sm:px-8 lg:flex lg:items-center lg:justify-between">

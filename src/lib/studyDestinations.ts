@@ -115,6 +115,16 @@ export const studyDestinations: StudyDestination[] = [
         answer:
           'Most eligible international students can work part-time during term and full-time during official holidays.',
       },
+      {
+        question: 'What is the Graduate Route (PSW) in the UK?',
+        answer:
+          'The Graduate Route allows international students to stay and work in the UK for 2 years (3 years for PhD graduates) after completing their studies.',
+      },
+      {
+        question: 'How long are undergraduate and postgraduate courses in the UK?',
+        answer:
+          'Typically, bachelor\'s degrees are 3 years and master\'s degrees are 1 year. This is shorter than in many other countries, saving tuition and living expenses.',
+      },
     ],
   },
   {
@@ -129,7 +139,7 @@ export const studyDestinations: StudyDestination[] = [
       'Popular for diplomas, undergraduate degrees, postgraduate certificates, and research programs.',
       'Co-op and internship pathways connect study with practical Canadian work exposure.',
       'Multicultural cities make it easier for students to settle and build networks.',
-      'Eligible graduates may explore post-graduation work pathways.',
+      'Eligical graduates may explore post-graduation work pathways.',
     ],
     visa: {
       name: 'Study permit',
@@ -194,6 +204,16 @@ export const studyDestinations: StudyDestination[] = [
         question: 'Is Canada good for practical courses?',
         answer:
           'Yes. Canadian colleges and universities are known for co-op, applied learning, and industry-focused programs.',
+      },
+      {
+        question: 'What is PGWPP in Canada?',
+        answer:
+          'The Post-Graduation Work Permit Program (PGWPP) allows eligible graduates to obtain an open work permit to gain valuable Canadian work experience.',
+      },
+      {
+        question: 'Can I bring my family while studying in Canada?',
+        answer:
+          'Yes, eligible students can bring their spouse (who may apply for an open work permit) and minor children to study at public schools.',
       },
     ],
   },
@@ -274,6 +294,16 @@ export const studyDestinations: StudyDestination[] = [
         answer:
           'Yes. Awards vary by university, region, study level, and academic profile.',
       },
+      {
+        question: 'What is the subclass 485 Temporary Graduate visa?',
+        answer:
+          'It is a post-study work visa allowing international graduates to live and work in Australia temporarily.',
+      },
+      {
+        question: 'Is OSHC mandatory for study in Australia?',
+        answer:
+          'Yes, purchasing Overseas Student Health Cover (OSHC) is a mandatory requirement for the duration of your student visa.',
+      },
     ],
   },
   {
@@ -352,6 +382,16 @@ export const studyDestinations: StudyDestination[] = [
         question: 'Can I choose pathway programs in New Zealand?',
         answer:
           'Yes. Many institutions offer diploma, foundation, and pathway routes into degree programs.',
+      },
+      {
+        question: 'Can I work on a student visa in New Zealand?',
+        answer:
+          'Most student visas allow you to work up to 20 hours per week during term and full-time during holidays.',
+      },
+      {
+        question: 'What is the post-study work visa in New Zealand?',
+        answer:
+          'Eligible graduates of degree-level courses or higher can get a post-study work visa for up to 3 years.',
       },
     ],
   },

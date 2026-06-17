@@ -771,7 +771,10 @@ export default function NextLevelHomepage({
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              {Object.values(universitiesData).slice(0, 4).map((univ: any) => (
+              {(universitiesSection.universities && universitiesSection.universities.length > 0
+                ? universitiesSection.universities
+                : Object.values(universitiesData).slice(0, 4)
+              ).map((univ: any) => (
                 <div
                   key={univ.name}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(6,19,49,0.12)]"

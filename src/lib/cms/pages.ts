@@ -1,6 +1,9 @@
 import connectDB from '@/lib/db'
 import CmsPage from '@/models/CmsPage'
 import { defaultHomePageContent } from './homeDefaults'
+import { defaultAboutPageContent } from './aboutDefaults'
+import { defaultServicesPageContent } from './servicesDefaults'
+import { defaultContactPageContent } from './contactDefaults'
 import { parseCmsPageContent } from './validation'
 import type { CmsPageContent, CmsPageDocument, CmsSection } from './types'
 
@@ -9,10 +12,24 @@ const defaultPages: Record<string, { title: string; content: CmsPageContent }> =
     title: 'Home Page',
     content: defaultHomePageContent,
   },
+  '/services': {
+    title: 'Services Page',
+    content: defaultServicesPageContent,
+  },
+  '/about-us': {
+    title: 'About Page',
+    content: defaultAboutPageContent,
+  },
+  '/contact-us': {
+    title: 'Contact Page',
+    content: defaultContactPageContent,
+  },
 }
 
-function normalizeSlug(slug: string) {
+export function normalizeCmsPageSlug(slug: string) {
   if (!slug || slug === 'home') return '/'
+  if (slug === 'about') return '/about-us'
+  if (slug === 'contact') return '/contact-us'
   return slug.startsWith('/') ? slug : `/${slug}`
 }
 
@@ -47,15 +64,34 @@ function withDefaultSections(content: unknown, slug: string) {
 }
 
 function serializePage(page: any): CmsPageDocument {
-  const slug = normalizeSlug(page.slug)
+  const slug = normalizeCmsPageSlug(page.slug)
+  const defaultPage = defaultPages[slug]
+
+  let draftContent: CmsPageContent
+  let publishedContent: CmsPageContent | undefined
+
+  try {
+    draftContent = parseCmsPageContent(withDefaultSections(page.draftContent, slug))
+  } catch (error) {
+    console.warn(`[CMS] Validation failed for draft content of '${slug}'. Falling back to defaults.`)
+    if (!defaultPage) throw error
+    draftContent = defaultPage.content
+  }
+
+  if (page.publishedContent) {
+    try {
+      publishedContent = parseCmsPageContent(withDefaultSections(page.publishedContent, slug))
+    } catch (error) {
+      console.warn(`[CMS] Validation failed for published content of '${slug}'. Falling back to defaults.`)
+      publishedContent = defaultPage?.content
+    }
+  }
 
   return {
     slug,
     title: page.title,
-    draftContent: parseCmsPageContent(withDefaultSections(page.draftContent, slug)),
-    publishedContent: page.publishedContent
-      ? parseCmsPageContent(withDefaultSections(page.publishedContent, slug))
-      : undefined,
+    draftContent,
+    publishedContent,
     status: page.status,
     updatedAt: page.updatedAt?.toISOString?.(),
     publishedAt: page.publishedAt?.toISOString?.(),
@@ -65,7 +101,7 @@ function serializePage(page: any): CmsPageDocument {
 export async function getCmsPageBySlug(slug: string) {
   await connectDB()
 
-  const normalizedSlug = normalizeSlug(slug)
+  const normalizedSlug = normalizeCmsPageSlug(slug)
   const page = await (CmsPage as any).findOne({ slug: normalizedSlug }).lean()
 
   if (page) return serializePage(page)
@@ -85,7 +121,7 @@ export async function getCmsPageBySlug(slug: string) {
 export async function ensureCmsPage(slug: string) {
   await connectDB()
 
-  const normalizedSlug = normalizeSlug(slug)
+  const normalizedSlug = normalizeCmsPageSlug(slug)
   const existing = await (CmsPage as any).findOne({ slug: normalizedSlug }).lean()
   if (existing) return serializePage(existing)
 

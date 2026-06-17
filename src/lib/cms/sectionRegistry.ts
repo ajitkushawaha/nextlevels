@@ -13,6 +13,9 @@ import {
   Star,
   Trophy,
   UsersRound,
+  Eye,
+  Rocket,
+  Heart,
 } from 'lucide-react'
 
 export type CmsPageKey = 'home' | 'services' | 'about' | 'contact'
@@ -24,6 +27,7 @@ export type CmsSectionRegistryItem = {
   title: string
   description: string
   status: CmsSectionStatus
+  customHref?: string
 }
 
 export type CmsPageRegistryItem = {
@@ -114,34 +118,6 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
     ],
   },
   {
-    key: 'services',
-    title: 'Services Page Content',
-    description: 'Manage service landing page content',
-    publicPath: '/services',
-    icon: Briefcase,
-    iconClassName: 'bg-indigo-50 text-indigo-600',
-    sections: [
-      {
-        id: 'services-hero',
-        title: 'Manage Hero',
-        description: 'Services banner and intro copy',
-        status: 'planned',
-      },
-      {
-        id: 'services-tabs',
-        title: 'Manage Services Tabs',
-        description: 'Interactive service cards and tabs',
-        status: 'planned',
-      },
-      {
-        id: 'services-process',
-        title: 'Manage Service Process',
-        description: 'Support process / guidance section',
-        status: 'planned',
-      },
-    ],
-  },
-  {
     key: 'about',
     title: 'About Page Content',
     description: 'Manage about page sections and public content',
@@ -153,31 +129,66 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
         id: 'about-hero',
         title: 'Manage Hero',
         description: 'About page banner content',
-        status: 'planned',
+        status: 'ready',
       },
       {
         id: 'about-story',
         title: 'Manage Story',
         description: 'Story copy, stats and image',
-        status: 'planned',
+        status: 'ready',
       },
       {
         id: 'about-vision-mission',
         title: 'Manage Vision & Mission',
-        description: 'Vision and mission cards',
-        status: 'planned',
+        description: 'Company vision statement and core mission',
+        status: 'ready',
+      },
+      {
+        id: 'about-team',
+        title: 'Manage Team',
+        description: 'Team member cards and section intro',
+        status: 'ready',
       },
       {
         id: 'about-pillars',
         title: 'Manage Core Pillars',
-        description: 'Pillar cards and section heading',
-        status: 'planned',
+        description: 'Core brand values and details',
+        status: 'ready',
       },
       {
         id: 'about-cta',
-        title: 'Manage CTA Banner',
-        description: 'Study abroad CTA banner',
-        status: 'planned',
+        title: 'Manage Study Abroad CTA Banner',
+        description: 'Footer call to action banner configuration',
+        status: 'ready',
+      },
+    ],
+  },
+  {
+    key: 'services',
+    title: 'Services Page Content',
+    description: 'Manage service landing page content',
+    publicPath: '/services',
+    icon: Briefcase,
+    iconClassName: 'bg-indigo-50 text-indigo-600',
+    sections: [
+      {
+        id: 'services-hero',
+        title: 'Manage Hero',
+        description: 'Services banner and intro copy',
+        status: 'ready',
+      },
+      {
+        id: 'services-list',
+        title: 'Manage Services List / Detail Pages',
+        description: 'Interactive service cards, details and images',
+        status: 'ready',
+        customHref: '/admin/services',
+      },
+      {
+        id: 'services-credentials',
+        title: 'Manage Credentials',
+        description: 'Standout copy, image, points and stats',
+        status: 'ready',
       },
     ],
   },
@@ -193,25 +204,25 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
         id: 'contact-hero',
         title: 'Manage Hero',
         description: 'Contact page banner content',
-        status: 'planned',
+        status: 'ready',
       },
       {
         id: 'contact-cards',
         title: 'Manage Quick Contact Cards',
         description: 'Support, feedback and institution cards',
-        status: 'planned',
+        status: 'ready',
       },
       {
         id: 'contact-form',
         title: 'Manage Free Counselling Form',
         description: 'Form-side content and image',
-        status: 'planned',
+        status: 'ready',
       },
       {
         id: 'contact-map-office',
         title: 'Manage Map & Office Details',
         description: 'Map iframe and branch addresses',
-        status: 'planned',
+        status: 'ready',
       },
     ],
   },
@@ -228,7 +239,7 @@ export const cmsDashboardStats = [
     label: 'Ready Editors',
     value: cmsPageRegistry.reduce(
       (total, page) =>
-        total + page.sections.filter(section => section.status === 'ready').length,
+          total + page.sections.filter(section => section.status === 'ready').length,
       0
     ),
     icon: Trophy,
@@ -255,6 +266,10 @@ export const cmsSectionIconMap: Record<string, typeof Home> = {
   map: MapPinned,
   ambassadors: MessageCircle,
   universities: GraduationCap,
+  vision: Eye,
+  mission: Rocket,
+  pillars: Heart,
+  cta: Trophy,
 }
 
 export function getCmsSectionIcon(sectionId: string) {

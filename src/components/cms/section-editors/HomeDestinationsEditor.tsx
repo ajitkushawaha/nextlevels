@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import type { HomeDestinationsSection } from '@/lib/cms/types'
+import CmsImageField from './CmsImageField'
 
 interface HomeDestinationsEditorProps {
   destinations: HomeDestinationsSection
@@ -100,16 +101,15 @@ export default function HomeDestinationsEditor({
               />
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor={`destination-image-${index}`}>Image</Label>
-              <Input
-                id={`destination-image-${index}`}
-                value={destination.image}
-                onChange={event =>
-                  setDestinationCardField(index, 'image', event.target.value)
-                }
-              />
-            </div>
+            <CmsImageField
+              id={`destination-image-${index}`}
+              label="Image"
+              value={destination.image}
+              folder="nextlevel/home/destinations"
+              onChange={value =>
+                setDestinationCardField(index, 'image', value)
+              }
+            />
 
             <div className="space-y-1.5">
               <Label htmlFor={`destination-alt-${index}`}>Image Alt</Label>

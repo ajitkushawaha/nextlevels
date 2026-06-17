@@ -80,11 +80,11 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       {/* Sidebar Navigation */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col justify-between transform transition-all duration-300 ease-in-out
-        md:sticky md:top-0 md:h-screen md:translate-x-0
+        md:sticky md:top-0 md:h-screen md:overflow-y-auto md:translate-x-0
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
         ${isCollapsed ? 'md:w-16' : 'md:w-64'}
       `}>
-        <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex flex-col h-full">
           {/* Brand Switcher Area */}
           <div className="px-4 py-4 border-b border-slate-100 flex items-center justify-between">
             {!isCollapsed && (

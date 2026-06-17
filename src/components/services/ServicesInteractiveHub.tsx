@@ -20,6 +20,7 @@ import {
   Wallet
 } from 'lucide-react'
 import { serviceDetails, type ServiceDetail } from '@/lib/serviceDetails'
+import type { ServicesCredentialsSection } from '@/lib/cms/types'
 
 type ServiceItem = ServiceDetail & {
   id: number
@@ -44,18 +45,31 @@ const serviceIcons = [
 
 const serviceColors = ['#d7a23a', '#84cc16', '#a855f7', '#f59e0b', '#06b6d4']
 
-const servicesData: ServiceItem[] = serviceDetails.map((service, index) => ({
-  ...service,
-  id: index,
-  icon: serviceIcons[index] || GraduationCap,
-  color: serviceColors[index % serviceColors.length],
-}))
+function buildServicesData(services: ServiceDetail[]): ServiceItem[] {
+  return services.map((service, index) => ({
+    ...service,
+    id: index,
+    icon: serviceIcons[index] || GraduationCap,
+    color: serviceColors[index % serviceColors.length],
+  }))
+}
 
-export default function ServicesInteractiveHub() {
+export default function ServicesInteractiveHub({
+  services = serviceDetails,
+  credentials,
+  showServices = true,
+  showCredentials = true,
+}: {
+  services?: ServiceDetail[]
+  credentials?: ServicesCredentialsSection
+  showServices?: boolean
+  showCredentials?: boolean
+}) {
   const [activeTab, setActiveTab] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const servicesData = buildServicesData(services)
   const activeService = servicesData[activeTab]
-  const ActiveIcon = activeService.icon
+  const ActiveIcon = activeService?.icon || GraduationCap
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -72,6 +86,7 @@ export default function ServicesInteractiveHub() {
   return (
     <div className="w-full">
       {/* Services Grid Layout */}
+      {showServices && servicesData.length > 0 && (
       <section className="" id="services">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {servicesData.map((service, index) => {
@@ -114,54 +129,48 @@ export default function ServicesInteractiveHub() {
           })}
         </div>
       </section>
+      )}
 
       {/* Why Next Level Stands Out */}
+      {showCredentials && credentials && (
       <section className="py-10 bg-white/70 rounded-3xl border border-slate-100 p-8 sm:p-12 mt-16">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
             <div className="text-[#081638] text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
               <div className="w-8 h-0.5 bg-[#d7a23a]"></div>
-              OUR CREDENTIALS
+              {credentials.eyebrow}
             </div>
 
             <h2
               className="text-3xl sm:text-4xl font-extrabold text-[#081638] mb-6 leading-tight"
               style={{ fontFamily: 'Farro, sans-serif' }}
             >
-              Why Next Level Stands Out
+              {credentials.title}
             </h2>
 
             <p className="text-base text-slate-500 mb-10 leading-relaxed">
-              Providing unique, personalized guidance that eliminates study abroad stress entirely. We operate with high compliance rigor and a commitment to transparent, zero-fee support.
+              {credentials.description}
             </p>
 
             <div className="space-y-8">
-              <div className="flex gap-6">
-                <div className="shrink-0 w-12 h-12 rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/5 flex items-center justify-center text-[#d7a23a]">
-                  <Check className="h-5 w-5 stroke-[2.5]" />
+              {credentials.points.map(point => (
+                <div key={point.title} className="flex gap-6">
+                  <div className="shrink-0 w-12 h-12 rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/5 flex items-center justify-center text-[#d7a23a]">
+                    <Check className="h-5 w-5 stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#081638] text-lg mb-2">{point.title}</h4>
+                    <p className="text-slate-500 text-sm leading-relaxed">{point.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-[#081638] text-lg mb-2">Global Admissions Representative</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">Direct relationships with over 150+ highly ranked universities across Australia, Canada, UK, and New Zealand.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-6">
-                <div className="shrink-0 w-12 h-12 rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/5 flex items-center justify-center text-[#d7a23a]">
-                  <Check className="h-5 w-5 stroke-[2.5]" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#081638] text-lg mb-2">Credibility-First Visa Success</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">Every portfolio undergoes rigorous auditing to ensure financial records and statements are bulletproof.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
           <div className="relative min-h-90 overflow-hidden rounded-3xl border border-slate-200 bg-[#E9EFF6] shadow-[0_24px_60px_rgba(8,22,56,0.12)]">
             <Image
-              src="/services-credentials.png"
-              alt="Next Level student counselling advisor"
+              src={credentials.image}
+              alt={credentials.imageAlt}
               fill
               className="object-cover object-center"
               sizes="(max-width: 1024px) 100vw, 520px"
@@ -169,49 +178,50 @@ export default function ServicesInteractiveHub() {
             <div className="absolute inset-0 bg-linear-to-t from-[#061331]/65 via-[#061331]/10 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
               <p className="text-xs font-black uppercase tracking-wider text-[#d7a23a]">
-                Zero-fee guidance
+                {credentials.imageEyebrow}
               </p>
               <p className="mt-2 max-w-sm text-lg font-extrabold leading-snug">
-                Profile review, admissions planning, and visa readiness in one place.
+                {credentials.imageTitle}
               </p>
             </div>
           </div>
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <div className="bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
-            <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">150+</span>
-            <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Partner Colleges</span>
-          </div>
-
-          <div className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
-            <span className="text-[#081638] text-4xl font-extrabold mb-1">5+</span>
-            <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Destinations</span>
-          </div>
-
-          <div className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm">
-            <span className="text-[#081638] text-4xl font-extrabold mb-1">100%</span>
-            <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Direct Channels</span>
-          </div>
-
-          <div className="bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg">
-            <span className="text-[#d7a23a] text-4xl font-extrabold mb-1">98%</span>
-            <span className="text-white/80 text-[10px] uppercase font-bold tracking-widest">Visa Approvals</span>
-          </div>
-
-          <div className="bg-[#fffcf0] border border-[#d7a23a]/20 p-6 rounded-2xl flex items-center justify-between shadow-sm sm:col-span-2 lg:col-span-1">
-            <div className="flex flex-col">
-              <span className="text-[#d7a23a] text-[10px] uppercase font-extrabold tracking-widest">ZERO FEES</span>
-              <span className="text-[#081638] text-3xl font-black mt-2">LKR 0</span>
-              <span className="text-slate-500 text-xs font-semibold mt-1">Student Service Costs</span>
+          {credentials.stats.map(stat => (
+            <div
+              key={`${stat.value}-${stat.label}`}
+              className={
+                stat.variant === 'dark'
+                  ? 'bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg'
+                  : stat.variant === 'gold'
+                    ? 'bg-[#fffcf0] border border-[#d7a23a]/20 p-6 rounded-2xl flex items-center justify-between shadow-sm sm:col-span-2 lg:col-span-1'
+                    : 'bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm'
+              }
+            >
+              {stat.variant === 'gold' ? (
+                <>
+                  <div className="flex flex-col">
+                    <span className="text-[#d7a23a] text-[10px] uppercase font-extrabold tracking-widest">ZERO FEES</span>
+                    <span className="text-[#081638] text-3xl font-black mt-2">{stat.value}</span>
+                    <span className="text-slate-500 text-xs font-semibold mt-1">{stat.label}</span>
+                  </div>
+                  <Wallet className="h-12 w-12 text-[#d7a23a] opacity-30 stroke-[1.5]" />
+                </>
+              ) : (
+                <>
+                  <span className={`${stat.variant === 'dark' ? 'text-[#d7a23a]' : 'text-[#081638]'} text-4xl font-extrabold mb-1`}>{stat.value}</span>
+                  <span className={`${stat.variant === 'dark' ? 'text-white/80' : 'text-slate-500'} text-[10px] uppercase font-bold tracking-widest`}>{stat.label}</span>
+                </>
+              )}
             </div>
-            <Wallet className="h-12 w-12 text-[#d7a23a] opacity-30 stroke-[1.5]" />
-          </div>
+          ))}
         </div>
       </section>
+      )}
 
       {/* Modal Overlay */}
-      {isModalOpen && (
+      {isModalOpen && activeService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           {/* Backdrop */}
           <div
@@ -283,7 +293,7 @@ export default function ServicesInteractiveHub() {
                         <Check className="h-3 w-3 stroke-[2.5]" />
                       </span>
                       <span className="text-xs font-semibold text-slate-700 leading-snug">
-                        {benefit}
+                        {typeof benefit === 'string' ? benefit : benefit?.title}
                       </span>
                     </div>
                   ))}

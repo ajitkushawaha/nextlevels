@@ -25,6 +25,10 @@ import {
   studyDestinations,
   type StudyDestination,
 } from '@/lib/studyDestinations'
+import connectDB from '@/lib/db'
+import CountryModel from '@/models/Country'
+import UniversityModel from '@/models/University'
+import ProgramModel from '@/models/Program'
 
 type Params = {
   params: Promise<{
@@ -40,10 +44,32 @@ export function generateStaticParams() {
   }))
 }
 
+function getCountryDisplayName(countryName: string) {
+  const nameLower = countryName.toLowerCase()
+  if (nameLower === 'united kingdom' || nameLower === 'uk' || nameLower === 'united states' || nameLower === 'usa' || nameLower === 'us') {
+    return `the ${countryName}`
+  }
+  return countryName
+}
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { country } = await params
-  const destination = getStudyDestination(country)
+  
+  try {
+    await connectDB()
+    const dbCountry = await (CountryModel as any).findOne({ code: country.toLowerCase() }).lean()
+    if (dbCountry) {
+      return {
+        title: `Study in ${dbCountry.name} | Next Level Education`,
+        description: dbCountry.intro || dbCountry.description || '',
+        alternates: { canonical: `/study-abroad/${dbCountry.code}` },
+      }
+    }
+  } catch (err) {
+    console.error('Metadata DB lookup failed:', err)
+  }
 
+  const destination = getStudyDestination(country)
   if (!destination) return { title: 'Study Destination Not Found' }
 
   return {
@@ -87,7 +113,7 @@ function DataTable({
   return (
     <div className="my-5 overflow-hidden border border-slate-200 bg-white">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-125 border-collapse text-left text-[13px]">
+        <table className="w-full min-w-[500px] border-collapse text-left text-[13px]">
           <thead className="bg-slate-50 text-[#081638]">
             <tr>
               {columns.map(column => (
@@ -135,12 +161,61 @@ function ArticleBlock({
 
 export default async function StudyDestinationPage({ params }: Params) {
   const { country } = await params
-  const destination = getStudyDestination(country)
+  
+  await connectDB()
+  
+  const dbCountry = await (CountryModel as any).findOne({ code: country.toLowerCase() }).lean()
+  let destination: any = null
+  let universities: any[] = []
+  let courses: any[] = []
 
-  if (!destination) notFound()
+  if (dbCountry) {
+    destination = {
+      slug: dbCountry.code,
+      country: dbCountry.name,
+      shortName: dbCountry.name,
+      flag: dbCountry.flagImage,
+      heroImage: dbCountry.flagImage,
+      intro: dbCountry.intro || dbCountry.description || '',
+      highlights: dbCountry.highlights || [],
+      visa: dbCountry.visa || { name: '', who: '', whenToApply: '', arrival: '' },
+      costs: dbCountry.costs || [],
+      scholarships: dbCountry.scholarships || [],
+      intakes: dbCountry.intakes || [],
+      topCourses: dbCountry.topCourses || [],
+      jobProspects: dbCountry.jobProspects || [],
+      livingCosts: dbCountry.livingCosts || [],
+      faqs: dbCountry.faqs || [],
+    }
 
-  const universities = getCountryUniversities(destination)
-  const courses = getCountryCourses(destination)
+    // Load associated universities
+    const dbUniversities = await (UniversityModel as any).find({ countryId: dbCountry._id }).lean()
+    universities = dbUniversities.map((u: any) => ({
+      name: u.name,
+      logo: u.logo,
+      coverImage: u.bannerImage || '/countries/default.png',
+      location: u.city,
+      country: dbCountry.name,
+      flag: dbCountry.flagImage,
+    }))
+
+    // Load first 4 courses for universities in this country
+    const dbUnivIds = dbUniversities.map((u: any) => u._id)
+    const dbCourses = await (ProgramModel as any).find({ universityId: { $in: dbUnivIds } }).populate('universityId').limit(4).lean()
+    courses = dbCourses.map((c: any) => ({
+      id: c._id.toString(),
+      title: c.title,
+      level: c.degreeLevel,
+      university: c.universityId?.name || '',
+    }))
+  } else {
+    const mockDest = getStudyDestination(country)
+    if (!mockDest) notFound()
+    destination = mockDest
+    universities = getCountryUniversities(destination)
+    courses = getCountryCourses(destination)
+  }
+
   const heroTiles = [
     destination.heroImage,
     universities[0]?.coverImage || destination.heroImage,
@@ -157,7 +232,7 @@ export default async function StudyDestinationPage({ params }: Params) {
   ]
   const articleCards = [
     {
-      title: `Guide to studying in ${destination.country}`,
+      title: `Guide to studying in ${getCountryDisplayName(destination.country)}`,
       image: destination.heroImage,
     },
     {
@@ -176,11 +251,11 @@ export default async function StudyDestinationPage({ params }: Params) {
 
   return (
     <div className="min-h-screen bg-white text-[#081638]">
-      <main>
+      <main >
         <section className="bg-[#E9EFF6] pt-24">
-         
-          <div className="mx-auto flex max-w-6xl flex-col gap-5 px-5 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-            <div className="w-1/2">
+
+          <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="w-full lg:w-1/2">
               <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-slate-500">
                 <Link href="/" className="hover:text-[#d7a23a]">Home</Link>
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -189,10 +264,10 @@ export default async function StudyDestinationPage({ params }: Params) {
                 <span>{destination.country}</span>
               </nav>
               <h1 className="text-3xl font-extrabold text-[#061331] sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                Study in {destination.country}
+                Study in {getCountryDisplayName(destination.country)}
               </h1>
               <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
-                Looking for overseas education information? Explore everything about studying in {destination.country}, including visa, admission, costs, scholarships and top universities.
+                Looking for overseas education information? Explore everything about studying in {getCountryDisplayName(destination.country)}, including visa, admission, costs, scholarships and top universities.
               </p>
               <Link
                 href="/contact-us"
@@ -201,14 +276,14 @@ export default async function StudyDestinationPage({ params }: Params) {
                 Enquire now
               </Link>
             </div>
-            <div className="relative grid w-1/3">
+            <div className="relative grid w-full lg:w-1/3">
               <div
                 role="img"
                 aria-label={`${destination.country} landmark`}
                 className="relative col-span-1 row-span-2 h-40 overflow-hidden bg-[#E9EFF6] bg-cover bg-center bg-blend-multiply sm:h-44"
                 style={{ backgroundImage: `url(${heroTiles[0]})` }}
               >
-                
+
               </div>
             </div>
             {/* <Image
@@ -222,7 +297,7 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <div className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-5 py-3 text-[12px] font-semibold text-slate-500 sm:px-8">
+          <div className="mx-auto flex max-w-7xl gap-5 overflow-x-auto px-5 py-3 text-[12px] font-semibold text-slate-500 sm:px-8">
             {navLinks.map(([label, id]) => (
               <a key={id} href={`#${id}`} className="shrink-0 hover:text-[#d7a23a]">
                 {label}
@@ -232,9 +307,9 @@ export default async function StudyDestinationPage({ params }: Params) {
         </div>
 
         <section className="bg-white py-9">
-          <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,720px)_300px]">
+          <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,720px)_300px]">
             <article>
-              <ArticleBlock id="why-study" title={`Why study in ${destination.country}?`}>
+              <ArticleBlock id="why-study" title={`Why study in ${getCountryDisplayName(destination.country)}?`}>
                 <p>{destination.intro}</p>
                 <ul className="mt-4 space-y-2">
                   {destination.highlights.map(highlight => (
@@ -246,7 +321,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 </ul>
               </ArticleBlock>
 
-              <ArticleBlock id="requirements" title={`Student visa requirements for ${destination.country}`}>
+              <ArticleBlock id="requirements" title={`Student visa requirements for ${getCountryDisplayName(destination.country)}`}>
                 <p>
                   A complete student visa file usually includes a valid offer, passport, financial evidence, academic documents, English test evidence where required, and country-specific supporting documents.
                 </p>
@@ -264,7 +339,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 />
               </ArticleBlock>
 
-              <ArticleBlock id="intakes" title={`Intakes available in ${destination.country}`}>
+              <ArticleBlock id="intakes" title={`Intakes available in ${getCountryDisplayName(destination.country)}`}>
                 <p>
                   Plan your intake based on course availability, offer deadlines, financial documents, English test dates, and visa processing timelines.
                 </p>
@@ -277,7 +352,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 />
               </ArticleBlock>
 
-              <ArticleBlock id="courses" title={`Popular courses to study in ${destination.country}`}>
+              <ArticleBlock id="courses" title={`Popular courses to study in ${getCountryDisplayName(destination.country)}`}>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {destination.topCourses.map(course => (
                     <div key={course} className="flex items-center gap-2 border border-slate-200 bg-slate-50 px-3 py-2 text-[13px] font-semibold text-[#081638]">
@@ -299,7 +374,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 ) : null}
               </ArticleBlock>
 
-              <ArticleBlock id="cost" title={`Cost of studying in ${destination.country}`}>
+              <ArticleBlock id="cost" title={`Cost of studying in ${getCountryDisplayName(destination.country)}`}>
                 <p>
                   Tuition and living costs vary by institution, city, study level and lifestyle. The table below gives a practical planning range.
                 </p>
@@ -319,7 +394,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 />
               </ArticleBlock>
 
-              <ArticleBlock id="scholarships" title={`Scholarships to study in ${destination.country}`}>
+              <ArticleBlock id="scholarships" title={`Scholarships to study in ${getCountryDisplayName(destination.country)}`}>
                 <p>
                   Scholarships depend on your academic record, course, institution and intake. We help you shortlist realistic options and prepare strong applications.
                 </p>
@@ -332,7 +407,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 />
               </ArticleBlock>
 
-              <ArticleBlock id="jobs" title={`Job prospects in ${destination.country}`}>
+              <ArticleBlock id="jobs" title={`Job prospects in ${getCountryDisplayName(destination.country)}`}>
                 <p>
                   Career outcomes depend on your course, work rights, experience, city and employer demand. These sectors are commonly explored by international students.
                 </p>
@@ -379,7 +454,7 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section className="bg-slate-50 py-9">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="grid gap-4 rounded-md bg-white p-6 md:grid-cols-[1fr_220px] md:items-center">
               <div>
                 <h2 className="text-xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
@@ -397,9 +472,9 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section className="bg-slate-50 py-8">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <h2 className="text-xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
-              Explore in {destination.country}
+              Explore in {getCountryDisplayName(destination.country)}
             </h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
@@ -422,11 +497,11 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section id="universities" className="bg-white py-9">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  Top universities in {destination.country}
+                  Top universities in {getCountryDisplayName(destination.country)}
                 </h2>
                 <p className="mt-2 text-sm text-slate-500">Compare popular partner institutions and shortlist based on your profile.</p>
               </div>
@@ -463,7 +538,7 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section className="bg-slate-50 py-9">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="grid gap-4 md:grid-cols-2">
               {[
                 ['Find your home away from home', 'Get guidance on accommodation and arrival planning.', Home],
@@ -488,9 +563,9 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section className="bg-white py-9">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <h2 className="text-xl font-extrabold text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
-              Articles about {destination.country}
+              Articles about {getCountryDisplayName(destination.country)}
             </h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {articleCards.map(article => (
@@ -506,15 +581,15 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section id="faqs" className="bg-[#061331] py-10 text-white">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <h2 className="text-xl font-extrabold" style={{ fontFamily: 'Farro, sans-serif' }}>
               Ask Next Level
             </h2>
             <p className="mt-2 text-sm text-white/65">
-              Key questions students ask before applying to {destination.country}.
+              Key questions students ask before applying to {getCountryDisplayName(destination.country)}.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {destination.faqs.concat(destination.faqs).slice(0, 4).map((faq, index) => (
+              {destination.faqs.map((faq, index) => (
                 <div key={`${faq.question}-${index}`} className="flex min-h-44 flex-col justify-end rounded-md bg-white p-4 text-[#081638]">
                   <h3 className="text-xs font-extrabold leading-5">{faq.question}</h3>
                   <p className="mt-2 line-clamp-3 text-[11px] leading-5 text-slate-500">{faq.answer}</p>
@@ -525,7 +600,7 @@ export default async function StudyDestinationPage({ params }: Params) {
         </section>
 
         <section className="bg-[#E9EFF6] py-10">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-7xl px-6 sm:px-8">
             <div className="rounded-md bg-white/40 p-3 sm:p-4">
               <FreeCounsellingForm />
             </div>

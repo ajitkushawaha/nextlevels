@@ -1,6 +1,9 @@
 'use client'
 
 import NextLevelHomepage from '@/components/home/NextLevelHomepage'
+import ServicesPageContent from '@/components/services/ServicesPageContent'
+import AboutPageContent from '@/components/about/AboutPageContent'
+import ContactPageContent from '@/components/contact/ContactPageContent'
 import type { CmsPageContent, CmsSection } from '@/lib/cms/types'
 
 interface PageRendererProps {
@@ -34,6 +37,36 @@ export default function PageRenderer({
             />
           ))}
       </div>
+    )
+  }
+
+  if (slug === '/services') {
+    return (
+      <ServicesPageContent
+        content={content}
+        includeFooter={includeFooter}
+        sectionId={sectionId}
+      />
+    )
+  }
+
+  if (slug === '/about-us') {
+    return (
+      <AboutPageContent
+        content={content}
+        includeFooter={includeFooter}
+        sectionId={sectionId}
+      />
+    )
+  }
+
+  if (slug === '/contact-us') {
+    return (
+      <ContactPageContent
+        content={content}
+        includeFooter={includeFooter}
+        sectionId={sectionId}
+      />
     )
   }
 

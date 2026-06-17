@@ -457,14 +457,14 @@ function CourseFinderContent() {
               <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
             </div>
 
-            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
               {fields
                 .filter(f => f.toLowerCase().includes(searchFieldQuery.toLowerCase()))
                 .map(field => {
                   const isChecked = selectedFields.includes(field)
                   return (
                     <label key={field} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
-                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-[140px]">{field}</span>
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-35">{field}</span>
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] font-black text-slate-400">{getFieldCount(field)}</span>
                         <input
@@ -511,7 +511,7 @@ function CourseFinderContent() {
               <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
             </div>
 
-            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
               {degreeTypes
                 .filter(d => d.toLowerCase().includes(searchDegreeQuery.toLowerCase()))
                 .map(deg => {
@@ -565,14 +565,14 @@ function CourseFinderContent() {
               <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
             </div>
 
-            <div className="space-y-1 max-h-[160px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
               {universitiesList
                 .filter(u => u.toLowerCase().includes(searchUniversityQuery.toLowerCase()))
                 .map(uni => {
                   const isChecked = selectedUniversities.includes(uni)
                   return (
                     <label key={uni} className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1.5 transition-colors group">
-                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-[140px]">{uni}</span>
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-[#081638] truncate max-w-35">{uni}</span>
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] font-black text-slate-400">{getUniversityCount(uni)}</span>
                         <input
@@ -603,12 +603,12 @@ function CourseFinderContent() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-between pt-10">
 
       <main className="w-full grow py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
 
           {/* Interactive Matcher Wizard */}
           {showWizard && (
             <div className="mb-12 bg-[#061331] rounded-3xl border border-white/10 p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#d7a23a]/5 rounded-full blur-[80px] pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-75 h-75 bg-[#d7a23a]/5 rounded-full blur-[80px] pointer-events-none"></div>
 
               <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/10">
                 <div>
@@ -716,7 +716,7 @@ function CourseFinderContent() {
             <section className="lg:col-span-9 space-y-6">
 
               {/* Results count & Header stats with dynamic tabs and mobile actions */}
-              <div className="sticky top-[80px] bg-slate-50 z-20 pb-4 pt-4 flex flex-col gap-4 border-b border-slate-200 text-left">
+              <div className="sticky top-20 bg-slate-50 z-20 pb-4 pt-4 flex flex-col gap-4 border-b border-slate-200 text-left">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h2 className="font-extrabold text-[#081638] text-xl sm:text-2xl">
@@ -825,7 +825,7 @@ function CourseFinderContent() {
                               </div>
                               <div className="grow space-y-0.5 min-w-0">
                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                                  <strong className="text-xs font-black text-[#081638] hover:text-[#d7a23a] transition-colors truncate max-w-[220px] sm:max-w-none">
+                                  <strong className="text-xs font-black text-[#081638] hover:text-[#d7a23a] transition-colors truncate max-w-55 sm:max-w-none">
                                     <Link href={`/universities/${encodeURIComponent(course.university)}`} className="hover:underline">
                                       {course.university}
                                     </Link>

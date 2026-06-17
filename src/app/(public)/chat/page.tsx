@@ -96,8 +96,8 @@ function ChatContent() {
 
       {/* Main Content Area */}
       <main className="w-full grow py-10 bg-[#fbf8fc] relative z-10">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-14">
-          <div className="bg-white rounded-[32px] p-4 sm:p-5 lg:p-6 shadow-[0_15px_50px_rgba(8,22,56,0.03)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="bg-white rounded-4xl p-4 sm:p-5 lg:p-6 shadow-[0_15px_50px_rgba(8,22,56,0.03)]">
             <FreeCounsellingForm  />
           </div>
         </div>

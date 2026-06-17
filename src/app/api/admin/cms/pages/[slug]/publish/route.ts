@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authConfig'
 import connectDB from '@/lib/db'
 import CmsPage from '@/models/CmsPage'
-import { ensureCmsPage } from '@/lib/cms/pages'
+import { ensureCmsPage, normalizeCmsPageSlug } from '@/lib/cms/pages'
 import { parseCmsPageContent } from '@/lib/cms/validation'
 
 type Params = { params: Promise<{ slug: string }> }
@@ -12,10 +12,6 @@ type Params = { params: Promise<{ slug: string }> }
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
   return Boolean(session && (session.user as any)?.role === 'admin')
-}
-
-function normalizeSlug(slug: string) {
-  return slug === 'home' ? '/' : slug.startsWith('/') ? slug : `/${slug}`
 }
 
 export async function POST(_req: Request, { params }: Params) {
@@ -36,7 +32,7 @@ export async function POST(_req: Request, { params }: Params) {
     await connectDB()
 
     const page = await (CmsPage as any).findOneAndUpdate(
-      { slug: normalizeSlug(slug) },
+      { slug: normalizeCmsPageSlug(slug) },
       {
         $set: {
           publishedContent: draftContent,
@@ -47,7 +43,7 @@ export async function POST(_req: Request, { params }: Params) {
       { new: true }
     ).lean()
 
-    revalidatePath(normalizeSlug(slug))
+    revalidatePath(normalizeCmsPageSlug(slug))
 
     return NextResponse.json({ page })
   } catch (error: any) {

@@ -1,3 +1,10 @@
+export type ServiceCardDetail = {
+  title: string
+  description?: string
+  image?: string
+  iconName?: string
+}
+
 export type ServiceDetail = {
   slug: string
   number: string
@@ -6,9 +13,9 @@ export type ServiceDetail = {
   description: string
   image: string
   stats: string
-  benefits: string[]
-  process: string[]
-  outcomes: string[]
+  benefits: Array<string | ServiceCardDetail>
+  process: Array<string | ServiceCardDetail>
+  outcomes: Array<string | ServiceCardDetail>
 }
 
 export const serviceDetails: ServiceDetail[] = [

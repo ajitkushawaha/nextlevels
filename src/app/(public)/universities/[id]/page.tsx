@@ -14,6 +14,8 @@ import {
 } from 'lucide-react'
 import { universitiesData, coursesData, scholarshipsData } from '@/lib/mockData'
 import connectDb from '@/lib/db'
+import UniversityModel from '@/models/University'
+import mongoose from 'mongoose'
 import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import UniversityEnquiryForm from './UniversityEnquiryForm'
@@ -26,19 +28,51 @@ export default async function UniversityDetailPage({ params }: Props) {
   const { id } = await params
   const decodedName = decodeURIComponent(id)
 
-  // Find structured university profile or create dynamic fallback
-  const university = universitiesData[decodedName] || {
-    name: decodedName,
-    logo: decodedName.substring(0, 3).toUpperCase(),
-    coverImage: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
-    worldRank: '#Rank Unlisted',
-    students: '10,000+',
-    established: 'N/A',
-    description: `Welcome to ${decodedName}. Providing elite academic training with cutting-edge laboratories, world-renowned faculties, and dynamic research programs.`,
-    country: 'International',
-    location: 'Global Campus',
-    flag: '🏛️',
-    website: 'https://www.google.com'
+  let university: any = null
+
+  try {
+    await connectDb()
+    const isValidId = mongoose.Types.ObjectId.isValid(decodedName)
+    const dbUniv = await (UniversityModel as any).findOne({
+      $or: [
+        ...(isValidId ? [{ _id: decodedName }] : []),
+        { name: decodedName }
+      ]
+    }).populate('countryId').lean()
+
+    if (dbUniv) {
+      university = {
+        name: dbUniv.name,
+        logo: dbUniv.logo || dbUniv.name.substring(0, 3).toUpperCase(),
+        coverImage: dbUniv.bannerImage || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
+        worldRank: dbUniv.globalRanking ? `#${dbUniv.globalRanking}` : '#Rank Unlisted',
+        students: dbUniv.cmsData?.students || '10,000+',
+        established: dbUniv.cmsData?.established || 'N/A',
+        description: dbUniv.description || `Welcome to ${dbUniv.name}.`,
+        country: dbUniv.countryId?.name || 'International',
+        location: dbUniv.city || 'Global Campus',
+        flag: dbUniv.countryId?.flagImage ? '📍' : '🏛️',
+        website: dbUniv.websiteUrl || 'https://www.google.com'
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load university from database:', err)
+  }
+
+  if (!university) {
+    university = universitiesData[decodedName] || {
+      name: decodedName,
+      logo: decodedName.substring(0, 3).toUpperCase(),
+      coverImage: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
+      worldRank: '#Rank Unlisted',
+      students: '10,000+',
+      established: 'N/A',
+      description: `Welcome to ${decodedName}. Providing elite academic training with cutting-edge laboratories, world-renowned faculties, and dynamic research programs.`,
+      country: 'International',
+      location: 'Global Campus',
+      flag: '🏛️',
+      website: 'https://www.google.com'
+    }
   }
 
   // Filter courses offered by this university
@@ -328,7 +362,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                 </p>
               </div>
 
-          
+
 
               {/* Scholarships Section */}
               {matchingScholarships.length > 0 && (
@@ -336,7 +370,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                   <h2 className="text-xl font-black text-[#081638] flex items-center gap-2 text-left">
                     🏆 Scholarships & Funding Opportunities
                   </h2>
-                  
+
                   <div className="space-y-8">
                     {matchingScholarships.slice(0, 1).map(sch => {
                       const meta = scholarshipMetadataMap[sch.id] || {
@@ -518,7 +552,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                   </div>
                 </div>
               )}
-                  {/* Available Degrees/Courses */}
+              {/* Available Degrees/Courses */}
               <div className="space-y-4">
                 <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 text-left">
                   🎓 Available Programs ({universityCourses.length})

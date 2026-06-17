@@ -163,7 +163,7 @@ export default function BranchEnquiryForm({ branchName }: BranchEnquiryFormProps
               name="dialCode"
               value={formData.dialCode}
               onChange={handleChange}
-              className="max-w-[108px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 text-sm text-[#081638] outline-none focus:border-[#d7a23a]"
+              className="max-w-27 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-2 text-sm text-[#081638] outline-none focus:border-[#d7a23a]"
             >
               <option value="+94">+94 LK</option>
               <option value="+91">+91 IN</option>

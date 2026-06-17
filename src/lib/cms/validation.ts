@@ -193,6 +193,179 @@ const homeStaticSectionsSchema = z.object({
   enabled: z.boolean(),
 })
 
+const serviceDetailCardSchema = z.object({
+  title: z.string().trim().min(1).max(220),
+  description: z.string().trim().min(1).max(1000).optional(),
+  image: z.string().trim().min(1).max(500).optional(),
+  iconName: z.string().trim().max(80).optional(),
+})
+
+const serviceDetailSchema = z.object({
+  slug: z.string().trim().min(1).max(140),
+  number: z.string().trim().min(1).max(12),
+  title: z.string().trim().min(1).max(180),
+  shortDesc: z.string().trim().min(1).max(420),
+  description: z.string().trim().min(1).max(1600),
+  image: z.string().trim().min(1).max(500),
+  stats: z.string().trim().min(1).max(120),
+  benefits: z.array(z.union([z.string(), serviceDetailCardSchema])).min(1).max(16),
+  process: z.array(z.union([z.string(), serviceDetailCardSchema])).min(1).max(16),
+  outcomes: z.array(z.union([z.string(), serviceDetailCardSchema])).min(1).max(16),
+})
+
+const servicesHeroSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('servicesHero'),
+  enabled: z.boolean(),
+  breadcrumbLabel: z.string().trim().min(1).max(80),
+  eyebrow: z.string().trim().min(1).max(100),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(500),
+  image: z.string().trim().min(1).max(500),
+  imageAlt: z.string().trim().min(1).max(160),
+})
+
+const servicesListSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('servicesList'),
+  enabled: z.boolean(),
+  services: z.array(serviceDetailSchema).min(1).max(16),
+})
+
+const servicesCredentialsSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('servicesCredentials'),
+  enabled: z.boolean(),
+  eyebrow: z.string().trim().min(1).max(100),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(600),
+  points: z.array(z.object({
+    title: z.string().trim().min(1).max(160),
+    description: z.string().trim().min(1).max(500),
+  })).min(1).max(6),
+  image: z.string().trim().min(1).max(500),
+  imageAlt: z.string().trim().min(1).max(160),
+  imageEyebrow: z.string().trim().min(1).max(100),
+  imageTitle: z.string().trim().min(1).max(220),
+  stats: z.array(z.object({
+    value: z.string().trim().min(1).max(40),
+    label: z.string().trim().min(1).max(100),
+    variant: z.enum(['dark', 'light', 'gold']),
+  })).min(1).max(8),
+})
+
+const aboutHeroSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutHero'),
+  enabled: z.boolean(),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(500),
+  image: z.string().trim().min(1).max(500),
+})
+
+const aboutStorySectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutStory'),
+  enabled: z.boolean(),
+  title: z.string().trim().min(1).max(180),
+  content: z.string().trim().min(1).max(2000),
+  stats: z.array(z.object({
+    label: z.string().trim().min(1).max(100),
+    value: z.string().trim().min(1).max(40),
+    variant: z.enum(['dark', 'light', 'gold']),
+  })).min(1).max(8),
+})
+
+const aboutTeamSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutTeam'),
+  enabled: z.boolean(),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(500),
+  members: z.array(z.object({
+    name: z.string().trim().min(1).max(100),
+    role: z.string().trim().min(1).max(100),
+    image: z.string().trim().min(1).max(500),
+  })).min(1).max(20),
+})
+
+const aboutVisionMissionSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutVisionMission'),
+  enabled: z.boolean(),
+  visionTitle: z.string().trim().min(1).max(180),
+  visionText: z.string().trim().min(1).max(1200),
+  missionTitle: z.string().trim().min(1).max(180),
+  missionText: z.string().trim().min(1).max(1200),
+})
+
+const aboutPillarsSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutPillars'),
+  enabled: z.boolean(),
+  title: z.string().trim().min(1).max(180),
+  pillars: z.array(z.object({
+    title: z.string().trim().min(1).max(120),
+    description: z.string().trim().min(1).max(600),
+    icon: z.string().trim().min(1).max(80),
+  })).min(1).max(10),
+})
+
+const aboutCtaSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutCta'),
+  enabled: z.boolean(),
+  titleLine1: z.string().trim().min(1).max(180),
+  titleLine2Highlighted: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(800),
+  buttonText: z.string().trim().min(1).max(100),
+  buttonHref: z.string().trim().min(1).max(240),
+  globeImage: z.string().trim().min(1).max(500),
+})
+
+const contactHeroSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('contactHero'),
+  enabled: z.boolean(),
+  eyebrow: z.string().trim().min(1).max(100),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(600),
+  backgroundImage: z.string().trim().min(1).max(500),
+})
+
+const contactCardsSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('contactCards'),
+  enabled: z.boolean(),
+  cards: z.array(z.object({
+    title: z.string().trim().min(1).max(120),
+    description: z.string().trim().min(1).max(500),
+    linkText: z.string().trim().min(1).max(120),
+    linkHref: z.string().trim().min(1).max(240),
+    isLink: z.boolean(),
+  })).min(1).max(6),
+})
+
+const contactFormSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('contactForm'),
+  enabled: z.boolean(),
+})
+
+const contactMapOfficeSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('contactMapOffice'),
+  enabled: z.boolean(),
+  mapUrl: z.string().trim().min(1).max(1000),
+  eyebrow: z.string().trim().min(1).max(100),
+  title: z.string().trim().min(1).max(180),
+  branches: z.array(z.object({
+    name: z.string().trim().min(1).max(120),
+    addressLine1: z.string().trim().min(1).max(240),
+    addressLine2: z.string().trim().min(1).max(240),
+  })).min(1).max(6),
+})
+
 export const cmsSectionSchema = z.discriminatedUnion('type', [
   homeHeroSectionSchema,
   homeProgramSectionSchema,
@@ -206,6 +379,19 @@ export const cmsSectionSchema = z.discriminatedUnion('type', [
   homeFaqsSectionSchema,
   homeBlogSectionSchema,
   homeStaticSectionsSchema,
+  servicesHeroSectionSchema,
+  servicesListSectionSchema,
+  servicesCredentialsSectionSchema,
+  aboutHeroSectionSchema,
+  aboutStorySectionSchema,
+  aboutTeamSectionSchema,
+  aboutVisionMissionSectionSchema,
+  aboutPillarsSectionSchema,
+  aboutCtaSectionSchema,
+  contactHeroSectionSchema,
+  contactCardsSectionSchema,
+  contactFormSectionSchema,
+  contactMapOfficeSectionSchema,
 ])
 
 export const cmsPageContentSchema = z.object({

@@ -13,6 +13,9 @@ import {
   FileCheck
 } from 'lucide-react'
 import { scholarshipsData, universitiesData } from '@/lib/mockData'
+import connectDb from '@/lib/db'
+import ScholarshipModel from '@/models/Scholarship'
+import mongoose from 'mongoose'
 import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import ScholarshipEnquiryForm from './ScholarshipEnquiryForm'
@@ -23,7 +26,40 @@ interface Props {
 
 export default async function ScholarshipDetailPage({ params }: Props) {
   const { id } = await params
-  const scholarship = scholarshipsData.find(s => s.id === id)
+  const decodedId = decodeURIComponent(id)
+
+  let scholarship: any = null
+
+  try {
+    await connectDb()
+    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
+    const dbSchol = await (ScholarshipModel as any).findOne({
+      $or: [
+        ...(isValidId ? [{ _id: decodedId }] : []),
+        { title: decodedId }
+      ]
+    }).populate('countryId').populate('universityId').populate('programId').lean()
+
+    if (dbSchol) {
+      scholarship = {
+        id: dbSchol._id.toString(),
+        title: dbSchol.title,
+        type: 'Merit based',
+        country: dbSchol.countryId?.name || 'Global',
+        award: dbSchol.awardAmount,
+        deadline: 'December 2026',
+        overview: dbSchol.description || 'Welcome to this scholarship study guide.',
+        eligibility: dbSchol.eligibilityCriteria || 'No eligibility criteria listed.',
+        howToApply: 'Apply via our advisor panel or directly at partner institutions.'
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load scholarship from database:', err)
+  }
+
+  if (!scholarship) {
+    scholarship = scholarshipsData.find(s => s.id === decodedId)
+  }
 
   if (!scholarship) {
     notFound()

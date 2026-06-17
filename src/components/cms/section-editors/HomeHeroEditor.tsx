@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import type { HomeHeroSection } from '@/lib/cms/types'
+import CmsImageField from './CmsImageField'
 
 interface HomeHeroEditorProps {
   hero: HomeHeroSection
@@ -67,15 +68,14 @@ export default function HomeHeroEditor({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="hero-image">Hero Image</Label>
-          <Input
-            id="hero-image"
-            value={hero.image.src}
-            onChange={event => setHeroImageField('src', event.target.value)}
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-4 ">
+        <CmsImageField
+          id="hero-image"
+          label="Hero Image"
+          value={hero.image.src}
+          folder="nextlevel/home/hero"
+          onChange={value => setHeroImageField('src', value)}
+        />
         <div className="space-y-1.5">
           <Label htmlFor="hero-image-alt">Image Alt</Label>
           <Input
