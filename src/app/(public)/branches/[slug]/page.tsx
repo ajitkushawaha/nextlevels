@@ -95,7 +95,7 @@ export default async function BranchPage({ params }: Params) {
                 Study Abroad Consultant in {branch.city}
               </h1>
               <p className="mt-4 max-w-2xl text-sm font-medium leading-7 text-white/82 sm:text-base">
-                UK, Australia, Canada, Ireland, and New Zealand admissions support for students across {branch.province}.
+                UK, Canada, Australia, and New Zealand admissions support for students across {branch.province}.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link

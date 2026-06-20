@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { name, code, flagImage, description, averageCostOfLiving, popularCities } = body
+    const { name, code, flagImage, heroImage, description, averageCostOfLiving, popularCities } = body
 
     if (!name || !code || !flagImage) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -43,6 +43,7 @@ export async function POST(req: Request) {
       name,
       code: code.toLowerCase(),
       flagImage,
+      heroImage: heroImage || flagImage,
       description: description || '',
       averageCostOfLiving: averageCostOfLiving || '',
       popularCities: popularCities || [],

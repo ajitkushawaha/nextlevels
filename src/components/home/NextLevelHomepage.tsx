@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ServicesCarousel from './ServiceSection'
 import StudentTestimonialsCarousel from './StudentTestimonialsCarousel'
-import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck, Lock } from 'lucide-react'
+import { ArrowRight, Award, BookOpenCheck, Building2, CalendarDays, CheckCircle2, ChevronDown, CirclePlay, FileCheck2, Globe2, GraduationCap, Headphones, Mail, MapPin, Menu, Phone, PhoneCall, Plane, ShieldCheck, Star, UsersRound, BookOpen, TrendingUp, Search, Clock, UserCheck, Lock, X } from 'lucide-react'
 import Footer from '../layout/footer'
 // import FlyingAeroplane from './FlyingAeroplane'
 import FAQSection from './FAQSection'
@@ -15,14 +15,17 @@ import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
 import { serviceDetails } from '@/lib/serviceDetails'
 import type {
   CmsPageContent,
+  CmsSection,
   HomeAmbassadorsSection as HomeAmbassadorsSectionData,
   HomeBlogSection as HomeBlogSectionData,
   HomeDestinationsSection as HomeDestinationsSectionData,
   HomeFaqsSection as HomeFaqsSectionData,
   HomeHeroSection as HomeHeroSectionData,
   HomeProgramSection as HomeProgramSectionData,
+  HomeScholarshipOfferSection as HomeScholarshipOfferSectionData,
   HomeServicesSection as HomeServicesSectionData,
   HomeStatsSection as HomeStatsSectionData,
+  HomeSuccessStoriesSection as HomeSuccessStoriesSectionData,
   HomeTestimonialsSection as HomeTestimonialsSectionData,
   HomeUniversitiesSection as HomeUniversitiesSectionData,
   HomeWhyChooseUsSection as HomeWhyChooseUsSectionData,
@@ -51,6 +54,48 @@ const statsIconMap = {
   Award,
 }
 
+const scholarshipOfferIconMap = {
+  Award,
+  ShieldCheck,
+  GraduationCap,
+}
+
+function getYoutubeVideoId(url?: string) {
+  if (!url) return ''
+
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.replace(/^www\./, '')
+    let videoId = ''
+
+    if (hostname === 'youtu.be') {
+      videoId = parsedUrl.pathname.split('/').filter(Boolean)[0] || ''
+    } else if (hostname === 'youtube.com' || hostname === 'm.youtube.com') {
+      if (parsedUrl.pathname.startsWith('/shorts/')) {
+        videoId = parsedUrl.pathname.split('/').filter(Boolean)[1] || ''
+      } else if (parsedUrl.pathname.startsWith('/embed/')) {
+        videoId = parsedUrl.pathname.split('/').filter(Boolean)[1] || ''
+      } else {
+        videoId = parsedUrl.searchParams.get('v') || ''
+      }
+    }
+
+    return videoId
+  } catch {
+    return ''
+  }
+}
+
+function getYoutubeEmbedUrl(url?: string) {
+  const videoId = getYoutubeVideoId(url)
+  return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : ''
+}
+
+function getYoutubeThumbnailUrl(url?: string) {
+  const videoId = getYoutubeVideoId(url)
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : ''
+}
+
 const stats = [
   { icon: UsersRound, targetValue: 1000, suffix: '+', label: 'Students Placed' },
   { icon: Building2, targetValue: 150, suffix: '+', label: 'Partner Universities' },
@@ -68,11 +113,18 @@ const approvedHomeServices = serviceDetails.map(service => ({
 }))
 
 const destinationHrefMap: Record<string, string> = {
-  Australia: '/study-abroad/australia',
-  Canada: '/study-abroad/canada',
-  'New Zealand': '/study-abroad/new-zealand',
   'United Kingdom': '/study-abroad/uk',
+  Canada: '/study-abroad/canada',
+  Australia: '/study-abroad/australia',
+  'New Zealand': '/study-abroad/new-zealand',
 }
+
+const homeDestinationOrder = [
+  'United Kingdom',
+  'Canada',
+  'Australia',
+  'New Zealand',
+]
 
 const testimonials = [
   {
@@ -163,38 +215,6 @@ const ambassadors = [
     university: 'University of Melbourne',
     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     link: '/chat?name=Yumi%20Wans',
-  },
-]
-
-const studentLifeVideos = [
-  {
-    title: 'What does a typical student day look like at CQU?',
-    studentName: 'Jean Manreal',
-    studentAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&auto=format&fit=crop&q=80',
-    textOverlay: 'Day in a life of an International MBM Student in AUS 🇵🇭 🇳🇿 (School Day Edition)',
-    isLocked: false,
-  },
-  {
-    title: 'Fav spot in campus',
-    studentName: 'Nayla Hafeeza Putri',
-    studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&auto=format&fit=crop&q=80',
-    isLocked: false,
-  },
-  {
-    title: 'What kind of food options are there on campus?',
-    studentName: 'Kun Deng',
-    studentAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=400&auto=format&fit=crop&q=80',
-    isLocked: true,
-  },
-  {
-    title: 'How are different cultures and events celebrated on campus?',
-    studentName: 'Tioluwalase Arowolo',
-    studentAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-    thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&auto=format&fit=crop&q=80',
-    isLocked: true,
   },
 ]
 
@@ -317,12 +337,164 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   )
 }
 
+function getDefaultHomeSection<Type extends CmsSection['type']>(type: Type) {
+  return defaultHomePageContent.sections.find(
+    section => section.type === type
+  ) as Extract<CmsSection, { type: Type }> | undefined
+}
+
+function getCountdownTimeLeft(targetTime: number) {
+  const safeTargetTime = Number.isFinite(targetTime) ? targetTime : Date.now()
+  const remaining = Math.max(safeTargetTime - Date.now(), 0)
+
+  return {
+    days: Math.floor(remaining / 86400000),
+    hours: Math.floor((remaining / 3600000) % 24),
+    mins: Math.floor((remaining / 60000) % 60),
+    secs: Math.floor((remaining / 1000) % 60),
+  }
+}
+
+function ScholarshipOfferSection({
+  section,
+}: {
+  section: HomeScholarshipOfferSectionData
+}) {
+  const intakeDate = new Date(section.countdownTarget).getTime()
+  const [timeLeft, setTimeLeft] = useState(() => getCountdownTimeLeft(intakeDate))
+
+  useEffect(() => {
+    setTimeLeft(getCountdownTimeLeft(intakeDate))
+
+    const interval = window.setInterval(() => {
+      setTimeLeft(getCountdownTimeLeft(intakeDate))
+    }, 1000)
+
+    return () => window.clearInterval(interval)
+  }, [intakeDate])
+
+  const countdown = [
+    { label: 'Days', value: timeLeft.days },
+    { label: 'Hours', value: timeLeft.hours },
+    { label: 'Mins', value: timeLeft.mins },
+    { label: 'Secs', value: timeLeft.secs },
+  ]
+
+  return (
+    <section className="relative overflow-hidden bg-[#061331] px-4 py-12 text-white sm:px-6 lg:px-8">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-18"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(215,162,58,0.16) 1px, transparent 1px), linear-gradient(rgba(215,162,58,0.08) 1px, transparent 1px)",
+          backgroundSize: '72px 72px',
+        }}
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(215,162,58,0.18),transparent_28%),radial-gradient(circle_at_82%_26%,rgba(255,255,255,0.10),transparent_24%),linear-gradient(115deg,rgba(0,0,0,0.38),transparent_55%)]" />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[1.25fr_0.85fr]">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#d7a23a] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-[#061331]">
+              <Award className="h-3.5 w-3.5 fill-[#061331]" />
+              {section.badgeText}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#d7a23a]/35 bg-white/8 px-3 py-2 text-xs font-bold text-[#f3d79c]">
+              <Clock className="h-3.5 w-3.5" />
+              {section.intakeLabel}
+            </span>
+          </div>
+
+          <h2 className="mt-7 max-w-4xl text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[64px]">
+            {section.titlePrefix}{' '}
+            <span className="text-[#d7a23a]">{section.scholarshipAmount}</span>{' '}
+            {section.titleSuffix}
+          </h2>
+
+          <p className="mt-6 max-w-3xl text-base font-medium leading-8 text-white/72 sm:text-lg">
+            {section.description}
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/82">
+            {section.featureChips.map(item => {
+              const Icon = scholarshipOfferIconMap[item.icon] || Award
+
+              return (
+                <span key={item.text} className="inline-flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/15 text-[#d7a23a]">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {item.text}
+                </span>
+              )
+            })}
+          </div>
+
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <Link
+              href={section.ctaHref}
+              className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#d7a23a] px-8 text-base font-black text-[#061331] shadow-[0_20px_42px_rgba(215,162,58,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e4b85d]"
+            >
+              {section.ctaLabel}
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            {section.note ? (
+              <span className="text-sm font-medium text-white/38">{section.note}</span>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="rounded-[28px] border border-[#d7a23a]/20 bg-white/7 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8">
+          <div className="mb-6 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-[#d7a23a]">
+            <Clock className="h-4 w-4" />
+            Intake Opens In
+          </div>
+
+          <div className="grid grid-cols-4 gap-3">
+            {countdown.map(item => (
+              <div key={item.label} className="text-center">
+                <div className="rounded-2xl border border-[#d7a23a]/25 bg-[#d7a23a]/14 px-2 py-4 text-3xl font-black leading-none text-[#d7a23a] sm:text-4xl">
+                  {String(item.value).padStart(2, '0')}
+                </div>
+                <span className="mt-2 block text-[10px] font-black uppercase tracking-wider text-white/42">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="my-7 h-px bg-white/10" />
+
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/42">
+              {section.benefitsTitle}
+            </p>
+            <ul className="mt-4 space-y-3 text-sm font-medium text-white/68">
+              {section.benefits.map(item => (
+                <li key={item} className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d7a23a]" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-7 rounded-2xl border border-dashed border-[#d7a23a]/30 bg-[#d7a23a]/9 px-5 py-4 text-center text-sm font-black text-[#d7a23a]">
+            {section.urgencyText}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function getHomeHeroSection(content: CmsPageContent): HomeHeroSectionData {
   return (
     content.sections.find(
       section => section.type === 'homeHero' && section.enabled
     ) as HomeHeroSectionData | undefined
-  ) || (defaultHomePageContent.sections[0] as HomeHeroSectionData)
+  ) || (getDefaultHomeSection('homeHero') as HomeHeroSectionData)
 }
 
 function getHomeProgramSection(content: CmsPageContent): HomeProgramSectionData {
@@ -330,15 +502,32 @@ function getHomeProgramSection(content: CmsPageContent): HomeProgramSectionData 
     content.sections.find(
       section => section.type === 'homeProgram' && section.enabled
     ) as HomeProgramSectionData | undefined
-  ) || (defaultHomePageContent.sections[1] as HomeProgramSectionData)
+  ) || (getDefaultHomeSection('homeProgram') as HomeProgramSectionData)
+}
+
+function getHomeScholarshipOfferSection(content: CmsPageContent): HomeScholarshipOfferSectionData {
+  return (
+    content.sections.find(
+      section => section.type === 'homeScholarshipOffer' && section.enabled
+    ) as HomeScholarshipOfferSectionData | undefined
+  ) || (getDefaultHomeSection('homeScholarshipOffer') as HomeScholarshipOfferSectionData)
 }
 
 function getHomeDestinationsSection(content: CmsPageContent): HomeDestinationsSectionData {
-  return (
+  const section = (
     content.sections.find(
       section => section.type === 'homeDestinations' && section.enabled
     ) as HomeDestinationsSectionData | undefined
-  ) || (defaultHomePageContent.sections[2] as HomeDestinationsSectionData)
+  ) || (getDefaultHomeSection('homeDestinations') as HomeDestinationsSectionData)
+
+  return {
+    ...section,
+    destinations: homeDestinationOrder
+      .map(countryName =>
+        section.destinations.find(destination => destination.name === countryName)
+      )
+      .filter(Boolean) as HomeDestinationsSectionData['destinations'],
+  }
 }
 
 function getHomeWhyChooseUsSection(content: CmsPageContent): HomeWhyChooseUsSectionData {
@@ -346,7 +535,7 @@ function getHomeWhyChooseUsSection(content: CmsPageContent): HomeWhyChooseUsSect
     content.sections.find(
       section => section.type === 'homeWhyChooseUs' && section.enabled
     ) as HomeWhyChooseUsSectionData | undefined
-  ) || (defaultHomePageContent.sections[3] as HomeWhyChooseUsSectionData)
+  ) || (getDefaultHomeSection('homeWhyChooseUs') as HomeWhyChooseUsSectionData)
 }
 
 function getHomeServicesSection(content: CmsPageContent): HomeServicesSectionData {
@@ -354,7 +543,7 @@ function getHomeServicesSection(content: CmsPageContent): HomeServicesSectionDat
     content.sections.find(
       section => section.type === 'homeServices' && section.enabled
     ) as HomeServicesSectionData | undefined
-  ) || (defaultHomePageContent.sections[4] as HomeServicesSectionData)
+  ) || (getDefaultHomeSection('homeServices') as HomeServicesSectionData)
 }
 
 function getHomeUniversitiesSection(content: CmsPageContent): HomeUniversitiesSectionData {
@@ -362,7 +551,7 @@ function getHomeUniversitiesSection(content: CmsPageContent): HomeUniversitiesSe
     content.sections.find(
       section => section.type === 'homeUniversities' && section.enabled
     ) as HomeUniversitiesSectionData | undefined
-  ) || (defaultHomePageContent.sections[5] as HomeUniversitiesSectionData)
+  ) || (getDefaultHomeSection('homeUniversities') as HomeUniversitiesSectionData)
 }
 
 function getHomeStatsSection(content: CmsPageContent): HomeStatsSectionData {
@@ -370,7 +559,7 @@ function getHomeStatsSection(content: CmsPageContent): HomeStatsSectionData {
     content.sections.find(
       section => section.type === 'homeStats' && section.enabled
     ) as HomeStatsSectionData | undefined
-  ) || (defaultHomePageContent.sections[6] as HomeStatsSectionData)
+  ) || (getDefaultHomeSection('homeStats') as HomeStatsSectionData)
 }
 
 function getHomeTestimonialsSection(content: CmsPageContent): HomeTestimonialsSectionData {
@@ -378,7 +567,7 @@ function getHomeTestimonialsSection(content: CmsPageContent): HomeTestimonialsSe
     content.sections.find(
       section => section.type === 'homeTestimonials' && section.enabled
     ) as HomeTestimonialsSectionData | undefined
-  ) || (defaultHomePageContent.sections[7] as HomeTestimonialsSectionData)
+  ) || (getDefaultHomeSection('homeTestimonials') as HomeTestimonialsSectionData)
 }
 
 function getHomeAmbassadorsSection(content: CmsPageContent): HomeAmbassadorsSectionData {
@@ -386,7 +575,17 @@ function getHomeAmbassadorsSection(content: CmsPageContent): HomeAmbassadorsSect
     content.sections.find(
       section => section.type === 'homeAmbassadors' && section.enabled
     ) as HomeAmbassadorsSectionData | undefined
-  ) || (defaultHomePageContent.sections[8] as HomeAmbassadorsSectionData)
+  ) || (getDefaultHomeSection('homeAmbassadors') as HomeAmbassadorsSectionData)
+}
+
+function getHomeSuccessStoriesSection(content: CmsPageContent): HomeSuccessStoriesSectionData {
+  const section = content.sections.find(
+    section => section.type === 'homeSuccessStories' && section.enabled
+  ) as HomeSuccessStoriesSectionData | undefined
+
+  if (section) return section
+
+  return getDefaultHomeSection('homeSuccessStories') as HomeSuccessStoriesSectionData
 }
 
 function getHomeFaqsSection(content: CmsPageContent): HomeFaqsSectionData {
@@ -394,7 +593,7 @@ function getHomeFaqsSection(content: CmsPageContent): HomeFaqsSectionData {
     content.sections.find(
       section => section.type === 'homeFaqs' && section.enabled
     ) as HomeFaqsSectionData | undefined
-  ) || (defaultHomePageContent.sections[9] as HomeFaqsSectionData)
+  ) || (getDefaultHomeSection('homeFaqs') as HomeFaqsSectionData)
 }
 
 function getHomeBlogSection(content: CmsPageContent): HomeBlogSectionData {
@@ -402,7 +601,7 @@ function getHomeBlogSection(content: CmsPageContent): HomeBlogSectionData {
     content.sections.find(
       section => section.type === 'homeBlog' && section.enabled
     ) as HomeBlogSectionData | undefined
-  ) || (defaultHomePageContent.sections[10] as HomeBlogSectionData)
+  ) || (getDefaultHomeSection('homeBlog') as HomeBlogSectionData)
 }
 
 interface NextLevelHomepageProps {
@@ -410,6 +609,7 @@ interface NextLevelHomepageProps {
   includeFooter?: boolean
   renderHero?: boolean
   renderProgram?: boolean
+  renderScholarshipOffer?: boolean
   renderDestinations?: boolean
   renderWhyChooseUs?: boolean
   renderServices?: boolean
@@ -417,6 +617,7 @@ interface NextLevelHomepageProps {
   renderStats?: boolean
   renderTestimonials?: boolean
   renderAmbassadors?: boolean
+  renderSuccessStories?: boolean
   renderFaqs?: boolean
   renderBlog?: boolean
   renderStaticSections?: boolean
@@ -430,6 +631,7 @@ export default function NextLevelHomepage({
   includeFooter = true,
   renderHero = true,
   renderProgram = true,
+  renderScholarshipOffer = true,
   renderDestinations = true,
   renderWhyChooseUs = true,
   renderServices = true,
@@ -437,6 +639,7 @@ export default function NextLevelHomepage({
   renderStats = true,
   renderTestimonials = true,
   renderAmbassadors = true,
+  renderSuccessStories = true,
   renderFaqs = true,
   renderBlog = true,
   renderStaticSections = true,
@@ -446,6 +649,7 @@ export default function NextLevelHomepage({
 }: NextLevelHomepageProps) {
   const heroSection = getHomeHeroSection(content)
   const programSection = getHomeProgramSection(content)
+  const scholarshipOfferSection = getHomeScholarshipOfferSection(content)
   const destinationsSection = getHomeDestinationsSection(content)
   const whyChooseUsSection = getHomeWhyChooseUsSection(content)
   const servicesSection = getHomeServicesSection(content)
@@ -453,8 +657,33 @@ export default function NextLevelHomepage({
   const statsSection = getHomeStatsSection(content)
   const testimonialsSection = getHomeTestimonialsSection(content)
   const ambassadorsSection = getHomeAmbassadorsSection(content)
+  const successStoriesSection = getHomeSuccessStoriesSection(content)
+  const [activeSuccessStory, setActiveSuccessStory] = useState<
+    HomeSuccessStoriesSectionData['videos'][number] | null
+  >(null)
   const faqsSection = getHomeFaqsSection(content)
   const blogSection = getHomeBlogSection(content)
+  const pinnedHomeServices =
+    servicesSection.services && servicesSection.services.length > 0
+      ? servicesSection.services.map((service, index) => {
+          const matchingService = serviceDetails.find(
+            detail => detail.title === service.title
+          )
+
+          return {
+            title: service.title,
+            description: service.description,
+            image: service.image,
+            number:
+              matchingService?.number ||
+              String(index + 1).padStart(2, '0'),
+            stats: matchingService?.stats || '100% Free',
+            href: matchingService
+              ? `/services/${matchingService.slug}`
+              : '/services',
+          }
+        })
+      : approvedHomeServices
 
   return (
     <div className="bg-white text-[#081638]">
@@ -622,6 +851,10 @@ export default function NextLevelHomepage({
         </section>
         )}
 
+        {renderScholarshipOffer && (
+          <ScholarshipOfferSection section={scholarshipOfferSection} />
+        )}
+
         {renderDestinations && (
         <section className="bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
@@ -724,9 +957,6 @@ export default function NextLevelHomepage({
         </section>
         )}
 
-        {renderStaticSections && (
-          <>
-
         {renderServices && (
         <section className="bg-white py-10 ">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -740,7 +970,7 @@ export default function NextLevelHomepage({
               </h2>
             </div>
             <div className="mt-10">
-              <ServicesCarousel services={approvedHomeServices} />
+              <ServicesCarousel services={pinnedHomeServices} />
             </div>
           </div>
         </section>
@@ -869,12 +1099,10 @@ export default function NextLevelHomepage({
           </div>
         </section>
         )}
-          </>
-        )}
 
         {/* Testimonials, Ambassador & Student Life Container */}
         {renderTestimonials && (
-        <section id="testimonials" className=" py-10  overflow-hidden bg-amber-50">
+        <section id="testimonials" className=" py-10  overflow-hidden bg-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <Eyebrow>{testimonialsSection.eyebrow}</Eyebrow>
@@ -894,24 +1122,35 @@ export default function NextLevelHomepage({
         {/* Student Ambassador & Life Combined Section */}
         {renderAmbassadors && (
         <section id="ambassadors" className={`bg-white scroll-mt-24 ${ambassadorSectionBottomGap ? 'pb-10 sm:pb-14' : ''}`}>
-          <div className="mx-auto max-w-7xl">
-            {/* Chat to a Student Ambassador Subsection */}
-            <div className="mb-5 py-10 px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  {ambassadorsSection.ambassadorTitle}
-                </h2>
-                <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-[#0f54b6]" />
-                <p className="mt-3 text-sm text-[#59616f] font-semibold sm:text-base">
-                  {ambassadorsSection.ambassadorDescription}
-                </p>
+          {/* Chat to a Student Ambassador Subsection */}
+          <div className="mb-5 bg-[#081638] py-10">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+                    {ambassadorsSection.ambassadorTitle}
+                  </h2>
+                  <div className="mt-3 h-1.5 w-16 rounded-full bg-[#d7a23a]" />
+                  <p className="mt-3 text-sm font-semibold text-white/80 sm:text-base">
+                    {ambassadorsSection.ambassadorDescription}
+                  </p>
+                </div>
+                {showAmbassadorViewAll && (
+                  <Link
+                    href="/testimonial#ambassadors"
+                    className="hidden items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-white transition hover:text-[#d7a23a] sm:inline-flex"
+                  >
+                    View All Ambassadors
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
                 {ambassadorsSection.ambassadors.map((ambassador) => (
                   <div
                     key={ambassador.name}
-                    className="bg-white border border-[#ece8df] rounded-3xl p-8 flex flex-col items-center justify-between text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                    className="bg-white border border-[#ece8df] rounded-3xl p-4 flex flex-col items-center justify-between text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
                   >
                     <div className="flex flex-col items-center w-full">
                       <div className="relative w-20 h-20 rounded-full overflow-hidden mb-2 border-2 border-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
@@ -936,42 +1175,46 @@ export default function NextLevelHomepage({
                       className="inline-flex items-center gap-1 text-sm font-bold text-[#0f54b6] hover:text-[#0b3e87] transition-colors"
                     >
                       Chat with me <span className="font-semibold">&gt;</span>
-                    </Link>
-                  </div>
-                ))}
+                  </Link>
+                </div>
+              ))}
               </div>
               {showAmbassadorViewAll && (
-              <div className="mt-8 text-center">
-                <Link
-                  href="/testimonial#ambassadors"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#081638] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0f54b6]"
-                >
-                  View All Ambassadors
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
+                <div className="mt-8 flex justify-center sm:hidden">
+                  <Link
+                    href="/testimonial#ambassadors"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/15 px-5 py-3 text-sm font-bold text-white transition hover:text-[#d7a23a]"
+                  >
+                    View All Ambassadors
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               )}
             </div>
-
           </div>
+        </section>
+        )}
 
-          {/* Success Story Videos Subsection */}
-          <div id="success-stories" className="bg-[#081638] py-10 scroll-mt-24">
+        {/* Success Story Videos Subsection */}
+        {renderSuccessStories && (
+        <section id="success-stories" className="bg-white py-10 ">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center mb-5">
+
                 <div>
-                  <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                  {ambassadorsSection.storiesTitle}
+                  <h2 className="text-3xl font-extrabold text-[#081638] tracking-tight sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+                  {successStoriesSection.title}
                 </h2>
-                <p className="mt-1 text-sm text-white/80 font-semibold sm:text-base">
-                  {ambassadorsSection.storiesDescription}
+                <div className="mt-3 h-1.5 w-16 rounded-full bg-[#d7a23a]" />
+                <p className="mt-1 text-sm text-[#59616f] font-semibold sm:text-base">
+                  {successStoriesSection.description}
                 </p>
                 </div>
                 {showSuccessStoriesViewAll && (
                 <div>
                 <Link
                   href="/testimonial#success-stories"
-                  className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-white transition hover:text-[#d7a23a]"
+                  className="hidden items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-[#081638] transition hover:text-[#d7a23a] sm:inline-flex"
                 >
                   View All Success Stories
                   <ArrowRight className="w-4 h-4" />
@@ -982,55 +1225,110 @@ export default function NextLevelHomepage({
               </div>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                {ambassadorsSection.videos.map((video) => (
-                  <div
-                    key={video.title}
-                    className="bg-white rounded-3xl border border-[#ece8df] overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
-                  >
-                    {/* Video Thumbnail Area */}
-                    <div className="relative h-64 w-full bg-slate-100 flex items-center justify-center overflow-hidden">
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        className="w-full h-full object-cover"
-                      />
-                    
-                        <div className="absolute inset-0 bg-black/15 flex items-center justify-center group/play cursor-pointer hover:bg-black/25 transition-all">
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/play:scale-110">
-                            <CirclePlay className="w-12 h-12 text-[#ffffff] " />
-                          </div>
-                          {video.textOverlay && (
-                            <div className="absolute top-4 left-4 right-4 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold p-2 rounded-lg leading-normal">
-                              {video.textOverlay}
-                            </div>
-                          )}
-                        </div>
-                   
-                    </div>
+                {successStoriesSection.videos.map((video) => {
+                  const isYoutube = video.mediaType === 'youtube'
+                  const embedUrl = isYoutube ? getYoutubeEmbedUrl(video.youtubeUrl) : ''
+                  const thumbnail =
+                    (isYoutube ? getYoutubeThumbnailUrl(video.youtubeUrl) : '') ||
+                    video.thumbnail ||
+                    '/home2/happy-team.png'
 
-                    {/* Content below image */}
-                    <div className="p-5 flex flex-col justify-between grow text-left">
-                      <h4 className="text-sm font-bold text-[#081638] leading-snug mb-5 line-clamp-2">
-                        {video.title}
-                      </h4>
-                      
-                      <div className="flex items-center gap-2 border-t border-slate-100 pt-3.5">
-                        <img
-                          src={video.studentAvatar}
-                          alt={video.studentName}
-                          className="w-6 h-6 rounded-full object-cover"
-                        />
-                        <span className="text-xs font-semibold text-[#59616f]">
-                          {video.studentName}
-                        </span>
+                  return (
+                    <div
+                      key={`${video.studentName}-${thumbnail}-${video.youtubeUrl || ''}`}
+                      className="bg-white rounded-3xl border border-[#ece8df] overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                    >
+                      {embedUrl ? (
+                        <button
+                          type="button"
+                          onClick={() => setActiveSuccessStory(video)}
+                          className="group relative h-64 w-full cursor-pointer overflow-hidden bg-slate-100"
+                          aria-label={`Open ${video.studentName} success story video`}
+                        >
+                          <img
+                            src={thumbnail}
+                            alt={`${video.studentName} success story`}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition group-hover:bg-black/35">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full  text-[#081638] shadow-lg transition-transform duration-300 group-hover:scale-110">
+                              <CirclePlay className="h-11 w-11 text-white" />
+                            </div>
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="relative h-64 w-full overflow-hidden bg-slate-100">
+                          <img
+                            src={thumbnail}
+                            alt={`${video.studentName} success story`}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      )}
+
+                      <div className="p-5 text-left">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={video.studentAvatar}
+                            alt={video.studentName}
+                            className="w-6 h-6 rounded-full object-cover"
+                          />
+                          <span className="text-xs font-semibold text-[#59616f]">
+                            {video.studentName}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
+              </div>
+              {showSuccessStoriesViewAll && (
+                <div className="mt-8 flex justify-center sm:hidden">
+                  <Link
+                    href="/testimonial#success-stories"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 px-5 py-3 text-sm font-bold text-[#081638] transition hover:text-[#d7a23a]"
+                  >
+                    View All Success Stories
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              )}
+            </div>
+        </section>
+        )}
+
+        {activeSuccessStory && getYoutubeEmbedUrl(activeSuccessStory.youtubeUrl) && (
+          <div
+            className="fixed inset-0 z-100 flex items-center justify-center  bg-black/72 px-4 py-6 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeSuccessStory.studentName} success story`}
+            onClick={() => setActiveSuccessStory(null)}
+          >
+            <div
+              className="relative max-h-[88vh] w-full max-w-107.5 overflow-hidden rounded-3xl bg-black shadow-[0_30px_90px_rgba(0,0,0,0.45)]"
+              onClick={event => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveSuccessStory(null)}
+                className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white transition hover:bg-black/60"
+                aria-label="Close success story video"
+              >
+                <X className="h-7 w-7" />
+              </button>
+
+              <div className="relative aspect-9/16 rounded-2xl max-h-[88vh] w-full bg-black">
+                <iframe
+                  src={getYoutubeEmbedUrl(activeSuccessStory.youtubeUrl)}
+                  title={`${activeSuccessStory.studentName} success story video`}
+                  className="h-full w-full rounded-xl"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
               </div>
             </div>
           </div>
-        </section>
         )}
 
         {renderFaqs && <FAQSection section={faqsSection} />}
@@ -1041,6 +1339,7 @@ export default function NextLevelHomepage({
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <Eyebrow>{blogSection.eyebrow}</Eyebrow>
+                <div className="mt-3 h-1.5 w-16 rounded-full bg-[#d7a23a]" />
                 <h2
                   className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
                   style={{ fontFamily: 'Farro, sans-serif' }}
@@ -1050,7 +1349,7 @@ export default function NextLevelHomepage({
               </div>
               <Link
                 href={blogSection.cta.href}
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#061331] transition hover:text-[#d7a23a]"
+                className="hidden items-center gap-2 text-sm font-bold text-[#061331] transition hover:text-[#d7a23a] sm:inline-flex"
               >
                 {blogSection.cta.label}
                 <ArrowRight className="h-4 w-4" />
@@ -1091,6 +1390,15 @@ export default function NextLevelHomepage({
                   </div>
                 </article>
               ))}
+            </div>
+            <div className="mt-8 flex justify-center sm:hidden">
+              <Link
+                href={blogSection.cta.href}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 px-5 py-3 text-sm font-bold text-[#061331] transition hover:text-[#d7a23a]"
+              >
+                {blogSection.cta.label}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </section>

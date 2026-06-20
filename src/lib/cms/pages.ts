@@ -26,6 +26,13 @@ const defaultPages: Record<string, { title: string; content: CmsPageContent }> =
   },
 }
 
+const homeDestinationOrder = [
+  'United Kingdom',
+  'Canada',
+  'Australia',
+  'New Zealand',
+]
+
 export function normalizeCmsPageSlug(slug: string) {
   if (!slug || slug === 'home') return '/'
   if (slug === 'about') return '/about-us'
@@ -39,22 +46,32 @@ function withDefaultSections(content: unknown, slug: string) {
 
   if (!defaultPage || !parsed?.sections) return content
 
-  const existingSectionIds = new Set(parsed.sections.map(section => section.id))
-  const mergedSections: CmsSection[] = [...parsed.sections]
+  const existingSectionsById = new Map(
+    parsed.sections.map(section => [section.id, section])
+  )
+  const defaultSectionIds = new Set(
+    defaultPage.content.sections.map(section => section.id)
+  )
+  const mergedSections: CmsSection[] = defaultPage.content.sections.map(defaultSection => {
+    const existingSection = existingSectionsById.get(defaultSection.id)
+    const section = existingSection || defaultSection
 
-  defaultPage.content.sections.forEach(defaultSection => {
-    if (existingSectionIds.has(defaultSection.id)) return
+    if (section.type !== 'homeDestinations') return section
 
-    const staticSectionIndex = mergedSections.findIndex(
-      section => section.type === 'homeStaticSections'
-    )
+    return {
+      ...section,
+      destinations: homeDestinationOrder
+        .map(countryName =>
+          section.destinations.find(destination => destination.name === countryName)
+        )
+        .filter(Boolean),
+    } as CmsSection
+  })
 
-    if (staticSectionIndex >= 0) {
-      mergedSections.splice(staticSectionIndex, 0, defaultSection)
-      return
+  parsed.sections.forEach(section => {
+    if (!defaultSectionIds.has(section.id)) {
+      mergedSections.push(section)
     }
-
-    mergedSections.push(defaultSection)
   })
 
   return {

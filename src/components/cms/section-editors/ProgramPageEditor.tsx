@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import CmsImageField from './CmsImageField'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
 
@@ -21,6 +22,9 @@ type ProgramData = {
   intakes: string[]
   ieltsScoreRequired?: number
   description?: string
+  heroImage?: string
+  requirements?: string
+  structure?: string[]
 }
 
 type Props = {
@@ -94,6 +98,14 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
     setData({
       ...data,
       intakes: val.split(',').map(i => i.trim()).filter(Boolean)
+    })
+  }
+
+  const handleStructureChange = (val: string) => {
+    if (!data) return
+    setData({
+      ...data,
+      structure: val.split('\n').map(item => item.trim()).filter(Boolean)
     })
   }
 
@@ -213,12 +225,33 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
                 </div>
 
                 <div className="space-y-1">
+                  <CmsImageField
+                    id="program-hero-image"
+                    label="Program Hero Image"
+                    value={data.heroImage || ''}
+                    onChange={val => setData({ ...data, heroImage: val })}
+                    folder="nextlevel/programs"
+                  />
+                </div>
+
+                <div className="space-y-1">
                   <Label>Course Outline / Summary</Label>
                   <Textarea
                     value={data.description || ''}
                     onChange={e => setData({ ...data, description: e.target.value })}
                     rows={5}
                     placeholder="Provide a comprehensive summary of core modules, duration detail, career outputs..."
+                    className="text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label>Entry Requirements</Label>
+                  <Textarea
+                    value={data.requirements || ''}
+                    onChange={e => setData({ ...data, requirements: e.target.value })}
+                    rows={4}
+                    placeholder="Describe academic, English, portfolio, or work experience requirements..."
                     className="text-xs"
                   />
                 </div>
@@ -283,6 +316,17 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
                     className="text-xs"
                   />
                 </div>
+
+                <div className="space-y-1">
+                  <Label>Course Modules / Structure (one per line)</Label>
+                  <Textarea
+                    value={data.structure?.join('\n') || ''}
+                    onChange={e => handleStructureChange(e.target.value)}
+                    rows={6}
+                    placeholder={'Machine Learning Systems\nAdvanced Data Science Pipelines\nPostgraduate Dissertation Project'}
+                    className="text-xs"
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -318,20 +362,25 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
             <ResponsivePreviewFrame device={viewportMode}>
               <div className="min-h-full bg-white text-[#061331] font-sans pb-12">
                 {/* Hero banner */}
-                <section className="bg-[#E9EFF6] pt-12 pb-8 px-6 text-left">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="inline-block px-2.5 py-0.5 rounded bg-[#061331] text-white text-[9px] font-black uppercase tracking-wider">
-                      {data.degreeLevel}
-                    </span>
-                    <span className="inline-block px-2.5 py-0.5 rounded bg-slate-200 text-slate-700 text-[9px] font-black uppercase tracking-wider">
-                      {data.discipline}
-                    </span>
-                  </div>
-                  <h1 className="text-xl sm:text-2xl font-black text-[#061331] leading-tight">{data.title}</h1>
-                  <div className="mt-3 flex flex-wrap items-center gap-3 text-[10px] font-bold text-slate-500">
-                    <span>🏛️ {activeUniv?.name || 'Partner Institution'}</span>
-                    <span>•</span>
-                    <span>📍 {activeUniv?.city || 'Campus Location'}</span>
+                <section
+                  className="relative bg-cover bg-center pt-12 pb-8 px-6 text-left before:absolute before:inset-0 before:bg-linear-to-r before:from-[#081638]/90 before:via-[#081638]/72 before:to-[#081638]/20"
+                  style={{ backgroundImage: `url("${data.heroImage || activeUniv?.bannerImage || '/servicehero.png'}")` }}
+                >
+                  <div className="relative z-10">
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="inline-block px-2.5 py-0.5 rounded bg-[#061331] text-[#d7a23a] border border-[#d7a23a]/40 text-[9px] font-black uppercase tracking-wider">
+                        {data.degreeLevel}
+                      </span>
+                      <span className="inline-block px-2.5 py-0.5 rounded bg-white/10 text-white text-[9px] font-black uppercase tracking-wider">
+                        {data.discipline}
+                      </span>
+                    </div>
+                    <h1 className="text-xl sm:text-2xl font-black text-white leading-tight">{data.title}</h1>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-[10px] font-bold text-white/75">
+                      <span>🏛️ {activeUniv?.name || 'Partner Institution'}</span>
+                      <span>•</span>
+                      <span>📍 {activeUniv?.city || 'Campus Location'}</span>
+                    </div>
                   </div>
                 </section>
 
@@ -367,10 +416,73 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
                   </div>
                 </div>
 
-                {/* Description */}
-                <div className="p-6 space-y-3">
-                  <h3 className="text-xs font-black uppercase text-slate-400 tracking-wider">Course Curriculum Overview</h3>
-                  <p className="text-xs leading-relaxed text-slate-600 whitespace-pre-line">{data.description || 'Outline description is currently empty. Edit course settings to populate profile details.'}</p>
+                <div className="bg-[#fbf8fc] p-6 space-y-6 text-left">
+                  <div className="inline-flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-xs">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#d7a23a]/20 bg-[#d7a23a]/10 text-xs font-black uppercase text-[#d7a23a]">
+                      {(activeUniv?.name || 'UNI').split(' ').map((word: string) => word[0]).join('').slice(0, 3)}
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-wider text-[#d7a23a]">Institution Profile</p>
+                      <p className="text-xs font-extrabold text-[#081638] underline decoration-dotted">
+                        {activeUniv?.name || 'Partner Institution'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-3xl border border-slate-200/60 bg-white p-5 shadow-xs">
+                    <h3 className="flex items-center gap-2 text-sm font-black text-[#081638]">
+                      <BookOpen className="h-4 w-4 text-[#d7a23a]" /> Program Overview
+                    </h3>
+                    <p className="mt-3 text-xs leading-relaxed text-slate-600 whitespace-pre-line">
+                      {data.description || 'Outline description is currently empty. Edit course settings to populate profile details.'}
+                    </p>
+                    <p className="mt-3 text-xs leading-relaxed text-slate-600">
+                      Graduating from this program unlocks premier opportunities worldwide. Our global placement cell helps students process credentials, prepare CVs, and secure post-study work authorization directly after completing the curriculum.
+                    </p>
+                  </div>
+
+                  <div className="rounded-3xl border border-slate-200/60 bg-white p-5 shadow-xs">
+                    <h3 className="flex items-center gap-2 text-sm font-black text-[#081638]">
+                      <Layers className="h-4 w-4 text-[#d7a23a]" /> Course Modules & Curriculum
+                    </h3>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {(data.structure || []).length > 0 ? (
+                        data.structure?.map((module, index) => (
+                          <div key={`${module}-${index}`} className="flex gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#081638]/5 text-[10px] font-black text-[#081638]">
+                              {index + 1}
+                            </span>
+                            <span className="text-xs font-bold leading-relaxed text-slate-700">{module}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-xs text-slate-400">Add course modules in the details tab.</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-3xl border border-slate-200/60 bg-white p-5 shadow-xs">
+                    <h3 className="flex items-center gap-2 text-sm font-black text-[#081638]">
+                      <Award className="h-4 w-4 text-[#d7a23a]" /> Admission Entry Requirements
+                    </h3>
+                    <div className="my-4 rounded-2xl border border-amber-500/10 bg-amber-500/5 p-3 text-xs font-bold leading-relaxed text-amber-900">
+                      📢 Always consult a Study Abroad consultant for standard waivers, exemptions, and country-specific qualification mappings.
+                    </div>
+                    <p className="text-xs font-semibold leading-relaxed text-slate-600 whitespace-pre-line">
+                      {data.requirements || 'Add entry requirements in the info tab.'}
+                    </p>
+                  </div>
+
+                  <div className="rounded-3xl border border-slate-200/60 bg-white p-5 shadow-xs">
+                    <h3 className="flex items-center gap-2 text-sm font-black text-[#081638]">
+                      <Award className="h-4 w-4 text-[#d7a23a]" /> Global Visa & Career Guidance
+                    </h3>
+                    <div className="mt-4 space-y-3 text-xs font-semibold leading-relaxed text-slate-600">
+                      <p>✓ <strong>Fast-track Visa processing</strong>: Leveraging high visa success scores with custom sponsor portfolio audits.</p>
+                      <p>✓ <strong>Post-study Work Permits</strong>: Dedicated counsel on post-grad visa durations, work allowances, and pathway eligibility.</p>
+                      <p>✓ <strong>Mock Interview training</strong>: Dedicated coaching sessions mimicking high-commission visa interviews.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </ResponsivePreviewFrame>

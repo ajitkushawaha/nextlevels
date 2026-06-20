@@ -54,16 +54,16 @@ export const branches: Branch[] = [
     slug: 'jaffna',
     city: 'Jaffna',
     province: 'Northern Province',
-    seoTitle: 'Study Abroad Consultant in Jaffna | UK, Australia & Canada Admissions | Next Level Education',
+    seoTitle: 'Study Abroad Consultant in Jaffna | UK, Canada, Australia & New Zealand Admissions | Next Level Education',
     metaDescription:
       'Next Level Education Jaffna helps students from Jaffna, Kilinochchi, Mullaitivu, Vavuniya, and Mannar with university admissions, student visas, scholarships, and pre-departure support.',
     heroImage: '/about-team-counselling.png',
     intro: [
       'Welcome to Next Level Education Jaffna, one of the leading overseas education consultancies serving students across the Northern Province of Sri Lanka. Located in the heart of Jaffna, our branch provides professional guidance and support to students from Jaffna, Kilinochchi, Mullaitivu, Vavuniya, and Mannar who wish to pursue higher education opportunities abroad.',
-      'We specialize in university admissions, student visa assistance, scholarship guidance, career counselling, accommodation support, and pre-departure services for students planning to study in the United Kingdom, Australia, Canada, Ireland, New Zealand, and other leading study destinations.',
+      'We specialize in university admissions, student visa assistance, scholarship guidance, career counselling, accommodation support, and pre-departure services for students planning to study in the United Kingdom, Canada, Australia, and New Zealand.',
       'Over the years, we have helped hundreds of students from across the Northern Province gain admission to globally recognized universities and colleges. Whether you are completing your A/Ls, pursuing higher studies, or looking to advance your career through international education, our team is here to guide you every step of the way.',
     ],
-    destinations: ['United Kingdom', 'Australia', 'Canada', 'Ireland', 'New Zealand'],
+    destinations: ['United Kingdom', 'Canada', 'Australia', 'New Zealand'],
     areas: [
       {
         name: 'Jaffna',
@@ -75,7 +75,7 @@ export const branches: Branch[] = [
         name: 'Kilinochchi',
         title: 'Study Abroad Guidance for Students in Kilinochchi',
         description:
-          'Students from Kilinochchi can access expert advice on studying in the UK, Australia, Canada, Ireland, and New Zealand through our Jaffna branch. We assist with course selection, university applications, scholarships, and student visa processes.',
+          'Students from Kilinochchi can access expert advice on studying in the UK, Canada, Australia, and New Zealand through our Jaffna branch. We assist with course selection, university applications, scholarships, and student visa processes.',
       },
       {
         name: 'Mullaitivu',
@@ -143,7 +143,7 @@ export const branches: Branch[] = [
       {
         question: 'Which countries can I apply to from the Jaffna branch?',
         answer:
-          'Students can apply for study opportunities in the UK, Australia, Canada, Ireland, New Zealand, and other leading destinations depending on their profile and goals.',
+          'Students can apply for study opportunities in the UK, Canada, Australia, and New Zealand depending on their profile and goals.',
       },
       {
         question: 'Is counselling free?',
@@ -171,16 +171,16 @@ export const branches: Branch[] = [
     slug: 'batticaloa',
     city: 'Batticaloa',
     province: 'Eastern Province',
-    seoTitle: 'Study Abroad Consultant in Batticaloa | UK, Australia & Canada Admissions | Next Level Education',
+    seoTitle: 'Study Abroad Consultant in Batticaloa | UK, Canada, Australia & New Zealand Admissions | Next Level Education',
     metaDescription:
       'Next Level Education Batticaloa supports students from Batticaloa, Kalmunai, Ampara, Trincomalee, and nearby Eastern Province areas with university admissions, student visas, scholarships, and pre-departure guidance.',
     heroImage: '/home2/happy-team.png',
     intro: [
       'Welcome to Next Level Education Batticaloa, a trusted overseas education consultancy supporting students across the Eastern Province of Sri Lanka. Our Batticaloa branch provides professional study abroad guidance for students planning international higher education.',
-      'We help students with university admissions, course selection, student visa assistance, scholarship guidance, financial planning, accommodation support, and pre-departure preparation for leading destinations including the United Kingdom, Australia, Canada, Ireland, and New Zealand.',
+      'We help students with university admissions, course selection, student visa assistance, scholarship guidance, financial planning, accommodation support, and pre-departure preparation for the United Kingdom, Canada, Australia, and New Zealand.',
       'Whether you are completing your A/Ls, planning undergraduate study, preparing for postgraduate education, or looking to build an international career pathway, our Batticaloa team is ready to guide you from first counselling to offer and visa preparation.',
     ],
-    destinations: ['United Kingdom', 'Australia', 'Canada', 'Ireland', 'New Zealand'],
+    destinations: ['United Kingdom', 'Canada', 'Australia', 'New Zealand'],
     areas: [
       {
         name: 'Batticaloa',
@@ -260,7 +260,7 @@ export const branches: Branch[] = [
       {
         question: 'Which countries can I apply to from the Batticaloa branch?',
         answer:
-          'Students can apply for study opportunities in the UK, Australia, Canada, Ireland, New Zealand, and other destinations depending on their academic profile and goals.',
+          'Students can apply for study opportunities in the UK, Canada, Australia, and New Zealand depending on their academic profile and goals.',
       },
       {
         question: 'Is counselling free at the Batticaloa branch?',
@@ -281,6 +281,152 @@ export const branches: Branch[] = [
         question: 'What scholarships are available for Eastern Province students?',
         answer:
           'Scholarship availability depends on country, university, intake, academic performance, and course choice. We help shortlist realistic scholarship and discount options.',
+      },
+    ],
+  },
+  {
+    slug: 'colombo',
+    city: 'Colombo',
+    province: 'Western Province',
+    seoTitle: 'Study Abroad Consultant in Colombo | UK, Canada, Australia & New Zealand Admissions | Next Level Education',
+    metaDescription:
+      'Next Level Education Colombo supports students with university admissions, student visas, scholarships, and study abroad counselling for the UK, Canada, Australia, and New Zealand.',
+    heroImage: '/services-credentials.png',
+    intro: [
+      'Welcome to Next Level Education Colombo, supporting students and families in Sri Lanka’s commercial capital with clear, practical study abroad guidance.',
+      'Our Colombo team helps students compare destinations, select suitable courses, prepare university applications, and build strong student visa files for the United Kingdom, Canada, Australia, and New Zealand.',
+      'Whether you are planning undergraduate study, postgraduate progression, or a career-focused pathway, we provide transparent counselling from your first conversation to pre-departure preparation.',
+    ],
+    destinations: ['United Kingdom', 'Canada', 'Australia', 'New Zealand'],
+    areas: [
+      {
+        name: 'Colombo',
+        title: 'Study Abroad Guidance for Students in Colombo',
+        description:
+          'Students in Colombo can access personalised counselling, course matching, admission support, scholarship guidance, and visa document preparation through our team.',
+      },
+      {
+        name: 'Western Province',
+        title: 'International Education Services Across the Western Province',
+        description:
+          'We support students from Colombo and nearby areas with clear destination advice and end-to-end application guidance.',
+      },
+    ],
+    stories: [
+      {
+        name: 'Sahan P.',
+        country: 'United Kingdom',
+        university: 'University of East London',
+        image: '/home2/sham.png',
+        quote:
+          'The Colombo team helped me compare options and prepare my application with confidence.',
+      },
+    ],
+    team: [
+      { name: 'John', designation: 'Branch Manager', image: '/service/team1.png' },
+      { name: 'John', designation: 'Education Counsellor', image: '/service/team2.png' },
+      { name: 'John', designation: 'Visa & Document Advisor', image: '/service/team3.png' },
+      { name: 'John', designation: 'Student Support Officer', image: '/service/team4.png' },
+    ],
+    gallery: [
+      { title: 'Colombo counselling session', image: '/services-credentials.png' },
+      { title: 'Student application planning', image: '/about-team-counselling.png' },
+      { title: 'University guidance discussion', image: '/home2/happy-team.png' },
+      { title: 'Visa document support', image: '/home2/visaappp.png' },
+    ],
+    address: 'Colombo, Sri Lanka',
+    phone: '+94 77 519 8195',
+    email: 'info@nextlevel.edu.lk',
+    workingHours: 'Monday to Saturday, 9:00 AM - 6:00 PM',
+    mapQuery: 'Colombo Sri Lanka',
+    faqs: [
+      {
+        question: 'Which countries can I apply to from the Colombo branch?',
+        answer:
+          'Students can apply for the UK, Canada, Australia, and New Zealand depending on their profile and goals.',
+      },
+      {
+        question: 'Is counselling free at the Colombo branch?',
+        answer:
+          'Yes. Our counselling and student guidance services are free for students.',
+      },
+      {
+        question: 'Do you help with visa documents?',
+        answer:
+          'Yes. We guide students with document checklists, financial evidence, forms, and visa file readiness.',
+      },
+    ],
+  },
+  {
+    slug: 'vavuniya',
+    city: 'Vavuniya',
+    province: 'Northern Province',
+    seoTitle: 'Study Abroad Consultant in Vavuniya | UK, Canada, Australia & New Zealand Admissions | Next Level Education',
+    metaDescription:
+      'Next Level Education Vavuniya helps students with study abroad counselling, admissions, scholarships, and visa support for the UK, Canada, Australia, and New Zealand.',
+    heroImage: '/about-team-counselling.png',
+    intro: [
+      'Welcome to Next Level Education Vavuniya, supporting students from Vavuniya and nearby Northern Province areas with trusted overseas education guidance.',
+      'Our team helps students understand destination choices, course options, admissions requirements, scholarships, and student visa preparation.',
+      'We focus on clear advice, transparent support, and practical next steps so students can plan their international education journey with confidence.',
+    ],
+    destinations: ['United Kingdom', 'Canada', 'Australia', 'New Zealand'],
+    areas: [
+      {
+        name: 'Vavuniya',
+        title: 'Study Abroad Guidance for Students in Vavuniya',
+        description:
+          'Students in Vavuniya can access support for university selection, applications, scholarships, and student visa preparation.',
+      },
+      {
+        name: 'Northern Province',
+        title: 'International Education Services for Northern Province Students',
+        description:
+          'We support students across the region with personalised counselling and transparent study abroad planning.',
+      },
+    ],
+    stories: [
+      {
+        name: 'Kavitha S.',
+        country: 'Canada',
+        university: 'Seneca Polytechnic',
+        image: '/home2/priya.png',
+        quote:
+          'The team explained every step clearly and helped my family understand the full process.',
+      },
+    ],
+    team: [
+      { name: 'John', designation: 'Branch Manager', image: '/service/team1.png' },
+      { name: 'John', designation: 'Education Counsellor', image: '/service/team2.png' },
+      { name: 'John', designation: 'Visa & Document Advisor', image: '/service/team3.png' },
+      { name: 'John', designation: 'Student Support Officer', image: '/service/team4.png' },
+    ],
+    gallery: [
+      { title: 'Vavuniya counselling session', image: '/about-team-counselling.png' },
+      { title: 'Student guidance discussion', image: '/home2/happy-team.png' },
+      { title: 'Visa planning support', image: '/home2/visaappp.png' },
+      { title: 'Application review meeting', image: '/services-credentials.png' },
+    ],
+    address: 'Vavuniya, Sri Lanka',
+    phone: '+94 77 519 8195',
+    email: 'info@nextlevel.edu.lk',
+    workingHours: 'Monday to Saturday, 9:00 AM - 6:00 PM',
+    mapQuery: 'Vavuniya Sri Lanka',
+    faqs: [
+      {
+        question: 'Which countries can I apply to from the Vavuniya branch?',
+        answer:
+          'Students can apply for study opportunities in the UK, Canada, Australia, and New Zealand.',
+      },
+      {
+        question: 'Is counselling free at the Vavuniya branch?',
+        answer:
+          'Yes. Our counselling and student guidance services are free for students.',
+      },
+      {
+        question: 'Can I apply without IELTS?',
+        answer:
+          'Some universities may consider IELTS waivers depending on your academic and English-medium background.',
       },
     ],
   },

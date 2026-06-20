@@ -8,7 +8,7 @@ export function processBlogContent(htmlContent: string): string {
   if (typeof window === 'undefined') {
     // Server-side: use regex to process links
     // This regex handles both self-closing and regular anchor tags
-    return normalizedContent.replace(
+    return promoteHeadingParagraphs(normalizedContent).replace(
       /<a\s+([^>]*?href=["']([^"']+)["'][^>]*?)>(.*?)<\/a>/gi,
       (match, attributes, href, content) => {
         if (!href) {
@@ -76,6 +76,7 @@ export function processBlogContent(htmlContent: string): string {
   // Client-side: use DOMParser
   const parser = new DOMParser()
   const doc = parser.parseFromString(normalizedContent, 'text/html')
+  promoteHeadingParagraphNodes(doc)
   const links = doc.querySelectorAll('a[href]')
 
   links.forEach(link => {
@@ -128,6 +129,38 @@ function normalizeBlogContent(content: string): string {
       return isHeading ? `<h2>${escaped}</h2>` : `<p>${escaped}</p>`
     })
     .join('\n')
+}
+
+function shouldPromoteParagraph(text: string) {
+  const normalized = text.replace(/\s+/g, ' ').trim()
+
+  return (
+    normalized.length > 4 &&
+    normalized.length <= 140 &&
+    normalized.endsWith(':')
+  )
+}
+
+function promoteHeadingParagraphs(content: string) {
+  return content.replace(
+    /<p([^>]*)>([\s\S]*?)<\/p>/gi,
+    (match, _attributes, innerHtml) => {
+      const text = innerHtml.replace(/<[^>]*>/g, '').trim()
+      if (!shouldPromoteParagraph(text)) return match
+
+      return `<h2>${innerHtml}</h2>`
+    }
+  )
+}
+
+function promoteHeadingParagraphNodes(doc: Document) {
+  doc.querySelectorAll('p').forEach(paragraph => {
+    if (!shouldPromoteParagraph(paragraph.textContent || '')) return
+
+    const heading = doc.createElement('h2')
+    heading.innerHTML = paragraph.innerHTML
+    paragraph.replaceWith(heading)
+  })
 }
 
 function escapeHtml(value: string): string {

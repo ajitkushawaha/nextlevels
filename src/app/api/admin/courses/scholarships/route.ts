@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, awardAmount, eligibilityCriteria, description, countryId, universityId, programId } = body
+    const { title, awardAmount, deadline, type, eligibilityCriteria, description, heroImage, howToApply, countryId, universityId, programId } = body
 
     if (!title || !awardAmount) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -44,8 +44,12 @@ export async function POST(req: Request) {
     const created = await Scholarship.create({
       title,
       awardAmount,
+      deadline: deadline || '',
+      type: type || 'Merit based',
       eligibilityCriteria: eligibilityCriteria || '',
       description: description || '',
+      heroImage: heroImage || '',
+      howToApply: howToApply || '',
       countryId: countryId || undefined,
       universityId: universityId || undefined,
       programId: programId || undefined,

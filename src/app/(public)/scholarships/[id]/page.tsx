@@ -1,16 +1,16 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
-  ArrowLeft,
-  MapPin,
-  DollarSign,
+  ArrowRight,
   Calendar,
   Award,
   Globe,
   BookOpen,
-  Send,
   HelpCircle,
-  FileCheck
+  FileCheck,
+  GraduationCap,
+  MessageCircle,
+  Building2,
 } from 'lucide-react'
 import { scholarshipsData, universitiesData } from '@/lib/mockData'
 import connectDb from '@/lib/db'
@@ -38,19 +38,29 @@ export default async function ScholarshipDetailPage({ params }: Props) {
         ...(isValidId ? [{ _id: decodedId }] : []),
         { title: decodedId }
       ]
-    }).populate('countryId').populate('universityId').populate('programId').lean()
+    }).populate('countryId').populate('universityId').populate({
+      path: 'programId',
+      populate: { path: 'universityId' },
+    }).lean()
 
     if (dbSchol) {
       scholarship = {
         id: dbSchol._id.toString(),
         title: dbSchol.title,
-        type: 'Merit based',
+        type: dbSchol.type || 'Merit based',
         country: dbSchol.countryId?.name || 'Global',
         award: dbSchol.awardAmount,
-        deadline: 'December 2026',
+        deadline: dbSchol.deadline || 'December 2026',
         overview: dbSchol.description || 'Welcome to this scholarship study guide.',
         eligibility: dbSchol.eligibilityCriteria || 'No eligibility criteria listed.',
-        howToApply: 'Apply via our advisor panel or directly at partner institutions.'
+        howToApply: dbSchol.howToApply || 'Apply via our advisor panel or directly at partner institutions.',
+        heroImage:
+          dbSchol.heroImage ||
+          dbSchol.programId?.heroImage ||
+          dbSchol.programId?.universityId?.bannerImage ||
+          dbSchol.universityId?.bannerImage ||
+          dbSchol.countryId?.heroImage ||
+          ''
       }
     }
   } catch (err) {
@@ -68,75 +78,146 @@ export default async function ScholarshipDetailPage({ params }: Props) {
   const matchingUniversities = Object.values(universitiesData).filter(
     u => u.country.toLowerCase() === scholarship.country.toLowerCase()
   )
+  const quickFacts = [
+    { label: 'Country', value: scholarship.country, icon: Globe },
+    { label: 'Award Value', value: scholarship.award, icon: Award },
+    { label: 'Deadline', value: scholarship.deadline, icon: Calendar },
+    { label: 'Funding Type', value: scholarship.type, icon: GraduationCap },
+  ]
+  const accordionSections = [
+    {
+      title: 'Scholarship overview',
+      icon: BookOpen,
+      content: scholarship.overview,
+      open: true,
+    },
+    {
+      title: 'Eligibility criteria',
+      icon: Award,
+      content: scholarship.eligibility,
+    },
+    {
+      title: 'How to apply',
+      icon: FileCheck,
+      content: scholarship.howToApply,
+    },
+    {
+      title: 'Application support',
+      icon: HelpCircle,
+      content:
+        'Securing international funding is highly competitive. Our study advisors review student profiles, match qualifications, and guide documents so students can apply with a stronger scholarship file.',
+    },
+  ].filter(section => section.content)
+  const heroImage =
+    scholarship.heroImage ||
+    (scholarship.id ? `/home2/${Number(scholarship.id.replace(/\D/g, '')) % 2 === 0 ? 'happy-gi' : 'scollership'}.png` : '') ||
+    '/home2/scollership.png'
 
   return (
     <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
 
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-120 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10">
 
         {/* Background Image */}
         <Image
-          src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200"
+          src={heroImage}
           alt={scholarship.title}
           fill
           priority
-          className="object-cover object-center absolute inset-0 z-0"
+          sizes="100vw"
+          className="absolute inset-0 z-0 object-cover object-center opacity-90"
         />
+        <div className="absolute inset-0 z-10 bg-linear-to-b from-[#081638]/88 via-[#081638]/90 to-[#081638]/96 lg:bg-linear-to-r lg:from-[#081638] lg:via-[#081638]/82 lg:to-[#081638]/10" />
 
         {/* Content Container */}
-        <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-20 py-10 flex h-full w-full max-w-7xl flex-col justify-between px-4 sm:px-6 lg:mx-auto lg:px-8">
 
-          {/* Top Breadcrumb */}
-          <div className="max-w-[750px]">
+          <div className="max-w-187.5">
             <nav aria-label="Breadcrumb">
-              <ol className="flex flex-wrap items-center gap-1.5 text-xs lg:text-sm text-white/90">
+              <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/75 lg:text-sm">
                 <li>
                   <Link href="/" className="hover:text-[#d7a23a] transition-colors">
                     Home
                   </Link>
-                  <span className="ml-1.5 text-white/60">/</span>
+                  <span className="ml-1.5 text-white/35">/</span>
                 </li>
                 <li>
-                  <Link href="/courses" className="hover:text-[#d7a23a] transition-colors">
+                  <Link href="/scholarships" className="hover:text-[#d7a23a] transition-colors">
                     Scholarships
                   </Link>
-                  <span className="ml-1.5 text-white/60">/</span>
+                  <span className="ml-1.5 text-white/35">/</span>
                 </li>
-                <li className="pointer-events-none text-white font-semibold line-clamp-1">
+                <li className="pointer-events-none font-semibold line-clamp-1">
                   <span>{scholarship.title}</span>
                 </li>
               </ol>
             </nav>
           </div>
 
-          {/* Bottom Title & Badge */}
-          <div className="mt-auto space-y-3 pt-6 text-left">
+          <div className="mt-auto max-w-3xl space-y-3 pt-6 text-left">
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
-                🏆 {scholarship.type}
+              <span className="inline-flex items-center rounded-full border border-[#d7a23a]/40 bg-[#081638] px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#d7a23a] shadow-sm">
+                {scholarship.type}
               </span>
-              <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-white/10 text-white/90 text-[10px] font-black uppercase tracking-wider shadow-sm">
-                📍 {scholarship.country}
+              <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-sm backdrop-blur">
+                {scholarship.country}
               </span>
             </div>
 
             <h1
-              className="text-2xl sm:text-4xl lg:text-[40px] font-bold text-white tracking-tight leading-[1.15]"
+              className="text-2xl font-bold tracking-tight text-white sm:text-4xl lg:text-[48px] leading-[1.15]"
               style={{ fontFamily: 'Farro, sans-serif' }}
             >
               {scholarship.title}
             </h1>
 
-            <p className="text-emerald-400 text-xs sm:text-sm max-w-xl font-bold flex items-center gap-1">
-              <span className="text-white/80 font-medium">Award Value:</span> {scholarship.award}
+            <p className="max-w-xl text-xs font-medium leading-relaxed text-white/80 sm:text-sm">
+              <span className="font-bold text-[#d7a23a]">Award Value:</span> {scholarship.award}
             </p>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a
+                href="#scholarship-enquiry"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#081638] px-6 py-3 text-xs font-black text-white transition hover:bg-[#d7a23a] hover:text-[#081638]"
+              >
+                Check Eligibility
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href="#scholarship-info"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 py-3 text-xs font-black text-white transition hover:border-[#d7a23a] hover:text-[#d7a23a]"
+              >
+                View Details
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
+      <section className="border-y border-[#d7a23a]/20 bg-[#081638] text-white">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+          {quickFacts.map(fact => {
+            const Icon = fact.icon
+
+            return (
+              <div key={fact.label} className="flex items-start gap-3 border-white/10 py-2 lg:border-r lg:last:border-r-0">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#d7a23a]/15 text-[#d7a23a]">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-white/45">{fact.label}</p>
+                  <p className="mt-1 text-sm font-extrabold leading-snug text-white">{fact.value}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
       {/* Main Content */}
-      <main className="w-full grow py-12 bg-[#fbf8fc]">
+      <main className="w-full grow bg-white">
+        <section id="scholarship-info" className="py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Details Content Grid */}
@@ -144,113 +225,142 @@ export default async function ScholarshipDetailPage({ params }: Props) {
 
             {/* Left Column: Descriptions */}
             <div className="lg:col-span-8 space-y-8 text-left">
-
-              {/* Overview */}
-              {scholarship.overview && (
-                <div className="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-8 shadow-xs">
-                  <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 mb-4">
-                    <BookOpen className="w-5 h-5 text-[#d7a23a]" /> Scholarship Overview
-                  </h2>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {scholarship.overview}
-                  </p>
-                </div>
-              )}
-
-              {/* Eligibility */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-8 shadow-xs">
-                <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 mb-4">
-                  <Award className="w-5 h-5 text-[#d7a23a]" /> Eligibility Criteria
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-[#d7a23a]">Scholarship info</p>
+                <h2 className="mt-2 text-3xl font-black text-[#081638]" style={{ fontFamily: 'Farro, sans-serif' }}>
+                  Funding details and application guidance
                 </h2>
-                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
-                  {scholarship.eligibility}
-                </p>
               </div>
 
-              {/* How to Apply */}
-              {scholarship.howToApply && (
-                <div className="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-8 shadow-xs">
-                  <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 mb-4">
-                    <FileCheck className="w-5 h-5 text-[#d7a23a]" /> Application Guidelines & Procedures
-                  </h2>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {scholarship.howToApply}
-                  </p>
-                </div>
-              )}
+              <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white shadow-sm">
+                {accordionSections.map(section => {
+                  const Icon = section.icon
 
-              {/* General Advising Support */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-8 shadow-xs">
-                <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 mb-4">
-                  <HelpCircle className="w-5 h-5 text-[#d7a23a]" /> Need Assistance?
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Securing international funding is highly competitive. Our study advisors specialize in reviewing student portfolios, matching qualifications, and optimizing statements of purpose to give you the highest chance of receiving global scholarships.
-                </p>
+                  return (
+                    <details key={section.title} open={section.open} className="group">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-left sm:px-6">
+                        <span className="flex items-center gap-3 text-base font-black text-[#081638]">
+                          <Icon className="h-5 w-5 text-[#d7a23a]" />
+                          {section.title}
+                        </span>
+                        <span className="text-2xl font-light text-[#081638] transition group-open:rotate-45">+</span>
+                      </summary>
+                      <div className="px-5 pb-6 sm:px-6">
+                        <p className="max-w-3xl whitespace-pre-line text-sm leading-7 text-slate-600">
+                          {section.content}
+                        </p>
+                      </div>
+                    </details>
+                  )
+                })}
               </div>
-
             </div>
 
             {/* Right Column: Key info card & inquiry form */}
             <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-
-              {/* Summary Stats */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-md text-left space-y-4">
-                <h3 className="font-extrabold text-[#081638] text-sm uppercase tracking-wider pb-2 border-b border-slate-100">Quick Facts</h3>
-
-                <div className="space-y-3.5">
-                  <div className="flex justify-between items-center text-xs font-semibold">
-                    <span className="text-slate-400 flex items-center gap-1.5"><Globe className="w-4 h-4" /> Country</span>
-                    <span className="text-[#081638] font-bold">{scholarship.country}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center text-xs font-semibold">
-                    <span className="text-slate-400 flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Deadline</span>
-                    <span className="text-amber-600 font-extrabold">{scholarship.deadline}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center text-xs font-semibold">
-                    <span className="text-slate-400 flex items-center gap-1.5"><Award className="w-4 h-4" /> Funding Type</span>
-                    <span className="text-[#081638] font-bold">{scholarship.type}</span>
-                  </div>
-                </div>
+              <div className="rounded-2xl border border-[#d7a23a]/25 bg-[#eaf8fb] p-6 text-left shadow-sm">
+                <h3 className="text-lg font-black text-[#081638]">Need help checking eligibility?</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  Our counsellors can review your profile, documents, and country options before you apply.
+                </p>
+                <a
+                  href="#scholarship-enquiry"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#081638] px-5 py-3 text-xs font-black text-white transition hover:bg-[#d7a23a] hover:text-[#081638]"
+                >
+                  Meet a counsellor
+                  <MessageCircle className="h-4 w-4" />
+                </a>
               </div>
 
-              {/* Partner Universities Card */}
-              {matchingUniversities.length > 0 && (
-                <div className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-md text-left space-y-4">
-                  <h3 className="font-extrabold text-[#081638] text-sm uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center gap-2">
-                    🏛️ Partner Universities
-                  </h3>
-                  <div className="space-y-3">
-                    {matchingUniversities.map(uni => (
-                      <div key={uni.name} className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-[#d7a23a] transition-all">
-                        <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-black text-xs text-[#081638] shrink-0">
-                          {uni.logo}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <Link href={`/universities/${encodeURIComponent(uni.name)}`} className="font-extrabold text-[#081638] text-xs hover:text-[#d7a23a] hover:underline block truncate">
-                            {uni.name}
-                          </Link>
-                          <p className="text-[10px] text-slate-400 font-medium mt-0.5 truncate">{uni.location}</p>
-                        </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm">
+                <h3 className="flex items-center gap-2 border-b border-slate-100 pb-3 text-sm font-extrabold uppercase tracking-wider text-[#081638]">
+                  <Building2 className="h-4 w-4 text-[#d7a23a]" />
+                  Related universities
+                </h3>
+                <div className="mt-4 space-y-3">
+                  {(matchingUniversities.length > 0 ? matchingUniversities.slice(0, 4) : Object.values(universitiesData).slice(0, 4)).map(uni => (
+                    <div key={uni.name} className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-black text-[#081638]">
+                        {uni.logo}
                       </div>
-                    ))}
-                  </div>
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/universities/${encodeURIComponent(uni.name)}`} className="block truncate text-xs font-extrabold text-[#081638] hover:text-[#d7a23a]">
+                          {uni.name}
+                        </Link>
+                        <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400">{uni.location}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        </div>
+        </section>
 
-              {/* Enquiry Form */}
-              <div className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-md">
-                <h3 className="font-extrabold text-[#081638] text-sm uppercase tracking-wider pb-2 border-b border-slate-100 mb-4 text-left">Inquire for Application</h3>
+        <section className="bg-[#081638] py-12 text-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#d7a23a]">Your action plan</p>
+            <h2 className="mt-2 text-3xl font-black" style={{ fontFamily: 'Farro, sans-serif' }}>
+              Apply with a clearer funding strategy
+            </h2>
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {[
+                ['Step 1', 'Check your eligibility', 'Share your academic background, country choice, and budget so we can check realistic scholarship options.'],
+                ['Step 2', 'Prepare your documents', 'Build a stronger document set with academic records, statements, references, and financial evidence.'],
+                ['Step 3', 'Submit with support', 'Apply through the right pathway and keep follow-up clear until the decision stage.'],
+              ].map(([step, title, text]) => (
+                <div key={step} className="rounded-xl border border-white/15 p-6">
+                  <p className="text-[11px] font-black uppercase tracking-wider text-white/50">{step}</p>
+                  <h3 className="mt-3 text-base font-black">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/70">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="scholarship-enquiry" className="bg-white py-12 sm:py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-[#d7a23a]">Free counselling</p>
+              <h2 className="mt-2 text-3xl font-black text-[#081638] sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+                Get FREE scholarship guidance today.
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+                Enter your details and our team will contact you to discuss eligibility, documentation, and application options for this scholarship.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:items-stretch">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:col-span-7">
                 <ScholarshipEnquiryForm scholarship={scholarship} />
               </div>
 
+              <div className="relative min-h-90 overflow-hidden rounded-3xl bg-[#081638] lg:col-span-5">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_22%,rgba(215,162,58,0.34),transparent_34%),linear-gradient(135deg,#081638_0%,#10245f_100%)]" />
+                <div className="absolute bottom-0 right-2 h-[92%] w-[78%] sm:right-8">
+                  <Image
+                    src="/girlwith.png"
+                    alt="Student ready for scholarship counselling"
+                    fill
+                    sizes="(max-width: 1024px) 70vw, 380px"
+                    className="object-contain object-bottom"
+                  />
+                </div>
+                <div className="relative z-10 max-w-60 p-6 text-left text-white sm:p-8">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#d7a23a]">Next Level Support</p>
+                  <h3 className="mt-3 text-2xl font-black leading-tight" style={{ fontFamily: 'Farro, sans-serif' }}>
+                    Scholarship help from profile to application.
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-white/70">
+                    Get clear advice before you submit documents.
+                  </p>
+                </div>
+              </div>
             </div>
-
           </div>
-
-        </div>
+        </section>
       </main>
       <Footer />
     </div>

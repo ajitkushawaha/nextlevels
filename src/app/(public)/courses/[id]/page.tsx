@@ -58,7 +58,15 @@ export default async function CourseDetailPage({ params }: Props) {
         country: dbProg.universityId?.countryId?.name || 'International',
         flag: '🏛️',
         visaSuccess: '95%',
-        overview: dbProg.description || 'Welcome to this program study guide.'
+        description: dbProg.description || 'Welcome to this program study guide.',
+        requirements: dbProg.requirements || '',
+        structure: dbProg.structure || [],
+        heroImage:
+          dbProg.heroImage ||
+          dbProg.cmsData?.heroImage ||
+          dbProg.universityId?.bannerImage ||
+          dbProg.universityId?.cmsData?.heroImage ||
+          ''
       }
     }
   } catch (err) {
@@ -83,21 +91,28 @@ export default async function CourseDetailPage({ params }: Props) {
     .map((w: string) => w[0])
     .join('')
     .substring(0, 3)
+  const courseNumericId = Number(course.id)
+  const courseHeroImage =
+    course.heroImage ||
+    (Number.isFinite(courseNumericId) ? `/service/cover-${((courseNumericId - 1) % 4) + 1}.png` : '') ||
+    '/servicehero.png'
 
   return (
     <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
 
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between bg-[#081638] pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px]">
 
         {/* Background Image */}
         <Image
-          src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200"
+          src={courseHeroImage}
           alt={course.title}
           fill
           priority
+          sizes="100vw"
           className="object-cover object-center absolute inset-0 z-0"
         />
+        <div className="absolute inset-0 z-10 bg-linear-to-b from-[#081638]/82 via-[#081638]/84 to-[#081638]/94 lg:bg-linear-to-r lg:from-[#081638]/92 lg:via-[#081638]/70 lg:to-[#081638]/10" />
 
         {/* Content Container */}
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

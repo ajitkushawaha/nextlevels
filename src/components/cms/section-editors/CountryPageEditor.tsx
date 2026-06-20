@@ -22,6 +22,7 @@ type CountryData = {
   name: string
   code: string
   flagImage: string
+  heroImage?: string
   description: string
   averageCostOfLiving?: string
   popularCities?: string[]
@@ -40,6 +41,20 @@ type CountryData = {
   jobProspects?: string[]
   livingCosts?: Array<{ item: string; cost: string }>
   faqs?: Array<{ question: string; answer: string }>
+  cmsData?: {
+    marketingBanner?: {
+      image?: string
+      alt?: string
+      href?: string
+    }
+    marketingBanners?: Array<{
+      image?: string
+      alt?: string
+      href?: string
+      enabled?: boolean
+    }>
+    [key: string]: any
+  }
 }
 
 type Props = {
@@ -116,6 +131,85 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
   // Popular Cities handler
   const handlePopularCitiesChange = (val: string) => {
     setData({ ...data, popularCities: val.split(',').map(c => c.trim()).filter(Boolean) })
+  }
+
+  const handleTopCoursesChange = (val: string) => {
+    setData({ ...data, topCourses: val.split(',').map(item => item.trim()).filter(Boolean) })
+  }
+
+  const handleJobProspectsChange = (val: string) => {
+    setData({ ...data, jobProspects: val.split(',').map(item => item.trim()).filter(Boolean) })
+  }
+
+  const getMarketingBanners = () => {
+    const banners = data.cmsData?.marketingBanners
+    if (banners?.length) return banners
+    const legacyBanner = data.cmsData?.marketingBanner
+    if (legacyBanner?.image) return [{ ...legacyBanner, enabled: true }]
+    return []
+  }
+
+  const updateMarketingBanners = (
+    updater: (banners: NonNullable<CountryData['cmsData']>['marketingBanners']) => NonNullable<CountryData['cmsData']>['marketingBanners']
+  ) => {
+    setData({
+      ...data,
+      cmsData: {
+        ...(data.cmsData || {}),
+        marketingBanners: updater(getMarketingBanners()),
+      },
+    })
+  }
+
+  const updateMarketingBanner = (
+    index: number,
+    key: 'image' | 'alt' | 'href' | 'enabled',
+    val: string | boolean
+  ) => {
+    updateMarketingBanners(banners =>
+      (banners || []).map((banner, bannerIndex) =>
+        bannerIndex === index ? { ...banner, [key]: val } : banner
+      )
+    )
+  }
+
+  const addMarketingBanner = () => {
+    updateMarketingBanners(banners => [
+      ...(banners || []),
+      { image: '', alt: '', href: '/contact-us', enabled: true },
+    ])
+  }
+
+  const removeMarketingBanner = (index: number) => {
+    updateMarketingBanners(banners => (banners || []).filter((_, bannerIndex) => bannerIndex !== index))
+  }
+
+  const updateIntake = (index: number, key: 'name' | 'duration', val: string) => {
+    const newIntakes = [...(data.intakes || [])]
+    newIntakes[index] = { ...newIntakes[index], [key]: val }
+    setData({ ...data, intakes: newIntakes })
+  }
+
+  const addIntake = () => {
+    setData({ ...data, intakes: [...(data.intakes || []), { name: '', duration: '' }] })
+  }
+
+  const removeIntake = (index: number) => {
+    setData({ ...data, intakes: (data.intakes || []).filter((_, i) => i !== index) })
+  }
+
+  const updateScholarship = (index: number, key: 'name' | 'description', val: string) => {
+    const newScholarships = [...(data.scholarships || [])]
+    newScholarships[index] = { ...newScholarships[index], [key]: val }
+    setData({ ...data, scholarships: newScholarships })
+  }
+
+  const addScholarship = () => {
+    setData({ ...data, scholarships: [...(data.scholarships || []), { name: '', description: '' }] })
+  }
+
+  const removeScholarship = (index: number) => {
+    setData({ ...data, scholarships: (data.scholarships || []).filter((_, i) => i !== index) })
   }
 
   // Costs handlers
@@ -237,6 +331,79 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                   />
                 </div>
                 <div className="space-y-1">
+                  <CmsImageField
+                    id="country-hero-image"
+                    label="Country Hero Image"
+                    value={data.heroImage || ''}
+                    onChange={val => setData({ ...data, heroImage: val })}
+                    folder="nextlevel/countries"
+                  />
+                </div>
+                <div className="space-y-3 rounded-lg border border-[#d7a23a]/20 bg-[#fffcf0] p-4">
+                  <div>
+                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#081638]">
+                      Image CTA Banners
+                    </h4>
+                    <p className="mt-1 text-[11px] leading-5 text-slate-500">
+                      Add clickable CTA images for the country page right sidebar. Keep text inside the uploaded image design.
+                    </p>
+                  </div>
+                  <Button type="button" size="sm" onClick={addMarketingBanner} className="bg-[#081638] text-xs text-white hover:bg-[#081638]/90">
+                    <Plus className="mr-1 h-3 w-3" />
+                    Add CTA Image
+                  </Button>
+                  <div className="space-y-4">
+                    {getMarketingBanners().map((banner, index) => (
+                      <div key={index} className="space-y-3 rounded-lg border border-[#d7a23a]/20 bg-white p-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <label className="flex items-center gap-2 text-[11px] font-bold text-slate-600">
+                            <input
+                              type="checkbox"
+                              checked={banner.enabled !== false}
+                              onChange={e => updateMarketingBanner(index, 'enabled', e.target.checked)}
+                              className="h-4 w-4 accent-[#d7a23a]"
+                            />
+                            Enabled
+                          </label>
+                          <Button type="button" size="icon" variant="ghost" onClick={() => removeMarketingBanner(index)} className="h-7 w-7 text-red-500 hover:bg-red-50 hover:text-red-600">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <CmsImageField
+                          id={`country-marketing-banner-image-${index}`}
+                          label={`CTA Image ${index + 1}`}
+                          value={banner.image || ''}
+                          onChange={val => updateMarketingBanner(index, 'image', val)}
+                          folder="nextlevel/countries/marketing"
+                        />
+                        <div className="space-y-1">
+                          <Label>Alt Text</Label>
+                          <Input
+                            value={banner.alt || ''}
+                            onChange={e => updateMarketingBanner(index, 'alt', e.target.value)}
+                            placeholder="e.g. Free study abroad assessment"
+                            className="text-xs"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label>Redirect Link</Label>
+                          <Input
+                            value={banner.href || ''}
+                            onChange={e => updateMarketingBanner(index, 'href', e.target.value)}
+                            placeholder="e.g. /contact-us"
+                            className="text-xs"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    {getMarketingBanners().length === 0 ? (
+                      <p className="rounded-md border border-dashed border-[#d7a23a]/30 bg-white px-3 py-4 text-center text-[11px] font-semibold text-slate-500">
+                        No CTA images added yet.
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="space-y-1">
                   <Label>Description / SEO Meta Info</Label>
                   <Textarea
                     value={data.description}
@@ -271,6 +438,24 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                     value={data.popularCities?.join(', ') || ''}
                     onChange={e => handlePopularCitiesChange(e.target.value)}
                     placeholder="e.g. London, Manchester, Leeds"
+                    className="text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Top Courses (comma separated)</Label>
+                  <Input
+                    value={data.topCourses?.join(', ') || ''}
+                    onChange={e => handleTopCoursesChange(e.target.value)}
+                    placeholder="e.g. Business, IT, Engineering"
+                    className="text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Job Prospects (comma separated)</Label>
+                  <Input
+                    value={data.jobProspects?.join(', ') || ''}
+                    onChange={e => handleJobProspectsChange(e.target.value)}
+                    placeholder="e.g. Technology, Healthcare, Finance"
                     className="text-xs"
                   />
                 </div>
@@ -360,6 +545,36 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
 
             {activeTab === 'costs' && (
               <div className="space-y-6">
+                <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-3 shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-bold text-slate-800">Study Intakes</h3>
+                    <Button type="button" size="sm" onClick={addIntake} className="bg-slate-800 hover:bg-slate-700 text-xs text-white">
+                      <Plus className="h-3 w-3 mr-1" /> Add Intake
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {(data.intakes || []).map((intake, index) => (
+                      <div key={index} className="flex gap-2 items-center">
+                        <Input
+                          value={intake.name}
+                          onChange={e => updateIntake(index, 'name', e.target.value)}
+                          placeholder="E.g. Fall intake"
+                          className="bg-white text-xs w-1/2"
+                        />
+                        <Input
+                          value={intake.duration}
+                          onChange={e => updateIntake(index, 'duration', e.target.value)}
+                          placeholder="E.g. September to October"
+                          className="bg-white text-xs w-1/2"
+                        />
+                        <Button type="button" size="icon" variant="ghost" onClick={() => removeIntake(index)} className="text-red-500 hover:bg-red-50 hover:text-red-600">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Tuition Fee Table */}
                 <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-3 shadow-sm">
                   <div className="flex justify-between items-center">
@@ -415,6 +630,36 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                           className="bg-white text-xs w-1/2"
                         />
                         <Button type="button" size="icon" variant="ghost" onClick={() => removeLivingCost(index)} className="text-red-500 hover:bg-red-50 hover:text-red-600">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-3 shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-sm font-bold text-slate-800">Scholarship Options</h3>
+                    <Button type="button" size="sm" onClick={addScholarship} className="bg-slate-800 hover:bg-slate-700 text-xs text-white">
+                      <Plus className="h-3 w-3 mr-1" /> Add Scholarship
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {(data.scholarships || []).map((scholarship, index) => (
+                      <div key={index} className="flex gap-2 items-center">
+                        <Input
+                          value={scholarship.name}
+                          onChange={e => updateScholarship(index, 'name', e.target.value)}
+                          placeholder="E.g. Government scholarships"
+                          className="bg-white text-xs w-1/2"
+                        />
+                        <Input
+                          value={scholarship.description}
+                          onChange={e => updateScholarship(index, 'description', e.target.value)}
+                          placeholder="E.g. Fully or partially funded opportunities"
+                          className="bg-white text-xs w-1/2"
+                        />
+                        <Button type="button" size="icon" variant="ghost" onClick={() => removeScholarship(index)} className="text-red-500 hover:bg-red-50 hover:text-red-600">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -496,17 +741,20 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
               {/* Public Country Detail Page Design Representation */}
               <div className="min-h-full bg-white text-[#081638] font-sans pb-12">
                 {/* Hero section */}
-                <section className="bg-[#E9EFF6] pt-12 pb-8 px-6">
-                  <div className="mx-auto flex flex-col gap-4 max-w-5xl">
-                    <nav className="flex items-center gap-1 text-[10px] text-slate-500 font-semibold">
+                <section
+                  className="relative bg-cover bg-center pt-12 pb-8 px-6 before:absolute before:inset-0 before:bg-linear-to-r before:from-[#081638]/90 before:via-[#081638]/72 before:to-[#081638]/20"
+                  style={{ backgroundImage: `url("${data.heroImage || data.flagImage}")` }}
+                >
+                  <div className="relative z-10 mx-auto flex flex-col gap-4 max-w-5xl">
+                    <nav className="flex items-center gap-1 text-[10px] text-white/75 font-semibold">
                       <span>Home</span>
                       <ChevronRight className="h-3 w-3" />
                       <span>Study abroad</span>
                       <ChevronRight className="h-3 w-3" />
                       <span>{data.name}</span>
                     </nav>
-                    <h1 className="text-2xl font-extrabold text-[#061331]">Study in {data.name}</h1>
-                    <p className="text-xs text-slate-600 leading-5 max-w-xl">
+                    <h1 className="text-2xl font-extrabold text-white">Study in {data.name}</h1>
+                    <p className="text-xs text-white/75 leading-5 max-w-xl">
                       Looking for overseas education information? Explore everything about studying in {data.name}, including visa, admission, costs, scholarships and top universities.
                     </p>
                   </div>
@@ -570,6 +818,29 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                     </div>
                   </section>
 
+                  <section className="border-b border-slate-100 pb-6">
+                    <h2 className="text-base font-extrabold text-[#081638]">Intakes available in {data.name}</h2>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {(data.intakes || []).map((intake, idx) => (
+                        <div key={idx} className="rounded border border-slate-100 bg-slate-50 p-3 text-xs">
+                          <p className="font-bold text-[#081638]">{intake.name}</p>
+                          <p className="mt-1 text-slate-500">{intake.duration}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="border-b border-slate-100 pb-6">
+                    <h2 className="text-base font-extrabold text-[#081638]">Popular courses to study in {data.name}</h2>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(data.topCourses || []).map((course, idx) => (
+                        <span key={idx} className="rounded bg-[#081638]/5 px-3 py-1 text-xs font-bold text-[#081638]">
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </section>
+
                   {/* Costs */}
                   <section className="border-b border-slate-100 pb-6">
                     <h2 className="text-base font-extrabold text-[#081638]">Cost of studying in {data.name}</h2>
@@ -611,6 +882,29 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                           ))}
                         </tbody>
                       </table>
+                    </div>
+                  </section>
+
+                  <section className="border-b border-slate-100 pb-6">
+                    <h2 className="text-base font-extrabold text-[#081638]">Scholarships to study in {data.name}</h2>
+                    <div className="mt-3 grid gap-2">
+                      {(data.scholarships || []).map((scholarship, idx) => (
+                        <div key={idx} className="rounded border border-slate-100 bg-white p-3 text-xs">
+                          <p className="font-bold text-[#081638]">{scholarship.name}</p>
+                          <p className="mt-1 text-slate-500">{scholarship.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="border-b border-slate-100 pb-6">
+                    <h2 className="text-base font-extrabold text-[#081638]">Job prospects in {data.name}</h2>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(data.jobProspects || []).map((job, idx) => (
+                        <span key={idx} className="rounded bg-[#d7a23a]/10 px-3 py-1 text-xs font-bold text-[#081638]">
+                          {job}
+                        </span>
+                      ))}
                     </div>
                   </section>
 

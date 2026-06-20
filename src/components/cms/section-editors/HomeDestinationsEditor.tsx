@@ -63,7 +63,7 @@ export default function HomeDestinationsEditor({
             variant="outline"
             size="sm"
             onClick={addDestination}
-            disabled={destinations.destinations.length >= 8}
+            disabled={destinations.destinations.length >= 4}
           >
             <Plus className="h-3.5 w-3.5" />
             Add

@@ -17,7 +17,7 @@ const farro = Farro({
 
 export const metadata = {
   title: "Next Level Education Consultancy | Study Abroad Expert",
-  description: "Leading overseas education consultancy providing free student visa consultation, university admission guidance, and comprehensive support to study in Canada, UK, Australia, USA, and more.",
+  description: "Leading overseas education consultancy providing free student visa consultation, university admission guidance, and comprehensive support to study in the UK, Canada, Australia, and New Zealand.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",

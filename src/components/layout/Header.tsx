@@ -19,12 +19,12 @@ const navItems = [
   { label: 'About Us', href: '/about-us' },
   {
     label: 'Study Abroad',
-    href: '/study-abroad/uk',
+    href: '/#',
     dropdownItems: [
-      { label: 'United Kingdom', href: '/study-abroad/uk' },
-      { label: 'Canada', href: '/study-abroad/canada' },
-      { label: 'Australia', href: '/study-abroad/australia' },
-      { label: 'New Zealand', href: '/study-abroad/new-zealand' },
+      { label: 'United Kingdom', href: '/study-abroad/study-in-uk' },
+      { label: 'Canada', href: '/study-abroad/study-in-canada' },
+      { label: 'Australia', href: '/study-abroad/study-in-australia' },
+      { label: 'New Zealand', href: '/study-abroad/study-in-new-zealand' },
     ]
   },
   { label: 'Testimonial', href: '/testimonial' },
@@ -73,27 +73,44 @@ export default function Header() {
         <div className="hidden items-center gap-6 lg:flex xl:gap-8">
           {navItems.map(item => {
             if (item.label === 'Course Finder') return null
+            const isDropdown = !!item.dropdownItems
+            const isActive = isDropdown
+              ? item.dropdownItems?.some(dropItem => pathname === dropItem.href)
+              : pathname === item.href
+
             return (
               <div key={item.label} className="group/nav relative flex items-center">
-                <Link
-                  href={item.href}
-                  className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold transition duration-300 text-[#061331] ${pathname === item.href
+                {isDropdown ? (
+                  <button
+                    type="button"
+                    aria-haspopup="menu"
+                    className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold transition duration-300 text-[#061331] ${isActive
+                      ? 'border-[#d7a23a] text-[#d7a23a]!'
+                      : 'border-transparent hover:border-[#d7a23a] hover:text-[#d7a23a]'
+                      }`}
+                  >
+                    {item.label}
+                    <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold transition duration-300 text-[#061331] ${isActive
                     ? 'border-[#d7a23a] text-[#d7a23a]!'
                     : 'border-transparent hover:border-[#d7a23a] hover:text-[#d7a23a]'
                     }`}
-                >
-                  {item.label}
-                  {item.dropdownItems ? (
-                    <ChevronDown className="h-3.5 w-3.5 opacity-70" />
-                  ) : null}
-                </Link>
+                  >
+                    {item.label}
+                  </Link>
+                )}
                 {item.dropdownItems && (
-                  <div className="absolute left-0 top-full hidden w-64 pt-2 group-hover/nav:block">
-                    <div className="rounded-md border border-white/10 bg-[#061331] p-2 shadow-xl">
+                  <div className="absolute left-0 top-full hidden w-64 pt-2 group-hover/nav:block group-focus-within/nav:block">
+                    <div className="rounded-md border border-white/10 bg-[#061331] p-2 shadow-xl" role="menu">
                       {item.dropdownItems.map(dropItem => (
                         <Link
                           key={dropItem.label}
                           href={dropItem.href}
+                          role="menuitem"
                           className="block rounded-md px-3 py-2 text-[13px] text-white transition hover:bg-white/10 hover:text-[#d7a23a]"
                         >
                           {dropItem.label}

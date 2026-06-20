@@ -31,34 +31,57 @@ import Footer from '@/components/layout/footer'
 
 import { coursesData, scholarshipsData, universitiesData } from '@/lib/mockData'
 import type { Course } from '@/lib/mockData'
+import { defaultCourseFilterSettings } from '@/lib/courseFilterSettings'
 
-const countries = ['United Kingdom', 'Canada', 'Australia', 'New Zealand', 'United States', 'Germany']
-const fields = [
-  'Information Technology',
-  'Business & Management',
-  'Health & Medicine',
-  'Engineering',
-  'Law',
-  'Hospitality & Tourism',
-  'Creative Arts & Design'
-]
-const degreeTypes = ['BSc', 'MSc', 'MBA', 'BEng', 'LLB', 'LLM', 'Diploma']
+const defaultCountries = defaultCourseFilterSettings.countries
+const defaultFields = defaultCourseFilterSettings.fields
+const defaultDegreeTypes = defaultCourseFilterSettings.degreeTypes
 const levels = ['Undergraduate', 'Postgraduate', 'Diploma']
 
 function CourseFinderContent() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const initialUniversity = searchParams.get('university') || ''
+  const [filterSettings, setFilterSettings] = useState(defaultCourseFilterSettings)
+  const countries = filterSettings.countries.length ? filterSettings.countries : defaultCountries
+  const fields = filterSettings.fields.length ? filterSettings.fields : defaultFields
+  const degreeTypes = filterSettings.degreeTypes.length ? filterSettings.degreeTypes : defaultDegreeTypes
 
   // Map initial search to a specific country filter if it matches country names/abbreviations
   const matchedCountry = useMemo(() => {
     if (!initialSearch) return ''
     const cleanSearch = initialSearch.toLowerCase().trim()
     if (cleanSearch === 'uk' || cleanSearch === 'united kingdom') return 'United Kingdom'
-    if (cleanSearch === 'usa' || cleanSearch === 'united states' || cleanSearch === 'us') return 'United States'
     if (cleanSearch === 'nz' || cleanSearch === 'new zealand') return 'New Zealand'
     return countries.find(c => c.toLowerCase() === cleanSearch) || ''
-  }, [initialSearch])
+  }, [countries, initialSearch])
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadFilterSettings() {
+      try {
+        const res = await fetch('/api/public/courses/filter-settings')
+        const json = await res.json()
+        if (isMounted && json.settings) {
+          setFilterSettings({
+            countries: Array.isArray(json.settings.countries) ? json.settings.countries : defaultCountries,
+            fields: Array.isArray(json.settings.fields) ? json.settings.fields : defaultFields,
+            degreeTypes: Array.isArray(json.settings.degreeTypes) ? json.settings.degreeTypes : defaultDegreeTypes,
+            universities: Array.isArray(json.settings.universities) ? json.settings.universities : [],
+          })
+        }
+      } catch {
+        if (isMounted) setFilterSettings(defaultCourseFilterSettings)
+      }
+    }
+
+    loadFilterSettings()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState(matchedCountry ? '' : initialSearch)
@@ -124,6 +147,8 @@ function CourseFinderContent() {
   // Dynamic filter lists
   const filteredCourses = useMemo(() => {
     return coursesData.filter(course => {
+      if (!countries.includes(course.country)) return false
+
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -182,6 +207,8 @@ function CourseFinderContent() {
   // Count helper functions for options
   const getCountryCount = (country: string) => {
     return coursesData.filter(course => {
+      if (!countries.includes(course.country)) return false
+
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -198,6 +225,8 @@ function CourseFinderContent() {
 
   const getFieldCount = (field: string) => {
     return coursesData.filter(course => {
+      if (!countries.includes(course.country)) return false
+
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -214,6 +243,8 @@ function CourseFinderContent() {
 
   const getDegreeCount = (degreeType: string) => {
     return coursesData.filter(course => {
+      if (!countries.includes(course.country)) return false
+
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -230,6 +261,8 @@ function CourseFinderContent() {
 
   const getUniversityCount = (university: string) => {
     return coursesData.filter(course => {
+      if (!countries.includes(course.country)) return false
+
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -246,9 +279,12 @@ function CourseFinderContent() {
 
   // Get list of unique universities
   const universitiesList = useMemo(() => {
-    const list = coursesData.map(c => c.university)
+    if (filterSettings.universities.length > 0) return filterSettings.universities
+    const list = coursesData
+      .filter(course => countries.includes(course.country))
+      .map(c => c.university)
     return Array.from(new Set(list))
-  }, [])
+  }, [countries, filterSettings.universities])
 
   // Handle Wizard Match click
   const handleWizardSelect = (key: 'country' | 'field' | 'level', value: string) => {
@@ -303,7 +339,15 @@ function CourseFinderContent() {
       preferredCountry: selectedCourseForEnquiry?.country || 'Any',
       intakeYear: new Date().getFullYear().toString(),
       intakeMonth: selectedCourseForEnquiry?.intakes[0] || 'Any Intake',
-      message: enquiryMessage || `Enquiring for ${selectedCourseForEnquiry?.title} at ${selectedCourseForEnquiry?.university}.`
+      message: enquiryMessage || `Enquiring for ${selectedCourseForEnquiry?.title} at ${selectedCourseForEnquiry?.university}.`,
+      sourcePage: selectedCourseForEnquiry
+        ? `Courses Listing: ${selectedCourseForEnquiry.title}`
+        : 'Courses Listing',
+      sourcePath: '/courses',
+      sourceType: 'course-listing-modal',
+      sourceCountry: selectedCourseForEnquiry?.country || '',
+      sourceProgram: selectedCourseForEnquiry?.title || '',
+      sourceUniversity: selectedCourseForEnquiry?.university || '',
     }
 
     try {
@@ -402,8 +446,6 @@ function CourseFinderContent() {
                   'Canada': '🇨🇦',
                   'Australia': '🇦🇺',
                   'New Zealand': '🇳🇿',
-                  'United States': '🇺🇸',
-                  'Germany': '🇩🇪'
                 }
                 const isChecked = selectedCountries.includes(country)
                 return (
@@ -639,7 +681,6 @@ function CourseFinderContent() {
                           'Canada': '🇨🇦',
                           'Australia': '🇦🇺',
                           'New Zealand': '🇳🇿',
-                          'United States': '🇺🇸'
                         }
                         return (
                           <button
@@ -730,7 +771,7 @@ function CourseFinderContent() {
                         <>Found <span className="text-[#081638] font-bold">{universitiesList.length}</span> partner institutions</>
                       )}
                       {activeTab === 'scholarships' && (
-                        <>Found <span className="text-[#081638] font-bold">{scholarshipsData.filter(s => selectedCountries.length === 0 || selectedCountries.includes(s.country)).length}</span> scholarships available</>
+                        <>Found <span className="text-[#081638] font-bold">{scholarshipsData.filter(s => countries.includes(s.country) && (selectedCountries.length === 0 || selectedCountries.includes(s.country))).length}</span> scholarships available</>
                       )}
                     </p>
                   </div>
@@ -879,12 +920,6 @@ function CourseFinderContent() {
                               </div>
 
                               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                                <button
-                                  onClick={() => setSelectedCourseForEnquiry(course)}
-                                  className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors whitespace-nowrap text-center"
-                                >
-                                  Enquire Now
-                                </button>
                                 <Link
                                   href={`/courses/${course.id}`}
                                   className="inline-flex items-center justify-center gap-1 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-xs whitespace-nowrap text-center"
@@ -1018,14 +1053,7 @@ function CourseFinderContent() {
 
                           {/* Footer section */}
                           <footer className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-1">
-                            <Link
-                              href={`/universities/${encodeURIComponent(uni)}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors text-center whitespace-nowrap"
-                            >
-                              Visit University Page
-                            </Link>
-
+                           
                             <div className="flex gap-1.5 flex-wrap self-end sm:self-center">
                               <span className="text-[9px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase tracking-wider">
                                 Global Top 5%
@@ -1034,6 +1062,14 @@ function CourseFinderContent() {
                                 Featured
                               </span>
                             </div>
+                             <Link
+                              href={`/universities/${encodeURIComponent(uni)}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors text-center whitespace-nowrap"
+                            >
+                              Visit University Page
+                            </Link>
+
                           </footer>
                         </div>
                       )
@@ -1044,7 +1080,7 @@ function CourseFinderContent() {
                 {activeTab === 'scholarships' && (
                   <div className="space-y-6">
                     {scholarshipsData
-                      .filter(s => selectedCountries.length === 0 || selectedCountries.includes(s.country))
+                      .filter(s => countries.includes(s.country) && (selectedCountries.length === 0 || selectedCountries.includes(s.country)))
                       .map(sch => (
                         <div
                           key={sch.id}
@@ -1085,12 +1121,7 @@ function CourseFinderContent() {
                             <p className="text-slate-500 text-xs leading-relaxed max-w-3xl line-clamp-2">
                               {sch.eligibility}
                             </p>
-                            <Link
-                              href={`/scholarships/${sch.id}`}
-                              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors mt-2"
-                            >
-                              Read more about eligibility <ArrowRight className="w-3.5 h-3.5" />
-                            </Link>
+                          
                           </div>
 
                           {/* Footer Provider Info & Actions */}
@@ -1105,27 +1136,12 @@ function CourseFinderContent() {
                               </div>
                             </div>
 
-                            <button
-                              onClick={() => setSelectedCourseForEnquiry({
-                                id: sch.id,
-                                title: `${sch.title} Application`,
-                                university: sch.type,
-                                location: 'Global Scholarship Office',
-                                country: sch.country,
-                                flag: '🏆',
-                                field: 'Scholarships & Bursaries',
-                                level: 'Funding Assistance',
-                                duration: 'Academic Year',
-                                tuitionFee: sch.award,
-                                intakes: [sch.deadline],
-                                visaSuccess: 'Guaranteed Assistance',
-                                description: sch.eligibility,
-                                degreeType: 'Scholarship'
-                              })}
-                              className="px-5 py-2.5 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all cursor-pointer shadow-xs text-center"
+                            <Link
+                              href={`/scholarships/${sch.id}`}
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors mt-2"
                             >
-                              Enquire For Scholarship
-                            </button>
+                              Read more about eligibility <ArrowRight className="w-3.5 h-3.5" />
+                            </Link> 
                           </div>
                         </div>
                       ))}

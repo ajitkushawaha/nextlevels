@@ -1,14 +1,64 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { Check, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
+type FreeCounsellingFormProps = {
+  heading?: string
+  description?: string
+  qualificationLabel?: string
+  qualificationPlaceholder?: string
+  qualificationOptions?: string[]
+  termsLabel?: string
+  submitLabel?: string
+  image?: string
+  imageAlt?: string
+  compact?: boolean
+  showImage?: boolean
+  sourcePage?: string
+  sourceType?: string
+  sourceCountry?: string
+  sourceProgram?: string
+  sourceUniversity?: string
+  sourceScholarship?: string
+  sourceBranch?: string
+}
 
+const defaultQualificationOptions = [
+  'O/L',
+  'A/L',
+  'Diploma',
+  'Higher Diploma',
+  "Bachelor's Degree",
+  "Master's Degree",
+  'Other',
+]
 
-export default function FreeCounsellingForm() {
+export default function FreeCounsellingForm({
+  heading = 'Get FREE Counselling Today!',
+  description = 'Enter your details and our expert will reach out to you to discuss your plans. By the way, all our services are free!',
+  qualificationLabel = 'Highest qualification',
+  qualificationPlaceholder = 'Select your highest qualification',
+  qualificationOptions = defaultQualificationOptions,
+  termsLabel = 'I agree to the Terms of use and privacy policy',
+  submitLabel = 'FREE Counselling',
+  image = '/hero5.png',
+  imageAlt = 'Expert counseling session representation',
+  compact = false,
+  showImage = true,
+  sourcePage,
+  sourceType = 'free-counselling',
+  sourceCountry = '',
+  sourceProgram = '',
+  sourceUniversity = '',
+  sourceScholarship = '',
+  sourceBranch = '',
+}: FreeCounsellingFormProps = {}) {
+  const pathname = usePathname()
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
@@ -17,9 +67,8 @@ export default function FreeCounsellingForm() {
     email: '',
     dialCode: '+94',
     phone: '',
+    highestQualification: '',
     termsAccepted: false,
-    contactMeAccepted: false,
-    marketingAccepted: false,
   })
 
   const handleInputChange = (
@@ -37,15 +86,15 @@ export default function FreeCounsellingForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.highestQualification) {
       setStatus('error')
       setErrorMessage('Please fill in all required fields.')
       return
     }
 
-    if (!formData.termsAccepted || !formData.contactMeAccepted) {
+    if (!formData.termsAccepted) {
       setStatus('error')
-      setErrorMessage('You must accept the terms and contact permissions.')
+      setErrorMessage('You must accept the terms and conditions.')
       return
     }
 
@@ -56,8 +105,7 @@ export default function FreeCounsellingForm() {
       const combinedPhone = `${formData.dialCode} ${formData.phone}`
       const fullName = `${formData.firstName} ${formData.lastName}`.trim()
 
-      const detailedMessage = `Free counselling request
-Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
+      const detailedMessage = 'Free counselling request'
 
       const res = await fetch('/api/public/enquiry', {
         method: 'POST',
@@ -67,10 +115,18 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
           email: formData.email,
           phone: combinedPhone,
           preferredCountry: 'Not Selected',
-          educationLevel: 'Not Provided',
+          educationLevel: formData.highestQualification,
           intakeYear: '2026',
           intakeMonth: 'Any Intake',
-          message: detailedMessage
+          message: detailedMessage,
+          sourcePage: sourcePage || heading,
+          sourcePath: pathname,
+          sourceType,
+          sourceCountry,
+          sourceProgram,
+          sourceUniversity,
+          sourceScholarship,
+          sourceBranch,
         }),
       })
 
@@ -83,9 +139,8 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
           email: '',
           dialCode: '+94',
           phone: '',
+          highestQualification: '',
           termsAccepted: false,
-          contactMeAccepted: false,
-          marketingAccepted: false,
         })
       } else {
         setStatus('error')
@@ -98,16 +153,23 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
   }
 
   return (
-    <div data-testid="mediaCardPosition" className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+    <div
+      data-testid="mediaCardPosition"
+      className={
+        compact
+          ? 'grid grid-cols-1 gap-5 items-stretch'
+          : 'grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch'
+      }
+    >
       {/* Form Side */}
-      <div className="col-span-1 md:col-span-7 py-3 md:py-5 pr-0 md:pr-5 lg:pr-8">
+      <div className={compact ? 'py-1' : 'col-span-1 md:col-span-7 py-3 md:py-5'}>
         <div className="text-left">
           <h2 className="text-[#081638] text-xl sm:text-2xl font-extrabold tracking-tight leading-tight">
-            Get FREE Counselling Today!
+            {heading}
             <span className="block bg-[#d7a23a] w-10 h-1 rounded-full mt-2"></span>
           </h2>
           <p className="text-slate-500 mt-2 text-xs sm:text-sm leading-6">
-            Enter your details and our expert will reach out to you to discuss your plans. By the way, all our services are free!
+            {description}
           </p>
         </div>
 
@@ -129,7 +191,11 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
             </div>
           )}
 
-          <form onSubmit={handleSubmit} data-testid="enquiry-form" className="grid gap-3.5 md:grid-cols-2 text-left">
+          <form
+            onSubmit={handleSubmit}
+            data-testid="enquiry-form"
+            className={compact ? 'grid gap-3.5 text-left' : 'grid gap-3.5 md:grid-cols-2 text-left'}
+          >
             {/* First Name */}
             <div className="form-field flex flex-col">
               <label htmlFor="first_name" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
@@ -163,7 +229,7 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
             </div>
 
             {/* Email Address */}
-            <div className="form-field md:col-span-2 flex flex-col">
+            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
               <label htmlFor="primary_email" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 Email address*
               </label>
@@ -179,7 +245,7 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
             </div>
 
             {/* Mobile Number */}
-            <div className="form-field md:col-span-2 flex flex-col">
+            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
               <label htmlFor="primary_mobile_number" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 Mobile number*
               </label>
@@ -189,7 +255,7 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
                   id="dialCode"
                   value={formData.dialCode}
                   onChange={handleInputChange}
-                  className="max-w-[105px] bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-sm text-[#081638] focus:outline-none focus:border-[#d7a23a] cursor-pointer"
+                  className="max-w-26.25 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-2 text-sm text-[#081638] focus:outline-none focus:border-[#d7a23a] cursor-pointer"
                 >
                   <option value="+94">+94 (LK)</option>
                   <option value="+91">+91 (IN)</option>
@@ -210,8 +276,30 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
               </div>
             </div>
 
+            {/* Highest Qualification */}
+            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
+              <label htmlFor="highest_qualification" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
+                {qualificationLabel}*
+              </label>
+              <select
+                name="highestQualification"
+                id="highest_qualification"
+                required
+                value={formData.highestQualification}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-[#081638] focus:outline-none focus:border-[#d7a23a] transition-all cursor-pointer"
+              >
+                <option value="">{qualificationPlaceholder}</option>
+                {qualificationOptions.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Checkbox 1: Terms */}
-            <div className="md:col-span-2 flex items-start gap-2.5 mt-1">
+            <div className={`flex items-start gap-2.5 mt-1 ${compact ? '' : 'md:col-span-2'}`}>
               <div className="relative flex items-center mt-0.5">
                 <input
                   type="checkbox"
@@ -224,48 +312,12 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
                 <Check className="pointer-events-none absolute left-0 top-0 h-4 w-4 text-white scale-0 peer-checked:scale-100 transition-transform p-0.5" />
               </div>
               <label htmlFor="termsAndConditionsAcceptance" className="text-[11px] text-slate-500 leading-5 cursor-pointer select-none">
-                I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-[#d7a23a] font-bold hover:underline">Terms of use</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#d7a23a] font-bold hover:underline">privacy policy</a>*
-              </label>
-            </div>
-
-            {/* Checkbox 2: Contact Me */}
-            <div className="md:col-span-2 flex items-start gap-2.5">
-              <div className="relative flex items-center mt-0.5">
-                <input
-                  type="checkbox"
-                  id="contactMeBy"
-                  name="contactMeAccepted"
-                  checked={formData.contactMeAccepted}
-                  onChange={handleInputChange}
-                  className="peer h-4 w-4 appearance-none rounded border border-slate-300 bg-white checked:bg-[#d7a23a] checked:border-[#d7a23a] focus:outline-none transition-all cursor-pointer"
-                />
-                <Check className="pointer-events-none absolute left-0 top-0 h-4 w-4 text-white scale-0 peer-checked:scale-100 transition-transform p-0.5" />
-              </div>
-              <label htmlFor="contactMeBy" className="text-[11px] text-slate-500 leading-5 cursor-pointer select-none">
-                Please contact me by phone, email or SMS to assist with my enquiry*
-              </label>
-            </div>
-
-            {/* Checkbox 3: Marketing */}
-            <div className="md:col-span-2 flex items-start gap-2.5">
-              <div className="relative flex items-center mt-0.5">
-                <input
-                  type="checkbox"
-                  id="marketing_acceptance_flag"
-                  name="marketingAccepted"
-                  checked={formData.marketingAccepted}
-                  onChange={handleInputChange}
-                  className="peer h-4 w-4 appearance-none rounded border border-slate-300 bg-white checked:bg-[#d7a23a] checked:border-[#d7a23a] focus:outline-none transition-all cursor-pointer"
-                />
-                <Check className="pointer-events-none absolute left-0 top-0 h-4 w-4 text-white scale-0 peer-checked:scale-100 transition-transform p-0.5" />
-              </div>
-              <label htmlFor="marketing_acceptance_flag" className="text-[11px] text-slate-500 leading-5 cursor-pointer select-none">
-                I would like to receive updates and offers from Next Level Education
+                {termsLabel}*
               </label>
             </div>
 
             {/* Submit Button */}
-            <div className="md:col-span-2 mt-2">
+            <div className={compact ? 'mt-2' : 'md:col-span-2 mt-2'}>
               <button
                 type="submit"
                 disabled={status === 'submitting'}
@@ -277,7 +329,7 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
                     Processing...
                   </>
                 ) : (
-                  'FREE Counselling'
+                  submitLabel
                 )}
               </button>
             </div>
@@ -286,18 +338,20 @@ Marketing Opt-in: ${formData.marketingAccepted ? 'Yes' : 'No'}`
       </div>
 
       {/* Image Side */}
-      <div className="hidden md:block col-span-1 md:col-span-5 relative self-stretch min-h-[360px]">
-        <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[32px]">
+      {showImage && (
+      <div className="hidden md:block col-span-1 md:col-span-5 relative self-stretch min-h-90">
+        <div className="absolute inset-0 w-full h-full overflow-hidden rounded-4xl">
           <Image
-            alt="Expert counseling session representation"
+            alt={imageAlt}
             loading="eager"
             fill
             sizes="(max-width: 768px) 100vw, 40vw"
             className="object-contain object-center"
-            src="/hero5.png"
+            src={image}
           />
         </div>
       </div>
+      )}
     </div>
   )
 }

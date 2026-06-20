@@ -191,13 +191,7 @@ export default function ServicesInteractiveHub({
           {credentials.stats.map(stat => (
             <div
               key={`${stat.value}-${stat.label}`}
-              className={
-                stat.variant === 'dark'
-                  ? 'bg-[#081638] p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-lg'
-                  : stat.variant === 'gold'
-                    ? 'bg-[#fffcf0] border border-[#d7a23a]/20 p-6 rounded-2xl flex items-center justify-between shadow-sm sm:col-span-2 lg:col-span-1'
-                    : 'bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-center items-center text-center shadow-sm'
-              }
+              className="flex items-center justify-between rounded-2xl border border-[#d7a23a]/20 bg-[#fffcf0] p-6 shadow-sm sm:col-span-2 lg:col-span-1"
             >
               {stat.variant === 'gold' ? (
                 <>
@@ -209,10 +203,10 @@ export default function ServicesInteractiveHub({
                   <Wallet className="h-12 w-12 text-[#d7a23a] opacity-30 stroke-[1.5]" />
                 </>
               ) : (
-                <>
-                  <span className={`${stat.variant === 'dark' ? 'text-[#d7a23a]' : 'text-[#081638]'} text-4xl font-extrabold mb-1`}>{stat.value}</span>
-                  <span className={`${stat.variant === 'dark' ? 'text-white/80' : 'text-slate-500'} text-[10px] uppercase font-bold tracking-widest`}>{stat.label}</span>
-                </>
+                <div className="flex flex-col">
+                  <span className="text-[#081638] text-3xl font-black">{stat.value}</span>
+                  <span className="text-slate-500 text-xs font-semibold mt-1">{stat.label}</span>
+                </div>
               )}
             </div>
           ))}

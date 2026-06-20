@@ -14,6 +14,38 @@ import type {
   CmsSection,
 } from '@/lib/cms/types'
 
+const fallbackBranches: ContactMapOfficeSection['branches'] = [
+  {
+    name: 'Jaffna Head Office',
+    addressLine1: 'Palali Road, Kondavil,',
+    addressLine2: 'Jaffna, Sri Lanka',
+  },
+  {
+    name: 'Batticaloa Branch',
+    addressLine1: 'Main Street,',
+    addressLine2: 'Batticaloa, Sri Lanka',
+  },
+  {
+    name: 'Colombo Branch',
+    addressLine1: 'Colombo,',
+    addressLine2: 'Sri Lanka',
+  },
+  {
+    name: 'Vavuniya Branch',
+    addressLine1: 'Vavuniya,',
+    addressLine2: 'Sri Lanka',
+  },
+]
+
+function getBranchHref(branchName: string) {
+  const lowerName = branchName.toLowerCase()
+  if (lowerName.includes('jaffna')) return '/branches/jaffna'
+  if (lowerName.includes('batticaloa')) return '/branches/batticaloa'
+  if (lowerName.includes('colombo')) return '/branches/colombo'
+  if (lowerName.includes('vavuniya')) return '/branches/vavuniya'
+  return '/branches/jaffna'
+}
+
 interface ContactPageContentProps {
   content: CmsPageContent
   includeFooter?: boolean
@@ -74,6 +106,7 @@ function ContactHero({ section }: { section: ContactHeroSection }) {
         fill
         priority
         className="object-cover object-center absolute inset-0 z-0"
+        sizes="100vw"
       />
       <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-187.5">
@@ -144,15 +177,64 @@ function ContactCards({ section }: { section: ContactCardsSection }) {
 function ContactForm({ section }: { section: ContactFormSection }) {
   return (
     <div className="bg-white rounded-4xl p-4 sm:p-5 lg:p-6 shadow-[0_15px_50px_rgba(8,22,56,0.03)]">
-      <FreeCounsellingForm />
+      <FreeCounsellingForm
+        heading={section.heading}
+        description={section.description}
+        qualificationLabel={section.qualificationLabel}
+        qualificationPlaceholder={section.qualificationPlaceholder}
+        qualificationOptions={section.qualificationOptions}
+        termsLabel={section.termsLabel}
+        submitLabel={section.submitLabel}
+        image={section.image}
+        imageAlt={section.imageAlt}
+      />
     </div>
   )
 }
 
 function ContactMapOffice({ section }: { section: ContactMapOfficeSection }) {
+  const branchMap = new Map(section.branches.map(branch => [branch.name, branch]))
+  const branches = fallbackBranches.map(branch => branchMap.get(branch.name) || branch)
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-10 border-t bg-white border-slate-200 px-6 sm:px-8 lg:px-14 rounded-4xl shadow-[0_10px_35px_rgba(8,22,56,0.02)]">
-      <div className="lg:col-span-7 w-full h-100 relative rounded-4xl overflow-hidden border border-slate-200/80 shadow-md">
+    <div className="space-y-8 border-t border-slate-200 bg-white px-6 py-10 shadow-[0_10px_35px_rgba(8,22,56,0.02)] sm:px-8 lg:px-14">
+      <div className="text-center">
+        <span className="block text-xs font-black uppercase tracking-widest text-[#d7a23a]">
+          {section.eyebrow}
+        </span>
+        <h2
+          className="mt-3 text-3xl font-extrabold text-[#081638] sm:text-4xl"
+          style={{ fontFamily: 'Farro, sans-serif' }}
+        >
+          {section.title}
+        </h2>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {branches.map(branch => (
+          <Link
+            key={branch.name}
+            href={getBranchHref(branch.name)}
+            className="group flex min-h-40 flex-col justify-between rounded-2xl border border-[#d7a23a]/20 bg-[#fffcf0] p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a23a]/50 hover:shadow-md"
+          >
+            <h4 className="flex items-center gap-2 text-base font-extrabold text-[#081638]">
+                <MapPin className="h-5 w-5 text-[#d7a23a] shrink-0" />
+                {branch.name}
+            </h4>
+            <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
+              {branch.addressLine1}
+              <br />
+              {branch.addressLine2}
+            </p>
+            <span className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-[#d7a23a]">
+              View branch
+              <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      <div className="relative h-100 w-full overflow-hidden rounded-4xl border border-slate-200/80 shadow-md">
         <iframe
           src={section.mapUrl}
           width="100%"
@@ -161,41 +243,8 @@ function ContactMapOffice({ section }: { section: ContactMapOfficeSection }) {
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Next Level Office Location"
+          title="Next Level Head Office Location"
         />
-      </div>
-
-      <div className="lg:col-span-5 text-left space-y-8 lg:pl-6">
-        <div className="space-y-3">
-          <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest block">
-            {section.eyebrow}
-          </span>
-          <h2
-            className="text-3xl sm:text-4xl font-extrabold text-[#081638]"
-            style={{ fontFamily: 'Farro, sans-serif' }}
-          >
-            {section.title}
-          </h2>
-        </div>
-
-        <div className="space-y-6">
-          {section.branches.map((branch, idx) => (
-            <div
-              key={branch.name}
-              className={idx > 0 ? 'border-t border-slate-100 pt-6' : ''}
-            >
-              <h4 className="font-extrabold text-lg text-[#081638] flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-[#d7a23a] shrink-0" />
-                {branch.name}
-              </h4>
-              <p className="text-slate-500 text-sm mt-1.5 pl-7 leading-relaxed font-medium">
-                {branch.addressLine1}
-                <br />
-                {branch.addressLine2}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   )

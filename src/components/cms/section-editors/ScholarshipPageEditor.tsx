@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import CmsImageField from './CmsImageField'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
 
@@ -13,8 +14,12 @@ type ScholarshipData = {
   _id: string
   title: string
   awardAmount: string
+  deadline?: string
+  type?: string
   eligibilityCriteria?: string
   description?: string
+  heroImage?: string
+  howToApply?: string
   countryId?: any
   universityId?: any
   programId?: any
@@ -178,6 +183,37 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                   />
                 </div>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Funding Type</Label>
+                    <Input
+                      value={data.type || ''}
+                      onChange={e => setData({ ...data, type: e.target.value })}
+                      placeholder="e.g. Government Funded"
+                      className="text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Application Deadline</Label>
+                    <Input
+                      value={data.deadline || ''}
+                      onChange={e => setData({ ...data, deadline: e.target.value })}
+                      placeholder="e.g. December 2026"
+                      className="text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <CmsImageField
+                    id="scholarship-hero-image"
+                    label="Scholarship Hero Image"
+                    value={data.heroImage || ''}
+                    onChange={val => setData({ ...data, heroImage: val })}
+                    folder="nextlevel/scholarships"
+                  />
+                </div>
+
                 <div className="space-y-1">
                   <Label>Eligibility Criteria</Label>
                   <Textarea
@@ -196,6 +232,17 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                     onChange={e => setData({ ...data, description: e.target.value })}
                     rows={5}
                     placeholder="Provide a comprehensive summary of grant details, flight and accommodation allowance..."
+                    className="text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label>How To Apply</Label>
+                  <Textarea
+                    value={data.howToApply || ''}
+                    onChange={e => setData({ ...data, howToApply: e.target.value })}
+                    rows={4}
+                    placeholder="Explain application steps, documents, and submission guidance..."
                     className="text-xs"
                   />
                 </div>
@@ -284,13 +331,13 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
               <div className="min-h-full bg-white text-[#061331] font-sans pb-12">
                 {/* Hero banner */}
                 <section
-                  className="relative h-56 bg-cover bg-center flex items-end p-6 before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/85 before:to-black/35"
-                  style={{ backgroundImage: `url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200")` }}
+                  className="relative h-56 bg-cover bg-center flex items-end p-6 before:absolute before:inset-0 before:bg-linear-to-t before:from-black/85 before:to-black/35"
+                  style={{ backgroundImage: `url("${data.heroImage || activeProg?.heroImage || activeUniv?.bannerImage || activeCountry?.heroImage || '/home2/scollership.png'}")` }}
                 >
                   <div className="relative z-10 w-full text-white text-left">
                     <div className="flex gap-1.5 mb-2">
                       <span className="inline-block px-2 py-0.5 text-[9px] font-bold text-amber-400 border border-amber-400/40 rounded bg-slate-900/80 uppercase tracking-widest">
-                        🏆 Merit Based
+                        🏆 {data.type || 'Merit Based'}
                       </span>
                       <span className="inline-block px-2 py-0.5 text-[9px] font-bold text-white/90 rounded bg-white/10 uppercase tracking-widest">
                         📍 {activeCountry?.name || 'Global'}
@@ -299,6 +346,9 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                     <h1 className="text-lg sm:text-xl font-black">{data.title}</h1>
                     <p className="text-[11px] text-emerald-400 font-extrabold mt-1">
                       Award Value: <span className="text-white font-medium">{data.awardAmount}</span>
+                    </p>
+                    <p className="text-[10px] text-white/70 font-semibold mt-1">
+                      Deadline: {data.deadline || 'Not specified'}
                     </p>
                   </div>
                 </section>
@@ -319,6 +369,13 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                       <FileCheck className="h-4 w-4 text-emerald-500" /> Eligibility Criteria
                     </h3>
                     <p className="text-xs leading-relaxed text-slate-600 whitespace-pre-line">{data.eligibilityCriteria || 'No criteria details listed.'}</p>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-2xs space-y-2">
+                    <h3 className="text-xs font-black uppercase text-slate-400 flex items-center gap-1.5">
+                      <HelpCircle className="h-4 w-4 text-blue-500" /> How To Apply
+                    </h3>
+                    <p className="text-xs leading-relaxed text-slate-600 whitespace-pre-line">{data.howToApply || 'Application guidance is not listed yet.'}</p>
                   </div>
 
                   {/* Applicability target summary */}

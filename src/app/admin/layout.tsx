@@ -62,7 +62,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex flex-col md:flex-row text-slate-800 font-sans">
+    <div className="min-h-screen bg-[#f3f4f6] flex flex-col md:flex-row text-slate-800 font-sans overflow-hidden">
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 z-40 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       {/* Sidebar Navigation */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col justify-between transform transition-all duration-300 ease-in-out
-        md:sticky md:top-0 md:h-screen md:overflow-y-auto md:translate-x-0
+        md:translate-x-0
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
         ${isCollapsed ? 'md:w-16' : 'md:w-64'}
       `}>
@@ -244,7 +244,11 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 min-w-0 overflow-y-auto">
+      <main
+        className={`min-w-0 flex-1 overflow-y-auto transition-[padding] duration-300 ${
+          isCollapsed ? 'md:pl-16' : 'md:pl-64'
+        }`}
+      >
         <div className="h-full min-h-[calc(100vh-56px)] md:min-h-screen">
           {children}
         </div>

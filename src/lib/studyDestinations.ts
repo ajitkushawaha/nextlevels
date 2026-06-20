@@ -397,6 +397,29 @@ export const studyDestinations: StudyDestination[] = [
   },
 ]
 
+const destinationSlugAliases: Record<string, string> = {
+  'study-in-uk': 'uk',
+  'study-in-united-kingdom': 'uk',
+  'study-in-canada': 'canada',
+  'study-in-australia': 'australia',
+  'study-in-new-zealand': 'new-zealand',
+  'study-in-newzealand': 'new-zealand',
+  'sdudy-in-newzealand': 'new-zealand',
+}
+
+export function normalizeStudyDestinationSlug(slug: string) {
+  const normalizedSlug = slug.trim().toLowerCase()
+  return destinationSlugAliases[normalizedSlug] || normalizedSlug
+}
+
+export function getStudyDestinationSlugs() {
+  return [
+    ...studyDestinations.map(destination => destination.slug),
+    ...Object.keys(destinationSlugAliases),
+  ]
+}
+
 export function getStudyDestination(slug: string) {
-  return studyDestinations.find(destination => destination.slug === slug)
+  const normalizedSlug = normalizeStudyDestinationSlug(slug)
+  return studyDestinations.find(destination => destination.slug === normalizedSlug)
 }

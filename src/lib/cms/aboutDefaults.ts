@@ -12,6 +12,20 @@ export const defaultAboutPageContent: CmsPageContent = {
       image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
     },
     {
+      id: 'about-ceo-message',
+      type: 'aboutCeoMessage',
+      enabled: true,
+      eyebrow: 'Leadership Message',
+      title: 'A Few Words from Our CEO',
+      message:
+        'Every student deserves clear guidance, honest advice, and the confidence to take the next step. At Next Level Education, our mission is to make international education simpler, safer, and more achievable for every family we serve.',
+      quote: 'Guiding students with clarity, honesty, and care.',
+      name: 'CEO Name',
+      role: 'Founder & CEO',
+      image: '/service/team1.png',
+      imageAlt: 'Founder and CEO of Next Level Education',
+    },
+    {
       id: 'about-story',
       type: 'aboutStory',
       enabled: true,

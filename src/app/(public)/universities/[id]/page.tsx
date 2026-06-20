@@ -108,7 +108,7 @@ export default async function UniversityDetailPage({ params }: Props) {
       numAwards: 'Multiple',
       grant: 'Full tuition fee waiver + monthly stipend & travel allowance',
       coverage: ['tuition fee reduction', 'travel allowance', 'living expenses', 'health'],
-      hostCountries: ['United Kingdom', 'Australia', 'Canada', 'New Zealand'],
+      hostCountries: ['United Kingdom', 'Canada', 'Australia', 'New Zealand'],
       degreeLevels: ['Master', 'PhD'],
       disciplines: 'Any development-focused field',
       locations: 'United Kingdom',
@@ -191,57 +191,13 @@ export default async function UniversityDetailPage({ params }: Props) {
         'Supports living and studying costs in designated regional communities.'
       ]
     },
-    's5': {
-      type: 'Merit & Development based',
-      numAwards: 'Multiple',
-      grant: '€934 - €1,200 / month + tuition waiver',
-      coverage: ['living expenses', 'tuition fee reduction', 'health insurance', 'travel'],
-      hostCountries: ['Germany'],
-      degreeLevels: ['Master', 'PhD'],
-      disciplines: 'Development-related postgraduate courses',
-      locations: 'Germany',
-      nationality: 'Developing countries (DAC list)',
-      studyExperience: 'Bachelor\'s degree + 2 years professional experience',
-      age: 'Under 36 years old',
-      language: 'German (B2) or English (B2)',
-      gpa: 'Above-average academic results',
-      applicationStart: 'October 2025',
-      applyLink: 'https://www.daad.de/en/study-and-research-in-germany/scholarships',
-      benefits: [
-        'Monthly stipend of €934 for graduates or €1,200 for doctoral candidates.',
-        'Health, accident, and personal liability insurance coverage.',
-        'Travel allowance and monthly rent subsidy, if applicable.'
-      ]
-    },
-    's6': {
-      type: 'Merit based',
-      numAwards: 'Multiple',
-      grant: 'Full tuition fee waiver + other benefits',
-      coverage: ['tuition fee reduction', 'accommodation', 'living expenses', 'health'],
-      hostCountries: ['China'],
-      degreeLevels: ['Bachelor', 'Master', 'PhD'],
-      disciplines: 'Any',
-      locations: 'China',
-      nationality: '225 nationalities',
-      studyExperience: 'High school',
-      age: '25 to 45 years old',
-      language: 'English or Chinese (HSK 4+)',
-      gpa: 'Good academic standing',
-      applicationStart: 'February 2026',
-      applyLink: 'https://www.bnu.edu.cn/en/admissions',
-      benefits: [
-        'Type A: Covers tuition fees, accommodation fees (providing dormitories or accommodation subsidies), living allowances, and comprehensive medical insurance.',
-        'Type B: Covers tuition fees, accommodation fees (providing dormitories or accommodation subsidies), and comprehensive medical insurance.',
-        'Type C: Covers tuition fees and comprehensive medical insurance.'
-      ]
-    }
   }
 
   return (
     <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
 
       {/* Hero Header Section */}
-      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px] before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30">
+      <section className="relative overflow-hidden min-h-[340px] sm:h-[360px] lg:h-[400px] flex flex-col justify-between bg-[#081638] pt-24 sm:pt-28 lg:pt-[110px] pb-6 sm:pb-8 lg:py-[40px]">
 
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
@@ -250,9 +206,11 @@ export default async function UniversityDetailPage({ params }: Props) {
             alt={university.name}
             fill
             priority
+            sizes="100vw"
             className="object-cover object-center"
           />
         </div>
+        <div className="absolute inset-0 z-10 bg-linear-to-b from-[#081638]/80 via-[#081638]/82 to-[#081638]/94 lg:bg-linear-to-r lg:from-[#081638]/90 lg:via-[#081638]/68 lg:to-[#081638]/12" />
 
         {/* Content Container */}
         <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -645,7 +603,7 @@ export default async function UniversityDetailPage({ params }: Props) {
             </div>
 
             {/* Right Column: Inquiry Form */}
-            <div className="lg:col-span-4 lg:sticky lg:top-24">
+            <div className="lg:col-span-4 sticky top-24 self-start h-fit">
               <div className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-md">
                 <h3 className="font-extrabold text-[#081638] text-sm uppercase tracking-wider pb-2 border-b border-slate-100 mb-4 text-left">Connect with Institution</h3>
                 <UniversityEnquiryForm university={university} />

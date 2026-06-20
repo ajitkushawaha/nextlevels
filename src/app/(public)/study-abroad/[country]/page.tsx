@@ -21,8 +21,9 @@ import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import Footer from '@/components/layout/footer'
 import { coursesData, universitiesData } from '@/lib/mockData'
 import {
+  getStudyDestinationSlugs,
   getStudyDestination,
-  studyDestinations,
+  normalizeStudyDestinationSlug,
   type StudyDestination,
 } from '@/lib/studyDestinations'
 import connectDB from '@/lib/db'
@@ -39,14 +40,14 @@ type Params = {
 type TableRow = Record<string, string>
 
 export function generateStaticParams() {
-  return studyDestinations.map(destination => ({
-    country: destination.slug,
+  return getStudyDestinationSlugs().map(slug => ({
+    country: slug,
   }))
 }
 
 function getCountryDisplayName(countryName: string) {
   const nameLower = countryName.toLowerCase()
-  if (nameLower === 'united kingdom' || nameLower === 'uk' || nameLower === 'united states' || nameLower === 'usa' || nameLower === 'us') {
+  if (nameLower === 'united kingdom' || nameLower === 'uk') {
     return `the ${countryName}`
   }
   return countryName
@@ -54,10 +55,11 @@ function getCountryDisplayName(countryName: string) {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { country } = await params
+  const normalizedCountry = normalizeStudyDestinationSlug(country)
   
   try {
     await connectDB()
-    const dbCountry = await (CountryModel as any).findOne({ code: country.toLowerCase() }).lean()
+    const dbCountry = await (CountryModel as any).findOne({ code: normalizedCountry }).lean()
     if (dbCountry) {
       return {
         title: `Study in ${dbCountry.name} | Next Level Education`,
@@ -113,7 +115,7 @@ function DataTable({
   return (
     <div className="my-5 overflow-hidden border border-slate-200 bg-white">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[500px] border-collapse text-left text-[13px]">
+        <table className="w-full min-w-125 border-collapse text-left text-[13px]">
           <thead className="bg-slate-50 text-[#081638]">
             <tr>
               {columns.map(column => (
@@ -161,10 +163,11 @@ function ArticleBlock({
 
 export default async function StudyDestinationPage({ params }: Params) {
   const { country } = await params
+  const normalizedCountry = normalizeStudyDestinationSlug(country)
   
   await connectDB()
   
-  const dbCountry = await (CountryModel as any).findOne({ code: country.toLowerCase() }).lean()
+  const dbCountry = await (CountryModel as any).findOne({ code: normalizedCountry }).lean()
   let destination: any = null
   let universities: any[] = []
   let courses: any[] = []
@@ -175,7 +178,7 @@ export default async function StudyDestinationPage({ params }: Params) {
       country: dbCountry.name,
       shortName: dbCountry.name,
       flag: dbCountry.flagImage,
-      heroImage: dbCountry.flagImage,
+      heroImage: dbCountry.heroImage || dbCountry.cmsData?.heroImage || dbCountry.flagImage,
       intro: dbCountry.intro || dbCountry.description || '',
       highlights: dbCountry.highlights || [],
       visa: dbCountry.visa || { name: '', who: '', whenToApply: '', arrival: '' },
@@ -186,6 +189,7 @@ export default async function StudyDestinationPage({ params }: Params) {
       jobProspects: dbCountry.jobProspects || [],
       livingCosts: dbCountry.livingCosts || [],
       faqs: dbCountry.faqs || [],
+      cmsData: dbCountry.cmsData || {},
     }
 
     // Load associated universities
@@ -193,7 +197,7 @@ export default async function StudyDestinationPage({ params }: Params) {
     universities = dbUniversities.map((u: any) => ({
       name: u.name,
       logo: u.logo,
-      coverImage: u.bannerImage || '/countries/default.png',
+      coverImage: u.bannerImage || dbCountry.heroImage || dbCountry.flagImage,
       location: u.city,
       country: dbCountry.name,
       flag: dbCountry.flagImage,
@@ -248,13 +252,23 @@ export default async function StudyDestinationPage({ params }: Params) {
       image: universities[2]?.coverImage || destination.heroImage,
     },
   ]
+  const legacyMarketingBanner = destination.cmsData?.marketingBanner
+  const marketingBanners = (
+    Array.isArray(destination.cmsData?.marketingBanners)
+      ? destination.cmsData.marketingBanners
+      : legacyMarketingBanner?.image
+        ? [{ ...legacyMarketingBanner, enabled: true }]
+        : []
+  )
+    .filter((banner: any) => banner?.enabled !== false && typeof banner?.image === 'string' && banner.image.trim())
+    .slice(0, 4)
 
   return (
     <div className="min-h-screen bg-white text-[#081638]">
       <main >
         <section className="bg-[#E9EFF6] pt-24">
 
-          <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="w-full lg:w-1/2">
               <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-slate-500">
                 <Link href="/" className="hover:text-[#d7a23a]">Home</Link>
@@ -307,7 +321,7 @@ export default async function StudyDestinationPage({ params }: Params) {
         </div>
 
         <section className="bg-white py-9">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,720px)_300px]">
+          <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,920px)_400px]">
             <article>
               <ArticleBlock id="why-study" title={`Why study in ${getCountryDisplayName(destination.country)}?`}>
                 <p>{destination.intro}</p>
@@ -422,32 +436,45 @@ export default async function StudyDestinationPage({ params }: Params) {
               </ArticleBlock>
             </article>
 
-            <aside className="hidden lg:block">
-              <div className="sticky top-28 space-y-4">
-                <div className="relative h-72 overflow-hidden rounded-md">
-                  <Image
-                    src={universities[0]?.coverImage || destination.heroImage}
-                    alt={`${destination.country} campus`}
-                    fill
-                    priority
-                    className="object-cover"
-                    sizes="300px"
+            <aside className="hidden self-start lg:block">
+              <div id="request-assessment" className="sticky top-24 max-h-[calc(100vh-7rem)] scroll-mt-28 space-y-4 overflow-y-auto pr-1">
+                 <div className="rounded-md border border-[#d7a23a]/20 bg-[#ffffff] p-4 shadow-sm">
+                  <FreeCounsellingForm
+                    compact
+                    showImage={false}
+                    heading="Request Assessment"
+                    description={`Share your details and our ${destination.country} advisor will review your study options.`}
+                    submitLabel="Request Assessment"
+                    sourcePage={`Study in ${destination.country}`}
+                    sourceType="country-assessment"
+                    sourceCountry={destination.country}
                   />
                 </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {heroTiles.map((image, index) => (
-                    <div key={image + index} className="relative h-16 overflow-hidden rounded">
+                {marketingBanners.length > 0 ? (
+                  <div className="space-y-3">
+                    {marketingBanners.map((banner: any, index: number) => (
+                      <Link
+                        key={`${banner.image}-${index}`}
+                        href={typeof banner.href === 'string' && banner.href.trim() ? banner.href : '/contact-us'}
+                        className="relative block aspect-video overflow-hidden rounded-md border border-[#d7a23a]/20 bg-[#fffcf0] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                      >
                       <Image
-                        src={image}
-                        alt={`${destination.country} preview ${index + 1}`}
+                        src={banner.image}
+                        alt={
+                          typeof banner.alt === 'string' && banner.alt.trim()
+                            ? banner.alt
+                            : `${destination.country} image CTA ${index + 1}`
+                        }
                         fill
-                        priority
-                        className="object-cover"
-                        sizes="90px"
+                        priority={index === 0}
+                        className="object-cover object-center"
+                        sizes="400px"
                       />
-                    </div>
-                  ))}
-                </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+               
               </div>
             </aside>
           </div>
@@ -464,7 +491,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                   Get free expert guidance on course selection, application documents, visa preparation and scholarship options.
                 </p>
               </div>
-              <Link href="/contact-us" className="inline-flex min-h-10 items-center justify-center rounded-md bg-[#d7a23a] px-5 py-2 text-xs font-bold text-[#061331] transition hover:bg-[#061331] hover:text-white">
+              <Link href="#request-assessment" className="inline-flex min-h-10 items-center justify-center rounded-md bg-[#d7a23a] px-5 py-2 text-xs font-bold text-[#061331] transition hover:bg-[#061331] hover:text-white">
                 Talk to an advisor
               </Link>
             </div>

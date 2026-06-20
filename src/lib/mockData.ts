@@ -3,6 +3,7 @@
 export interface Course {
   id: string
   title: string
+  heroImage?: string
   university: string
   location: string
   country: string
@@ -22,6 +23,7 @@ export interface Course {
 export interface Scholarship {
   id: string
   title: string
+  heroImage?: string
   award: string
   country: string
   eligibility: string
@@ -273,31 +275,6 @@ export const coursesData: Course[] = [
     ]
   },
   {
-    id: '10',
-    title: 'MSc Cybersecurity & Cloud Computing',
-    university: 'Arizona State University',
-    location: 'Phoenix, AZ',
-    country: 'United States',
-    flag: '🇺🇸',
-    field: 'Information Technology',
-    level: 'Postgraduate',
-    duration: '2 Years',
-    tuitionFee: '$28,000 - $32,000 / year',
-    intakes: ['January', 'August'],
-    visaSuccess: 'High',
-    description: 'Cutting-edge program designed to protect digital infrastructure, addressing cloud security architecture, cryptography, and network defense.',
-    degreeType: 'MSc',
-    requirements: 'Bachelor\'s degree in computer science, software engineering, or mathematical computing with a minimum GPA of 3.0.',
-    structure: [
-      'Advanced Cloud Security Architecture',
-      'Applied Cryptography Protocols',
-      'Computer Network Attack & Defense',
-      'Cyber Incident Response & Management',
-      'Security Policy & Compliance Standards',
-      'Graduate Capstone Research'
-    ]
-  },
-  {
     id: '11',
     title: 'Diploma in Hospitality & Tourism Management',
     university: 'Capilano University',
@@ -320,31 +297,6 @@ export const coursesData: Course[] = [
       'Front Office & Guest Relations',
       'Industry Co-operative Placement I',
       'Industry Co-operative Placement II'
-    ]
-  },
-  {
-    id: '12',
-    title: 'BEng Creative Technologies & Design',
-    university: 'University of Colorado Boulder',
-    location: 'Boulder, CO',
-    country: 'United States',
-    flag: '🇺🇸',
-    field: 'Creative Arts & Design',
-    level: 'Undergraduate',
-    duration: '4 Years',
-    tuitionFee: '$38,000 - $42,000 / year',
-    intakes: ['August'],
-    visaSuccess: 'High',
-    description: 'Interdisciplinary degree combining engineering principles with visual arts, design, UX/UI, animation, and digital fabrication.',
-    degreeType: 'BEng',
-    requirements: 'Completion of high school education showing rigorous courses in math, science, and a portfolio review of creative projects.',
-    structure: [
-      'Foundations of Creative Technology',
-      'Interactive Web Design & Programming',
-      'UI/UX Design Methodology',
-      'Digital Fabrication & Prototyping',
-      'Animation & Digital Media Production',
-      'Senior Engineering Design Project'
     ]
   },
   {
@@ -396,31 +348,6 @@ export const coursesData: Course[] = [
       'Global Dispute Resolution Methods',
       'Postgraduate Law Research Thesis'
     ]
-  },
-  {
-    id: '15',
-    title: 'MSc International Logistics & Supply Chain',
-    university: 'Technical University of Munich',
-    location: 'Munich',
-    country: 'Germany',
-    flag: '🇩🇪',
-    field: 'Business & Management',
-    level: 'Postgraduate',
-    duration: '2 Years',
-    tuitionFee: '€0 - €1,500 / semester',
-    intakes: ['October'],
-    visaSuccess: 'High',
-    description: 'A cutting-edge postgraduate engineering and supply chain management degree at one of Europe\'s top technical universities.',
-    degreeType: 'MSc',
-    requirements: 'A qualifying bachelor\'s degree in engineering, logistics, business, or economics with strong quantitative modules.',
-    structure: [
-      'Logistics & Distribution Systems',
-      'Supply Chain Analytics & Optimization',
-      'Strategic Procurement & Sourcing',
-      'International Trade Operations',
-      'Operations Research Models',
-      'Master Thesis & Colloquium'
-    ]
   }
 ]
 
@@ -468,17 +395,6 @@ export const scholarshipsData: Scholarship[] = [
     type: 'State Funded',
     overview: 'The Destination Australia program defines regional Australia as anywhere outside major cities. This scholarship aims to attract high-performing international and domestic students to regional universities and campuses.',
     howToApply: 'Apply directly through your choice of participating Australian university. The application dates align with the university intake calendar.'
-  },
-  {
-    id: 's5',
-    title: 'DAAD Scholarships for Development-Related Postgraduate Courses',
-    award: '€934 - €1,200 / month + tuition waiver',
-    country: 'Germany',
-    eligibility: 'Postgraduates with at least 2 years of professional experience from developing countries.',
-    deadline: 'Varies by program',
-    type: 'Government Funded',
-    overview: 'The DAAD (German Academic Exchange Service) supports postgraduate courses of interest to developing countries. The scholarships offer foreign graduates from development and newly industrialized countries all disciplines the chance to take a postgraduate degree at a state-recognized German university.',
-    howToApply: 'Submit applications directly to the respective postgraduate course. Check target university deadlines as they vary significantly.'
   }
 ]
 
@@ -609,20 +525,6 @@ export const universitiesData: Record<string, University> = {
     website: 'https://www.auckland.ac.nz',
     accreditation: 'Association of Pacific Rim Universities (APRU)'
   },
-  'Arizona State University': {
-    name: 'Arizona State University',
-    logo: 'ASU',
-    coverImage: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
-    worldRank: '#179',
-    students: '140,000+',
-    established: '1885',
-    description: 'ASU is a top-ranked public research university in Phoenix, Arizona, recognized as the #1 most innovative university in the US for several consecutive years. It offers world-class facilities and comprehensive online/on-campus courses.',
-    country: 'United States',
-    location: 'Phoenix, Arizona',
-    flag: '🇺🇸',
-    website: 'https://www.asu.edu',
-    accreditation: 'Higher Learning Commission (HLC) Accredited'
-  },
   'Capilano University': {
     name: 'Capilano University',
     logo: 'CAPU',
@@ -636,20 +538,6 @@ export const universitiesData: Record<string, University> = {
     flag: '🇨🇦',
     website: 'https://www.capilanou.ca',
     accreditation: 'Northwest Commission on Colleges and Universities'
-  },
-  'University of Colorado Boulder': {
-    name: 'University of Colorado Boulder',
-    logo: 'CU-B',
-    coverImage: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
-    worldRank: '#97',
-    students: '36,000+',
-    established: '1876',
-    description: 'CU Boulder is one of the top public research universities in the US. Located in the beautiful Rocky Mountain foothills, it is famous for its aerospace engineering, earth sciences, physics, and creative arts departments.',
-    country: 'United States',
-    location: 'Boulder, Colorado',
-    flag: '🇺🇸',
-    website: 'https://www.colorado.edu',
-    accreditation: 'Association of American Universities (AAU) Member'
   },
   'University of Law': {
     name: 'University of Law',
@@ -678,19 +566,5 @@ export const universitiesData: Record<string, University> = {
     flag: '🇦🇺',
     website: 'https://www.sydney.edu.au',
     accreditation: 'Group of Eight Member (Go8)'
-  },
-  'Technical University of Munich': {
-    name: 'Technical University of Munich',
-    logo: 'TUM',
-    coverImage: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200',
-    worldRank: '#37',
-    students: '50,000+',
-    established: '1868',
-    description: 'TUM is one of Europe\'s top universities. It is highly committed to academic excellence in engineering, natural sciences, life sciences, and medicine.',
-    country: 'Germany',
-    location: 'Munich, Bavaria',
-    flag: '🇩🇪',
-    website: 'https://www.tum.de',
-    accreditation: 'German Excellence University Status'
   }
 }

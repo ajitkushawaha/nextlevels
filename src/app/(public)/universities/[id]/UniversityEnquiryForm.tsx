@@ -45,7 +45,12 @@ export default function UniversityEnquiryForm({ university }: Props) {
       preferredCountry: university.country,
       intakeYear: new Date().getFullYear().toString(),
       intakeMonth: 'Any Intake',
-      message: message || `Enquiring for admissions support at ${university.name}.`
+      message: message || `Enquiring for admissions support at ${university.name}.`,
+      sourcePage: `University: ${university.name}`,
+      sourcePath: `/universities/${encodeURIComponent(university.name)}`,
+      sourceType: 'university',
+      sourceCountry: university.country,
+      sourceUniversity: university.name,
     }
 
     try {

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Footer from '@/components/layout/footer'
+import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import type { CmsPageContent, CmsSection } from '@/lib/cms/types'
 import { defaultServicesPageContent } from '@/lib/cms/servicesDefaults'
 import ServicesInteractiveHub from './ServicesInteractiveHub'
@@ -99,6 +100,27 @@ export default function ServicesPageContent({
               showServices={!sectionId || sectionId === servicesList.id}
               showCredentials={!sectionId || sectionId === credentials.id}
             />
+
+            {!sectionId && (
+              <section className="mt-14 rounded-4xl bg-white p-4 shadow-[0_15px_50px_rgba(8,22,56,0.04)] sm:p-5 lg:p-10">
+                <div className="mb-6 max-w-3xl">
+                  <span className="text-[#d7a23a] text-xs font-black uppercase tracking-widest">
+                    Free expert guidance
+                  </span>
+                  <h2
+                    className="mt-2 text-2xl font-extrabold leading-tight text-[#081638] sm:text-4xl"
+                    style={{ fontFamily: 'Farro, sans-serif' }}
+                  >
+                    Ready to Start Your Study Abroad Journey?
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-slate-500">
+                    Share your details and our team will help you choose the right destination,
+                    course, and application pathway.
+                  </p>
+                </div>
+                <FreeCounsellingForm />
+              </section>
+            )}
           </div>
         </main>
       )}

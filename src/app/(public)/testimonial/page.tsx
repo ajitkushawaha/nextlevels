@@ -85,6 +85,7 @@ export default async function TestimonialPage() {
         content={content}
         renderHero={false}
         renderProgram={false}
+        renderScholarshipOffer={false}
         renderDestinations={false}
         renderWhyChooseUs={false}
         renderServices={false}

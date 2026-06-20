@@ -10,6 +10,7 @@ type BranchEnquiryFormProps = {
 }
 
 export default function BranchEnquiryForm({ branchName }: BranchEnquiryFormProps) {
+  const branchPath = `/branches/${branchName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
@@ -66,6 +67,11 @@ export default function BranchEnquiryForm({ branchName }: BranchEnquiryFormProps
           intakeYear: '2026',
           intakeMonth: 'Any Intake',
           message: `Branch enquiry: ${branchName}\n${formData.message || 'No additional message provided.'}`,
+          sourcePage: `${branchName} Branch`,
+          sourcePath: branchPath,
+          sourceType: 'branch',
+          sourceCountry: formData.preferredCountry,
+          sourceBranch: branchName,
         }),
       })
 
@@ -196,9 +202,8 @@ export default function BranchEnquiryForm({ branchName }: BranchEnquiryFormProps
             >
               <option value="">Select</option>
               <option value="United Kingdom">United Kingdom</option>
-              <option value="Australia">Australia</option>
               <option value="Canada">Canada</option>
-              <option value="Ireland">Ireland</option>
+              <option value="Australia">Australia</option>
               <option value="New Zealand">New Zealand</option>
               <option value="Not Sure">Not Sure</option>
             </select>

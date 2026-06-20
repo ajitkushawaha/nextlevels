@@ -45,7 +45,13 @@ export default function CourseEnquiryForm({ course }: Props) {
       preferredCountry: course.country,
       intakeYear: new Date().getFullYear().toString(),
       intakeMonth: course.intakes[0] || 'Any Intake',
-      message: message || `Enquiring for ${course.title} at ${course.university}.`
+      message: message || `Enquiring for ${course.title} at ${course.university}.`,
+      sourcePage: `Course: ${course.title}`,
+      sourcePath: `/courses/${course.id}`,
+      sourceType: 'course',
+      sourceCountry: course.country,
+      sourceProgram: course.title,
+      sourceUniversity: course.university,
     }
 
     try {

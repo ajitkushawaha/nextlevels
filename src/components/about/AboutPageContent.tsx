@@ -16,6 +16,7 @@ import {
   Users,
 } from 'lucide-react'
 import type {
+  AboutCeoMessageSection,
   AboutHeroSection,
   AboutStorySection,
   AboutTeamSection,
@@ -65,8 +66,10 @@ function AboutSectionRenderer({ section }: { section: CmsSection }) {
   switch (section.type) {
     case 'aboutHero':
       return <AboutHero section={section} />
-    case 'aboutStory':
-      return <AboutStory section={section} />
+    case 'aboutCeoMessage':
+      return <AboutCeoMessage section={section} />
+    // case 'aboutStory':
+    //   return <AboutStory section={section} />
     case 'aboutVisionMission':
       return <AboutVisionMission section={section} />
     case 'aboutTeam':
@@ -82,7 +85,7 @@ function AboutSectionRenderer({ section }: { section: CmsSection }) {
 
 function AboutHero({ section }: { section: AboutHeroSection }) {
   return (
-    <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30 rounded-3xl">
+    <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30 ">
       <Image
         src={section.image}
         alt={section.title}
@@ -128,64 +131,110 @@ function AboutHero({ section }: { section: AboutHeroSection }) {
   )
 }
 
-function AboutStory({ section }: { section: AboutStorySection }) {
+function AboutCeoMessage({ section }: { section: AboutCeoMessageSection }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
-        <div className="space-y-6 lg:col-span-7">
-          <div className="space-y-4">
-            <span className="block text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">
-              About Next Level Education
-            </span>
-            <div className="relative inline-block">
-              <h2 className="font-serif text-3xl font-bold leading-[1.15] tracking-tight text-[#061331] sm:text-4xl">
-                {section.title}
-              </h2>
-              <div className="absolute -bottom-2 left-0 h-1.5 w-24 rounded-full bg-[#d7a23a]" />
-            </div>
-          </div>
-          <p className="max-w-3xl text-sm font-medium leading-relaxed text-slate-500 sm:text-base">
-            {section.content}
+    <section className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
+      <div className="grid overflow-hidden rounded-4xl border border-[#f2ece2] bg-[#fdfbf7] shadow-[0_16px_50px_rgba(6,19,49,0.04)] lg:grid-cols-12">
+        <div className="flex flex-col justify-center p-6 text-left sm:p-8 lg:col-span-7 lg:p-12">
+          <span className="text-[11px] font-black uppercase tracking-widest text-[#d7a23a]">
+            {section.eyebrow}
+          </span>
+          <h2
+            className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight text-[#061331] sm:text-4xl"
+            style={{ fontFamily: 'Farro, sans-serif' }}
+          >
+            {section.title}
+          </h2>
+          <div className="mt-5 h-1.5 w-24 rounded-full bg-[#d7a23a]" />
+          <p className="mt-6 max-w-3xl text-sm font-medium leading-7 text-slate-600 sm:text-base">
+            {section.message}
           </p>
+          {section.quote ? (
+            <p className="mt-6 border-l-4 border-[#d7a23a] pl-4 text-sm font-extrabold leading-6 text-[#061331]">
+              {section.quote}
+            </p>
+          ) : null}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:col-span-5">
-          {section.stats.map(stat => (
-            <div
-              key={`${stat.label}-${stat.value}`}
-              className={`rounded-2xl border p-5 shadow-[0_4px_20px_rgba(6,19,49,0.02)] flex items-center gap-4 ${
-                stat.variant === 'gold'
-                  ? 'border-[#d7a23a]/30 bg-[#d7a23a] text-white'
-                  : stat.variant === 'dark'
-                    ? 'border-[#061331] bg-[#061331] text-white'
-                    : 'border-[#f3eee2] bg-[#fcfbfa] text-[#061331]'
-              }`}
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#d7a23a]/10 flex items-center justify-center text-[#d7a23a] shrink-0">
-                {stat.label.toUpperCase().includes('VISA') ? (
-                  <Award className="w-6 h-6" />
-                ) : (
-                  <Users className="w-6 h-6" />
-                )}
-              </div>
-              <div>
-                <span className="block text-3xl font-bold leading-none">{stat.value}</span>
-                <span className="mt-1 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  {stat.label}
-                </span>
-              </div>
+        <div className="relative min-h-96 bg-[#061331] lg:col-span-5">
+          <Image
+            src={section.image}
+            alt={section.imageAlt}
+            fill
+            className="object-cover object-top"
+            sizes="(max-width: 1024px) 100vw, 520px"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-[#061331]/90 via-[#061331]/15 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
+            <div className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-md">
+              <h3 className="text-2xl font-extrabold leading-tight">{section.name}</h3>
+              <p className="mt-1 text-sm font-bold text-[#d7a23a]">{section.role}</p>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
   )
 }
 
+// function AboutStory({ section }: { section: AboutStorySection }) {
+//   return (
+//     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+//       <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+//         <div className="space-y-6 lg:col-span-7">
+//           <div className="space-y-4">
+//             <span className="block text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">
+//               About Next Level Education
+//             </span>
+//             <div className="relative inline-block">
+//               <h2 className="font-serif text-3xl font-bold leading-[1.15] tracking-tight text-[#061331] sm:text-4xl">
+//                 {section.title}
+//               </h2>
+//               <div className="absolute -bottom-2 left-0 h-1.5 w-24 rounded-full bg-[#d7a23a]" />
+//             </div>
+//           </div>
+//           <p className="max-w-3xl text-sm font-medium leading-relaxed text-slate-500 sm:text-base">
+//             {section.content}
+//           </p>
+//         </div>
+
+//         <div className="grid gap-4 sm:grid-cols-2 lg:col-span-5">
+//           {section.stats.map(stat => (
+//             <div
+//               key={`${stat.label}-${stat.value}`}
+//               className={`rounded-2xl border p-5 shadow-[0_4px_20px_rgba(6,19,49,0.02)] flex items-center gap-4 ${
+//                 stat.variant === 'gold'
+//                   ? 'border-[#d7a23a]/30 bg-[#d7a23a] text-white'
+//                   : stat.variant === 'dark'
+//                     ? 'border-[#061331] bg-[#061331] text-white'
+//                     : 'border-[#f3eee2] bg-[#fcfbfa] text-[#061331]'
+//               }`}
+//             >
+//               <div className="w-12 h-12 rounded-xl bg-[#d7a23a]/10 flex items-center justify-center text-[#d7a23a] shrink-0">
+//                 {stat.label.toUpperCase().includes('VISA') ? (
+//                   <Award className="w-6 h-6" />
+//                 ) : (
+//                   <Users className="w-6 h-6" />
+//                 )}
+//               </div>
+//               <div>
+//                 <span className="block text-3xl font-bold leading-none">{stat.value}</span>
+//                 <span className="mt-1 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+//                   {stat.label}
+//                 </span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   )
+// }
+
 function AboutVisionMission({ section }: { section: AboutVisionMissionSection }) {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="bg-[#fdfbf7] border border-[#f5efe4] rounded-4xl p-8 md:p-12 shadow-[0_10px_35px_rgba(6,19,49,0.02)]">
+      <div className="bg-[#fdffff] border border-[#f5efe4] rounded-4xl p-8 md:p-12 shadow-[0_10px_35px_rgba(6,19,49,0.02)]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start relative">
           {/* Vision */}
           <div className="flex flex-col md:flex-row gap-6 text-left items-start">
@@ -227,7 +276,7 @@ function AboutVisionMission({ section }: { section: AboutVisionMissionSection })
 
 function AboutTeam({ section }: { section: AboutTeamSection }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl text-center">
         <span className="block text-[11px] font-bold uppercase tracking-widest text-[#d7a23a]">
           Our Team
@@ -271,7 +320,7 @@ function AboutTeam({ section }: { section: AboutTeamSection }) {
 
 function AboutPillars({ section }: { section: AboutPillarsSection }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold font-serif text-[#061331]">{section.title}</h2>
         <div className="h-1 w-16 bg-[#d7a23a] mx-auto mt-4 rounded-full" />

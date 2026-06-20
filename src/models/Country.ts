@@ -4,6 +4,7 @@ export interface ICountry extends Document {
   name: string
   code: string
   flagImage: string
+  heroImage?: string
   description: string
   averageCostOfLiving?: string
   popularCities?: string[]
@@ -47,6 +48,7 @@ const CountrySchema = new Schema<ICountry>(
     name: { type: String, required: true, unique: true, index: true },
     code: { type: String, required: true, unique: true, index: true }, // slug like 'uk', 'canada'
     flagImage: { type: String, required: true },
+    heroImage: { type: String, default: '' },
     description: { type: String, default: '' },
     averageCostOfLiving: { type: String, default: '' },
     popularCities: { type: [String], default: [] },

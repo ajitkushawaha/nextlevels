@@ -21,16 +21,19 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/html')
     const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    const usedIds = new Map<string, number>()
+
+    const getUniqueId = (baseId: string) => {
+      const count = usedIds.get(baseId) || 0
+      usedIds.set(baseId, count + 1)
+      return count === 0 ? baseId : `${baseId}-${count + 1}`
+    }
     
     const items: TOCItem[] = Array.from(headings).map((heading, index) => {
-      const id = heading.id || `heading-${index}`
       const text = heading.textContent || ''
       const level = parseInt(heading.tagName.charAt(1))
-      
-      // Add ID to the heading if it doesn't have one
-      if (!heading.id) {
-        heading.id = id
-      }
+      const baseId = heading.id || `heading-${index}`
+      const id = getUniqueId(baseId)
       
       return { id, text, level }
     })
@@ -40,44 +43,36 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
   useEffect(() => {
     const handleScroll = () => {
+      if (tocItems.length === 0) return
+
       const headings = tocItems.map(item => {
         const element = document.getElementById(item.id)
         return {
           id: item.id,
           element,
-          top: element ? element.getBoundingClientRect().top : Infinity
+          top: element ? element.getBoundingClientRect().top : Infinity,
         }
-      })
+      }).filter(item => item.element)
 
-      // Find the heading that's currently in view
-      const visibleHeadings = headings.filter(h => h.top >= 0 && h.top <= 200)
-      
-      if (visibleHeadings.length > 0) {
-        // Get the first visible heading
-        const currentHeading = visibleHeadings.reduce((prev, current) => 
-          prev.top < current.top ? prev : current
-        )
-        setActiveId(currentHeading.id)
-      } else {
-        // If no heading is in view, find the last heading that has passed
-        const passedHeadings = headings.filter(h => h.top < 0)
-        if (passedHeadings.length > 0) {
-          const lastPassed = passedHeadings.reduce((prev, current) => 
-            prev.top > current.top ? prev : current
-          )
-          setActiveId(lastPassed.id)
-        }
+      const offset = 140
+      const passedHeadings = headings.filter(heading => heading.top <= offset)
+
+      if (passedHeadings.length > 0) {
+        setActiveId(passedHeadings[passedHeadings.length - 1].id)
+        return
       }
+
+      setActiveId(headings[0]?.id || '')
     }
 
-    // Add scroll listener
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll)
     
-    // Initial check
-    handleScroll()
+    window.requestAnimationFrame(handleScroll)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
     }
   }, [tocItems])
 
@@ -86,29 +81,26 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   }
 
   return (
-    <div className="sticky top-8">
-      <div className="bg-gray-50 rounded-lg p-3">
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">Contents</h3>
-        <nav className="space-y-1">
+    <nav className="space-y-1">
           {tocItems.map((item) => (
             <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={`block text-xs py-1 transition-colors leading-tight rounded px-2 ${
-                activeId === item.id 
-                  ? 'bg-blue-100 text-blue-700 font-medium border-l-2 border-blue-500' 
-                  : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100'
-              } ${
-                item.level === 1 ? 'font-medium text-xs' : 
-                item.level === 2 ? 'ml-1' : 
-                item.level >= 3 ? 'ml-2' : ''
-              }`}
-            >
-              {item.text.length > 20 ? `${item.text.substring(0, 20)}...` : item.text}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </div>
+              key={`${item.id}-${item.text}`}
+          href={`#${item.id}`}
+          className={`block rounded-md border-l-2 px-3 py-2 text-xs font-semibold leading-snug transition-colors ${
+            activeId === item.id
+              ? 'border-[#d7a23a] bg-[#fffcf0] text-[#081638]'
+              : 'border-transparent text-slate-500 hover:border-[#d7a23a]/40 hover:bg-slate-50 hover:text-[#081638]'
+          } ${
+            item.level === 1
+              ? ''
+              : item.level === 2
+                ? 'ml-1'
+                : 'ml-3'
+          }`}
+        >
+          {item.text.length > 54 ? `${item.text.substring(0, 54)}...` : item.text}
+        </a>
+      ))}
+    </nav>
   )
 }

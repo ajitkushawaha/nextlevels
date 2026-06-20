@@ -29,7 +29,6 @@ const countryOptions = [
   { value: 'Canada', flag: '🇨🇦' },
   { value: 'Australia', flag: '🇦🇺' },
   { value: 'New Zealand', flag: '🇳🇿' },
-  { value: 'Germany', flag: '🇩🇪' },
   { value: 'Undecided / Not Sure', flag: '🌍' },
 ]
 
@@ -67,7 +66,13 @@ export default function CustomEnquiryForm() {
       const res = await fetch('/api/public/enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          sourcePage: 'About Custom Enquiry',
+          sourcePath: '/about-us',
+          sourceType: 'about-custom-enquiry',
+          sourceCountry: formData.preferredCountry,
+        }),
       })
       const data = await res.json()
       if (res.ok) {

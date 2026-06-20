@@ -505,6 +505,7 @@ Please help me with the admission consultation process.`
   // Determine author image
   const authorImage =
     authorConfig?.profileImage || `${baseUrl}/avtarplaceholder.png`
+  const processedContent = addHeadingIds(processBlogContent(post.content))
 
   // Blog Schema Data
   const blogJsonLd = {
@@ -654,10 +655,21 @@ Please help me with the admission consultation process.`
 
       {/* ── MAIN BODY ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
+
+          {/* ── LEFT: TABLE OF CONTENTS ── */}
+          <aside className="hidden lg:col-span-3 lg:block lg:self-start">
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+              <h3 className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#081638]">
+                <span className="h-4 w-1.5 rounded-full bg-[#d7a23a]" />
+                Table of Contents
+              </h3>
+              <TableOfContents content={processedContent} />
+            </div>
+          </aside>
 
           {/* ── LEFT: CONTENT ── */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-6">
 
 
             {/* Header CTA */}
@@ -677,13 +689,13 @@ Please help me with the admission consultation process.`
             {/* Article Content */}
             <article
               id="blog-content"
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8
               prose prose-base md:prose-lg max-w-none font-sans
               prose-headings:text-[#081638] prose-headings:font-bold prose-headings:font-serif
               prose-h1:text-2xl prose-h1:font-extrabold prose-h1:mb-6 prose-h1:mt-0 prose-h1:leading-tight  prose-h1:pb-3 prose-h1:text-[#081638]
-              prose-h2:text-xl prose-h2:font-extrabold prose-h2:mb-4 prose-h2:mt-10 prose-h2:leading-tight prose-h2:text-[#081638]  prose-h2:pl-4
+              prose-h2:text-xl prose-h2:font-extrabold prose-h2:mb-4 prose-h2:mt-10 prose-h2:leading-tight prose-h2:text-[#081638] prose-h2:border-l-4 prose-h2:border-[#d7a23a] prose-h2:pl-4 prose-h2:scroll-mt-28
               prose-h3:text-lg prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:leading-tight prose-h3:text-[#0d2459]
-              prose-h4:text-md prose-h4:font-bold prose-h4:mb-2 prose-h4:mt-6 prose-h4:text-slate-700 prose-h4:px-4 prose-h4:py-1.5 prose-h4:rounded prose-h4:border-l-4 prose-h4:border-[#d7a23a] prose-h4:bg-slate-50
+              prose-h4:text-md prose-h4:font-bold prose-h4:mb-2 prose-h4:mt-6 prose-h4:text-slate-700 prose-h4:px-4 prose-h4:py-1.5 prose-h4:rounded prose-h4:border-l-4 prose-h4:border-[#d7a23a] prose-h4:bg-slate-50 prose-h4:scroll-mt-28
               prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-5 prose-p:text-base md:prose-p:text-[16px]
               prose-a:text-[#d7a23a] prose-a:no-underline prose-a:font-semibold hover:prose-a:underline
               prose-strong:text-[#081638] prose-strong:font-bold
@@ -699,7 +711,7 @@ Please help me with the admission consultation process.`
             >
               <section
                 className="blog-content"
-                dangerouslySetInnerHTML={{ __html: addHeadingIds(processBlogContent(post.content)) }}
+                dangerouslySetInnerHTML={{ __html: processedContent }}
               />
             </article>
 
@@ -775,9 +787,9 @@ Please help me with the admission consultation process.`
 
           </div>
 
-          {/* ── RIGHT: SIDEBAR ── */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-8 space-y-6">
+          {/* ── RIGHT: CTA + RECENT POSTS ── */}
+          <aside className="lg:col-span-3 lg:self-start">
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-6 overflow-y-auto pr-1">
 
               {/* Free Consultation CTA */}
               <div className="bg-linear-to-br from-[#081638] to-[#0d2459] rounded-2xl p-6 text-white shadow-lg text-center space-y-4">
@@ -797,15 +809,6 @@ Please help me with the admission consultation process.`
                   <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>
                   WhatsApp Us
                 </a>
-              </div>
-
-              {/* Table of Contents */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                <h3 className="text-xs font-black text-[#081638] uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span className="w-4 h-4 rounded bg-[#d7a23a] inline-block" />
-                  Table of Contents
-                </h3>
-                <TableOfContents content={post.content} />
               </div>
 
               {/* Recent Posts */}
@@ -848,7 +851,7 @@ Please help me with the admission consultation process.`
               </div>
 
             </div>
-          </div>
+          </aside>
 
         </div>
       </div>

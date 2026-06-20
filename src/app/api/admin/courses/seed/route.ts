@@ -35,6 +35,7 @@ export async function POST() {
         name: destination.country,
         code: destination.slug.toLowerCase(),
         flagImage: destination.heroImage, // Use heroImage as flagImage if no flagImage on dest
+        heroImage: destination.heroImage,
         description: destination.intro || '',
         averageCostOfLiving: destination.livingCosts?.[0]?.cost || '',
         popularCities: [destination.shortName],
@@ -129,6 +130,9 @@ export async function POST() {
         intakes: prog.intakes,
         ieltsScoreRequired: parseFloat(prog.visaSuccess) || 6.5,
         description: prog.description,
+        heroImage: '',
+        requirements: prog.requirements || '',
+        structure: prog.structure || [],
       })
       createdPrograms.push(progDoc)
     }
@@ -144,8 +148,12 @@ export async function POST() {
       await (Scholarship as any).create({
         title: schol.title,
         awardAmount: schol.award,
+        deadline: schol.deadline,
+        type: schol.type,
         eligibilityCriteria: schol.eligibility,
         description: schol.overview || schol.howToApply || '',
+        heroImage: '',
+        howToApply: schol.howToApply || '',
         countryId: countryNameToId[schol.country],
       })
     }

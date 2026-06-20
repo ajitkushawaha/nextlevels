@@ -33,7 +33,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: 'Which study destinations do you specialize in?',
-        answer: 'We specialize in placing students in world-renowned universities across the United Kingdom (UK), Canada, Australia, New Zealand, and the United States of America (USA).'
+        answer: 'We specialize in placing students in world-renowned universities across the United Kingdom (UK), Canada, Australia, and New Zealand.'
       },
       {
         question: 'What services does Next Level Education Consultancy provide?',
@@ -55,7 +55,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: 'Is an English language proficiency test (IELTS / PTE) mandatory?',
-        answer: 'Most partner universities in the UK, Canada, Australia, and USA require English proficiency scores (IELTS Academic, PTE Academic, or TOEFL). However, some universities may offer IELTS waivers if you have scored exceptionally high in English in your national/international O/L or A/L examinations.'
+        answer: 'Most partner universities in the UK, Canada, Australia, and New Zealand require English proficiency scores (IELTS Academic, PTE Academic, or TOEFL). However, some universities may offer IELTS waivers if you have scored exceptionally high in English in your national/international O/L or A/L examinations.'
       },
       {
         question: 'Can I apply to universities if my final results are still pending?',
@@ -69,7 +69,7 @@ const faqCategories: FAQCategory[] = [
     items: [
       {
         question: 'What is the average cost of tuition for international students?',
-        answer: 'Tuition fees vary significantly depending on the country, university, and field of study. On average, annual tuition starts from £14,000 in the UK, C$20,000 in Canada, A$30,000 in Australia, and $25,000 in the USA. We actively assist in finding budget-friendly universities.'
+        answer: 'Tuition fees vary significantly depending on the country, university, and field of study. On average, annual tuition starts from £14,000 in the UK, C$20,000 in Canada, A$30,000 in Australia, and NZ$22,000 in New Zealand. We actively assist in finding budget-friendly universities.'
       },
       {
         question: 'How do you assist with the student visa application process?',
@@ -77,7 +77,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: 'Do I need to show proof of funds for my student visa?',
-        answer: 'Yes, immigration authorities in Canada, UK, Australia, and the USA require proof that you have sufficient funds to cover your first year of tuition fees and living expenses. The exact amount and hold duration (e.g. 28 days for UK, SDS requirements for Canada) depend on your target country.'
+        answer: 'Yes, immigration authorities in the UK, Canada, Australia, and New Zealand require proof that you have sufficient funds to cover your first year of tuition fees and living expenses. The exact amount and hold duration (e.g. 28 days for UK, SDS requirements for Canada) depend on your target country.'
       },
       {
         question: 'Can my spouse or dependents travel with me?',
@@ -95,7 +95,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: 'Can I work part-time while studying?',
-        answer: 'Yes, in most major destinations (UK, Canada, Australia, NZ), international students on a valid student visa are permitted to work part-time for up to 20 hours per week during academic semesters, and full-time during official university vacations.'
+        answer: 'Yes, in our major destinations (UK, Canada, Australia, NZ), international students on a valid student visa are permitted to work part-time during academic semesters, and full-time during official university vacations, subject to visa conditions.'
       },
       {
         question: 'How do I set up a bank account and get a SIM card upon arrival?',

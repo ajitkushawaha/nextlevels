@@ -34,7 +34,7 @@ export const defaultServicesPageContent: CmsPageContent = {
         {
           title: 'Global Admissions Representative',
           description:
-            'Direct relationships with over 150+ highly ranked universities across Australia, Canada, UK, and New Zealand.',
+            'Direct relationships with over 150+ highly ranked universities across the UK, Canada, Australia, and New Zealand.',
         },
         {
           title: 'Credibility-First Visa Success',

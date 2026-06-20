@@ -11,6 +11,9 @@ export interface IProgram extends Document {
   intakes: string[]
   ieltsScoreRequired?: number
   description?: string
+  heroImage?: string
+  requirements?: string
+  structure?: string[]
   cmsData?: Record<string, any>
   createdAt: Date
   updatedAt: Date
@@ -28,6 +31,9 @@ const ProgramSchema = new Schema<IProgram>(
     intakes: { type: [String], default: [] },
     ieltsScoreRequired: { type: Number, default: 6.0 },
     description: { type: String, default: '' },
+    heroImage: { type: String, default: '' },
+    requirements: { type: String, default: '' },
+    structure: { type: [String], default: [] },
     cmsData: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }

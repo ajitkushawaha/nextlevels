@@ -62,6 +62,12 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
         status: 'ready',
       },
       {
+        id: 'home-scholarship-offer',
+        title: 'Manage Scholarship Offer',
+        description: 'Limited offer banner, countdown, benefits and CTA',
+        status: 'ready',
+      },
+      {
         id: 'home-destinations',
         title: 'Manage Study Destinations',
         description: 'Destination cards and section intro',
@@ -104,6 +110,12 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
         status: 'ready',
       },
       {
+        id: 'home-success-stories',
+        title: 'Manage Success Stories',
+        description: 'Student story videos, title and intro copy',
+        status: 'ready',
+      },
+      {
         id: 'home-faqs',
         title: 'Manage FAQs',
         description: 'Latest FAQ cards',
@@ -129,6 +141,12 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
         id: 'about-hero',
         title: 'Manage Hero',
         description: 'About page banner content',
+        status: 'ready',
+      },
+      {
+        id: 'about-ceo-message',
+        title: 'Manage CEO Message',
+        description: 'Leadership message, portrait, name and role',
         status: 'ready',
       },
       {

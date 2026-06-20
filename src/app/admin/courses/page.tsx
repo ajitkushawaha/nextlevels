@@ -12,6 +12,7 @@ import {
   Loader2,
   ArrowLeft,
   ChevronRight,
+  SlidersHorizontal,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -31,13 +32,19 @@ import { toast } from 'sonner'
 
 export default function CourseFinderAdminPage() {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<'countries' | 'universities' | 'programs' | 'scholarships'>('countries')
+  const [activeTab, setActiveTab] = useState<'countries' | 'universities' | 'programs' | 'scholarships' | 'filterSettings'>('countries')
   
   // Data lists
   const [countries, setCountries] = useState<any[]>([])
   const [universities, setUniversities] = useState<any[]>([])
   const [programs, setPrograms] = useState<any[]>([])
   const [scholarships, setScholarships] = useState<any[]>([])
+  const [filterSettings, setFilterSettings] = useState({
+    countries: '',
+    fields: '',
+    degreeTypes: '',
+    universities: '',
+  })
 
   const [loading, setLoading] = useState(true)
 
@@ -49,6 +56,7 @@ export default function CourseFinderAdminPage() {
     name: '',
     code: '',
     flagImage: '',
+    heroImage: '',
     description: '',
     averageCostOfLiving: '',
     popularCities: '',
@@ -78,6 +86,7 @@ export default function CourseFinderAdminPage() {
     intakes: '',
     ieltsScoreRequired: '6.0',
     description: '',
+    heroImage: '',
   })
 
   // Form Fields - Scholarship
@@ -86,6 +95,7 @@ export default function CourseFinderAdminPage() {
     awardAmount: '',
     eligibilityCriteria: '',
     description: '',
+    heroImage: '',
     countryId: '',
     universityId: '',
     programId: '',
@@ -95,22 +105,31 @@ export default function CourseFinderAdminPage() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const [countriesRes, univRes, progRes, scholRes] = await Promise.all([
+      const [countriesRes, univRes, progRes, scholRes, filterSettingsRes] = await Promise.all([
         fetch('/api/admin/courses/countries'),
         fetch('/api/admin/courses/universities'),
         fetch('/api/admin/courses/programs'),
         fetch('/api/admin/courses/scholarships'),
+        fetch('/api/admin/courses/filter-settings'),
       ])
 
       const countriesData = await countriesRes.json()
       const univData = await univRes.json()
       const progData = await progRes.json()
       const scholData = await scholRes.json()
+      const filterSettingsData = await filterSettingsRes.json()
 
       setCountries(countriesData.countries || [])
       setUniversities(univData.universities || [])
       setPrograms(progData.programs || [])
       setScholarships(scholData.scholarships || [])
+      const settings = filterSettingsData.settings || {}
+      setFilterSettings({
+        countries: (settings.countries || []).join('\n'),
+        fields: (settings.fields || []).join('\n'),
+        degreeTypes: (settings.degreeTypes || []).join('\n'),
+        universities: (settings.universities || []).join('\n'),
+      })
     } catch (error) {
       toast.error('Failed to load data')
     } finally {
@@ -119,12 +138,16 @@ export default function CourseFinderAdminPage() {
   }
 
   useEffect(() => {
-    fetchData()
+    const timer = window.setTimeout(() => {
+      fetchData()
+    }, 0)
+
+    return () => window.clearTimeout(timer)
   }, [])
 
   // Helper reset functions
   const resetCountryForm = () => {
-    setCountryForm({ name: '', code: '', flagImage: '', description: '', averageCostOfLiving: '', popularCities: '' })
+    setCountryForm({ name: '', code: '', flagImage: '', heroImage: '', description: '', averageCostOfLiving: '', popularCities: '' })
     setEditingId(null)
   }
   const resetUnivForm = () => {
@@ -132,11 +155,11 @@ export default function CourseFinderAdminPage() {
     setEditingId(null)
   }
   const resetProgramForm = () => {
-    setProgramForm({ title: '', universityId: '', degreeLevel: 'Bachelor', discipline: 'IT', duration: '', tuitionFee: '', currency: 'USD', intakes: '', ieltsScoreRequired: '6.0', description: '' })
+    setProgramForm({ title: '', universityId: '', degreeLevel: 'Bachelor', discipline: 'IT', duration: '', tuitionFee: '', currency: 'USD', intakes: '', ieltsScoreRequired: '6.0', description: '', heroImage: '' })
     setEditingId(null)
   }
   const resetScholForm = () => {
-    setScholarshipForm({ title: '', awardAmount: '', eligibilityCriteria: '', description: '', countryId: '', universityId: '', programId: '' })
+    setScholarshipForm({ title: '', awardAmount: '', eligibilityCriteria: '', description: '', heroImage: '', countryId: '', universityId: '', programId: '' })
     setEditingId(null)
   }
 
@@ -150,6 +173,7 @@ export default function CourseFinderAdminPage() {
           name: `New Country ${tempId.toUpperCase()}`,
           code: `temp-${tempId}`,
           flagImage: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80',
+          heroImage: '/servicehero.png',
           description: 'A newly added study destination guide.',
           averageCostOfLiving: '£1,200/month',
           popularCities: ['Capital City'],
@@ -225,6 +249,7 @@ export default function CourseFinderAdminPage() {
           intakes: ['September'],
           ieltsScoreRequired: 6.5,
           description: 'A comprehensive curriculum designed to prepare students for global career opportunities.',
+          heroImage: '/servicehero.png',
         }),
       })
 
@@ -252,6 +277,7 @@ export default function CourseFinderAdminPage() {
           awardAmount: '$5,000 / year',
           eligibilityCriteria: 'Minimum GPA 3.0 or equivalent IELTS 6.5+',
           description: 'A prestigious funding support award for meritorious international students.',
+          heroImage: '/home2/scollership.png',
           countryId: countries.length > 0 ? countries[0]._id : undefined,
         }),
       })
@@ -420,6 +446,33 @@ export default function CourseFinderAdminPage() {
     }
   }
 
+  const parseSettingsList = (value: string) =>
+    value
+      .split('\n')
+      .map(item => item.trim())
+      .filter(Boolean)
+
+  const handleFilterSettingsSave = async () => {
+    try {
+      const res = await fetch('/api/admin/courses/filter-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          countries: parseSettingsList(filterSettings.countries),
+          fields: parseSettingsList(filterSettings.fields),
+          degreeTypes: parseSettingsList(filterSettings.degreeTypes),
+          universities: parseSettingsList(filterSettings.universities),
+        }),
+      })
+
+      if (!res.ok) throw new Error('Save failed')
+      toast.success('Course filter settings saved')
+      fetchData()
+    } catch {
+      toast.error('Failed to save filter settings')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 p-6 md:p-8">
       {/* Header */}
@@ -442,7 +495,7 @@ export default function CourseFinderAdminPage() {
       </div>
 
       {/* Tabs list */}
-      <div className="mb-6 flex flex-wrap gap-2 rounded-xl bg-slate-200/80 p-1.5 max-w-2xl">
+      <div className="mb-6 flex flex-wrap gap-2 rounded-xl bg-slate-200/80 p-1.5 max-w-4xl">
         <Button
           variant="ghost"
           size="sm"
@@ -475,6 +528,14 @@ export default function CourseFinderAdminPage() {
         >
           <Award className="h-4 w-4" /> Scholarships
         </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => { setActiveTab('filterSettings'); setEditingId(null); }}
+          className={`h-9 px-4 gap-2 text-xs font-bold rounded-lg ${activeTab === 'filterSettings' ? 'bg-[#061331] text-white hover:bg-[#061331] hover:text-white shadow-xs' : 'text-slate-600'}`}
+        >
+          <SlidersHorizontal className="h-4 w-4" /> Filter Settings
+        </Button>
       </div>
 
       {loading ? (
@@ -495,7 +556,8 @@ export default function CourseFinderAdminPage() {
                     A total of {
                       activeTab === 'countries' ? countries.length :
                       activeTab === 'universities' ? universities.length :
-                      activeTab === 'programs' ? programs.length : scholarships.length
+                      activeTab === 'programs' ? programs.length :
+                      activeTab === 'scholarships' ? scholarships.length : 4
                     } items registered.
                   </CardDescription>
                 </div>
@@ -627,6 +689,43 @@ export default function CourseFinderAdminPage() {
                   </div>
                 ))}
 
+                {activeTab === 'filterSettings' && (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {[
+                      ['countries', 'Countries / Study Destinations', 'One country per line, in display order.'],
+                      ['fields', 'Field of Study Options', 'One field per line.'],
+                      ['degreeTypes', 'Degree Type Options', 'One degree type per line.'],
+                      ['universities', 'University Filter Options', 'One university name per line, in display order.'],
+                    ].map(([key, title, description]) => (
+                      <div key={key} className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
+                        <Label className="text-xs font-black uppercase tracking-wider text-[#081638]">
+                          {title}
+                        </Label>
+                        <p className="mt-1 text-[11px] leading-5 text-slate-500">{description}</p>
+                        <Textarea
+                          value={filterSettings[key as keyof typeof filterSettings]}
+                          onChange={event =>
+                            setFilterSettings(prev => ({
+                              ...prev,
+                              [key]: event.target.value,
+                            }))
+                          }
+                          rows={8}
+                          className="mt-3 text-xs font-semibold"
+                        />
+                      </div>
+                    ))}
+                    <div className="md:col-span-2 flex justify-end">
+                      <Button
+                        onClick={handleFilterSettingsSave}
+                        className="bg-[#061331] text-white hover:bg-slate-800 text-xs font-bold"
+                      >
+                        Save Filter Settings
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
                 {((activeTab === 'countries' && countries.length === 0) ||
                   (activeTab === 'universities' && universities.length === 0) ||
                   (activeTab === 'programs' && programs.length === 0) ||
@@ -748,6 +847,27 @@ export default function CourseFinderAdminPage() {
                   >
                     <Plus className="h-3.5 w-3.5" /> Add New Scholarship
                   </Button>
+                </CardContent>
+              </Card>
+            )}
+            {activeTab === 'filterSettings' && (
+              <Card className="border-slate-200 bg-white shadow-sm border-dashed">
+                <CardHeader>
+                  <CardTitle className="text-sm font-bold text-[#061331]">Filter Settings Guide</CardTitle>
+                  <CardDescription className="text-xs">Control public course finder filter options</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 text-xs text-slate-600">
+                  <p>
+                    These lists control the public filter labels and ordering. Counts are still calculated from real course data.
+                  </p>
+                  <div className="rounded-lg bg-slate-50 p-3 border border-slate-100 space-y-2">
+                    <p className="font-semibold text-slate-700">Recommended use:</p>
+                    <ul className="list-disc pl-4 space-y-1 text-[11px]">
+                      <li>Keep the country order as United Kingdom, Canada, Australia, New Zealand.</li>
+                      <li>Remove fields or degree types you do not want students to see.</li>
+                      <li>University filters use this list first, so partner universities can appear even before courses are added.</li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             )}

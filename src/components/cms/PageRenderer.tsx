@@ -92,214 +92,123 @@ function CmsSectionRenderer({
   section: CmsSection
   includeFooter: boolean
 }) {
+  const homePreviewProps = {
+    content,
+    includeFooter: false,
+    renderHero: false,
+    renderProgram: false,
+    renderScholarshipOffer: false,
+    renderDestinations: false,
+    renderWhyChooseUs: false,
+    renderServices: false,
+    renderUniversities: false,
+    renderStats: false,
+    renderTestimonials: false,
+    renderAmbassadors: false,
+    renderSuccessStories: false,
+    renderFaqs: false,
+    renderBlog: false,
+    renderStaticSections: false,
+  }
+
   switch (section.type) {
     case 'homeHero':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
-          renderStaticSections={false}
+          {...homePreviewProps}
+          renderHero
         />
       )
     case 'homeProgram':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
-          renderStaticSections={false}
+          {...homePreviewProps}
+          renderProgram
+        />
+      )
+    case 'homeScholarshipOffer':
+      return (
+        <NextLevelHomepage
+          {...homePreviewProps}
+          renderScholarshipOffer
         />
       )
     case 'homeDestinations':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
-          renderStaticSections={false}
+          {...homePreviewProps}
+          renderDestinations
         />
       )
     case 'homeWhyChooseUs':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
-          renderStaticSections={false}
+          {...homePreviewProps}
+          renderWhyChooseUs
         />
       )
     case 'homeServices':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderServices
         />
       )
     case 'homeUniversities':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderUniversities
         />
       )
     case 'homeStats':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderStats
         />
       )
     case 'homeTestimonials':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderTestimonials
         />
       )
     case 'homeAmbassadors':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderFaqs={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderAmbassadors
+        />
+      )
+    case 'homeSuccessStories':
+      return (
+        <NextLevelHomepage
+          {...homePreviewProps}
+          renderSuccessStories
         />
       )
     case 'homeFaqs':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderBlog={false}
+          {...homePreviewProps}
+          renderFaqs
         />
       )
     case 'homeBlog':
       return (
         <NextLevelHomepage
-          content={content}
-          includeFooter={false}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
+          {...homePreviewProps}
+          renderBlog
         />
       )
     case 'homeStaticSections':
       return (
         <NextLevelHomepage
-          content={content}
+          {...homePreviewProps}
           includeFooter={includeFooter}
-          renderHero={false}
-          renderProgram={false}
-          renderDestinations={false}
-          renderWhyChooseUs={false}
-          renderServices={false}
-          renderUniversities={false}
-          renderStats={false}
-          renderTestimonials={false}
-          renderAmbassadors={false}
-          renderFaqs={false}
-          renderBlog={false}
+          renderStaticSections
         />
       )
     default:

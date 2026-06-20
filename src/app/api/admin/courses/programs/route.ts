@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, universityId, degreeLevel, discipline, duration, tuitionFee, currency, intakes, ieltsScoreRequired, description } = body
+    const { title, universityId, degreeLevel, discipline, duration, tuitionFee, currency, intakes, ieltsScoreRequired, description, heroImage, requirements, structure } = body
 
     if (!title || !universityId || !duration || !tuitionFee) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -48,6 +48,9 @@ export async function POST(req: Request) {
       intakes: intakes || [],
       ieltsScoreRequired: ieltsScoreRequired ? Number(ieltsScoreRequired) : 6.0,
       description: description || '',
+      heroImage: heroImage || '',
+      requirements: requirements || '',
+      structure: structure || [],
     })
 
     return NextResponse.json({ program: created }, { status: 201 })

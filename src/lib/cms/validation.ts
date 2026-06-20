@@ -47,6 +47,32 @@ const homeProgramSectionSchema = z.object({
   }),
 })
 
+const homeScholarshipOfferSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('homeScholarshipOffer'),
+  enabled: z.boolean(),
+  badgeText: z.string().trim().min(1).max(80),
+  intakeLabel: z.string().trim().min(1).max(100),
+  countdownTarget: z.string().trim().min(1).max(80),
+  titlePrefix: z.string().trim().min(1).max(120),
+  scholarshipAmount: z.string().trim().min(1).max(40),
+  titleSuffix: z.string().trim().min(1).max(120),
+  description: z.string().trim().min(1).max(600),
+  highlightedAgency: z.string().trim().min(1).max(120),
+  highlightedUniversity: z.string().trim().min(1).max(180),
+  highlightedOffer: z.string().trim().min(1).max(80),
+  ctaLabel: z.string().trim().min(1).max(80),
+  ctaHref: z.string().trim().min(1).max(240),
+  note: z.string().trim().max(100),
+  featureChips: z.array(z.object({
+    icon: z.enum(['Award', 'ShieldCheck', 'GraduationCap']),
+    text: z.string().trim().min(1).max(120),
+  })).min(1).max(6),
+  benefitsTitle: z.string().trim().min(1).max(100),
+  benefits: z.array(z.string().trim().min(1).max(160)).min(1).max(8),
+  urgencyText: z.string().trim().min(1).max(120),
+})
+
 const homeDestinationCardSchema = z.object({
   name: z.string().trim().min(1).max(80),
   image: z.string().trim().min(1).max(500),
@@ -59,7 +85,7 @@ const homeDestinationsSectionSchema = z.object({
   enabled: z.boolean(),
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().min(1).max(320),
-  destinations: z.array(homeDestinationCardSchema).min(1).max(8),
+  destinations: z.array(homeDestinationCardSchema).min(1).max(4),
 })
 
 const homeWhyChooseUsItemSchema = z.object({
@@ -102,6 +128,18 @@ const homeUniversitiesSectionSchema = z.object({
     label: z.string().trim().min(1).max(100),
     href: z.string().trim().min(1).max(240),
   }),
+  universities: z.array(z.object({
+    name: z.string().trim().min(1).max(180),
+    logo: z.string().trim().min(1).max(80),
+    coverImage: z.string().trim().min(1).max(500),
+    worldRank: z.union([z.string().trim().min(1).max(80), z.number()]).optional(),
+    established: z.union([z.string().trim().min(1).max(80), z.number()]).optional(),
+    flag: z.string().trim().min(1).max(40),
+    location: z.string().trim().max(160),
+    country: z.string().trim().min(1).max(120),
+    description: z.string().trim().max(900),
+    students: z.string().trim().max(80).optional(),
+  })).min(0).max(4).optional(),
 })
 
 const homeStatsSectionSchema = z.object({
@@ -113,7 +151,7 @@ const homeStatsSectionSchema = z.object({
     targetValue: z.coerce.number().int().min(0).max(1000000),
     suffix: z.string().trim().max(12),
     label: z.string().trim().min(1).max(100),
-  })).min(1).max(8),
+  })).min(1).max(4),
 })
 
 const homeTestimonialsSectionSchema = z.object({
@@ -143,14 +181,20 @@ const homeAmbassadorsSectionSchema = z.object({
     image: z.string().trim().min(1).max(500),
     link: z.string().trim().min(1).max(240),
   })).min(1).max(10),
-  storiesTitle: z.string().trim().min(1).max(160),
-  storiesDescription: z.string().trim().min(1).max(260),
+})
+
+const homeSuccessStoriesSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('homeSuccessStories'),
+  enabled: z.boolean(),
+  title: z.string().trim().min(1).max(160),
+  description: z.string().trim().min(1).max(260),
   videos: z.array(z.object({
-    title: z.string().trim().min(1).max(180),
+    mediaType: z.enum(['youtube', 'image']).default('image'),
+    youtubeUrl: z.string().trim().max(500).optional(),
     studentName: z.string().trim().min(1).max(100),
     studentAvatar: z.string().trim().min(1).max(500),
-    thumbnail: z.string().trim().min(1).max(500),
-    textOverlay: z.string().trim().max(260).optional(),
+    thumbnail: z.string().trim().max(500).optional(),
     isLocked: z.boolean().optional(),
   })).min(1).max(8),
 })
@@ -263,6 +307,20 @@ const aboutHeroSectionSchema = z.object({
   image: z.string().trim().min(1).max(500),
 })
 
+const aboutCeoMessageSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('aboutCeoMessage'),
+  enabled: z.boolean(),
+  eyebrow: z.string().trim().min(1).max(100),
+  title: z.string().trim().min(1).max(180),
+  message: z.string().trim().min(1).max(1200),
+  quote: z.string().trim().max(220).optional(),
+  name: z.string().trim().min(1).max(120),
+  role: z.string().trim().min(1).max(120),
+  image: z.string().trim().min(1).max(500),
+  imageAlt: z.string().trim().min(1).max(180),
+})
+
 const aboutStorySectionSchema = z.object({
   id: z.string().trim().min(1),
   type: z.literal('aboutStory'),
@@ -350,6 +408,15 @@ const contactFormSectionSchema = z.object({
   id: z.string().trim().min(1),
   type: z.literal('contactForm'),
   enabled: z.boolean(),
+  heading: z.string().trim().min(1).max(120).optional(),
+  description: z.string().trim().min(1).max(500).optional(),
+  qualificationLabel: z.string().trim().min(1).max(80).optional(),
+  qualificationPlaceholder: z.string().trim().min(1).max(120).optional(),
+  qualificationOptions: z.array(z.string().trim().min(1).max(80)).min(1).max(12).optional(),
+  termsLabel: z.string().trim().min(1).max(180).optional(),
+  submitLabel: z.string().trim().min(1).max(80).optional(),
+  image: z.string().trim().min(1).max(500).optional(),
+  imageAlt: z.string().trim().min(1).max(160).optional(),
 })
 
 const contactMapOfficeSectionSchema = z.object({
@@ -369,6 +436,7 @@ const contactMapOfficeSectionSchema = z.object({
 export const cmsSectionSchema = z.discriminatedUnion('type', [
   homeHeroSectionSchema,
   homeProgramSectionSchema,
+  homeScholarshipOfferSectionSchema,
   homeDestinationsSectionSchema,
   homeWhyChooseUsSectionSchema,
   homeServicesSectionSchema,
@@ -376,6 +444,7 @@ export const cmsSectionSchema = z.discriminatedUnion('type', [
   homeStatsSectionSchema,
   homeTestimonialsSectionSchema,
   homeAmbassadorsSectionSchema,
+  homeSuccessStoriesSectionSchema,
   homeFaqsSectionSchema,
   homeBlogSectionSchema,
   homeStaticSectionsSchema,
@@ -383,6 +452,7 @@ export const cmsSectionSchema = z.discriminatedUnion('type', [
   servicesListSectionSchema,
   servicesCredentialsSectionSchema,
   aboutHeroSectionSchema,
+  aboutCeoMessageSectionSchema,
   aboutStorySectionSchema,
   aboutTeamSectionSchema,
   aboutVisionMissionSectionSchema,

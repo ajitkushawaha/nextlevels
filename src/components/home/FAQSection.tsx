@@ -144,7 +144,7 @@ const faqCards: FAQCard[] = [
   },
   {
     question: 'Which country is best for international students?',
-    answer: 'Canada, UK, Australia and Germany are popular choices for quality education.',
+    answer: 'United Kingdom, Canada, Australia and New Zealand are popular choices for quality education.',
     color: '#06b6d4', // cyan
     illustration: (
       <div className="relative w-32 h-32 flex items-center justify-center">
@@ -252,7 +252,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
               <span className="text-xs font-bold uppercase tracking-widest text-[#d7a23a]">
                 {section?.eyebrow || 'LATEST FAQS'}
               </span>
-              <div className="mt-1 h-[3px] w-8 bg-[#d7a23a] rounded" />
+               <div className="mt-3 h-1.5 w-16 rounded-full bg-[#d7a23a]" />
             </div>
             
             {/* Main Title */}
@@ -267,7 +267,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* View All FAQs CTA */}
           <Link
             href="/faq"
-            className="mt-4 sm:mt-0 inline-flex items-center gap-2 text-sm font-bold text-[#081638] hover:text-[#d7a23a] transition-all duration-300 group"
+            className="mt-4 hidden items-center gap-2 text-sm font-bold text-[#081638] transition-all duration-300 hover:text-[#d7a23a] sm:mt-0 sm:inline-flex group"
           >
             View All FAQs
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -280,7 +280,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Left Arrow Button */}
           <button
             onClick={prevSlide}
-            className="absolute left-[-15px] sm:left-[-5px] top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -left-3.75 sm:-left-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
             aria-label="Previous FAQs"
           >
             <ChevronLeft className="h-5 w-5 stroke-[2.5]" />
@@ -302,14 +302,14 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left min-h-[260px] sm:aspect-square flex flex-col justify-between overflow-hidden">
+                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left min-h-65 sm:aspect-square flex flex-col justify-between overflow-hidden">
                     {/* Question */}
-                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-[52px]">
+                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-13">
                       {faq.question}
                     </h3>
 
                     {/* Answer Summary */}
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium min-h-[64px] mb-6 ">
+                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium min-h-16 mb-6 ">
                       {faq.answer}
                     </p>
 
@@ -330,7 +330,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Right Arrow Button */}
           <button
             onClick={nextSlide}
-            className="absolute right-[-15px] sm:right-[-5px] top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -right-3.75 sm:-right-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
             aria-label="Next FAQs"
           >
             <ChevronRight className="h-5 w-5 stroke-[2.5]" />
@@ -352,6 +352,16 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
             ))}
           </div>
         )}
+
+        <div className="mt-8 flex justify-center sm:hidden">
+          <Link
+            href="/faq"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 px-5 py-3 text-sm font-bold text-[#081638] transition hover:text-[#d7a23a]"
+          >
+            View All FAQs
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
 
       </div>
     </section>

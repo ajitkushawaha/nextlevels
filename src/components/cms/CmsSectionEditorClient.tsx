@@ -12,9 +12,11 @@ import HomeDestinationsEditor from '@/components/cms/section-editors/HomeDestina
 import HomeHeroEditor from '@/components/cms/section-editors/HomeHeroEditor'
 import HomeJsonSectionEditor from '@/components/cms/section-editors/HomeJsonSectionEditor'
 import HomeProgramEditor from '@/components/cms/section-editors/HomeProgramEditor'
+import HomeScholarshipOfferEditor from '@/components/cms/section-editors/HomeScholarshipOfferEditor'
 import HomeWhyChooseUsEditor from '@/components/cms/section-editors/HomeWhyChooseUsEditor'
 import ServicesListEditor from '@/components/cms/section-editors/ServicesListEditor'
 import HomeServicesEditor from '@/components/cms/section-editors/HomeServicesEditor'
+import HomeSuccessStoriesEditor from '@/components/cms/section-editors/HomeSuccessStoriesEditor'
 import HomeUniversitiesEditor from '@/components/cms/section-editors/HomeUniversitiesEditor'
 import HomeBlogEditor from '@/components/cms/section-editors/HomeBlogEditor'
 import { Badge } from '@/components/ui/badge'
@@ -32,9 +34,11 @@ import type {
   HomeDestinationsSection,
   HomeHeroSection,
   HomeProgramSection,
+  HomeScholarshipOfferSection,
   HomeWhyChooseUsSection,
   ServicesListSection,
   HomeServicesSection,
+  HomeSuccessStoriesSection,
   HomeUniversitiesSection,
   HomeBlogSection,
 } from '@/lib/cms/types'
@@ -139,6 +143,29 @@ function updateSectionById(
   }
 }
 
+const canonicalHomeDestinations = [
+  {
+    name: 'United Kingdom',
+    image: '/destinations_uk.png',
+    alt: 'United Kingdom study destination',
+  },
+  {
+    name: 'Canada',
+    image: '/destinations_canada.png',
+    alt: 'Canada study destination',
+  },
+  {
+    name: 'Australia',
+    image: '/destinations_australia.png',
+    alt: 'Australia study destination',
+  },
+  {
+    name: 'New Zealand',
+    image: '/destinations_nz.png',
+    alt: 'New Zealand study destination',
+  },
+]
+
 export default function CmsSectionEditorClient({
   pageKey,
   sectionId,
@@ -166,6 +193,8 @@ export default function CmsSectionEditorClient({
   )
   const isHomeHero = pageKey === 'home' && sectionId === 'home-hero'
   const isHomeProgram = pageKey === 'home' && sectionId === 'home-program'
+  const isHomeScholarshipOffer =
+    pageKey === 'home' && sectionId === 'home-scholarship-offer'
   const isHomeDestinations =
     pageKey === 'home' && sectionId === 'home-destinations'
   const isHomeWhyChooseUs =
@@ -173,15 +202,19 @@ export default function CmsSectionEditorClient({
   const isHomeServices = pageKey === 'home' && sectionId === 'home-services'
   const isHomeUniversities = pageKey === 'home' && sectionId === 'home-universities'
   const isHomeBlog = pageKey === 'home' && sectionId === 'home-blog'
+  const isHomeSuccessStories =
+    pageKey === 'home' && sectionId === 'home-success-stories'
   const isServicesList = pageKey === 'services' && sectionId === 'services-list'
   const isEditableHomeSection =
     isHomeHero ||
     isHomeProgram ||
+    isHomeScholarshipOffer ||
     isHomeDestinations ||
     isHomeWhyChooseUs ||
     isHomeServices ||
     isHomeUniversities ||
-    isHomeBlog
+    isHomeBlog ||
+    isHomeSuccessStories
   const isEditableServicesSection = isServicesList
   const isJsonReadySection = section?.status === 'ready' && !isEditableHomeSection && !isEditableServicesSection
   const isReadySection = isEditableHomeSection || isEditableServicesSection || isJsonReadySection
@@ -369,17 +402,27 @@ export default function CmsSectionEditorClient({
 
   const addDestination = () => {
     setContent(prev =>
-      updateDestinations(prev, destinationsSection => ({
-        ...destinationsSection,
-        destinations: [
-          ...destinationsSection.destinations,
-          {
-            name: 'New Destination',
-            image: '/destinations_canada.png',
-            alt: 'New study destination',
-          },
-        ],
-      }))
+      updateDestinations(prev, destinationsSection => {
+        if (destinationsSection.destinations.length >= 4) {
+          return destinationsSection
+        }
+
+        const existingCountryNames = new Set(
+          destinationsSection.destinations.map(destination => destination.name)
+        )
+        const nextDestination =
+          canonicalHomeDestinations.find(
+            destination => !existingCountryNames.has(destination.name)
+          ) || canonicalHomeDestinations[destinationsSection.destinations.length]
+
+        return {
+          ...destinationsSection,
+          destinations: [
+            ...destinationsSection.destinations,
+            nextDestination,
+          ],
+        }
+      })
     )
   }
 
@@ -599,7 +642,7 @@ export default function CmsSectionEditorClient({
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="xl:col-span-4">
-          <Card className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden border-slate-200 bg-white shadow-sm xl:sticky xl:top-6">
+          <Card className="flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden border-slate-200 bg-white shadow-sm xl:sticky xl:top-6 xl:max-h-[calc(100vh-3rem)]">
             <CardHeader className="shrink-0 border-b border-slate-100">
               <CardTitle className="text-sm font-bold text-slate-800">
                 {isHomeHero
@@ -616,7 +659,7 @@ export default function CmsSectionEditorClient({
                 Changes update the preview instantly before saving.
               </CardDescription>
             </CardHeader>
-            <CardContent className="min-h-0 space-y-5 overflow-y-auto p-6 text-xs">
+            <CardContent className="min-h-0 flex-1 space-y-5 overflow-y-auto p-6 text-xs">
               <div className="space-y-1.5">
                 <Label htmlFor="page-title">CMS Page Title</Label>
                 <Input
@@ -645,6 +688,17 @@ export default function CmsSectionEditorClient({
                   setProgramBenefit={setProgramBenefit}
                   addProgramBenefit={addProgramBenefit}
                   removeProgramBenefit={removeProgramBenefit}
+                />
+              )}
+
+              {isHomeScholarshipOffer && activeCmsSection && (
+                <HomeScholarshipOfferEditor
+                  section={activeCmsSection as HomeScholarshipOfferSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
                 />
               )}
 
@@ -704,6 +758,17 @@ export default function CmsSectionEditorClient({
               {isHomeBlog && activeCmsSection && (
                 <HomeBlogEditor
                   section={activeCmsSection as HomeBlogSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isHomeSuccessStories && activeCmsSection && (
+                <HomeSuccessStoriesEditor
+                  section={activeCmsSection as HomeSuccessStoriesSection}
                   onChange={nextSection =>
                     setContent(prev =>
                       updateSectionById(prev, sectionId, nextSection)

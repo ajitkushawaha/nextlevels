@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -35,69 +35,134 @@ interface Inquiry {
   message: string
   status: 'Pending' | 'Contacted' | 'Resolved'
   date: string
+  educationLevel: string
+  preferredCountry: string
+  intake: string
+  sourcePage: string
+  sourcePath: string
+  sourceType: string
+  sourceCountry: string
+  sourceProgram: string
+  sourceUniversity: string
+  sourceScholarship: string
+  sourceBranch: string
+}
+
+function mapStatus(status: string): Inquiry['status'] {
+  if (status === 'resolved') return 'Resolved'
+  if (status === 'contacted') return 'Contacted'
+  return 'Pending'
+}
+
+function apiStatus(status: Inquiry['status']) {
+  if (status === 'Resolved') return 'resolved'
+  if (status === 'Contacted') return 'contacted'
+  return 'new'
+}
+
+function mapInquiry(item: any): Inquiry {
+  const sourceParts = [
+    item.sourceProgram,
+    item.sourceUniversity,
+    item.sourceScholarship,
+    item.sourceBranch,
+  ].filter(Boolean)
+
+  return {
+    id: item._id,
+    name: item.fullName || 'Unknown student',
+    email: item.email || '',
+    mobile: item.phone || '',
+    subject:
+      item.sourcePage ||
+      item.fieldOfStudy ||
+      sourceParts.join(' - ') ||
+      'Student enquiry',
+    message: item.message || '',
+    status: mapStatus(item.status),
+    date: item.createdAt
+      ? new Date(item.createdAt).toISOString().slice(0, 10)
+      : '',
+    educationLevel: item.educationLevel || '',
+    preferredCountry: item.preferredCountry || '',
+    intake: [item.intakeMonth, item.intakeYear].filter(Boolean).join(' '),
+    sourcePage: item.sourcePage || '',
+    sourcePath: item.sourcePath || '',
+    sourceType: item.sourceType || '',
+    sourceCountry: item.sourceCountry || '',
+    sourceProgram: item.sourceProgram || '',
+    sourceUniversity: item.sourceUniversity || '',
+    sourceScholarship: item.sourceScholarship || '',
+    sourceBranch: item.sourceBranch || '',
+  }
 }
 
 export default function InquiriesManager() {
-  const [inquiries, setInquiries] = useState<Inquiry[]>([
-    {
-      id: 'inq_1',
-      name: 'Rahul Sharma',
-      email: 'rahul.sharma@example.com',
-      mobile: '+91 98765 43210',
-      subject: 'Student Visa Canada Inquiry',
-      message: 'Hello, I want to know the visa process for applying to McGill University for Fall 2026 intake. What documents are required?',
-      status: 'Pending',
-      date: '2026-06-04'
-    },
-    {
-      id: 'inq_2',
-      name: 'Priya Patel',
-      email: 'priya.patel@example.com',
-      mobile: '+91 87654 32109',
-      subject: 'IELTS Coaching Details',
-      message: 'Can you share the timings and batch details for online IELTS coaching sessions? I am looking to score 7.5 bands.',
-      status: 'Contacted',
-      date: '2026-06-02'
-    },
-    {
-      id: 'inq_3',
-      name: 'Michael Miller',
-      email: 'michael.m@example.com',
-      mobile: '+1 415 555 2671',
-      subject: 'UK University Admissions',
-      message: 'Looking for advice on postgraduate courses in Software Engineering in UK universities. Do you cover admission support?',
-      status: 'Resolved',
-      date: '2026-05-30'
-    },
-    {
-      id: 'inq_4',
-      name: 'Amina Al-Fayed',
-      email: 'amina.fayed@example.com',
-      mobile: '+971 50 123 4567',
-      subject: 'Scholarship guidance Australia',
-      message: 'Are there any fully funded scholarship opportunities for master courses in Sydney or Melbourne for international students?',
-      status: 'Pending',
-      date: '2026-06-03'
-    }
-  ])
-
+  const [inquiries, setInquiries] = useState<Inquiry[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null)
 
-  const handleUpdateStatus = (id: string, newStatus: 'Pending' | 'Contacted' | 'Resolved') => {
-    setInquiries(inquiries.map(inq => inq.id === id ? { ...inq, status: newStatus } : inq))
-    if (selectedInquiry && selectedInquiry.id === id) {
-      setSelectedInquiry({ ...selectedInquiry, status: newStatus })
+  useEffect(() => {
+    async function loadInquiries() {
+      try {
+        const res = await fetch('/api/admin/inquiries')
+        const data = await res.json()
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Unable to load inquiries')
+        }
+
+        setInquiries((data.inquiries || []).map(mapInquiry))
+      } catch (error: any) {
+        toast.error(error.message || 'Unable to load inquiries')
+      } finally {
+        setIsLoading(false)
+      }
     }
-    toast.success(`Inquiry marked as ${newStatus}`)
+
+    loadInquiries()
+  }, [])
+
+  const handleUpdateStatus = async (id: string, newStatus: 'Pending' | 'Contacted' | 'Resolved') => {
+    try {
+      const res = await fetch(`/api/admin/inquiries/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: apiStatus(newStatus) }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data.error || 'Unable to update inquiry')
+
+      const nextInquiry = mapInquiry(data.inquiry)
+      setInquiries(inquiries.map(inq => inq.id === id ? nextInquiry : inq))
+      if (selectedInquiry && selectedInquiry.id === id) {
+        setSelectedInquiry(nextInquiry)
+      }
+      toast.success(`Inquiry marked as ${newStatus}`)
+    } catch (error: any) {
+      toast.error(error.message || 'Unable to update inquiry')
+    }
   }
 
-  const handleDelete = (id: string) => {
-    setInquiries(inquiries.filter(inq => inq.id !== id))
-    toast.success('Inquiry deleted successfully (Mock)')
-    if (selectedInquiry && selectedInquiry.id === id) {
-      setSelectedInquiry(null)
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/inquiries/${id}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+
+      if (!res.ok) throw new Error(data.error || 'Unable to delete inquiry')
+
+      setInquiries(inquiries.filter(inq => inq.id !== id))
+      toast.success('Inquiry deleted successfully')
+      if (selectedInquiry && selectedInquiry.id === id) {
+        setSelectedInquiry(null)
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Unable to delete inquiry')
     }
   }
 
@@ -105,7 +170,10 @@ export default function InquiriesManager() {
     const matchesSearch = 
       inq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inq.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inq.subject.toLowerCase().includes(searchTerm.toLowerCase())
+      inq.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.sourceCountry.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.sourceProgram.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inq.sourceUniversity.toLowerCase().includes(searchTerm.toLowerCase())
     
     const matchesStatus = statusFilter === 'all' || inq.status === statusFilter
     
@@ -151,7 +219,11 @@ export default function InquiriesManager() {
               variant={statusFilter === filter ? 'default' : 'outline'}
               size="sm"
               onClick={() => setStatusFilter(filter)}
-              className="text-[11px] h-8 capitalize font-medium"
+              className={
+                statusFilter === filter
+                  ? 'h-8 bg-[#061331] text-[11px] font-bold capitalize text-white hover:bg-[#081638]'
+                  : 'h-8 text-[11px] font-medium capitalize text-slate-600 hover:border-[#d7a23a]/40 hover:bg-[#fffcf0] hover:text-[#081638]'
+              }
             >
               {filter === 'all' ? 'All Inquiries' : filter}
             </Button>
@@ -168,6 +240,7 @@ export default function InquiriesManager() {
                 <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider">
                   <th className="p-4 pl-6">Student Details</th>
                   <th className="p-4">Subject</th>
+                  <th className="p-4">Source</th>
                   <th className="p-4">Status</th>
                   <th className="p-4">Date</th>
                   <th className="p-4 pr-6 text-right">Actions</th>
@@ -183,11 +256,44 @@ export default function InquiriesManager() {
                         <span className="flex items-center gap-1"><Phone className="h-3 w-3 shrink-0" /> {inq.mobile}</span>
                       </div>
                     </td>
-                    <td className="p-4 font-medium text-slate-700 max-w-[200px] truncate">{inq.subject}</td>
+                    <td className="p-4 font-medium text-slate-700 max-w-50 truncate">{inq.subject}</td>
+                    <td className="p-4 max-w-60">
+                      <div className="space-y-1">
+                        <Badge variant="outline" className="text-[10px] capitalize">
+                          {inq.sourceType || 'general'}
+                        </Badge>
+                        <p className="truncate text-[11px] font-bold text-slate-700">
+                          {inq.sourceCountry || inq.preferredCountry || 'Country not selected'}
+                        </p>
+                        <p className="truncate text-[10px] text-slate-400">
+                          {inq.sourceProgram || inq.sourceUniversity || inq.sourceScholarship || inq.sourceBranch || inq.sourcePath || 'No source details'}
+                        </p>
+                      </div>
+                    </td>
                     <td className="p-4">{getStatusBadge(inq.status)}</td>
                     <td className="p-4 text-slate-400 font-medium">{inq.date}</td>
                     <td className="p-4 pr-6 text-right">
-                      <div className="flex justify-end gap-1">
+                      <div className="flex flex-wrap justify-end gap-1">
+                        {inq.status === 'Pending' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleUpdateStatus(inq.id, 'Contacted')}
+                            className="h-8 border-[#d7a23a]/40 px-2 text-[10px] font-bold text-[#081638] hover:bg-[#fffcf0]"
+                          >
+                            Contacted
+                          </Button>
+                        )}
+                        {inq.status !== 'Resolved' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleUpdateStatus(inq.id, 'Resolved')}
+                            className="h-8 bg-[#d7a23a] px-2 text-[10px] font-bold text-[#061331] hover:bg-[#c4932f]"
+                          >
+                            Resolve
+                          </Button>
+                        )}
                         <Button 
                           variant="ghost" 
                           size="sm" 
@@ -210,8 +316,8 @@ export default function InquiriesManager() {
                 ))}
                 {filteredInquiries.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-400 font-medium">
-                      No inquiries match your query.
+                    <td colSpan={6} className="p-8 text-center text-slate-400 font-medium">
+                      {isLoading ? 'Loading inquiries...' : 'No inquiries match your query.'}
                     </td>
                   </tr>
                 )}
@@ -250,6 +356,14 @@ export default function InquiriesManager() {
                   <span className="text-[10px] uppercase font-bold text-slate-400">Mobile</span>
                   <p className="font-semibold text-slate-600">{selectedInquiry.mobile}</p>
                 </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Qualification</span>
+                  <p className="font-semibold text-slate-600">{selectedInquiry.educationLevel || 'Not specified'}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Preferred Country</span>
+                  <p className="font-semibold text-slate-600">{selectedInquiry.preferredCountry || 'Not selected'}</p>
+                </div>
               </div>
 
               <hr className="border-slate-100" />
@@ -257,6 +371,27 @@ export default function InquiriesManager() {
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-bold text-slate-400">Subject</span>
                 <p className="font-bold text-slate-800 text-sm">{selectedInquiry.subject}</p>
+              </div>
+
+              <div className="grid gap-3 rounded-lg border border-[#d7a23a]/20 bg-[#fffcf0] p-3 text-xs sm:grid-cols-2">
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400">Source Type</span>
+                  <p className="mt-1 font-bold capitalize text-[#081638]">{selectedInquiry.sourceType || 'general'}</p>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400">Source Page</span>
+                  <p className="mt-1 font-bold text-[#081638]">{selectedInquiry.sourcePage || selectedInquiry.sourcePath || 'Not captured'}</p>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400">Country</span>
+                  <p className="mt-1 font-bold text-[#081638]">{selectedInquiry.sourceCountry || selectedInquiry.preferredCountry || 'Not selected'}</p>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400">Program / University</span>
+                  <p className="mt-1 font-bold text-[#081638]">
+                    {selectedInquiry.sourceProgram || selectedInquiry.sourceUniversity || selectedInquiry.sourceScholarship || selectedInquiry.sourceBranch || 'Not captured'}
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100">

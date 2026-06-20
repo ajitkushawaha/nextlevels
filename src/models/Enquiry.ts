@@ -10,6 +10,14 @@ export interface IEnquiry extends Document {
   intakeYear: string
   intakeMonth?: string
   message?: string
+  sourcePage?: string
+  sourcePath?: string
+  sourceType?: string
+  sourceCountry?: string
+  sourceProgram?: string
+  sourceUniversity?: string
+  sourceScholarship?: string
+  sourceBranch?: string
   status: 'new' | 'contacted' | 'resolved'
   createdAt: Date
   updatedAt: Date
@@ -26,6 +34,14 @@ const EnquirySchema: Schema = new Schema(
     intakeYear: { type: String, required: true },
     intakeMonth: { type: String },
     message: { type: String },
+    sourcePage: { type: String, default: '' },
+    sourcePath: { type: String, default: '' },
+    sourceType: { type: String, default: '' },
+    sourceCountry: { type: String, default: '' },
+    sourceProgram: { type: String, default: '' },
+    sourceUniversity: { type: String, default: '' },
+    sourceScholarship: { type: String, default: '' },
+    sourceBranch: { type: String, default: '' },
     status: { type: String, enum: ['new', 'contacted', 'resolved'], default: 'new' },
   },
   { timestamps: true }

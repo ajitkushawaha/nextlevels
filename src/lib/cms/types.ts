@@ -1,6 +1,7 @@
 export const CMS_SECTION_TYPES = [
   'homeHero',
   'homeProgram',
+  'homeScholarshipOffer',
   'homeDestinations',
   'homeWhyChooseUs',
   'homeServices',
@@ -8,6 +9,7 @@ export const CMS_SECTION_TYPES = [
   'homeStats',
   'homeTestimonials',
   'homeAmbassadors',
+  'homeSuccessStories',
   'homeFaqs',
   'homeBlog',
   'homeStaticSections',
@@ -15,6 +17,7 @@ export const CMS_SECTION_TYPES = [
   'servicesList',
   'servicesCredentials',
   'aboutHero',
+  'aboutCeoMessage',
   'aboutStory',
   'aboutTeam',
   'aboutVisionMission',
@@ -72,6 +75,32 @@ export type HomeProgramSection = {
     line1: string
     line2: string
   }
+}
+
+export type HomeScholarshipOfferSection = {
+  id: string
+  type: 'homeScholarshipOffer'
+  enabled: boolean
+  badgeText: string
+  intakeLabel: string
+  countdownTarget: string
+  titlePrefix: string
+  scholarshipAmount: string
+  titleSuffix: string
+  description: string
+  highlightedAgency: string
+  highlightedUniversity: string
+  highlightedOffer: string
+  ctaLabel: string
+  ctaHref: string
+  note: string
+  featureChips: Array<{
+    icon: 'Award' | 'ShieldCheck' | 'GraduationCap'
+    text: string
+  }>
+  benefitsTitle: string
+  benefits: string[]
+  urgencyText: string
 }
 
 export type HomeDestinationCard = {
@@ -197,12 +226,13 @@ export type HomeUniversitiesSection = {
     name: string
     logo: string
     coverImage: string
-    worldRank: string | number
-    established: string | number
+    worldRank?: string | number
+    established?: string | number
     flag: string
     location: string
     country: string
     description: string
+    students?: string
   }>
 }
 
@@ -245,14 +275,20 @@ export type HomeAmbassadorsSection = {
     image: string
     link: string
   }>
-  storiesTitle: string
-  storiesDescription: string
+}
+
+export type HomeSuccessStoriesSection = {
+  id: string
+  type: 'homeSuccessStories'
+  enabled: boolean
+  title: string
+  description: string
   videos: Array<{
-    title: string
+    mediaType: 'youtube' | 'image'
+    youtubeUrl?: string
     studentName: string
     studentAvatar: string
-    thumbnail: string
-    textOverlay?: string
+    thumbnail?: string
     isLocked?: boolean
   }>
 }
@@ -296,6 +332,20 @@ export type AboutHeroSection = {
   title: string
   description: string
   image: string
+}
+
+export type AboutCeoMessageSection = {
+  id: string
+  type: 'aboutCeoMessage'
+  enabled: boolean
+  eyebrow: string
+  title: string
+  message: string
+  quote?: string
+  name: string
+  role: string
+  image: string
+  imageAlt: string
 }
 
 export type AboutStorySection = {
@@ -385,6 +435,15 @@ export type ContactFormSection = {
   id: string
   type: 'contactForm'
   enabled: boolean
+  heading?: string
+  description?: string
+  qualificationLabel?: string
+  qualificationPlaceholder?: string
+  qualificationOptions?: string[]
+  termsLabel?: string
+  submitLabel?: string
+  image?: string
+  imageAlt?: string
 }
 
 export type ContactMapOfficeSection = {
@@ -404,6 +463,7 @@ export type ContactMapOfficeSection = {
 export type CmsSection =
   | HomeHeroSection
   | HomeProgramSection
+  | HomeScholarshipOfferSection
   | HomeDestinationsSection
   | HomeWhyChooseUsSection
   | HomeServicesSection
@@ -411,6 +471,7 @@ export type CmsSection =
   | HomeStatsSection
   | HomeTestimonialsSection
   | HomeAmbassadorsSection
+  | HomeSuccessStoriesSection
   | HomeFaqsSection
   | HomeBlogSection
   | HomeStaticSections
@@ -418,6 +479,7 @@ export type CmsSection =
   | ServicesListSection
   | ServicesCredentialsSection
   | AboutHeroSection
+  | AboutCeoMessageSection
   | AboutStorySection
   | AboutTeamSection
   | AboutVisionMissionSection

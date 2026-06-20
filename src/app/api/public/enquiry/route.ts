@@ -27,6 +27,14 @@ export async function POST(request: Request) {
       intakeYear,
       intakeMonth: body.intakeMonth || '',
       message: body.message || '',
+      sourcePage: body.sourcePage || '',
+      sourcePath: body.sourcePath || '',
+      sourceType: body.sourceType || '',
+      sourceCountry: body.sourceCountry || body.preferredCountry || '',
+      sourceProgram: body.sourceProgram || '',
+      sourceUniversity: body.sourceUniversity || '',
+      sourceScholarship: body.sourceScholarship || '',
+      sourceBranch: body.sourceBranch || '',
       status: 'new'
     })
     

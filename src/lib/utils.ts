@@ -13,12 +13,8 @@ export const formatCountryName = (name: string): string => {
 
   // Handle special cases for country names
   const specialCases: { [key: string]: string } = {
-    usa: 'United States',
-    us: 'United States',
     uk: 'United Kingdom',
-    uae: 'UAE',
-    'u.s.a': 'United States',
-    'u.s.': 'United States',
+    nz: 'New Zealand',
   }
 
   const lowerName = trimmedName.toLowerCase()

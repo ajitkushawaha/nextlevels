@@ -29,6 +29,7 @@ const imageKeyNames = new Set([
   'profileimage',
   'avatar',
   'globeimage',
+  'backgroundimage',
 ])
 
 function isImageKey(key: string) {
@@ -231,7 +232,11 @@ export default function HomeJsonSectionEditor({
 
   useEffect(() => {
     if (mode === 'form') {
-      setJsonString(JSON.stringify(section, null, 2))
+      const timeout = window.setTimeout(() => {
+        setJsonString(JSON.stringify(section, null, 2))
+      }, 0)
+
+      return () => window.clearTimeout(timeout)
     }
   }, [section, mode])
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Pin, PinOff, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -41,7 +41,7 @@ export default function HomeServicesEditor({
   }
 
   const togglePin = (service: any) => {
-    const title = service.title
+    const title = service.data?.title || service.title
     const description = service.data?.shortDesc || service.data?.description || ''
     const image = service.data?.image || '/image.png'
 
@@ -88,7 +88,8 @@ export default function HomeServicesEditor({
         ) : (
           <div className="grid gap-2">
             {allServices.map(srv => {
-              const pinned = isPinned(srv.title)
+              const title = srv.data?.title || srv.title
+              const pinned = isPinned(title)
               return (
                 <div
                   key={srv.id || srv._id}
@@ -99,10 +100,7 @@ export default function HomeServicesEditor({
                   }`}
                 >
                   <div className="text-left">
-                    <h4 className="text-xs font-bold text-[#081638]">{srv.title}</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5 max-w-sm truncate">
-                      {srv.data?.shortDesc || srv.data?.description || 'No description available'}
-                    </p>
+                    <h4 className="text-xs font-bold text-[#081638]">{title}</h4>
                   </div>
                   <Button
                     type="button"

@@ -45,7 +45,12 @@ export default function ScholarshipEnquiryForm({ scholarship }: Props) {
       preferredCountry: scholarship.country,
       intakeYear: new Date().getFullYear().toString(),
       intakeMonth: scholarship.deadline,
-      message: message || `Enquiring for ${scholarship.title} application guidance.`
+      message: message || `Enquiring for ${scholarship.title} application guidance.`,
+      sourcePage: `Scholarship: ${scholarship.title}`,
+      sourcePath: `/scholarships/${scholarship.id}`,
+      sourceType: 'scholarship',
+      sourceCountry: scholarship.country,
+      sourceScholarship: scholarship.title,
     }
 
     try {
