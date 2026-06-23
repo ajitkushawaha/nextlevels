@@ -1,14 +1,25 @@
+'use client'
+
 import { Mail, MapPin, Phone, PhoneCall, ArrowRight } from 'lucide-react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa6'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { defaultSiteSettings, type SiteSettings } from '@/lib/siteSettings'
 
-function Logo({ footer = false }: { footer?: boolean }) {
+const socialIconMap: Record<string, any> = {
+  Facebook: FaFacebook,
+  Instagram: FaInstagram,
+  LinkedIn: FaLinkedin,
+  YouTube: FaYoutube,
+}
+
+function Logo({ footer = false, settings }: { footer?: boolean; settings: SiteSettings['footer'] }) {
   return (
     <Link href="/" className="flex items-center gap-2" aria-label="Home">
       <Image
-        src="/logo.png"
-        alt="Next Level Education"
+        src={settings.logo}
+        alt={settings.logoAlt}
         width={150}
         height={74}
         priority={!footer}
@@ -19,6 +30,25 @@ function Logo({ footer = false }: { footer?: boolean }) {
 }
 
 export default function Footer() {
+  const [settings, setSettings] = useState(defaultSiteSettings.footer)
+
+  useEffect(() => {
+    let mounted = true
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/public/site-settings')
+        const data = await res.json()
+        if (mounted && data.settings?.footer) setSettings(data.settings.footer)
+      } catch {
+        // Keep defaults.
+      }
+    }
+    loadSettings()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   return (
     <footer className="relative bg-[#061331] pt-8 text-white bg-[url('/visa/footervector.png')] bg-cover bg-center">
       {/* Ready to Start Your Journey Section */}
@@ -30,16 +60,16 @@ export default function Footer() {
             </span>
             <div>
               <h2 className="text-xl font-bold leading-tight sm:text-2xl" style={{ fontFamily: 'Farro, sans-serif' }}>
-                Ready to Start Your Journey?
+                {settings.ctaTitle}
               </h2>
               <p className="mt-1 text-sm text-white/75">
-                Book a free consultation with our experts today.
+                {settings.ctaDescription}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/contact-us" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[#d7a23a] px-6 py-2 text-sm font-bold text-[#d7a23a] transition hover:bg-white hover:text-black">
-              Book a Free Consultation
+            <Link href={settings.ctaButtonHref} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[#d7a23a] px-6 py-2 text-sm font-bold text-[#d7a23a] transition hover:bg-white hover:text-black">
+              {settings.ctaButtonText}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <div className="hidden lg:block relative -mt-4 opacity-80 pl-4">
@@ -52,9 +82,9 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 px-5 py-8 sm:px-8 grid-cols-2 lg:grid-cols-5 lg:px-10">
         {/* Logo & Description */}
         <div className="lg:col-span-1">
-          <Logo footer />
+          <Logo footer settings={settings} />
           <p className="mt-5 text-[13px] leading-6 text-white/70 pr-4">
-            Your trusted partner for global education. We help you achieve your dreams and build a better future.
+            {settings.description}
           </p>
 
         </div>
@@ -63,16 +93,10 @@ export default function Footer() {
         <div className='pt-8 lg:pt-0'>
           <h3 className="text-[15px] font-bold">Quick Links</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
-            {[
-              ['Home', '/'],
-              ['About Us', '/about-us'],
-
-              ['Blog', '/blog'],
-              ['Contact Us', '/contact-us'],
-            ].map(([label, href]) => (
-              <li key={label}>
-                <Link href={href} className="transition hover:text-white">
-                  {label}
+            {settings.quickLinks.filter(item => item.enabled !== false).map(item => (
+              <li key={item.label}>
+                <Link href={item.href} className="transition hover:text-white">
+                  {item.label}
                 </Link>
               </li>
             ))}
@@ -83,15 +107,10 @@ export default function Footer() {
         <div>
           <h3 className="text-[15px] font-bold">Study Abroad</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
-            {[
-              ['United Kingdom', '/study-abroad/uk'],
-              ['Canada', '/study-abroad/canada'],
-              ['Australia', '/study-abroad/australia'],
-              ['New Zealand', '/study-abroad/new-zealand'],
-            ].map(([label, href]) => (
-              <li key={label}>
-                <Link href={href} className="transition hover:text-white">
-                  {label}
+            {settings.studyLinks.filter(item => item.enabled !== false).map(item => (
+              <li key={item.label}>
+                <Link href={item.href} className="transition hover:text-white">
+                  {item.label}
                 </Link>
               </li>
             ))}
@@ -102,18 +121,13 @@ export default function Footer() {
         <div>
           <h3 className="text-[15px] font-bold">Branches</h3>
           <ul className="mt-6 space-y-3 text-[13px] text-white/70">
-            {[
-              ['Jaffna', '/branches/jaffna'],
-              ['Batticaloa', '/branches/batticaloa'],
-              ['Colombo', '#'],
-              ['Vavuniya', '#'],
-            ].map(([branch, href]) => (
-              <li key={branch} className="text-[13px] text-white/70">
-                {href === '#' ? (
-                  branch
+            {settings.branchLinks.filter(item => item.enabled !== false).map(item => (
+              <li key={item.label} className="text-[13px] text-white/70">
+                {item.href === '#' ? (
+                  item.label
                 ) : (
-                  <Link href={href} className="transition hover:text-white">
-                    {branch}
+                  <Link href={item.href} className="transition hover:text-white">
+                    {item.label}
                   </Link>
                 )}
               </li>
@@ -127,26 +141,21 @@ export default function Footer() {
           <ul className="mt-3 space-y-4 text-[13px] text-white/70">
             <li className="flex gap-3 items-start">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
-              <span>+94775198195</span>
+              <span>{settings.phone}</span>
             </li>
             <li className="flex gap-3 items-start">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
-              <span>info@nextlevel.edu.lk</span>
+              <span>{settings.email}</span>
             </li>
             <li className="flex gap-3 items-start">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
               <span>
-                Palali Road, Kondavil, Jaffna, Sri Lanka</span>
+                {settings.address}</span>
             </li>
             <li>
               <div className="mt-3 flex items-center gap-3">
-                {[
-                  { icon: FaFacebook, label: 'Facebook', href: '#' },
-                  { icon: FaInstagram, label: 'Instagram', href: '#' },
-                  { icon: FaLinkedin, label: 'LinkedIn', href: '#' },
-                  { icon: FaYoutube, label: 'YouTube', href: '#' },
-                ].map(item => {
-                  const Icon = item.icon
+                {settings.socialLinks.filter(item => item.enabled !== false).map(item => {
+                  const Icon = socialIconMap[item.label] || FaFacebook
                   return (
                     <a
                       key={item.label}
@@ -166,15 +175,16 @@ export default function Footer() {
 
       <div className="border-t border-white/10 bg-[#030A1A]">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 text-[13px] text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
-          <p>© 2026 Next Level Education. All Rights Reserved.</p>
+          <p>{settings.copyright}</p>
           <div className="flex gap-4">
-            <Link href="/privacy-policy" className="hover:text-white transition">
-              Privacy Policy
-            </Link>
-            <span className="text-white/40">|</span>
-            <Link href="/terms" className="hover:text-white transition">
-              Terms &amp; Conditions
-            </Link>
+            {settings.legalLinks.filter(item => item.enabled !== false).map((item, index) => (
+              <span key={item.label} className="contents">
+                {index > 0 ? <span className="text-white/40">|</span> : null}
+                <Link href={item.href} className="hover:text-white transition">
+                  {item.label}
+                </Link>
+              </span>
+            ))}
           </div>
         </div>
       </div>

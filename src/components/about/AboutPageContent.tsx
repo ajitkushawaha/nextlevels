@@ -146,9 +146,15 @@ function AboutCeoMessage({ section }: { section: AboutCeoMessageSection }) {
             {section.title}
           </h2>
           <div className="mt-5 h-1.5 w-24 rounded-full bg-[#d7a23a]" />
-          <p className="mt-6 max-w-3xl text-sm font-medium leading-7 text-slate-600 sm:text-base">
-            {section.message}
-          </p>
+          <div className="mt-6 max-w-3xl space-y-4 text-sm font-medium leading-7 text-slate-600 sm:text-base">
+            {section.message
+              .split(/\n{2,}/)
+              .map(paragraph => paragraph.trim())
+              .filter(Boolean)
+              .map(paragraph => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+          </div>
           {section.quote ? (
             <p className="mt-6 border-l-4 border-[#d7a23a] pl-4 text-sm font-extrabold leading-6 text-[#061331]">
               {section.quote}

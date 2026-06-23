@@ -4,6 +4,8 @@ import NextLevelHomepage from '@/components/home/NextLevelHomepage'
 import ServicesPageContent from '@/components/services/ServicesPageContent'
 import AboutPageContent from '@/components/about/AboutPageContent'
 import ContactPageContent from '@/components/contact/ContactPageContent'
+import LegalPageContent from '@/components/legal/LegalPageContent'
+import FaqPageContent from '@/components/faq/FaqPageContent'
 import type { CmsPageContent, CmsSection } from '@/lib/cms/types'
 
 interface PageRendererProps {
@@ -63,6 +65,26 @@ export default function PageRenderer({
   if (slug === '/contact-us') {
     return (
       <ContactPageContent
+        content={content}
+        includeFooter={includeFooter}
+        sectionId={sectionId}
+      />
+    )
+  }
+
+  if (slug === '/privacy-policy' || slug === '/terms') {
+    return (
+      <LegalPageContent
+        content={content}
+        includeFooter={includeFooter}
+        sectionId={sectionId}
+      />
+    )
+  }
+
+  if (slug === '/faq') {
+    return (
+      <FaqPageContent
         content={content}
         includeFooter={includeFooter}
         sectionId={sectionId}

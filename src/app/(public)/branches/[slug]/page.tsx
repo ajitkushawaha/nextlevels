@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import BranchEnquiryForm from '@/components/branches/BranchEnquiryForm'
 import Footer from '@/components/layout/footer'
-import { branches, getBranch } from '@/lib/branches'
+import { getBranchPage, getBranchSlugs } from '@/lib/branchPages'
 
 type Params = {
   params: Promise<{
@@ -27,15 +27,14 @@ type Params = {
   }>
 }
 
-export function generateStaticParams() {
-  return branches.map(branch => ({
-    slug: branch.slug,
-  }))
+export async function generateStaticParams() {
+  const slugs = await getBranchSlugs()
+  return slugs.map(slug => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
-  const branch = getBranch(slug)
+  const branch = await getBranchPage(slug)
 
   if (!branch) return { title: 'Branch Not Found' }
 
@@ -50,7 +49,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function BranchPage({ params }: Params) {
   const { slug } = await params
-  const branch = getBranch(slug)
+  const branch = await getBranchPage(slug)
 
   if (!branch) notFound()
 

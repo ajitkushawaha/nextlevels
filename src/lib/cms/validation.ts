@@ -313,7 +313,7 @@ const aboutCeoMessageSectionSchema = z.object({
   enabled: z.boolean(),
   eyebrow: z.string().trim().min(1).max(100),
   title: z.string().trim().min(1).max(180),
-  message: z.string().trim().min(1).max(1200),
+  message: z.string().trim().min(1).max(4000),
   quote: z.string().trim().max(220).optional(),
   name: z.string().trim().min(1).max(120),
   role: z.string().trim().min(1).max(120),
@@ -433,6 +433,38 @@ const contactMapOfficeSectionSchema = z.object({
   })).min(1).max(6),
 })
 
+const legalContentSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('legalContent'),
+  enabled: z.boolean(),
+  eyebrow: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(180),
+  updatedLabel: z.string().trim().min(1).max(120),
+  intro: z.string().trim().min(1).max(800),
+  sections: z.array(z.object({
+    title: z.string().trim().min(1).max(180),
+    content: z.string().trim().min(1).max(2000),
+  })).min(1).max(20),
+})
+
+const faqContentSectionSchema = z.object({
+  id: z.string().trim().min(1),
+  type: z.literal('faqContent'),
+  enabled: z.boolean(),
+  badge: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(500),
+  backgroundImage: z.string().trim().min(1).max(500),
+  categories: z.array(z.object({
+    id: z.string().trim().min(1).max(80),
+    name: z.string().trim().min(1).max(120),
+    items: z.array(z.object({
+      question: z.string().trim().min(1).max(240),
+      answer: z.string().trim().min(1).max(1200),
+    })).min(1).max(20),
+  })).min(1).max(12),
+})
+
 export const cmsSectionSchema = z.discriminatedUnion('type', [
   homeHeroSectionSchema,
   homeProgramSectionSchema,
@@ -462,6 +494,8 @@ export const cmsSectionSchema = z.discriminatedUnion('type', [
   contactCardsSectionSchema,
   contactFormSectionSchema,
   contactMapOfficeSectionSchema,
+  legalContentSectionSchema,
+  faqContentSectionSchema,
 ])
 
 export const cmsPageContentSchema = z.object({

@@ -436,9 +436,9 @@ export default async function StudyDestinationPage({ params }: Params) {
               </ArticleBlock>
             </article>
 
-            <aside className="hidden self-start lg:block">
-              <div id="request-assessment" className="sticky top-24 max-h-[calc(100vh-7rem)] scroll-mt-28 space-y-4 overflow-y-auto pr-1">
-                 <div className="rounded-md border border-[#d7a23a]/20 bg-[#ffffff] p-4 shadow-sm">
+            <aside id="request-assessment" className="hidden scroll-mt-28 self-start lg:block">
+              <div className="space-y-4">
+                <div className="sticky top-24 rounded-md border border-[#d7a23a]/20 bg-white p-4 shadow-sm">
                   <FreeCounsellingForm
                     compact
                     showImage={false}
@@ -458,23 +458,22 @@ export default async function StudyDestinationPage({ params }: Params) {
                         href={typeof banner.href === 'string' && banner.href.trim() ? banner.href : '/contact-us'}
                         className="relative block aspect-video overflow-hidden rounded-md border border-[#d7a23a]/20 bg-[#fffcf0] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                       >
-                      <Image
-                        src={banner.image}
-                        alt={
-                          typeof banner.alt === 'string' && banner.alt.trim()
-                            ? banner.alt
-                            : `${destination.country} image CTA ${index + 1}`
-                        }
-                        fill
-                        priority={index === 0}
-                        className="object-cover object-center"
-                        sizes="400px"
-                      />
+                        <Image
+                          src={banner.image}
+                          alt={
+                            typeof banner.alt === 'string' && banner.alt.trim()
+                              ? banner.alt
+                              : `${destination.country} image CTA ${index + 1}`
+                          }
+                          fill
+                          priority={index === 0}
+                          className="object-cover object-center"
+                          sizes="400px"
+                        />
                       </Link>
                     ))}
                   </div>
                 ) : null}
-               
               </div>
             </aside>
           </div>

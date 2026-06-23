@@ -27,11 +27,45 @@ export const CMS_SECTION_TYPES = [
   'contactCards',
   'contactForm',
   'contactMapOffice',
+  'legalContent',
+  'faqContent',
 ] as const
 
 export type CmsSectionType = (typeof CMS_SECTION_TYPES)[number]
 
 export type CmsPageStatus = 'draft' | 'published' | 'archived'
+
+export type LegalContentSection = {
+  id: string
+  type: 'legalContent'
+  enabled: boolean
+  eyebrow: string
+  title: string
+  updatedLabel: string
+  intro: string
+  sections: Array<{
+    title: string
+    content: string
+  }>
+}
+
+export type FaqContentSection = {
+  id: string
+  type: 'faqContent'
+  enabled: boolean
+  badge: string
+  title: string
+  description: string
+  backgroundImage: string
+  categories: Array<{
+    id: string
+    name: string
+    items: Array<{
+      question: string
+      answer: string
+    }>
+  }>
+}
 
 export type HomeHeroFeature = {
   icon: 'Headphones' | 'FileCheck2' | 'GraduationCap' | 'ShieldCheck'
@@ -489,6 +523,8 @@ export type CmsSection =
   | ContactCardsSection
   | ContactFormSection
   | ContactMapOfficeSection
+  | LegalContentSection
+  | FaqContentSection
 
 export type CmsPageContent = {
   version: 1

@@ -39,6 +39,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCurrency } from '@/hooks/useCurrency'
+import { toast } from 'sonner'
 
 interface BlogCTA {
   title?: string
@@ -409,14 +410,14 @@ export default function CreateBlogPage() {
       'image/webp',
     ]
     if (!allowedTypes.includes(file.type)) {
-      alert('Please select a valid image file (PNG, JPEG, JPG, GIF, or WebP)')
+      toast.error('Please select a valid image file (PNG, JPEG, JPG, GIF, or WebP)')
       return
     }
 
     // Validate file size (5MB max)
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      alert('File size must be less than 5MB')
+      toast.error('File size must be less than 5MB')
       return
     }
 
@@ -454,13 +455,13 @@ export default function CreateBlogPage() {
         // Set the Cloudinary URL
         setFormData(prev => ({ ...prev, featuredImage: imageUrl }))
         setImagePreview(imageUrl)
-        alert('Image uploaded successfully!')
+        toast.success('Image uploaded successfully!')
       } else {
         throw new Error(result.error || 'Upload failed - no image URL received')
       }
     } catch (error) {
       console.error('Error uploading image:', error)
-      alert('Failed to upload image. Please try again.')
+      toast.error('Failed to upload image. Please try again.')
       setUploadedFile(null)
       setImagePreview('')
     } finally {
@@ -538,9 +539,7 @@ export default function CreateBlogPage() {
         !formData.category ||
         !formData.author
       ) {
-        alert(
-          'Please fill in title, excerpt, content, category, and author fields'
-        )
+        toast.error('Please fill in title, excerpt, content, category, and author fields')
         return
       }
 
@@ -563,9 +562,7 @@ export default function CreateBlogPage() {
 
       if (response.ok) {
         const result = await response.json()
-        alert(
-          `Blog ${status || formData.status === 'published' ? 'published' : 'saved as draft'} successfully!`
-        )
+        toast.success(`Blog ${status || formData.status === 'published' ? 'published' : 'saved as draft'} successfully!`)
         router.push('/admin/blog')
       } else {
         const errorData = await response.json()
@@ -573,7 +570,7 @@ export default function CreateBlogPage() {
       }
     } catch (error: any) {
       console.error('Error saving blog:', error)
-      alert(error.message || 'Error saving blog. Please try again.')
+      toast.error(error.message || 'Error saving blog. Please try again.')
     } finally {
       setIsLoading(false)
     }

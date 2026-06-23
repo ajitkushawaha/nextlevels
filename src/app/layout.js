@@ -1,5 +1,6 @@
 import { Farro, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col relative">
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

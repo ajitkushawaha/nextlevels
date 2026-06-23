@@ -41,6 +41,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useCurrency } from '@/hooks/useCurrency'
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -233,7 +234,7 @@ export default function EditBlogPage() {
         }
       } catch (error) {
         console.error('Error loading blog:', error)
-        alert('Error loading blog data. Please try again.')
+        toast.error('Error loading blog data. Please try again.')
         router.push('/admin/blog')
       } finally {
         setIsLoadingData(false)
@@ -464,14 +465,14 @@ export default function EditBlogPage() {
       'image/webp',
     ]
     if (!allowedTypes.includes(file.type)) {
-      alert('Please select a valid image file (PNG, JPEG, JPG, GIF, or WebP)')
+      toast.error('Please select a valid image file (PNG, JPEG, JPG, GIF, or WebP)')
       return
     }
 
     // Validate file size (5MB max)
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      alert('File size must be less than 5MB')
+      toast.error('File size must be less than 5MB')
       return
     }
 
@@ -509,13 +510,13 @@ export default function EditBlogPage() {
         // Set the Cloudinary URL
         setFormData(prev => ({ ...prev, featuredImage: imageUrl }))
         setImagePreview(imageUrl)
-        alert('Image uploaded successfully!')
+        toast.success('Image uploaded successfully!')
       } else {
         throw new Error(result.error || 'Upload failed - no image URL received')
       }
     } catch (error) {
       console.error('Error uploading image:', error)
-      alert('Failed to upload image. Please try again.')
+      toast.error('Failed to upload image. Please try again.')
       setUploadedFile(null)
       setImagePreview('')
     } finally {
@@ -592,7 +593,7 @@ export default function EditBlogPage() {
         !formData.excerpt ||
         !formData.author
       ) {
-        alert('Please fill in title, excerpt, content, and author fields')
+        toast.error('Please fill in title, excerpt, content, and author fields')
         return
       }
 
@@ -614,9 +615,7 @@ export default function EditBlogPage() {
       })
 
       if (response.ok) {
-        alert(
-          `Blog ${status || formData.status === 'published' ? 'published' : 'updated'} successfully!`
-        )
+        toast.success(`Blog ${status || formData.status === 'published' ? 'published' : 'updated'} successfully!`)
         router.push('/admin/blog')
       } else {
         const errorData = await response.json()
@@ -624,7 +623,7 @@ export default function EditBlogPage() {
       }
     } catch (error: any) {
       console.error('Error updating blog:', error)
-      alert(error.message || 'Error updating blog. Please try again.')
+      toast.error(error.message || 'Error updating blog. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -638,7 +637,7 @@ export default function EditBlogPage() {
       })
 
       if (response.ok) {
-        alert('Blog deleted successfully!')
+        toast.success('Blog deleted successfully!')
         router.push('/admin/blog')
       } else {
         const errorData = await response.json()
@@ -646,7 +645,7 @@ export default function EditBlogPage() {
       }
     } catch (error: any) {
       console.error('Error deleting blog:', error)
-      alert(error.message || 'Error deleting blog. Please try again.')
+      toast.error(error.message || 'Error deleting blog. Please try again.')
     } finally {
       setIsDeleting(false)
     }

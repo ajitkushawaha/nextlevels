@@ -120,7 +120,7 @@ h6,
 }
 
 .blog-content h1 {
-  margin: 0 0 1.5rem;
+  margin: 1rem 0;
   font-size: 1.875rem;
 }
 
@@ -146,7 +146,7 @@ h6,
 }
 
 .blog-content p {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0;
 }
 
 .blog-content a {

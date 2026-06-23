@@ -1,5 +1,6 @@
 import {
   Briefcase,
+  FileText,
   FileQuestion,
   GraduationCap,
   Home,
@@ -18,7 +19,14 @@ import {
   Heart,
 } from 'lucide-react'
 
-export type CmsPageKey = 'home' | 'services' | 'about' | 'contact'
+export type CmsPageKey =
+  | 'home'
+  | 'services'
+  | 'about'
+  | 'contact'
+  | 'privacy-policy'
+  | 'terms'
+  | 'faq'
 
 export type CmsSectionStatus = 'ready' | 'planned'
 
@@ -244,6 +252,54 @@ export const cmsPageRegistry: CmsPageRegistryItem[] = [
       },
     ],
   },
+  {
+    key: 'privacy-policy',
+    title: 'Privacy Policy',
+    description: 'Manage the public privacy policy page',
+    publicPath: '/privacy-policy',
+    icon: FileText,
+    iconClassName: 'bg-yellow-50 text-[#d7a23a]',
+    sections: [
+      {
+        id: 'privacy-policy-content',
+        title: 'Manage Privacy Policy',
+        description: 'Page intro, last updated label and policy sections',
+        status: 'ready',
+      },
+    ],
+  },
+  {
+    key: 'faq',
+    title: 'FAQ Page Content',
+    description: 'Manage FAQ page hero and question categories',
+    publicPath: '/faq',
+    icon: FileQuestion,
+    iconClassName: 'bg-yellow-50 text-[#d7a23a]',
+    sections: [
+      {
+        id: 'faq-content',
+        title: 'Manage FAQ Content',
+        description: 'Hero copy, FAQ categories, questions and answers',
+        status: 'ready',
+      },
+    ],
+  },
+  {
+    key: 'terms',
+    title: 'Terms & Conditions',
+    description: 'Manage the public terms and conditions page',
+    publicPath: '/terms',
+    icon: FileText,
+    iconClassName: 'bg-yellow-50 text-[#d7a23a]',
+    sections: [
+      {
+        id: 'terms-content',
+        title: 'Manage Terms & Conditions',
+        description: 'Page intro, last updated label and terms sections',
+        status: 'ready',
+      },
+    ],
+  },
 ]
 
 export const cmsDashboardStats = [
@@ -288,6 +344,9 @@ export const cmsSectionIconMap: Record<string, typeof Home> = {
   mission: Rocket,
   pillars: Heart,
   cta: Trophy,
+  privacy: FileText,
+  terms: FileText,
+  legal: FileText,
 }
 
 export function getCmsSectionIcon(sectionId: string) {

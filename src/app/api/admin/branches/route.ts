@@ -1,0 +1,65 @@
+import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/authConfig'
+import connectDB from '@/lib/db'
+import Branch from '@/models/Branch'
+import { branches as defaultBranches } from '@/lib/branches'
+import { listBranchPages } from '@/lib/branchPages'
+
+async function requireAdmin() {
+  const session = await getServerSession(authOptions)
+  return Boolean(session && (session.user as any)?.role === 'admin')
+}
+
+export async function GET() {
+  try {
+    if (!(await requireAdmin())) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const branches = await listBranchPages()
+    return NextResponse.json({ branches })
+  } catch (error) {
+    console.error('Admin branches GET failed:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    if (!(await requireAdmin())) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = await req.json()
+    const branch = body.branch
+
+    if (!branch?.slug || !branch?.city) {
+      return NextResponse.json({ error: 'Branch slug and city are required.' }, { status: 400 })
+    }
+
+    const fallback = defaultBranches.find(item => item.slug === branch.slug)
+    const merged = {
+      ...(fallback || {}),
+      ...branch,
+      intro: Array.isArray(branch.intro) ? branch.intro : fallback?.intro || [],
+      destinations: Array.isArray(branch.destinations) ? branch.destinations : fallback?.destinations || [],
+      areas: fallback?.areas || branch.areas || [],
+      stories: fallback?.stories || branch.stories || [],
+      team: fallback?.team || branch.team || [],
+      gallery: fallback?.gallery || branch.gallery || [],
+      faqs: fallback?.faqs || branch.faqs || [],
+      isActive: true,
+    }
+
+    await connectDB()
+    const saved = await (Branch as any)
+      .findOneAndUpdate({ slug: merged.slug }, merged, { new: true, upsert: true })
+      .lean()
+
+    return NextResponse.json({ branch: saved })
+  } catch (error) {
+    console.error('Admin branches PUT failed:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

@@ -12,33 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { defaultSiteSettings, type SiteSettings } from '@/lib/siteSettings'
 
-const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'About Us', href: '/about-us' },
-  {
-    label: 'Study Abroad',
-    href: '/#',
-    dropdownItems: [
-      { label: 'United Kingdom', href: '/study-abroad/study-in-uk' },
-      { label: 'Canada', href: '/study-abroad/study-in-canada' },
-      { label: 'Australia', href: '/study-abroad/study-in-australia' },
-      { label: 'New Zealand', href: '/study-abroad/study-in-new-zealand' },
-    ]
-  },
-  { label: 'Testimonial', href: '/testimonial' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact Us', href: '/contact-us' },
-  { label: 'Course Finder', href: '/courses' }
-]
-
-function Logo() {
+function Logo({ settings }: { settings: SiteSettings['header'] }) {
   return (
     <Link href="/" className="flex items-center gap-2" aria-label="Home">
       <Image
-        src="/logo.png"
-        alt="Next Level Education"
+        src={settings.logo}
+        alt={settings.logoAlt}
         width={150}
         height={74}
         priority
@@ -50,6 +31,7 @@ function Logo() {
 
 export default function Header() {
   const pathname = usePathname()
+  const [settings, setSettings] = useState(defaultSiteSettings.header)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -60,6 +42,25 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    let mounted = true
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/public/site-settings')
+        const data = await res.json()
+        if (mounted && data.settings?.header) setSettings(data.settings.header)
+      } catch {
+        // Keep defaults.
+      }
+    }
+    loadSettings()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  const navItems = settings.navItems.filter(item => item.enabled !== false)
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full transition-all duration-300 ${scrolled
@@ -68,14 +69,13 @@ export default function Header() {
         }`}
     >
       <nav className="mx-auto flex h-20 max-w-350 items-center justify-between px-5 sm:px-8 lg:px-10">
-        <Logo />
+        <Logo settings={settings} />
 
         <div className="hidden items-center gap-6 lg:flex xl:gap-8">
           {navItems.map(item => {
-            if (item.label === 'Course Finder') return null
             const isDropdown = !!item.dropdownItems
             const isActive = isDropdown
-              ? item.dropdownItems?.some(dropItem => pathname === dropItem.href)
+              ? item.dropdownItems?.some(dropItem => dropItem.enabled !== false && pathname === dropItem.href)
               : pathname === item.href
 
             return (
@@ -106,7 +106,7 @@ export default function Header() {
                 {item.dropdownItems && (
                   <div className="absolute left-0 top-full hidden w-64 pt-2 group-hover/nav:block group-focus-within/nav:block">
                     <div className="rounded-md border border-white/10 bg-[#061331] p-2 shadow-xl" role="menu">
-                      {item.dropdownItems.map(dropItem => (
+                      {item.dropdownItems.filter(dropItem => dropItem.enabled !== false).map(dropItem => (
                         <Link
                           key={dropItem.label}
                           href={dropItem.href}
@@ -127,10 +127,10 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center mr-1 sm:mr-2">
             <Link
-              href="/courses"
+              href={settings.courseFinderHref}
               className="relative inline-block text-[12px] sm:text-[14px] font-bold text-[#061331] hover:text-[#d7a23a] transition duration-300 pb-1.5"
             >
-              Course Finder
+              {settings.courseFinderLabel}
               <svg
                 className="absolute left-0 -bottom-1 w-full h-2 text-[#d7a23a] pointer-events-none"
                 viewBox="0 0 100 10"
@@ -151,13 +151,13 @@ export default function Header() {
 
           <div className="hidden lg:flex items-center">
             <a
-              href="tel:+91883456789"
+              href={settings.callHref}
               className="flex items-center gap-3 rounded-md border border-[#d7a23a] px-4 py-1.5 transition duration-300 hover:bg-[#061331]/5"
             >
               <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
               <div className="flex flex-col text-left">
-                <span className="text-[10px] leading-tight transition duration-300 text-[#061331]/70">Call Anytime</span>
-                <span className="text-[13px] font-bold text-[#d7a23a] leading-tight">+94775198195</span>
+                <span className="text-[10px] leading-tight transition duration-300 text-[#061331]/70">{settings.callLabel}</span>
+                <span className="text-[13px] font-bold text-[#d7a23a] leading-tight">{settings.callPhone}</span>
               </div>
             </a>
           </div>
@@ -201,7 +201,7 @@ export default function Header() {
                             </button>
                             {isDropdownOpen && (
                               <div className="flex flex-col pl-4 pb-2 border-l border-white/10 ml-3 mt-1 space-y-1">
-                                {item.dropdownItems?.map(dropItem => (
+                                {item.dropdownItems?.filter(dropItem => dropItem.enabled !== false).map(dropItem => (
                                   <Link
                                     key={dropItem.label}
                                     href={dropItem.href}
@@ -221,9 +221,7 @@ export default function Header() {
                           <Link
                             href={item.href}
                             onClick={() => setOpen(false)}
-                            className={item.label === 'Course Finder'
-                              ? `block text-center rounded-full bg-[#d7a23a] px-4 py-2.5 text-xs font-bold text-[#061331] transition hover:bg-white hover:text-[#061331] mt-2`
-                              : `block rounded-md px-3 py-3 text-sm font-semibold transition ${isActive
+                            className={`block rounded-md px-3 py-3 text-sm font-semibold transition ${isActive
                                   ? 'bg-white/10 text-[#d7a23a]'
                                   : 'text-white hover:bg-white/10 hover:text-[#d7a23a]'
                                 }`
@@ -240,13 +238,13 @@ export default function Header() {
 
               <div className="border-t border-white/10 pt-4 mt-auto">
                 <a
-                  href="tel:+94775198195"
+                href={settings.callHref}
                   className="flex items-center gap-3 rounded-md border border-[#d7a23a]/40 bg-white/5 px-4 py-3 transition duration-300 hover:bg-[#d7a23a]/10"
                 >
                   <PhoneCall className="h-5 w-5 text-[#d7a23a]" />
                   <div className="flex flex-col text-left">
-                    <span className="text-[10px] leading-tight text-white/60">Call Anytime</span>
-                    <span className="text-[14px] font-bold text-[#d7a23a] leading-tight">+94775198195</span>
+                    <span className="text-[10px] leading-tight text-white/60">{settings.callLabel}</span>
+                    <span className="text-[14px] font-bold text-[#d7a23a] leading-tight">{settings.callPhone}</span>
                   </div>
                 </a>
               </div>

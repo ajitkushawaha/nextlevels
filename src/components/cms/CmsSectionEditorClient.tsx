@@ -27,6 +27,9 @@ import { Label } from '@/components/ui/label'
 import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
 import { defaultServicesPageContent } from '@/lib/cms/servicesDefaults'
 import { defaultAboutPageContent } from '@/lib/cms/aboutDefaults'
+import { defaultContactPageContent } from '@/lib/cms/contactDefaults'
+import { defaultPrivacyPolicyContent, defaultTermsContent } from '@/lib/cms/legalDefaults'
+import { defaultFaqPageContent } from '@/lib/cms/faqDefaults'
 import { getCmsPage, getCmsSection } from '@/lib/cms/sectionRegistry'
 import type {
   CmsPageContent,
@@ -75,6 +78,10 @@ function getSectionById(content: CmsPageContent, sectionId: string) {
 function getDefaultContent(pageKey: string) {
   if (pageKey === 'services') return defaultServicesPageContent
   if (pageKey === 'about') return defaultAboutPageContent
+  if (pageKey === 'contact') return defaultContactPageContent
+  if (pageKey === 'privacy-policy') return defaultPrivacyPolicyContent
+  if (pageKey === 'terms') return defaultTermsContent
+  if (pageKey === 'faq') return defaultFaqPageContent
   return defaultHomePageContent
 }
 

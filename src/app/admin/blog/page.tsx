@@ -41,6 +41,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { toast } from 'sonner'
 
 interface Blog {
   _id: string
@@ -126,14 +127,14 @@ export default function AdminBlogPage() {
 
       if (response.ok) {
         setBlogs(blogs.filter(blog => blog._id !== blogId))
-        alert(`"${blogTitle}" deleted successfully!`)
+        toast.success(`"${blogTitle}" deleted successfully!`)
         fetchBlogsList()
       } else {
         throw new Error('Failed to delete blog')
       }
     } catch (error) {
       console.error('Error deleting blog:', error)
-      alert('Error deleting blog. Please try again.')
+      toast.error('Error deleting blog. Please try again.')
     } finally {
       setDeletingId(null)
     }

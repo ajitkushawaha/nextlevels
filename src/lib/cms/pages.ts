@@ -4,6 +4,8 @@ import { defaultHomePageContent } from './homeDefaults'
 import { defaultAboutPageContent } from './aboutDefaults'
 import { defaultServicesPageContent } from './servicesDefaults'
 import { defaultContactPageContent } from './contactDefaults'
+import { defaultPrivacyPolicyContent, defaultTermsContent } from './legalDefaults'
+import { defaultFaqPageContent } from './faqDefaults'
 import { parseCmsPageContent } from './validation'
 import type { CmsPageContent, CmsPageDocument, CmsSection } from './types'
 
@@ -24,6 +26,18 @@ const defaultPages: Record<string, { title: string; content: CmsPageContent }> =
     title: 'Contact Page',
     content: defaultContactPageContent,
   },
+  '/privacy-policy': {
+    title: 'Privacy Policy',
+    content: defaultPrivacyPolicyContent,
+  },
+  '/terms': {
+    title: 'Terms & Conditions',
+    content: defaultTermsContent,
+  },
+  '/faq': {
+    title: 'FAQ Page',
+    content: defaultFaqPageContent,
+  },
 }
 
 const homeDestinationOrder = [
@@ -37,6 +51,8 @@ export function normalizeCmsPageSlug(slug: string) {
   if (!slug || slug === 'home') return '/'
   if (slug === 'about') return '/about-us'
   if (slug === 'contact') return '/contact-us'
+  if (slug === 'privacy') return '/privacy-policy'
+  if (slug === 'faqs') return '/faq'
   return slug.startsWith('/') ? slug : `/${slug}`
 }
 
@@ -55,6 +71,19 @@ function withDefaultSections(content: unknown, slug: string) {
   const mergedSections: CmsSection[] = defaultPage.content.sections.map(defaultSection => {
     const existingSection = existingSectionsById.get(defaultSection.id)
     const section = existingSection || defaultSection
+
+    if (
+      slug === '/about-us' &&
+      section.type === 'aboutCeoMessage' &&
+      defaultSection.type === 'aboutCeoMessage' &&
+      (
+        section.name === 'CEO Name' ||
+        section.image === '/service/team1.png' ||
+        section.title === 'A Few Words from Our CEO'
+      )
+    ) {
+      return defaultSection
+    }
 
     if (section.type !== 'homeDestinations') return section
 

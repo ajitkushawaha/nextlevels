@@ -655,11 +655,11 @@ Please help me with the admission consultation process.`
 
       {/* ── MAIN BODY ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-12 lg:items-start">
 
           {/* ── LEFT: TABLE OF CONTENTS ── */}
-          <aside className="hidden lg:col-span-3 lg:block lg:self-start">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+          <aside className="hidden lg:sticky lg:top-24 lg:col-span-3 lg:block lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto">
+            <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
               <h3 className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#081638]">
                 <span className="h-4 w-1.5 rounded-full bg-[#d7a23a]" />
                 Table of Contents
@@ -692,11 +692,11 @@ Please help me with the admission consultation process.`
               className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8
               prose prose-base md:prose-lg max-w-none font-sans
               prose-headings:text-[#081638] prose-headings:font-bold prose-headings:font-serif
-              prose-h1:text-2xl prose-h1:font-extrabold prose-h1:mb-6 prose-h1:mt-0 prose-h1:leading-tight  prose-h1:pb-3 prose-h1:text-[#081638]
-              prose-h2:text-xl prose-h2:font-extrabold prose-h2:mb-4 prose-h2:mt-10 prose-h2:leading-tight prose-h2:text-[#081638] prose-h2:border-l-4 prose-h2:border-[#d7a23a] prose-h2:pl-4 prose-h2:scroll-mt-28
-              prose-h3:text-lg prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:leading-tight prose-h3:text-[#0d2459]
-              prose-h4:text-md prose-h4:font-bold prose-h4:mb-2 prose-h4:mt-6 prose-h4:text-slate-700 prose-h4:px-4 prose-h4:py-1.5 prose-h4:rounded prose-h4:border-l-4 prose-h4:border-[#d7a23a] prose-h4:bg-slate-50 prose-h4:scroll-mt-28
-              prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-5 prose-p:text-base md:prose-p:text-[16px]
+              prose-h1:text-xl prose-h1:font-extrabold prose-h1:mb-6 prose-h1:mt-0 prose-h1:leading-tight  prose-h1:pb-3 prose-h1:text-[#081638]
+              prose-h2:text-lg prose-h2:font-extrabold prose-h2:mb-4 prose-h2:mt-10 prose-h2:leading-tight prose-h2:text-[#081638] prose-h2:border-l-4 prose-h2:border-[#d7a23a] prose-h2:pl-4 prose-h2:scroll-mt-28
+              prose-h3:text-md prose-h3:font-bold prose-h3:mb-3 prose-h3:mt-8 prose-h3:leading-tight prose-h3:text-[#0d2459]
+              prose-h4:text-sm prose-h4:font-bold prose-h4:mb-2 prose-h4:mt-6 prose-h4:text-slate-700 prose-h4:px-4 prose-h4:py-1.5 prose-h4:rounded prose-h4:border-l-4 prose-h4:border-[#d7a23a] prose-h4:bg-slate-50 prose-h4:scroll-mt-28
+              prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-5 prose-p:text-base md:prose-p:text-[14px]
               prose-a:text-[#d7a23a] prose-a:no-underline prose-a:font-semibold hover:prose-a:underline
               prose-strong:text-[#081638] prose-strong:font-bold
               prose-ul:text-slate-700 prose-ul:mb-5 prose-ul:pl-0 prose-ul:space-y-2 prose-ul:list-none
@@ -788,8 +788,8 @@ Please help me with the admission consultation process.`
           </div>
 
           {/* ── RIGHT: CTA + RECENT POSTS ── */}
-          <aside className="lg:col-span-3 lg:self-start">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-6 overflow-y-auto pr-1">
+          <aside className="lg:sticky lg:top-24 lg:col-span-3 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
+            <div className="space-y-6">
 
               {/* Free Consultation CTA */}
               <div className="bg-linear-to-br from-[#081638] to-[#0d2459] rounded-2xl p-6 text-white shadow-lg text-center space-y-4">
