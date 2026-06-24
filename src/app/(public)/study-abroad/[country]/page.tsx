@@ -549,8 +549,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                       sizes="260px"
                     />
                   </div>
-                  <div className="mt-3 flex items-start gap-2">
-                    <span className="text-lg">{university.flag}</span>
+                  <div className="mt-3">
                     <div>
                       <h3 className="line-clamp-2 text-sm font-extrabold text-[#081638]">{university.name}</h3>
                       <p className="mt-1 text-[11px] text-slate-500">{university.location}</p>
