@@ -439,7 +439,10 @@ export type AboutCtaSection = {
   description: string
   buttonText: string
   buttonHref: string
-  globeImage: string
+  globeImage?: string
+  formHeading?: string
+  formDescription?: string
+  formSubmitLabel?: string
 }
 
 export type ContactHeroSection = {
@@ -491,6 +494,8 @@ export type ContactMapOfficeSection = {
     name: string
     addressLine1: string
     addressLine2: string
+    mapQuery?: string
+    mapUrl?: string
   }>
 }
 

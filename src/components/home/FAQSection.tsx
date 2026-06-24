@@ -241,7 +241,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
   const totalDots = maxIndex + 1
 
   return (
-    <section ref={sectionRef} className="bg-slate-50 py-10 text-[#081638] overflow-hidden select-none">
+    <section ref={sectionRef} className="bg-[#081638] py-10 text-white overflow-hidden select-none">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         
         {/* Header Block */}
@@ -257,7 +257,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
             
             {/* Main Title */}
             <h2 
-              className="text-3xl font-extrabold text-[#081638] sm:text-4xl"
+              className="text-3xl font-extrabold text-white sm:text-4xl"
               style={{ fontFamily: 'Farro, sans-serif' }}
             >
               {section?.title || 'Frequently Asked Questions'}
@@ -267,7 +267,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* View All FAQs CTA */}
           <Link
             href="/faq"
-            className="mt-4 hidden items-center gap-2 text-sm font-bold text-[#081638] transition-all duration-300 hover:text-[#d7a23a] sm:mt-0 sm:inline-flex group"
+            className="mt-4 hidden items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:text-[#d7a23a] sm:mt-0 sm:inline-flex group"
           >
             View All FAQs
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -280,7 +280,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Left Arrow Button */}
           <button
             onClick={prevSlide}
-            className="absolute -left-3.75 sm:-left-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -left-3.75 sm:-left-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
             aria-label="Previous FAQs"
           >
             <ChevronLeft className="h-5 w-5 stroke-[2.5]" />
@@ -302,7 +302,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className="bg-white rounded-xl border border-[#ece8df] shadow-[0_12px_34px_rgba(8,22,56,0.06)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(8,22,56,0.12)] text-left min-h-65 sm:aspect-square flex flex-col justify-between overflow-hidden">
+                  <div className="bg-white rounded-xl border border-[#d7a23a]/20 shadow-[0_12px_34px_rgba(0,0,0,0.14)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.24)] text-left min-h-65 sm:aspect-square flex flex-col justify-between overflow-hidden">
                     {/* Question */}
                     <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-13">
                       {faq.question}
@@ -330,7 +330,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Right Arrow Button */}
           <button
             onClick={nextSlide}
-            className="absolute -right-3.75 sm:-right-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.1)] border border-slate-100 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -right-3.75 sm:-right-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
             aria-label="Next FAQs"
           >
             <ChevronRight className="h-5 w-5 stroke-[2.5]" />
@@ -345,7 +345,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
                 key={i}
                 onClick={() => selectSlide(i)}
                 className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  safeCurrentIndex === i ? 'w-6 bg-[#081638]' : 'w-2.5 bg-slate-200'
+                  safeCurrentIndex === i ? 'w-6 bg-[#d7a23a]' : 'w-2.5 bg-white/35'
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
@@ -356,7 +356,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
         <div className="mt-8 flex justify-center sm:hidden">
           <Link
             href="/faq"
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 px-5 py-3 text-sm font-bold text-[#081638] transition hover:text-[#d7a23a]"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-white transition hover:border-[#d7a23a] hover:text-[#d7a23a]"
           >
             View All FAQs
             <ArrowRight className="h-4 w-4" />

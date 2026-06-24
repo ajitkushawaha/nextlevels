@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Footer from '@/components/layout/footer'
+import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import {
   Eye,
   Rocket,
@@ -167,7 +168,9 @@ function AboutCeoMessage({ section }: { section: AboutCeoMessageSection }) {
             src={section.image}
             alt={section.imageAlt}
             fill
-            className="object-cover object-top"
+            priority
+            loading="eager"
+            className="object-contain object-center"
             sizes="(max-width: 1024px) 100vw, 520px"
           />
           <div className="absolute inset-0 bg-linear-to-t from-[#061331]/90 via-[#061331]/15 to-transparent" />
@@ -359,6 +362,11 @@ function AboutPillars({ section }: { section: AboutPillarsSection }) {
 }
 
 function AboutCta({ section }: { section: AboutCtaSection }) {
+  const buttonHref =
+    section.buttonHref === '/contact-us' && section.buttonText === 'Book a Free Consultation'
+      ? '#about-consultation-form'
+      : section.buttonHref
+
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
       <div className="bg-linear-to-r from-[#02133f] via-[#052062] to-[#0a3297] text-white rounded-3xl py-2 px-10 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10">
@@ -382,7 +390,7 @@ function AboutCta({ section }: { section: AboutCtaSection }) {
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Link
-              href={section.buttonHref}
+              href={buttonHref}
               className="group flex items-center justify-between gap-6 px-6 py-4 border border-amber-400 text-white font-bold rounded-2xl shadow-[0_4px_25px_rgba(135,57,229,0.35)] hover:scale-[1.02] transition-all text-sm w-full sm:w-auto"
             >
               <div className="flex items-center gap-3">
@@ -396,15 +404,19 @@ function AboutCta({ section }: { section: AboutCtaSection }) {
           </div>
         </div>
 
-        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative z-10">
-          <div className="relative w-full max-w-120 aspect-square lg:scale-110">
-            <Image
-              src={section.globeImage}
-              alt="Study Abroad Destination Illustration"
-              fill
-              className="object-contain"
-              sizes="(max-width: 1024px) 100vw, 480px"
-              priority
+        <div id="about-consultation-form" className="w-full scroll-mt-28 lg:w-1/2 relative z-10">
+          <div className="rounded-2xl border border-[#d7a23a]/25 bg-white p-4 shadow-2xl">
+            <FreeCounsellingForm
+              compact
+              showImage={false}
+              heading={section.formHeading || 'Book a Free Consultation'}
+              description={
+                section.formDescription ||
+                'Share your details and our study abroad advisor will contact you with the next steps.'
+              }
+              submitLabel={section.formSubmitLabel || 'Start My Journey'}
+              sourcePage="About CTA"
+              sourceType="about-cta"
             />
           </div>
         </div>

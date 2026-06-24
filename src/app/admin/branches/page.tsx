@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import CmsImageField from '@/components/cms/section-editors/CmsImageField'
 
 type BranchEditorData = {
   slug: string
@@ -23,7 +24,34 @@ type BranchEditorData = {
   email: string
   workingHours: string
   mapQuery: string
+  areas: Array<{
+    name: string
+    title: string
+    description: string
+  }>
+  stories: Array<{
+    name: string
+    country: string
+    university: string
+    image: string
+    quote: string
+  }>
+  team: Array<{
+    name: string
+    designation: string
+    image: string
+  }>
+  gallery: Array<{
+    title: string
+    image: string
+  }>
+  faqs: Array<{
+    question: string
+    answer: string
+  }>
 }
+
+type ArrayField = 'areas' | 'stories' | 'team' | 'gallery' | 'faqs'
 
 export default function AdminBranchesPage() {
   const [branches, setBranches] = useState<BranchEditorData[]>([])
@@ -70,8 +98,38 @@ export default function AdminBranchesPage() {
 
   const updateField = (field: keyof BranchEditorData, value: string) => {
     if (!draft) return
-    if (field === 'intro' || field === 'destinations') return
+    if (
+      field === 'intro' ||
+      field === 'destinations' ||
+      field === 'areas' ||
+      field === 'stories' ||
+      field === 'team' ||
+      field === 'gallery' ||
+      field === 'faqs'
+    ) return
     setDraft({ ...draft, [field]: value })
+  }
+
+  const updateArrayItem = (
+    field: ArrayField,
+    index: number,
+    key: string,
+    value: string
+  ) => {
+    if (!draft) return
+    const items = [...((draft[field] || []) as any[])]
+    items[index] = { ...(items[index] || {}), [key]: value }
+    setDraft({ ...draft, [field]: items })
+  }
+
+  const addArrayItem = (field: ArrayField, item: any) => {
+    if (!draft) return
+    setDraft({ ...draft, [field]: [...((draft[field] || []) as any[]), item] })
+  }
+
+  const removeArrayItem = (field: ArrayField, index: number) => {
+    if (!draft) return
+    setDraft({ ...draft, [field]: ((draft[field] || []) as any[]).filter((_, itemIndex) => itemIndex !== index) })
   }
 
   const saveBranch = async () => {
@@ -151,7 +209,16 @@ export default function AdminBranchesPage() {
                 <Field label="Phone" value={draft.phone} onChange={value => updateField('phone', value)} />
                 <Field label="Email" value={draft.email} onChange={value => updateField('email', value)} />
                 <Field label="Working Hours" value={draft.workingHours} onChange={value => updateField('workingHours', value)} />
-                <Field label="Hero Image" value={draft.heroImage} onChange={value => updateField('heroImage', value)} />
+                <div className="md:col-span-2">
+                  <CmsImageField
+                    id="branch-hero-image"
+                    label="Hero Image"
+                    value={draft.heroImage || ''}
+                    onChange={value => updateField('heroImage', value)}
+                    folder="nextlevel/branches"
+                    placeholder="Paste an image URL/path or upload a branch hero image"
+                  />
+                </div>
                 <div className="space-y-1.5 md:col-span-2">
                   <Label>Address</Label>
                   <Textarea value={draft.address} onChange={event => updateField('address', event.target.value)} rows={3} />
@@ -192,6 +259,198 @@ export default function AdminBranchesPage() {
                       })
                     }
                   />
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>Service Areas</Label>
+                      <p className="mt-1 text-xs text-slate-500">Manage local guidance cards on the branch page.</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('areas', { name: '', title: '', description: '' })}
+                    >
+                      Add Area
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {(draft.areas || []).map((area, index) => (
+                      <div key={`${area.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-2">
+                        <Field label="Area Name" value={area.name} onChange={value => updateArrayItem('areas', index, 'name', value)} />
+                        <Field label="Title" value={area.title} onChange={value => updateArrayItem('areas', index, 'title', value)} />
+                        <div className="space-y-1.5 md:col-span-2">
+                          <Label>Description</Label>
+                          <Textarea value={area.description} onChange={event => updateArrayItem('areas', index, 'description', event.target.value)} rows={3} />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Button type="button" variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50" onClick={() => removeArrayItem('areas', index)}>
+                            Remove Area
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>Student Stories</Label>
+                      <p className="mt-1 text-xs text-slate-500">Manage branch success story cards.</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('stories', { name: '', country: '', university: '', image: '/home2/happy-gi.png', quote: '' })}
+                    >
+                      Add Story
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {(draft.stories || []).map((story, index) => (
+                      <div key={`${story.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-3">
+                        <Field label="Student Name" value={story.name} onChange={value => updateArrayItem('stories', index, 'name', value)} />
+                        <Field label="Country" value={story.country} onChange={value => updateArrayItem('stories', index, 'country', value)} />
+                        <Field label="University" value={story.university} onChange={value => updateArrayItem('stories', index, 'university', value)} />
+                        <div className="md:col-span-3">
+                          <CmsImageField
+                            id={`story-image-${index}`}
+                            label="Story Image"
+                            value={story.image || ''}
+                            onChange={value => updateArrayItem('stories', index, 'image', value)}
+                            folder="nextlevel/branches/stories"
+                          />
+                        </div>
+                        <div className="space-y-1.5 md:col-span-3">
+                          <Label>Quote</Label>
+                          <Textarea value={story.quote} onChange={event => updateArrayItem('stories', index, 'quote', event.target.value)} rows={3} />
+                        </div>
+                        <div className="md:col-span-3">
+                          <Button type="button" variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50" onClick={() => removeArrayItem('stories', index)}>
+                            Remove Story
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>Branch Team</Label>
+                      <p className="mt-1 text-xs text-slate-500">Manage staff shown on the public branch page.</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('team', { name: '', designation: '', image: '/service/team1.png' })}
+                    >
+                      Add Member
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {(draft.team || []).map((member, index) => (
+                      <div key={`${member.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+                        <Field
+                          label="Name"
+                          value={member.name}
+                          onChange={value => updateArrayItem('team', index, 'name', value)}
+                        />
+                        <Field
+                          label="Role"
+                          value={member.designation}
+                          onChange={value => updateArrayItem('team', index, 'designation', value)}
+                        />
+                        <CmsImageField
+                          id={`team-image-${index}`}
+                          label="Image"
+                          value={member.image || ''}
+                          onChange={value => updateArrayItem('team', index, 'image', value)}
+                          folder="nextlevel/branches/team"
+                        />
+                        <div className="flex items-end">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full border-rose-200 text-rose-600 hover:bg-rose-50"
+                            onClick={() => removeArrayItem('team', index)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>Gallery</Label>
+                      <p className="mt-1 text-xs text-slate-500">Manage branch gallery images.</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('gallery', { title: '', image: '/about-team-counselling.png' })}
+                    >
+                      Add Image
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {(draft.gallery || []).map((item, index) => (
+                      <div key={`${item.title}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_2fr_auto]">
+                        <Field label="Title" value={item.title} onChange={value => updateArrayItem('gallery', index, 'title', value)} />
+                        <CmsImageField
+                          id={`gallery-image-${index}`}
+                          label="Image"
+                          value={item.image || ''}
+                          onChange={value => updateArrayItem('gallery', index, 'image', value)}
+                          folder="nextlevel/branches/gallery"
+                        />
+                        <div className="flex items-end">
+                          <Button type="button" variant="outline" className="w-full border-rose-200 text-rose-600 hover:bg-rose-50" onClick={() => removeArrayItem('gallery', index)}>
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>FAQs</Label>
+                      <p className="mt-1 text-xs text-slate-500">Manage branch FAQ accordion content.</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('faqs', { question: '', answer: '' })}
+                    >
+                      Add FAQ
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {(draft.faqs || []).map((faq, index) => (
+                      <div key={`${faq.question}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+                        <Field label="Question" value={faq.question} onChange={value => updateArrayItem('faqs', index, 'question', value)} />
+                        <div className="space-y-1.5">
+                          <Label>Answer</Label>
+                          <Textarea value={faq.answer} onChange={event => updateArrayItem('faqs', index, 'answer', event.target.value)} rows={3} />
+                        </div>
+                        <div>
+                          <Button type="button" variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50" onClick={() => removeArrayItem('faqs', index)}>
+                            Remove FAQ
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="flex gap-2 md:col-span-2">
                   <Button onClick={saveBranch} disabled={saving} className="bg-[#081638] text-white hover:bg-[#0d2256]">

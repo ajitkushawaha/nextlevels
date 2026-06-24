@@ -85,6 +85,24 @@ function withDefaultSections(content: unknown, slug: string) {
       return defaultSection
     }
 
+    if (
+      slug === '/contact-us' &&
+      section.type === 'contactMapOffice' &&
+      defaultSection.type === 'contactMapOffice'
+    ) {
+      const defaultBranchMap = new Map(
+        defaultSection.branches.map(branch => [branch.name, branch])
+      )
+
+      return {
+        ...section,
+        branches: section.branches.map(branch => ({
+          ...(defaultBranchMap.get(branch.name) || {}),
+          ...branch,
+        })),
+      } as CmsSection
+    }
+
     if (section.type !== 'homeDestinations') return section
 
     return {

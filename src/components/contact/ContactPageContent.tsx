@@ -19,23 +19,34 @@ const fallbackBranches: ContactMapOfficeSection['branches'] = [
     name: 'Jaffna Head Office',
     addressLine1: 'Palali Road, Kondavil,',
     addressLine2: 'Jaffna, Sri Lanka',
+    mapQuery: 'Next Level Education Palali Road Kondavil Jaffna Sri Lanka',
   },
   {
     name: 'Batticaloa Branch',
     addressLine1: 'Main Street,',
     addressLine2: 'Batticaloa, Sri Lanka',
+    mapQuery: 'Next Level Education Batticaloa Sri Lanka',
   },
   {
     name: 'Colombo Branch',
     addressLine1: 'Colombo,',
     addressLine2: 'Sri Lanka',
+    mapQuery: 'Next Level Education Colombo Sri Lanka',
   },
   {
     name: 'Vavuniya Branch',
     addressLine1: 'Vavuniya,',
     addressLine2: 'Sri Lanka',
+    mapQuery: 'Next Level Education Vavuniya Sri Lanka',
   },
 ]
+
+const branchMapQueries: Record<string, string> = {
+  jaffna: 'Next Level Education Palali Road Kondavil Jaffna Sri Lanka',
+  batticaloa: 'Next Level Education Batticaloa Sri Lanka',
+  colombo: 'Next Level Education Colombo Sri Lanka',
+  vavuniya: 'Next Level Education Vavuniya Sri Lanka',
+}
 
 function getBranchHref(branchName: string) {
   const lowerName = branchName.toLowerCase()
@@ -44,6 +55,26 @@ function getBranchHref(branchName: string) {
   if (lowerName.includes('colombo')) return '/branches/colombo'
   if (lowerName.includes('vavuniya')) return '/branches/vavuniya'
   return '/branches/jaffna'
+}
+
+function getBranchMapUrl(branch: ContactMapOfficeSection['branches'][number]) {
+  if (branch.mapUrl?.trim()) return branch.mapUrl
+
+  if (branch.mapQuery?.trim()) {
+    return `https://www.google.com/maps?q=${encodeURIComponent(branch.mapQuery)}&output=embed`
+  }
+
+  const branchName = branch.name
+  const lowerName = branchName.toLowerCase()
+  const key = lowerName.includes('batticaloa')
+    ? 'batticaloa'
+    : lowerName.includes('colombo')
+      ? 'colombo'
+      : lowerName.includes('vavuniya')
+        ? 'vavuniya'
+        : 'jaffna'
+
+  return `https://www.google.com/maps?q=${encodeURIComponent(branchMapQueries[key])}&output=embed`
 }
 
 interface ContactPageContentProps {
@@ -210,41 +241,44 @@ function ContactMapOffice({ section }: { section: ContactMapOfficeSection }) {
         </h2>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {branches.map(branch => (
           <Link
             key={branch.name}
             href={getBranchHref(branch.name)}
-            className="group flex min-h-40 flex-col justify-between rounded-2xl border border-[#d7a23a]/20 bg-[#fffcf0] p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a23a]/50 hover:shadow-md"
+            className="group overflow-hidden rounded-md border border-[#d7a23a]/25 bg-[#fffcf0] text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a23a]/60 hover:bg-white hover:shadow-md"
           >
-            <h4 className="flex items-center gap-2 text-base font-extrabold text-[#081638]">
-                <MapPin className="h-5 w-5 text-[#d7a23a] shrink-0" />
+            <div className="relative h-44 overflow-hidden border-b border-[#d7a23a]/20 bg-white">
+              <iframe
+                src={getBranchMapUrl(branch)}
+                width="100%"
+                height="100%"
+                style={{ border: 0, pointerEvents: 'none' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${branch.name} map`}
+              />
+              <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-[#d7a23a]/10" />
+            </div>
+            <div className="flex min-h-51 flex-col justify-between p-5">
+              <h4 className="flex items-center gap-2 text-sm font-extrabold text-[#081638]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#d7a23a] shadow-sm">
+                  <MapPin className="h-4 w-4" />
+                </span>
                 {branch.name}
-            </h4>
-            <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
-              {branch.addressLine1}
-              <br />
-              {branch.addressLine2}
-            </p>
-            <span className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-[#d7a23a]">
-              View branch
-              <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-            </span>
+              </h4>
+              <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
+                {branch.addressLine1}
+                <br />
+                {branch.addressLine2}
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-[#d7a23a]">
+                View branch
+                <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+              </span>
+            </div>
           </Link>
         ))}
-      </div>
-
-      <div className="relative h-100 w-full overflow-hidden rounded-4xl border border-slate-200/80 shadow-md">
-        <iframe
-          src={section.mapUrl}
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Next Level Head Office Location"
-        />
       </div>
     </div>
   )

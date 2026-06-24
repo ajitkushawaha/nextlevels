@@ -44,11 +44,11 @@ export async function PUT(req: Request) {
       ...branch,
       intro: Array.isArray(branch.intro) ? branch.intro : fallback?.intro || [],
       destinations: Array.isArray(branch.destinations) ? branch.destinations : fallback?.destinations || [],
-      areas: fallback?.areas || branch.areas || [],
-      stories: fallback?.stories || branch.stories || [],
-      team: fallback?.team || branch.team || [],
-      gallery: fallback?.gallery || branch.gallery || [],
-      faqs: fallback?.faqs || branch.faqs || [],
+      areas: Array.isArray(branch.areas) ? branch.areas : fallback?.areas || [],
+      stories: Array.isArray(branch.stories) ? branch.stories : fallback?.stories || [],
+      team: Array.isArray(branch.team) ? branch.team : fallback?.team || [],
+      gallery: Array.isArray(branch.gallery) ? branch.gallery : fallback?.gallery || [],
+      faqs: Array.isArray(branch.faqs) ? branch.faqs : fallback?.faqs || [],
       isActive: true,
     }
 

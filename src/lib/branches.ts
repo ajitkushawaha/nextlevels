@@ -123,10 +123,10 @@ export const branches: Branch[] = [
       },
     ],
     team: [
-      { name: 'John', designation: 'Branch Manager', image: '/service/team1.png' },
-      { name: 'John', designation: 'Education Counsellor', image: '/service/team2.png' },
-      { name: 'John', designation: 'Visa & Document Advisor', image: '/service/team3.png' },
-      { name: 'John', designation: 'Marketing Officer', image: '/service/team4.png' },
+      { name: 'Jeyanthiny Sanmugarasa, BSc', designation: 'Manager - Enrolment', image: '/service/team1.png' },
+      { name: 'Kirisha Mahenthiran, BSc', designation: 'Team Leader', image: '/service/team2.png' },
+      { name: 'Harshika Ragavan, BA', designation: 'Senior Student Counsellor', image: '/service/team3.png' },
+      { name: 'Kiristikka Kirupakaran, BA', designation: 'Operations Executive', image: '/service/team4.png' },
     ],
     gallery: [
       { title: 'Office counselling session', image: '/about-team-counselling.png' },
@@ -240,10 +240,10 @@ export const branches: Branch[] = [
       },
     ],
     team: [
-      { name: 'John', designation: 'Branch Manager', image: '/service/team1.png' },
-      { name: 'John', designation: 'Education Counsellor', image: '/service/team2.png' },
-      { name: 'John', designation: 'Visa & Document Advisor', image: '/service/team3.png' },
-      { name: 'John', designation: 'Marketing Officer', image: '/service/team4.png' },
+      { name: 'Kebilraj Kalvinathan, BSc', designation: 'Branch Manager', image: '/service/team1.png' },
+      { name: 'Jawfar Rasitha Akeela Banu', designation: 'Student Counsellor', image: '/service/team2.png' },
+      { name: 'Priyanka Kunapalan', designation: 'Student Counsellor', image: '/service/team3.png' },
+      { name: 'Nazeer Fathima Sahana, BA', designation: 'Administrative Assistant', image: '/service/team4.png' },
     ],
     gallery: [
       { title: 'Batticaloa counselling session', image: '/home2/happy-team.png' },

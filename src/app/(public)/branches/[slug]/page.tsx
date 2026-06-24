@@ -242,16 +242,13 @@ export default async function BranchPage({ params }: Params) {
 
         <section className="bg-white py-10 sm:py-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
               <div>
                 <p className="text-[11px] font-black uppercase tracking-widest text-[#d7a23a]">Branch Gallery</p>
                 <h2 className="mt-3 text-3xl font-black text-[#081638] sm:text-4xl" style={{ fontFamily: 'Farro, sans-serif' }}>
                   Inside the {branch.city} branch
                 </h2>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-slate-500">
-                Office photos, counselling sessions, visa celebrations, education fairs, and university delegate visits.
-              </p>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {branch.gallery.map(item => (
@@ -335,19 +332,19 @@ export default async function BranchPage({ params }: Params) {
 
         <section id="branch-enquiry" className="bg-[#E9EFF6] py-10 sm:py-12">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
-            <div>
-              <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[#081638] text-[#d7a23a]">
-                <GraduationCap className="h-7 w-7" />
+            <div className="max-w-2xl lg:self-center">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#081638] text-[#d7a23a]">
+                <GraduationCap className="h-6 w-6" />
               </span>
-              <h2 className="mt-5 text-3xl font-black leading-tight text-[#081638] sm:text-5xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+              <h2 className="mt-4 text-3xl font-black leading-[1.08] text-[#081638] sm:text-4xl lg:text-[46px]" style={{ fontFamily: 'Farro, sans-serif' }}>
                 Ready to Study Abroad from {branch.city}?
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
+              <p className="mt-4 max-w-xl text-sm leading-6 text-slate-600 sm:text-[15px]">
                 Share your details with the {branch.city} branch team. We will review your profile and guide you through country selection, university admissions, student visa preparation, and scholarship options.
               </p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="mt-5 grid max-w-xl gap-x-5 gap-y-2 sm:grid-cols-2">
                 {['Free counselling', 'University admissions', 'Visa assistance', 'Scholarship guidance'].map(item => (
-                  <div key={item} className="flex items-center gap-2 text-sm font-bold text-[#081638]">
+                  <div key={item} className="flex min-h-8 items-center gap-2 text-sm font-bold text-[#081638]">
                     <UsersRound className="h-4 w-4 text-[#d7a23a]" />
                     {item}
                   </div>

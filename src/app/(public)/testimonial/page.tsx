@@ -44,7 +44,7 @@ export default async function TestimonialPage() {
           fill
           priority
           className="absolute inset-0 z-0 object-cover object-center"
-          sizes="100vw"
+          sizes="(max-width: 1280px) 100vw, 1280px"
         />
 
         <div className="relative z-20 flex h-full w-full max-w-7xl flex-col justify-between mx-auto px-4 sm:px-6 lg:px-8">

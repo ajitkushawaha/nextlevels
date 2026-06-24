@@ -378,7 +378,10 @@ const aboutCtaSectionSchema = z.object({
   description: z.string().trim().min(1).max(800),
   buttonText: z.string().trim().min(1).max(100),
   buttonHref: z.string().trim().min(1).max(240),
-  globeImage: z.string().trim().min(1).max(500),
+  globeImage: z.string().trim().min(1).max(500).optional(),
+  formHeading: z.string().trim().min(1).max(120).optional(),
+  formDescription: z.string().trim().min(1).max(500).optional(),
+  formSubmitLabel: z.string().trim().min(1).max(80).optional(),
 })
 
 const contactHeroSectionSchema = z.object({
@@ -430,6 +433,8 @@ const contactMapOfficeSectionSchema = z.object({
     name: z.string().trim().min(1).max(120),
     addressLine1: z.string().trim().min(1).max(240),
     addressLine2: z.string().trim().min(1).max(240),
+    mapQuery: z.string().trim().min(1).max(300).optional(),
+    mapUrl: z.string().trim().min(1).max(1000).optional(),
   })).min(1).max(6),
 })
 

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import * as LucideIcons from 'lucide-react'
 import Footer from '@/components/layout/footer'
+import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import { getPublishedServiceDetail, getPublishedServiceSlugs } from '@/lib/servicePages'
 
 type Params = {
@@ -112,7 +113,7 @@ export default async function ServiceDetailPage({ params }: Params) {
             fill
             priority
             className="object-cover object-center absolute inset-0 z-0"
-            sizes="100vw"
+            sizes="(max-width: 1280px) 100vw, 1280px"
           />
 
           <div className="relative z-20 flex flex-col justify-between h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -331,27 +332,11 @@ export default async function ServiceDetailPage({ params }: Params) {
               })}
             </div>
 
-            <div className="mt-9 rounded-[18px] bg-[#12174F] px-6 py-5 text-white shadow-[0_20px_45px_rgba(18,23,79,0.16)] sm:px-8 lg:flex lg:items-center lg:justify-between">
-              <div className="flex items-center gap-5">
-                <span className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-full border border-white/70 text-white sm:flex">
-                  <Sparkles className="h-8 w-8" />
-                </span>
-                <div>
-                  <h3 className="text-xl font-black">
-                    Your dream university is closer than you think.
-                  </h3>
-                  <p className="mt-1 text-sm text-white/80">
-                    Let&apos;s take the next step together.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/contact-us"
-                className="mt-5 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#FBC02D] px-8 py-3 text-sm font-black text-[#12174F] shadow-lg transition hover:bg-white lg:mt-0"
-              >
-                Get Started Today
-                <ArrowRight className="h-5 w-5" />
-              </Link>
+              <div className="rounded-4xl mt-12 bg-white p-4 text-[#081638]  sm:p-5 lg:p-6">
+                <FreeCounsellingForm
+                  sourcePage={service.title}
+                  sourceType="service-detail-cta"
+                />
             </div>
           </div>
         </section>

@@ -105,8 +105,11 @@ export const defaultAboutPageContent: CmsPageContent = {
       titleLine2Highlighted: 'Study Abroad',
       description: 'Join thousands of successful students who have achieved their dreams with Next Level Education. Your future starts with a single conversation.',
       buttonText: 'Book a Free Consultation',
-      buttonHref: '/contact-us',
+      buttonHref: '#about-consultation-form',
       globeImage: '/study-abrode-cta-globe.png',
+      formHeading: 'Book a Free Consultation',
+      formDescription: 'Share your details and our study abroad advisor will contact you with the next steps.',
+      formSubmitLabel: 'Start My Journey',
     },
   ],
 }

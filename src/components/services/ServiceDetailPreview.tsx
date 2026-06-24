@@ -87,7 +87,7 @@ export default function ServiceDetailPreview({ service }: ServiceDetailPreviewPr
             alt={`${service.title || 'Service'} banner`}
             fill
             className="object-cover object-center"
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, 768px"
           />
         </div>
 
