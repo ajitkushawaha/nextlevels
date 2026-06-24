@@ -12,6 +12,10 @@ export interface IPage extends Document {
   metaDescription: string;
   metaKeywords: string;
   featuredImage: string;
+  ogTitle: string;
+  ogDescription: string;
+  canonical: string;
+  robots: string;
   category: string;
   tags: string[];
   author: string;
@@ -36,6 +40,10 @@ const PageSchema = new Schema<IPage>(
     metaDescription: { type: String },
     metaKeywords: { type: String },
     featuredImage: { type: String },
+    ogTitle: { type: String },
+    ogDescription: { type: String },
+    canonical: { type: String },
+    robots: { type: String, default: "index, follow" },
     category: { type: String, default: "general" },
     tags: [{ type: String }],
     author: { type: String },

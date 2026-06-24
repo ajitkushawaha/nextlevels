@@ -39,6 +39,7 @@ export async function PUT(req: Request) {
       { key: 'global' },
       {
         key: 'global',
+        seo: settings.seo,
         header: settings.header,
         footer: settings.footer,
       },

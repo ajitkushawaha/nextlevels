@@ -21,7 +21,8 @@ import {
   LayoutDashboard,
   MessageSquare,
   FileCode,
-  MapPinned
+  MapPinned,
+  Search
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -134,6 +135,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 {[
                   { label: 'CMS Dashboard', href: '/admin/cms', icon: FileCode },
                   { label: 'Global Settings', href: '/admin/site-settings', icon: Settings },
+                  { label: 'SEO Manager', href: '/admin/seo', icon: Search },
                   { label: 'Services', href: '/admin/services', icon: Briefcase },
                   { label: 'Branches', href: '/admin/branches', icon: MapPinned },
                   { label: 'Courses', href: '/admin/courses', icon: GraduationCap },

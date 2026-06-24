@@ -3,6 +3,8 @@ import connectDB from '@/lib/db'
 import Page from '@/models/Page'
 import Visa from '@/models/Visa'
 import HeroSection from '@/models/HeroSection'
+import SiteSettings from '@/models/SiteSettings'
+import { defaultSiteSettings, mergeSiteSettings } from '@/lib/siteSettings'
 
 interface SEOData {
   metaTitle: string
@@ -72,6 +74,9 @@ export function generateMetadata(seoData: SEOData): Metadata {
 
 // Utility function to fetch SEO data server-side (directly from database)
 export async function fetchSEOData(path: string): Promise<SEOData> {
+  let siteSettings = defaultSiteSettings
+  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || defaultSiteSettings.seo.baseUrl
+
   try {
     // Ensure database connection
     const db = await connectDB()
@@ -79,22 +84,27 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
       throw new Error('Database connection failed')
     }
 
+    const settingsDoc = await (SiteSettings as any).findOne({ key: 'global' }).lean()
+    siteSettings = mergeSiteSettings(settingsDoc)
+    baseUrl = process.env.NEXT_PUBLIC_BASE_URL || siteSettings.seo.baseUrl || defaultSiteSettings.seo.baseUrl
+
     // Try to find page by slug first
     const slug = path.startsWith('/') ? path.slice(1) : path
     const page: any = await (Page as any).findOne({ slug, status: 'active' }).lean()
 
     if (page) {
       return {
-        metaTitle: page.metaTitle || page.title || '',
-        metaDescription: page.metaDescription || page.description || '',
+        metaTitle: page.metaTitle || page.title || siteSettings.seo.defaultMetaTitle,
+        metaDescription:
+          page.metaDescription || page.description || siteSettings.seo.defaultMetaDescription,
         metaKeywords: page.metaKeywords
-          ? page.metaKeywords.split(',').map((k: string) => k.trim())
-          : [],
-        ogTitle: page.metaTitle || page.title || '',
-        ogDescription: page.metaDescription || page.description || '',
-        ogImage: page.featuredImage || '',
-        canonical: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nextleveleducation.com'}${path}`,
-        robots: 'index, follow',
+          ? page.metaKeywords.split(',').map((k: string) => k.trim()).filter(Boolean)
+          : siteSettings.seo.defaultMetaKeywords.split(',').map(keyword => keyword.trim()).filter(Boolean),
+        ogTitle: page.ogTitle || page.metaTitle || page.title || siteSettings.seo.defaultMetaTitle,
+        ogDescription: page.ogDescription || page.metaDescription || page.description || siteSettings.seo.defaultMetaDescription,
+        ogImage: page.featuredImage || siteSettings.seo.defaultOgImage,
+        canonical: page.canonical || `${baseUrl}${path}`,
+        robots: page.robots || siteSettings.seo.defaultRobots,
       }
     }
 
@@ -130,28 +140,20 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
             computedDescription ||
             'Professional study abroad consulting and student visa guidance. Expert support for your educational dreams.',
           ogImage: '/logo.png',
-          canonical: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nextleveleducation.com'}/`,
-          robots: 'index, follow',
+          canonical: `${baseUrl}/`,
+          robots: siteSettings.seo.defaultRobots,
         }
       }
 
       return {
-        metaTitle: 'Next Level Education Consultancy | Study Abroad Expert',
-        metaDescription:
-          'Expert guidance for your overseas education and student visa journey. We make it simple, you make it happen.',
-        metaKeywords: [
-          'education consultancy',
-          'study abroad',
-          'student visa',
-          'free visa consultation',
-          'Next Level Education',
-        ],
-        ogTitle: 'Next Level Education Consultancy | Study Abroad Expert',
-        ogDescription:
-          'Expert guidance for your overseas education and student visa journey. We make it simple, you make it happen.',
-        ogImage: '/logo.png',
-        canonical: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nextleveleducation.com'}/`,
-        robots: 'index, follow',
+        metaTitle: siteSettings.seo.defaultMetaTitle,
+        metaDescription: siteSettings.seo.defaultMetaDescription,
+        metaKeywords: siteSettings.seo.defaultMetaKeywords.split(',').map(keyword => keyword.trim()).filter(Boolean),
+        ogTitle: siteSettings.seo.defaultMetaTitle,
+        ogDescription: siteSettings.seo.defaultMetaDescription,
+        ogImage: siteSettings.seo.defaultOgImage,
+        canonical: `${baseUrl}/`,
+        robots: siteSettings.seo.defaultRobots,
       }
     }
 
@@ -196,7 +198,7 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
             visa.metaDescription ||
             `Apply for ${visa.country} ${visa.visaType} visa online with Next Level. Fast processing, expert guidance, and high success rate.`,
           ogImage: visa.countryFlag || '',
-          canonical: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nextleveleducation.com'}${path}`,
+          canonical: `${baseUrl}${path}`,
           robots: visa.metaRobots || 'INDEX, FOLLOW',
         }
       }
@@ -207,15 +209,13 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
 
   // Fallback SEO data
   return {
-    metaTitle: 'Next Level Education Consultancy | Study Abroad Expert',
-    metaDescription:
-      'Professional study abroad consulting and student visa guidance. Expert support for all your educational needs.',
-    metaKeywords: ['education consultancy', 'study abroad', 'student visa', 'Next Level Education'],
-    ogTitle: 'Next Level Education Consultancy | Study Abroad Expert',
-    ogDescription:
-      'Professional study abroad consulting and student visa guidance. Expert support for all your educational needs.',
-    ogImage: '',
-    canonical: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nextleveleducation.com'}${path}`,
-    robots: 'index, follow',
+    metaTitle: siteSettings.seo.defaultMetaTitle,
+    metaDescription: siteSettings.seo.defaultMetaDescription,
+    metaKeywords: siteSettings.seo.defaultMetaKeywords.split(',').map(keyword => keyword.trim()).filter(Boolean),
+    ogTitle: siteSettings.seo.defaultMetaTitle,
+    ogDescription: siteSettings.seo.defaultMetaDescription,
+    ogImage: siteSettings.seo.defaultOgImage,
+    canonical: `${baseUrl}${path}`,
+    robots: siteSettings.seo.defaultRobots,
   }
 }

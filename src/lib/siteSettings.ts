@@ -7,6 +7,17 @@ export type SiteLink = {
 
 export type SiteSettings = {
   key: 'global'
+  seo: {
+    siteName: string
+    defaultMetaTitle: string
+    defaultMetaDescription: string
+    defaultMetaKeywords: string
+    defaultOgImage: string
+    baseUrl: string
+    defaultRobots: string
+    googleAnalyticsId: string
+    googleTagManagerId: string
+  }
   header: {
     logo: string
     logoAlt: string
@@ -39,6 +50,18 @@ export type SiteSettings = {
 
 export const defaultSiteSettings: SiteSettings = {
   key: 'global',
+  seo: {
+    siteName: 'Next Level Education Consultancy',
+    defaultMetaTitle: 'Next Level Education Consultancy | Study Abroad Expert',
+    defaultMetaDescription:
+      'Leading overseas education consultancy providing free student visa consultation, university admission guidance, and comprehensive support to study in the UK, Canada, Australia, and New Zealand.',
+    defaultMetaKeywords: 'education consultancy, study abroad, student visa, Next Level Education',
+    defaultOgImage: '/logo.png',
+    baseUrl: 'https://nextleveleducation.com',
+    defaultRobots: 'index, follow',
+    googleAnalyticsId: '',
+    googleTagManagerId: '',
+  },
   header: {
     logo: '/logo.png',
     logoAlt: 'Next Level Education',
@@ -113,6 +136,10 @@ export const defaultSiteSettings: SiteSettings = {
 export function mergeSiteSettings(settings?: Partial<SiteSettings> | null): SiteSettings {
   return {
     key: 'global',
+    seo: {
+      ...defaultSiteSettings.seo,
+      ...(settings?.seo || {}),
+    },
     header: {
       ...defaultSiteSettings.header,
       ...(settings?.header || {}),

@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import CmsImageField from '@/components/cms/section-editors/CmsImageField'
 import { defaultSiteSettings, type SiteLink, type SiteSettings } from '@/lib/siteSettings'
 
 type HeaderKey = keyof SiteSettings['header']
 type FooterKey = keyof SiteSettings['footer']
+type SeoKey = keyof SiteSettings['seo']
 type LinkGroupKey = 'quickLinks' | 'studyLinks' | 'branchLinks' | 'socialLinks' | 'legalLinks'
 
 const emptyLink: SiteLink = { label: '', href: '', enabled: true }
@@ -38,6 +40,13 @@ export default function SiteSettingsPage() {
     setSettings(prev => ({
       ...prev,
       header: { ...prev.header, [key]: value },
+    }))
+  }
+
+  const updateSeo = (key: SeoKey, value: any) => {
+    setSettings(prev => ({
+      ...prev,
+      seo: { ...prev.seo, [key]: value },
     }))
   }
 
@@ -165,6 +174,47 @@ export default function SiteSettingsPage() {
         </Button>
       </div>
 
+      <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-black text-[#061331]">SEO & Analytics</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Manage site-wide fallback meta tags and Google tracking IDs.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <Field label="Site Name">
+            <Input value={settings.seo.siteName} onChange={event => updateSeo('siteName', event.target.value)} />
+          </Field>
+          <Field label="Base URL">
+            <Input value={settings.seo.baseUrl} onChange={event => updateSeo('baseUrl', event.target.value)} />
+          </Field>
+          <Field label="Default Meta Title">
+            <Input value={settings.seo.defaultMetaTitle} onChange={event => updateSeo('defaultMetaTitle', event.target.value)} />
+          </Field>
+          <Field label="Default Robots">
+            <Input value={settings.seo.defaultRobots} onChange={event => updateSeo('defaultRobots', event.target.value)} />
+          </Field>
+          <CmsImageField
+            id="default-og-image"
+            label="Default OG Image"
+            value={settings.seo.defaultOgImage}
+            onChange={value => updateSeo('defaultOgImage', value)}
+            folder="nextlevel/site-settings"
+            placeholder="Upload or paste an OG image URL"
+          />
+          <Field label="Default Keywords">
+            <Input value={settings.seo.defaultMetaKeywords} onChange={event => updateSeo('defaultMetaKeywords', event.target.value)} />
+          </Field>
+          <Field label="Google Analytics ID">
+            <Input placeholder="G-XXXXXXXXXX" value={settings.seo.googleAnalyticsId} onChange={event => updateSeo('googleAnalyticsId', event.target.value)} />
+          </Field>
+          <Field label="Google Tag Manager ID">
+            <Input placeholder="GTM-XXXXXXX" value={settings.seo.googleTagManagerId} onChange={event => updateSeo('googleTagManagerId', event.target.value)} />
+          </Field>
+          <Field label="Default Meta Description">
+            <Textarea rows={3} value={settings.seo.defaultMetaDescription} onChange={event => updateSeo('defaultMetaDescription', event.target.value)} />
+          </Field>
+        </div>
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-black text-[#061331]">Header</h2>
@@ -230,9 +280,14 @@ export default function SiteSettingsPage() {
           <h2 className="text-lg font-black text-[#061331]">Footer</h2>
           <div className="mt-5 grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Footer Logo">
-                <Input value={settings.footer.logo} onChange={event => updateFooter('logo', event.target.value)} />
-              </Field>
+              <CmsImageField
+                id="footer-logo"
+                label="Footer Logo"
+                value={settings.footer.logo}
+                onChange={value => updateFooter('logo', value)}
+                folder="nextlevel/site-settings"
+                placeholder="Upload or paste a footer logo URL"
+              />
               <Field label="Footer Logo Alt">
                 <Input value={settings.footer.logoAlt} onChange={event => updateFooter('logoAlt', event.target.value)} />
               </Field>
