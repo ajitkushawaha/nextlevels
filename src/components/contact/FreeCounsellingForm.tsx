@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Check, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
@@ -40,7 +40,15 @@ const defaultQualificationOptions = [
   'Other',
 ]
 
-export default function FreeCounsellingForm({
+export default function FreeCounsellingForm(props: FreeCounsellingFormProps) {
+  return (
+    <Suspense fallback={<div className="p-4 text-center text-slate-500 text-xs">Loading assessment form...</div>}>
+      <FreeCounsellingFormInner {...props} />
+    </Suspense>
+  )
+}
+
+function FreeCounsellingFormInner({
   heading = 'Get FREE Counselling Today!',
   description = 'Enter your details and our expert will reach out to you to discuss your plans. By the way, all our services are free!',
   qualificationLabel = 'Highest qualification',
@@ -61,7 +69,7 @@ export default function FreeCounsellingForm({
   sourceBranch = '',
   referralAgentCode = '',
   referralAgentName = '',
-}: FreeCounsellingFormProps = {}) {
+}: FreeCounsellingFormProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const detectedAgentCode = referralAgentCode || searchParams.get('agent') || searchParams.get('ref') || ''
@@ -110,7 +118,6 @@ export default function FreeCounsellingForm({
     try {
       const combinedPhone = `${formData.dialCode} ${formData.phone}`
       const fullName = `${formData.firstName} ${formData.lastName}`.trim()
-
       const detailedMessage = 'Free counselling request'
 
       const res = await fetch('/api/public/enquiry', {
@@ -347,18 +354,18 @@ export default function FreeCounsellingForm({
 
       {/* Image Side */}
       {showImage && (
-      <div className="hidden md:block col-span-1 md:col-span-5 relative self-stretch min-h-90">
-        <div className="absolute inset-0 w-full h-full overflow-hidden rounded-4xl">
-          <Image
-            alt={imageAlt}
-            loading="eager"
-            fill
-            sizes="(max-width: 768px) 100vw, 40vw"
-            className="object-contain object-center"
-            src={image}
-          />
+        <div className="hidden md:block col-span-1 md:col-span-5 relative self-stretch min-h-90">
+          <div className="absolute inset-0 w-full h-full overflow-hidden rounded-4xl">
+            <Image
+              alt={imageAlt}
+              loading="eager"
+              fill
+              sizes="(max-width: 768px) 100vw, 40vw"
+              className="object-contain object-center"
+              src={image}
+            />
+          </div>
         </div>
-      </div>
       )}
     </div>
   )
