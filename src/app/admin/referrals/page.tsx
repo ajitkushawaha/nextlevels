@@ -2,11 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { Copy, Link2, Plus, RefreshCw, UserRoundCheck } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Link2, Plus, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import Link from 'next/link'
 
 type ReferralAgent = {
   _id: string
@@ -20,18 +28,6 @@ type ReferralAgent = {
   totalLeads: number
 }
 
-type Enquiry = {
-  _id: string
-  fullName: string
-  email: string
-  phone: string
-  educationLevel: string
-  preferredCountry: string
-  sourcePage?: string
-  status: string
-  createdAt: string
-}
-
 const emptyForm = {
   name: '',
   email: '',
@@ -39,16 +35,17 @@ const emptyForm = {
   notes: '',
 }
 
+const ITEMS_PER_PAGE = 10
+
 export default function ReferralAgentsPage() {
   const [agents, setAgents] = useState<ReferralAgent[]>([])
-  const [selectedAgent, setSelectedAgent] = useState<ReferralAgent | null>(null)
-  const [enquiries, setEnquiries] = useState<Enquiry[]>([])
   const [form, setForm] = useState(emptyForm)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
-  const selectedLink = selectedAgent ? `${origin}/referral/${selectedAgent.publicToken || selectedAgent.code}` : ''
 
   const totalLeads = useMemo(
     () => agents.reduce((sum, agent) => sum + (agent.totalLeads || 0), 0),
@@ -62,23 +59,11 @@ export default function ReferralAgentsPage() {
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Unable to load referral agents')
       setAgents(data.agents || [])
+      setCurrentPage(1)
     } catch (error: any) {
       toast.error(error.message || 'Unable to load referral agents')
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const loadAgentDetails = async (agent: ReferralAgent) => {
-    setSelectedAgent(agent)
-    try {
-      const response = await fetch(`/api/admin/referral-agents/${agent.code}`)
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Unable to load agent leads')
-      setSelectedAgent({ ...data.agent, totalLeads: data.enquiries?.length || 0 })
-      setEnquiries(data.enquiries || [])
-    } catch (error: any) {
-      toast.error(error.message || 'Unable to load agent leads')
     }
   }
 
@@ -104,6 +89,7 @@ export default function ReferralAgentsPage() {
       if (!response.ok) throw new Error(data.error || 'Unable to create referral agent')
       toast.success('Referral agent created')
       setForm(emptyForm)
+      setIsDialogOpen(false)
       await loadAgents()
     } catch (error: any) {
       toast.error(error.message || 'Unable to create referral agent')
@@ -117,6 +103,16 @@ export default function ReferralAgentsPage() {
     toast.success(message)
   }
 
+  // Pagination Math
+  const totalPages = Math.max(1, Math.ceil(agents.length / ITEMS_PER_PAGE))
+  const paginatedAgents = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    return agents.slice(start, start + ITEMS_PER_PAGE)
+  }, [agents, currentPage])
+
+  const startIndex = agents.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1
+  const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, agents.length)
+
   return (
     <div className="min-h-screen bg-slate-100 p-6 md:p-8">
       <div className="mb-6 flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
@@ -126,10 +122,16 @@ export default function ReferralAgentsPage() {
             Generate agent links and track registrations submitted through each referral.
           </p>
         </div>
-        <Button onClick={loadAgents} variant="outline" className="gap-2">
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button onClick={() => setIsDialogOpen(true)} className="gap-2 bg-[#d7a23a] font-bold text-slate-950 hover:bg-[#d7a23a]/90">
+            <Plus className="h-4 w-4" />
+            Create Agent Link
+          </Button>
+          <Button onClick={loadAgents} variant="outline" className="gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
@@ -138,152 +140,179 @@ export default function ReferralAgentsPage() {
         <StatCard label="Active Agents" value={agents.filter(agent => agent.isActive).length} />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <div className="space-y-6">
-          <form onSubmit={createAgent} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-sm font-black text-[#061331]">Create Agent Link</h2>
-            <div className="mt-4 space-y-3">
-              <Field label="Agent Name">
-                <Input value={form.name} onChange={event => setForm(prev => ({ ...prev, name: event.target.value }))} />
-              </Field>
-              <Field label="Email">
-                <Input value={form.email} onChange={event => setForm(prev => ({ ...prev, email: event.target.value }))} />
-              </Field>
-              <Field label="Phone">
-                <Input value={form.phone} onChange={event => setForm(prev => ({ ...prev, phone: event.target.value }))} />
-              </Field>
-              <Field label="Notes">
-                <Textarea rows={3} value={form.notes} onChange={event => setForm(prev => ({ ...prev, notes: event.target.value }))} />
-              </Field>
-              <Button disabled={isSaving} className="w-full bg-[#061331] text-white hover:bg-[#061331]/95">
-                <Plus className="h-4 w-4" />
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[800px] border-collapse text-left text-sm">
+            <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-3.5">Agent Name</th>
+                <th className="px-6 py-3.5">Form Link</th>
+                <th className="px-6 py-3.5">Email</th>
+                <th className="px-6 py-3.5">Phone</th>
+                <th className="px-6 py-3.5 text-center">Total Leads</th>
+                <th className="px-6 py-3.5">Status</th>
+                <th className="px-6 py-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-sm font-semibold text-slate-400">
+                    Loading agents...
+                  </td>
+                </tr>
+              ) : agents.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-sm font-semibold text-slate-400">
+                    No agents created yet.
+                  </td>
+                </tr>
+              ) : (
+                paginatedAgents.map(agent => (
+                  <tr key={agent._id} className="hover:bg-slate-50/70 align-middle">
+                    <td className="px-6 py-4">
+                      <p className="font-black text-[#061331]">{agent.name}</p>
+                      {agent.notes && <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{agent.notes}</p>}
+                    </td>
+                    <td className="px-6 py-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyText(`${origin}/referral/${agent.publicToken || agent.code}`, 'Form link copied')}
+                        className="gap-1.5 text-xs border-slate-200 hover:bg-slate-50 text-slate-700 font-bold"
+                      >
+                        <Link2 className="h-3.5 w-3.5 text-[#d7a23a]" />
+                        Copy Link
+                      </Button>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">{agent.email || '-'}</td>
+                    <td className="px-6 py-4 text-slate-600">{agent.phone || '-'}</td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-[#061331]">
+                        {agent.totalLeads || 0}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        agent.isActive 
+                          ? 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' 
+                          : 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10'
+                      }`}>
+                        {agent.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Link
+                        href={`/admin/referrals/${agent.code}`}
+                        className="inline-flex items-center justify-center rounded-lg bg-[#061331] px-4 py-2 text-xs font-bold text-white hover:bg-[#061331]/90 transition-colors"
+                      >
+                        Dashboard
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination controls */}
+        {!isLoading && agents.length > 0 && (
+          <div className="flex flex-col gap-4 border-t border-slate-200 bg-white px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs font-bold text-slate-500">
+              Showing <span className="text-slate-800">{startIndex}</span> to{' '}
+              <span className="text-slate-800">{endIndex}</span> of{' '}
+              <span className="text-slate-800">{agents.length}</span> agents
+            </p>
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="h-8 w-8 p-0"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                  className={`h-8 w-8 text-xs font-black ${
+                    currentPage === page
+                      ? 'bg-[#061331] text-white'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  {page}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="h-8 w-8 p-0"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-white rounded-2xl p-6">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-black text-[#061331]">Create Agent Link</DialogTitle>
+            <DialogDescription className="text-xs text-slate-500">
+              Fill in the details below to generate a new referral agent tracking link.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={createAgent} className="mt-4 space-y-4">
+            <Field label="Agent Name">
+              <Input
+                value={form.name}
+                onChange={event => setForm(prev => ({ ...prev, name: event.target.value }))}
+                placeholder="John Doe"
+              />
+            </Field>
+            <Field label="Email">
+              <Input
+                type="email"
+                value={form.email}
+                onChange={event => setForm(prev => ({ ...prev, email: event.target.value }))}
+                placeholder="john@example.com"
+              />
+            </Field>
+            <Field label="Phone">
+              <Input
+                value={form.phone}
+                onChange={event => setForm(prev => ({ ...prev, phone: event.target.value }))}
+                placeholder="+1 234 567 890"
+              />
+            </Field>
+            <Field label="Notes">
+              <Textarea
+                rows={3}
+                value={form.notes}
+                onChange={event => setForm(prev => ({ ...prev, notes: event.target.value }))}
+                placeholder="Optional notes about the agent..."
+              />
+            </Field>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSaving} className="bg-[#061331] text-white hover:bg-[#061331]/95">
                 {isSaving ? 'Creating...' : 'Create Agent'}
               </Button>
             </div>
           </form>
-
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="px-1 text-sm font-black text-[#061331]">Agents</h2>
-            <div className="mt-3 space-y-2">
-              {isLoading ? (
-                <p className="p-4 text-center text-xs font-semibold text-slate-400">Loading agents...</p>
-              ) : agents.length === 0 ? (
-                <p className="p-4 text-center text-xs font-semibold text-slate-400">No agents created yet.</p>
-              ) : (
-                agents.map(agent => (
-                  <button
-                    key={agent._id}
-                    type="button"
-                    onClick={() => loadAgentDetails(agent)}
-                    className={`w-full rounded-xl border p-3 text-left transition ${
-                      selectedAgent?.code === agent.code
-                        ? 'border-[#d7a23a]/70 bg-[#fffbeb]'
-                        : 'border-slate-100 bg-slate-50 hover:border-[#d7a23a]/40 hover:bg-white'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-black text-[#061331]">{agent.name}</p>
-                        <p className="mt-1 text-[11px] font-bold text-slate-400">{agent.code}</p>
-                      </div>
-                      <span className="rounded-full bg-[#061331] px-2.5 py-1 text-[11px] font-black text-white">
-                        {agent.totalLeads || 0}
-                      </span>
-                    </div>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          {selectedAgent ? (
-            <>
-              <div className="flex flex-col gap-4 border-b border-slate-100 pb-5 lg:flex-row lg:items-start lg:justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <UserRoundCheck className="h-5 w-5 text-[#d7a23a]" />
-                    <h2 className="text-xl font-black text-[#061331]">{selectedAgent.name}</h2>
-                  </div>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Total collected through this agent: <span className="font-black text-[#061331]">{enquiries.length}</span>
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button variant="outline" onClick={() => copyText(selectedAgent.code, 'Agent code copied')} className="gap-2">
-                    <Copy className="h-4 w-4" />
-                    Copy Code
-                  </Button>
-                  <Button onClick={() => copyText(selectedLink, 'Referral link copied')} className="gap-2 bg-[#061331] text-white hover:bg-[#061331]/95">
-                    <Link2 className="h-4 w-4" />
-                    Copy Link
-                  </Button>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-xl border border-[#d7a23a]/25 bg-[#fffbeb] p-4">
-                <p className="text-[11px] font-black uppercase tracking-wider text-slate-500">Referral Link</p>
-                <p className="mt-1 break-all text-sm font-bold text-[#061331]">{selectedLink}</p>
-              </div>
-
-              <div className="mt-5 overflow-hidden rounded-xl border border-slate-200">
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[820px] border-collapse text-left text-sm">
-                    <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500">
-                      <tr>
-                        <th className="px-4 py-3">Student</th>
-                        <th className="px-4 py-3">Phone</th>
-                        <th className="px-4 py-3">Qualification</th>
-                        <th className="px-4 py-3">Country</th>
-                        <th className="px-4 py-3">Date</th>
-                        <th className="px-4 py-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {enquiries.length === 0 ? (
-                        <tr>
-                          <td colSpan={6} className="px-4 py-8 text-center text-sm font-semibold text-slate-400">
-                            No registrations from this agent yet.
-                          </td>
-                        </tr>
-                      ) : (
-                        enquiries.map(enquiry => (
-                          <tr key={enquiry._id} className="align-top hover:bg-slate-50/70">
-                            <td className="px-4 py-3">
-                              <p className="font-black text-[#061331]">{enquiry.fullName}</p>
-                              <p className="mt-0.5 text-xs text-slate-500">{enquiry.email}</p>
-                            </td>
-                            <td className="px-4 py-3 font-semibold text-slate-600">{enquiry.phone}</td>
-                            <td className="px-4 py-3 font-semibold text-slate-600">{enquiry.educationLevel || 'Not specified'}</td>
-                            <td className="px-4 py-3 font-semibold text-slate-600">{enquiry.preferredCountry}</td>
-                            <td className="px-4 py-3 font-semibold text-slate-500">
-                              {enquiry.createdAt ? new Date(enquiry.createdAt).toLocaleDateString() : '-'}
-                            </td>
-                            <td className="px-4 py-3">
-                              <span className="rounded-full bg-[#d7a23a]/12 px-2.5 py-1 text-xs font-black capitalize text-[#9a6a12]">
-                                {enquiry.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex min-h-96 items-center justify-center text-center">
-              <div>
-                <UserRoundCheck className="mx-auto h-12 w-12 text-slate-300" />
-                <h2 className="mt-4 text-lg font-black text-[#061331]">Select an agent</h2>
-                <p className="mt-1 text-sm text-slate-500">Click an agent card to view total collections and lead details.</p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
