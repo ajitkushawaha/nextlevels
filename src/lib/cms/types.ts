@@ -111,10 +111,7 @@ export type HomeProgramSection = {
   }
 }
 
-export type HomeScholarshipOfferSection = {
-  id: string
-  type: 'homeScholarshipOffer'
-  enabled: boolean
+export type HomeScholarshipOffer = {
   badgeText: string
   intakeLabel: string
   countdownTarget: string
@@ -135,6 +132,13 @@ export type HomeScholarshipOfferSection = {
   benefitsTitle: string
   benefits: string[]
   urgencyText: string
+}
+
+export type HomeScholarshipOfferSection = HomeScholarshipOffer & {
+  id: string
+  type: 'homeScholarshipOffer'
+  enabled: boolean
+  offers?: HomeScholarshipOffer[]
 }
 
 export type HomeDestinationCard = {
@@ -308,6 +312,7 @@ export type HomeAmbassadorsSection = {
     university: string
     image: string
     link: string
+    intro?: string
   }>
 }
 

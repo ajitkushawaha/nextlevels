@@ -22,7 +22,8 @@ import {
   MessageSquare,
   FileCode,
   MapPinned,
-  Search
+  Search,
+  UserRoundCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -201,6 +202,19 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 >
                   <MessageSquare className="h-4 w-4 text-slate-400 shrink-0" />
                   {!isCollapsed && <span>User Inquiries</span>}
+                </Link>
+                <Link
+                  href="/admin/referrals"
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition ${
+                    pathname.startsWith('/admin/referrals') 
+                      ? 'bg-slate-100 text-slate-950 font-semibold' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  } ${isCollapsed ? 'justify-center' : ''}`}
+                  title="Referral Agents"
+                >
+                  <UserRoundCheck className="h-4 w-4 text-slate-400 shrink-0" />
+                  {!isCollapsed && <span>Referral Agents</span>}
                 </Link>
               </nav>
             </div>

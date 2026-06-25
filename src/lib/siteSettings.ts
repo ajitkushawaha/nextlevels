@@ -48,6 +48,37 @@ export type SiteSettings = {
   }
 }
 
+const defaultHeaderNavItems: SiteLink[] = [
+  { label: 'Home', href: '/', enabled: true },
+  { label: 'Services', href: '/services', enabled: true },
+  { label: 'About Us', href: '/about-us', enabled: true },
+  {
+    label: 'Study Abroad',
+    href: '/#',
+    enabled: true,
+    dropdownItems: [
+      { label: 'United Kingdom', href: '/study-abroad/study-in-uk', enabled: true },
+      { label: 'Canada', href: '/study-abroad/study-in-canada', enabled: true },
+      { label: 'Australia', href: '/study-abroad/study-in-australia', enabled: true },
+      { label: 'New Zealand', href: '/study-abroad/study-in-new-zealand', enabled: true },
+    ],
+  },
+  { label: 'Testimonial', href: '/testimonial', enabled: true },
+  { label: 'Blog', href: '/blog', enabled: true },
+  { label: 'Contact Us', href: '/contact-us', enabled: true },
+  {
+    label: 'Branches',
+    href: '/branches',
+    enabled: true,
+    dropdownItems: [
+      { label: 'Jaffna', href: '/branches/jaffna', enabled: true },
+      { label: 'Batticaloa', href: '/branches/batticaloa', enabled: true },
+      { label: 'Colombo', href: '/branches/colombo', enabled: true },
+      { label: 'Vavuniya', href: '/branches/vavuniya', enabled: true },
+    ],
+  },
+]
+
 export const defaultSiteSettings: SiteSettings = {
   key: 'global',
   seo: {
@@ -65,25 +96,7 @@ export const defaultSiteSettings: SiteSettings = {
   header: {
     logo: '/logo.png',
     logoAlt: 'Next Level Education',
-    navItems: [
-      { label: 'Home', href: '/', enabled: true },
-      { label: 'Services', href: '/services', enabled: true },
-      { label: 'About Us', href: '/about-us', enabled: true },
-      {
-        label: 'Study Abroad',
-        href: '/#',
-        enabled: true,
-        dropdownItems: [
-          { label: 'United Kingdom', href: '/study-abroad/study-in-uk', enabled: true },
-          { label: 'Canada', href: '/study-abroad/study-in-canada', enabled: true },
-          { label: 'Australia', href: '/study-abroad/study-in-australia', enabled: true },
-          { label: 'New Zealand', href: '/study-abroad/study-in-new-zealand', enabled: true },
-        ],
-      },
-      { label: 'Testimonial', href: '/testimonial', enabled: true },
-      { label: 'Blog', href: '/blog', enabled: true },
-      { label: 'Contact Us', href: '/contact-us', enabled: true },
-    ],
+    navItems: defaultHeaderNavItems,
     courseFinderLabel: 'Course Finder',
     courseFinderHref: '/courses',
     callLabel: 'Call Anytime',
@@ -133,7 +146,27 @@ export const defaultSiteSettings: SiteSettings = {
   },
 }
 
+function normalizeHeaderNavItems(navItems?: SiteLink[]): SiteLink[] {
+  const items = navItems?.length ? navItems : defaultHeaderNavItems
+  const hasBranches = items.some(item => item.label.trim().toLowerCase() === 'branches')
+  if (hasBranches) return items
+
+  const branchesItem = defaultHeaderNavItems.find(item => item.label === 'Branches')
+  if (!branchesItem) return items
+
+  const contactIndex = items.findIndex(item => item.label.trim().toLowerCase() === 'contact us')
+  const nextItems = [...items]
+  const insertAt = contactIndex >= 0 ? contactIndex + 1 : nextItems.length
+  nextItems.splice(insertAt, 0, branchesItem)
+  return nextItems
+}
+
 export function mergeSiteSettings(settings?: Partial<SiteSettings> | null): SiteSettings {
+  const header = {
+    ...defaultSiteSettings.header,
+    ...(settings?.header || {}),
+  }
+
   return {
     key: 'global',
     seo: {
@@ -141,8 +174,8 @@ export function mergeSiteSettings(settings?: Partial<SiteSettings> | null): Site
       ...(settings?.seo || {}),
     },
     header: {
-      ...defaultSiteSettings.header,
-      ...(settings?.header || {}),
+      ...header,
+      navItems: normalizeHeaderNavItems(header.navItems),
     },
     footer: {
       ...defaultSiteSettings.footer,

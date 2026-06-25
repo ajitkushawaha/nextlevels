@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Check, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 
@@ -26,6 +26,8 @@ type FreeCounsellingFormProps = {
   sourceUniversity?: string
   sourceScholarship?: string
   sourceBranch?: string
+  referralAgentCode?: string
+  referralAgentName?: string
 }
 
 const defaultQualificationOptions = [
@@ -57,8 +59,12 @@ export default function FreeCounsellingForm({
   sourceUniversity = '',
   sourceScholarship = '',
   sourceBranch = '',
+  referralAgentCode = '',
+  referralAgentName = '',
 }: FreeCounsellingFormProps = {}) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const detectedAgentCode = referralAgentCode || searchParams.get('agent') || searchParams.get('ref') || ''
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
@@ -127,6 +133,8 @@ export default function FreeCounsellingForm({
           sourceUniversity,
           sourceScholarship,
           sourceBranch,
+          referralAgentCode: detectedAgentCode,
+          referralAgentName,
         }),
       })
 

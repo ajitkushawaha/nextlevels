@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import {
   ArrowLeft,
   MapPin,
@@ -22,6 +23,48 @@ import UniversityEnquiryForm from './UniversityEnquiryForm'
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const decodedName = decodeURIComponent(id)
+
+  try {
+    await connectDb()
+    const isValidId = mongoose.Types.ObjectId.isValid(decodedName)
+    const dbUniv = await (UniversityModel as any).findOne({
+      $or: [...(isValidId ? [{ _id: decodedName }] : []), { name: decodedName }],
+    }).populate('countryId').lean()
+
+    if (dbUniv) {
+      const seo = dbUniv.cmsData?.seo || {}
+      const title = seo.metaTitle || `${dbUniv.name} | Next Level Education`
+      const description =
+        seo.metaDescription ||
+        dbUniv.description ||
+        `Explore ${dbUniv.name} programs, admissions, location, and study abroad support.`
+      const image = seo.ogImage || dbUniv.bannerImage || dbUniv.logo
+      return {
+        title,
+        description,
+        keywords: seo.metaKeywords || undefined,
+        robots: seo.robots || 'index, follow',
+        alternates: { canonical: seo.canonical || `/universities/${encodeURIComponent(dbUniv.name)}` },
+        openGraph: {
+          title: seo.ogTitle || title,
+          description: seo.ogDescription || description,
+          images: image ? [image] : [],
+        },
+      }
+    }
+  } catch (error) {
+    console.error('University metadata lookup failed:', error)
+  }
+
+  return {
+    title: `${decodedName} | Next Level Education`,
+    description: `Explore ${decodedName} programs, admissions, and study abroad support.`,
+  }
 }
 
 export default async function UniversityDetailPage({ params }: Props) {

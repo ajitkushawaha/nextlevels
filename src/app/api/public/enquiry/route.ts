@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import connectDB from '@/lib/db'
 import Enquiry from '@/models/Enquiry'
+import ReferralAgent from '@/models/ReferralAgent'
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +17,11 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+
+    const referralCode = String(body.referralAgentCode || body.agent || '').trim().toUpperCase()
+    const referralAgent = referralCode
+      ? await (ReferralAgent as any).findOne({ code: referralCode, isActive: true }).lean()
+      : null
     
     const newEnquiry = await Enquiry.create({
       fullName,
@@ -35,6 +41,9 @@ export async function POST(request: Request) {
       sourceUniversity: body.sourceUniversity || '',
       sourceScholarship: body.sourceScholarship || '',
       sourceBranch: body.sourceBranch || '',
+      referralAgentId: referralAgent?._id,
+      referralAgentCode: referralAgent?.code || referralCode || '',
+      referralAgentName: referralAgent?.name || '',
       status: 'new'
     })
     

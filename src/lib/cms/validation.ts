@@ -47,10 +47,7 @@ const homeProgramSectionSchema = z.object({
   }),
 })
 
-const homeScholarshipOfferSectionSchema = z.object({
-  id: z.string().trim().min(1),
-  type: z.literal('homeScholarshipOffer'),
-  enabled: z.boolean(),
+const homeScholarshipOfferSchema = z.object({
   badgeText: z.string().trim().min(1).max(80),
   intakeLabel: z.string().trim().min(1).max(100),
   countdownTarget: z.string().trim().min(1).max(80),
@@ -71,6 +68,13 @@ const homeScholarshipOfferSectionSchema = z.object({
   benefitsTitle: z.string().trim().min(1).max(100),
   benefits: z.array(z.string().trim().min(1).max(160)).min(1).max(8),
   urgencyText: z.string().trim().min(1).max(120),
+})
+
+const homeScholarshipOfferSectionSchema = homeScholarshipOfferSchema.extend({
+  id: z.string().trim().min(1),
+  type: z.literal('homeScholarshipOffer'),
+  enabled: z.boolean(),
+  offers: z.array(homeScholarshipOfferSchema).min(1).max(12).optional(),
 })
 
 const homeDestinationCardSchema = z.object({
@@ -180,6 +184,7 @@ const homeAmbassadorsSectionSchema = z.object({
     university: z.string().trim().min(1).max(160),
     image: z.string().trim().min(1).max(500),
     link: z.string().trim().min(1).max(240),
+    intro: z.string().trim().max(700).optional(),
   })).min(1).max(10),
 })
 

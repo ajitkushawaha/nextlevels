@@ -18,6 +18,9 @@ export interface IEnquiry extends Document {
   sourceUniversity?: string
   sourceScholarship?: string
   sourceBranch?: string
+  referralAgentId?: mongoose.Types.ObjectId
+  referralAgentCode?: string
+  referralAgentName?: string
   status: 'new' | 'contacted' | 'resolved'
   createdAt: Date
   updatedAt: Date
@@ -42,6 +45,9 @@ const EnquirySchema: Schema = new Schema(
     sourceUniversity: { type: String, default: '' },
     sourceScholarship: { type: String, default: '' },
     sourceBranch: { type: String, default: '' },
+    referralAgentId: { type: Schema.Types.ObjectId, ref: 'ReferralAgent' },
+    referralAgentCode: { type: String, default: '', index: true },
+    referralAgentName: { type: String, default: '' },
     status: { type: String, enum: ['new', 'contacted', 'resolved'], default: 'new' },
   },
   { timestamps: true }

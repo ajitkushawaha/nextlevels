@@ -59,6 +59,10 @@ export default function Header() {
     }
   }, [])
 
+  useEffect(() => {
+    setActiveDropdown(null)
+  }, [pathname])
+
   const navItems = settings.navItems.filter(item => item.enabled !== false)
 
   return (
@@ -79,11 +83,22 @@ export default function Header() {
               : pathname === item.href
 
             return (
-              <div key={item.label} className="group/nav relative flex items-center">
+              <div
+                key={item.label}
+                className="relative flex items-center"
+                onMouseEnter={() => {
+                  if (isDropdown) setActiveDropdown(item.label)
+                }}
+                onMouseLeave={() => {
+                  if (isDropdown) setActiveDropdown(null)
+                }}
+              >
                 {isDropdown ? (
                   <button
                     type="button"
                     aria-haspopup="menu"
+                    aria-expanded={activeDropdown === item.label}
+                    onClick={() => setActiveDropdown(activeDropdown === item.label ? null : item.label)}
                     className={`inline-flex items-center gap-1 border-b-2 py-2 text-[13px] font-semibold transition duration-300 text-[#061331] ${isActive
                       ? 'border-[#d7a23a] text-[#d7a23a]!'
                       : 'border-transparent hover:border-[#d7a23a] hover:text-[#d7a23a]'
@@ -103,14 +118,15 @@ export default function Header() {
                     {item.label}
                   </Link>
                 )}
-                {item.dropdownItems && (
-                  <div className="absolute left-0 top-full hidden w-64 pt-2 group-hover/nav:block group-focus-within/nav:block">
+                {item.dropdownItems && activeDropdown === item.label && (
+                  <div className="absolute left-0 top-full w-64 pt-2">
                     <div className="rounded-md border border-white/10 bg-[#061331] p-2 shadow-xl" role="menu">
                       {item.dropdownItems.filter(dropItem => dropItem.enabled !== false).map(dropItem => (
                         <Link
                           key={dropItem.label}
                           href={dropItem.href}
                           role="menuitem"
+                          onClick={() => setActiveDropdown(null)}
                           className="block rounded-md px-3 py-2 text-[13px] text-white transition hover:bg-white/10 hover:text-[#d7a23a]"
                         >
                           {dropItem.label}
@@ -162,7 +178,13 @@ export default function Header() {
             </a>
           </div>
 
-          <Sheet open={open} onOpenChange={setOpen}>
+          <Sheet
+            open={open}
+            onOpenChange={nextOpen => {
+              setOpen(nextOpen)
+              if (!nextOpen) setActiveDropdown(null)
+            }}
+          >
             <SheetTrigger asChild>
               <button
                 className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border transition duration-300 text-[#061331] border-[#061331]/20 hover:border-[#d7a23a] hover:text-[#d7a23a] lg:hidden focus-visible:outline-none"
@@ -205,7 +227,10 @@ export default function Header() {
                                   <Link
                                     key={dropItem.label}
                                     href={dropItem.href}
-                                    onClick={() => setOpen(false)}
+                                    onClick={() => {
+                                      setActiveDropdown(null)
+                                      setOpen(false)
+                                    }}
                                     className={`block rounded-md px-3 py-2 text-[13px] transition ${pathname === dropItem.href
                                       ? 'bg-white/10 text-[#d7a23a] font-medium'
                                       : 'text-white/70 hover:bg-white/5 hover:text-[#d7a23a]'

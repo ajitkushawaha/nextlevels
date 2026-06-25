@@ -46,6 +46,8 @@ interface Inquiry {
   sourceUniversity: string
   sourceScholarship: string
   sourceBranch: string
+  referralAgentCode: string
+  referralAgentName: string
 }
 
 function mapStatus(status: string): Inquiry['status'] {
@@ -94,6 +96,8 @@ function mapInquiry(item: any): Inquiry {
     sourceUniversity: item.sourceUniversity || '',
     sourceScholarship: item.sourceScholarship || '',
     sourceBranch: item.sourceBranch || '',
+    referralAgentCode: item.referralAgentCode || '',
+    referralAgentName: item.referralAgentName || '',
   }
 }
 
@@ -390,6 +394,14 @@ export default function InquiriesManager() {
                   <span className="text-[9px] uppercase font-bold text-slate-400">Program / University</span>
                   <p className="mt-1 font-bold text-[#081638]">
                     {selectedInquiry.sourceProgram || selectedInquiry.sourceUniversity || selectedInquiry.sourceScholarship || selectedInquiry.sourceBranch || 'Not captured'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400">Referral Agent</span>
+                  <p className="mt-1 font-bold text-[#081638]">
+                    {selectedInquiry.referralAgentName
+                      ? `${selectedInquiry.referralAgentName} (${selectedInquiry.referralAgentCode})`
+                      : selectedInquiry.referralAgentCode || 'Not captured'}
                   </p>
                 </div>
               </div>

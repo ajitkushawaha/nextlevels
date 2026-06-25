@@ -108,6 +108,37 @@ export const defaultHomePageContent: CmsPageContent = {
         'University of East London only',
       ],
       urgencyText: 'Limited spots - apply early!',
+      offers: [
+        {
+          badgeText: 'Limited Offer',
+          intakeLabel: 'September 2026 Intake',
+          countdownTarget: '2026-09-01T00:00:00+05:30',
+          titlePrefix: 'Apply Now & Receive a',
+          scholarshipAmount: '£3,000',
+          titleSuffix: 'Scholarship',
+          description:
+            'Apply through Next Level Education to the University of East London for the September 2026 intake and get £3,000 off your first-year tuition.',
+          highlightedAgency: 'Next Level Education',
+          highlightedUniversity: 'University of East London',
+          highlightedOffer: '£3,000 off',
+          ctaLabel: 'Claim My Scholarship',
+          ctaHref: '/contact-us',
+          note: 'Free · No commitment',
+          featureChips: [
+            { icon: 'Award', text: '£3,000 scholarship' },
+            { icon: 'ShieldCheck', text: 'University of East London' },
+            { icon: 'GraduationCap', text: 'September 2026 intake' },
+          ],
+          benefitsTitle: 'What you get',
+          benefits: [
+            '£3,000 off first-year tuition',
+            'Priority application processing',
+            'Dedicated visa counselor',
+            'University of East London only',
+          ],
+          urgencyText: 'Limited spots - apply early!',
+        },
+      ],
     },
     {
       id: 'home-destinations',
@@ -255,6 +286,8 @@ export const defaultHomePageContent: CmsPageContent = {
           university: 'University of Colombo',
           image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
           link: '/chat?name=Aastha%20Paudel',
+          intro:
+            'Hi, I am Aastha. As a student ambassador, I help new students understand course choices, campus life, application steps, and what to expect before starting their study abroad journey.',
         },
         {
           name: 'Geraldine Penarete',
@@ -262,6 +295,8 @@ export const defaultHomePageContent: CmsPageContent = {
           university: 'University of Peradeniya',
           image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&auto=format&fit=crop&q=80',
           link: '/chat?name=Geraldine%20Penarete',
+          intro:
+            'Hi, I am Geraldine. I share practical student guidance about academics, daily life, documents, and how to prepare confidently for university abroad.',
         },
         {
           name: 'Yumi Wan',
@@ -269,6 +304,8 @@ export const defaultHomePageContent: CmsPageContent = {
           university: 'University of Sydney',
           image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
           link: '/chat?name=Yumi%20Wan',
+          intro:
+            'Hi, I am Yumi. I support students with honest insights about studying healthcare programs, settling into campus, and balancing academic expectations.',
         },
         {
           name: 'Tiara D Souza',
@@ -276,6 +313,8 @@ export const defaultHomePageContent: CmsPageContent = {
           university: 'Monash University',
           image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
           link: '/chat?name=Tiara%20D%20Souza',
+          intro:
+            'Hi, I am Tiara. My role is to help future students ask real questions about university life, student responsibilities, and preparation before departure.',
         },
         {
           name: 'Yumi Wans',
@@ -283,6 +322,8 @@ export const defaultHomePageContent: CmsPageContent = {
           university: 'University of Melbourne',
           image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
           link: '/chat?name=Yumi%20Wans',
+          intro:
+            'Hi, I am Yumi. I guide students with friendly peer advice about choosing a course, adapting to a new country, and planning their next steps.',
         },
       ],
     },

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import {
   ArrowRight,
   Calendar,
@@ -22,6 +23,57 @@ import ScholarshipEnquiryForm from './ScholarshipEnquiryForm'
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const decodedId = decodeURIComponent(id)
+
+  try {
+    await connectDb()
+    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
+    const dbSchol = await (ScholarshipModel as any).findOne({
+      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }],
+    })
+      .populate('countryId')
+      .populate('universityId')
+      .populate({ path: 'programId', populate: { path: 'universityId' } })
+      .lean()
+
+    if (dbSchol) {
+      const seo = dbSchol.cmsData?.seo || {}
+      const title = seo.metaTitle || `${dbSchol.title} | Next Level Education`
+      const description =
+        seo.metaDescription ||
+        dbSchol.description ||
+        `Explore ${dbSchol.title} eligibility, award value, deadline, and application support.`
+      const image =
+        seo.ogImage ||
+        dbSchol.heroImage ||
+        dbSchol.programId?.heroImage ||
+        dbSchol.universityId?.bannerImage ||
+        dbSchol.countryId?.heroImage
+      return {
+        title,
+        description,
+        keywords: seo.metaKeywords || undefined,
+        robots: seo.robots || 'index, follow',
+        alternates: { canonical: seo.canonical || `/scholarships/${dbSchol._id.toString()}` },
+        openGraph: {
+          title: seo.ogTitle || title,
+          description: seo.ogDescription || description,
+          images: image ? [image] : [],
+        },
+      }
+    }
+  } catch (error) {
+    console.error('Scholarship metadata lookup failed:', error)
+  }
+
+  return {
+    title: `${decodedId} | Next Level Education`,
+    description: `Explore ${decodedId} eligibility, award value, deadline, and application support.`,
+  }
 }
 
 export default async function ScholarshipDetailPage({ params }: Props) {

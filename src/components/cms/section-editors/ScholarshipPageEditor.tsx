@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import CmsImageField from './CmsImageField'
+import SeoFields from './SeoFields'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
 
@@ -23,6 +24,7 @@ type ScholarshipData = {
   countryId?: any
   universityId?: any
   programId?: any
+  cmsData?: Record<string, any>
 }
 
 type Props = {
@@ -35,7 +37,7 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
   const [countries, setCountries] = useState<any[]>([])
   const [universities, setUniversities] = useState<any[]>([])
   const [programs, setPrograms] = useState<any[]>([])
-  const [activeTab, setActiveTab] = useState<'info' | 'scope'>('info')
+  const [activeTab, setActiveTab] = useState<'info' | 'scope' | 'seo'>('info')
   const [isSaving, setIsSaving] = useState(false)
   const [viewportMode, setViewportMode] = useState<PreviewViewportMode>('laptop')
 
@@ -107,6 +109,16 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
     )
   }
 
+  const handleCmsDataChange = (key: string, val: any) => {
+    setData({
+      ...data,
+      cmsData: {
+        ...(data.cmsData || {}),
+        [key]: val,
+      },
+    })
+  }
+
   const selectedCountryId = typeof data.countryId === 'object' ? data.countryId?._id : data.countryId
   const activeCountry = countries.find(c => c._id === selectedCountryId)
 
@@ -155,6 +167,13 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                 }`}
             >
               Applicability & Targeting
+            </button>
+            <button
+              onClick={() => setActiveTab('seo')}
+              className={`px-5 py-3 border-b-2 transition shrink-0 ${activeTab === 'seo' ? 'border-[#061331] text-[#061331] bg-slate-50/50' : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+            >
+              SEO
             </button>
           </div>
 
@@ -298,6 +317,14 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                   </div>
                 </div>
               </div>
+            )}
+
+            {activeTab === 'seo' && (
+              <SeoFields
+                value={data.cmsData?.seo}
+                onChange={value => handleCmsDataChange('seo', value)}
+                folder="nextlevel/scholarships/seo"
+              />
             )}
           </div>
         </div>

@@ -19,6 +19,7 @@ import HomeServicesEditor from '@/components/cms/section-editors/HomeServicesEdi
 import HomeSuccessStoriesEditor from '@/components/cms/section-editors/HomeSuccessStoriesEditor'
 import HomeUniversitiesEditor from '@/components/cms/section-editors/HomeUniversitiesEditor'
 import HomeBlogEditor from '@/components/cms/section-editors/HomeBlogEditor'
+import HomeAmbassadorsEditor from '@/components/cms/section-editors/HomeAmbassadorsEditor'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -44,6 +45,7 @@ import type {
   HomeSuccessStoriesSection,
   HomeUniversitiesSection,
   HomeBlogSection,
+  HomeAmbassadorsSection,
 } from '@/lib/cms/types'
 import { toast } from 'sonner'
 
@@ -209,6 +211,7 @@ export default function CmsSectionEditorClient({
   const isHomeServices = pageKey === 'home' && sectionId === 'home-services'
   const isHomeUniversities = pageKey === 'home' && sectionId === 'home-universities'
   const isHomeBlog = pageKey === 'home' && sectionId === 'home-blog'
+  const isHomeAmbassadors = pageKey === 'home' && sectionId === 'home-ambassadors'
   const isHomeSuccessStories =
     pageKey === 'home' && sectionId === 'home-success-stories'
   const isServicesList = pageKey === 'services' && sectionId === 'services-list'
@@ -221,6 +224,7 @@ export default function CmsSectionEditorClient({
     isHomeServices ||
     isHomeUniversities ||
     isHomeBlog ||
+    isHomeAmbassadors ||
     isHomeSuccessStories
   const isEditableServicesSection = isServicesList
   const isJsonReadySection = section?.status === 'ready' && !isEditableHomeSection && !isEditableServicesSection
@@ -765,6 +769,17 @@ export default function CmsSectionEditorClient({
               {isHomeBlog && activeCmsSection && (
                 <HomeBlogEditor
                   section={activeCmsSection as HomeBlogSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isHomeAmbassadors && activeCmsSection && (
+                <HomeAmbassadorsEditor
+                  section={activeCmsSection as HomeAmbassadorsSection}
                   onChange={nextSection =>
                     setContent(prev =>
                       updateSectionById(prev, sectionId, nextSection)

@@ -360,25 +360,35 @@ function ScholarshipOfferSection({
 }: {
   section: HomeScholarshipOfferSectionData
 }) {
-  const intakeDate = new Date(section.countdownTarget).getTime()
-  const [timeLeft, setTimeLeft] = useState(() => getCountdownTimeLeft(intakeDate))
+  const slides = ((section as any).offers?.length ? (section as any).offers : [section]) as HomeScholarshipOfferSectionData[]
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [slideTick, setSlideTick] = useState(0)
+  const activeOffer = slides[activeSlide] || section
 
   useEffect(() => {
-    setTimeLeft(getCountdownTimeLeft(intakeDate))
+    if (slides.length <= 1) return
 
     const interval = window.setInterval(() => {
-      setTimeLeft(getCountdownTimeLeft(intakeDate))
-    }, 1000)
+      setActiveSlide(prev => (prev + 1) % slides.length)
+    }, 6000)
 
     return () => window.clearInterval(interval)
-  }, [intakeDate])
+  }, [slides.length, slideTick])
 
-  const countdown = [
-    { label: 'Days', value: timeLeft.days },
-    { label: 'Hours', value: timeLeft.hours },
-    { label: 'Mins', value: timeLeft.mins },
-    { label: 'Secs', value: timeLeft.secs },
-  ]
+  const goToOffer = (index: number) => {
+    setActiveSlide(index)
+    setSlideTick(prev => prev + 1)
+  }
+
+  const showPrevOffer = () => {
+    setActiveSlide(prev => (prev === 0 ? slides.length - 1 : prev - 1))
+    setSlideTick(prev => prev + 1)
+  }
+
+  const showNextOffer = () => {
+    setActiveSlide(prev => (prev + 1) % slides.length)
+    setSlideTick(prev => prev + 1)
+  }
 
   return (
     <section className="relative overflow-hidden bg-[#061331] px-4 py-12 text-white sm:px-6 lg:px-8">
@@ -393,31 +403,35 @@ function ScholarshipOfferSection({
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(215,162,58,0.18),transparent_28%),radial-gradient(circle_at_82%_26%,rgba(255,255,255,0.10),transparent_24%),linear-gradient(115deg,rgba(0,0,0,0.38),transparent_55%)]" />
 
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 lg:grid-cols-[1.25fr_0.85fr]">
+      <div className="relative z-10 mx-auto max-w-7xl">
+      <div
+        key={activeSlide}
+        className="grid items-center gap-8 transition-all duration-500 ease-out lg:grid-cols-[1.25fr_0.85fr]"
+      >
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#d7a23a] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-[#061331]">
               <Award className="h-3.5 w-3.5 fill-[#061331]" />
-              {section.badgeText}
+              {activeOffer.badgeText}
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d7a23a]/35 bg-white/8 px-3 py-2 text-xs font-bold text-[#f3d79c]">
               <Clock className="h-3.5 w-3.5" />
-              {section.intakeLabel}
+              {activeOffer.intakeLabel}
             </span>
           </div>
 
           <h2 className="mt-7 max-w-4xl text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[64px]">
-            {section.titlePrefix}{' '}
-            <span className="text-[#d7a23a]">{section.scholarshipAmount}</span>{' '}
-            {section.titleSuffix}
+            {activeOffer.titlePrefix}{' '}
+            <span className="text-[#d7a23a]">{activeOffer.scholarshipAmount}</span>{' '}
+            {activeOffer.titleSuffix}
           </h2>
 
           <p className="mt-6 max-w-3xl text-base font-medium leading-8 text-white/72 sm:text-lg">
-            {section.description}
+            {activeOffer.description}
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/82">
-            {section.featureChips.map(item => {
+            {activeOffer.featureChips.map(item => {
               const Icon = scholarshipOfferIconMap[item.icon] || Award
 
               return (
@@ -433,59 +447,284 @@ function ScholarshipOfferSection({
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
-              href={section.ctaHref}
+              href={activeOffer.ctaHref}
               className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#d7a23a] px-8 text-base font-black text-[#061331] shadow-[0_20px_42px_rgba(215,162,58,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e4b85d]"
             >
-              {section.ctaLabel}
+              {activeOffer.ctaLabel}
               <ArrowRight className="h-5 w-5" />
             </Link>
-            {section.note ? (
-              <span className="text-sm font-medium text-white/38">{section.note}</span>
+            {activeOffer.note ? (
+              <span className="text-sm font-medium text-white/38">{activeOffer.note}</span>
             ) : null}
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-[#d7a23a]/20 bg-white/7 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8">
-          <div className="mb-6 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-[#d7a23a]">
-            <Clock className="h-4 w-4" />
-            Intake Opens In
-          </div>
-
-          <div className="grid grid-cols-4 gap-3">
-            {countdown.map(item => (
-              <div key={item.label} className="text-center">
-                <div className="rounded-2xl border border-[#d7a23a]/25 bg-[#d7a23a]/14 px-2 py-4 text-3xl font-black leading-none text-[#d7a23a] sm:text-4xl">
-                  {String(item.value).padStart(2, '0')}
-                </div>
-                <span className="mt-2 block text-[10px] font-black uppercase tracking-wider text-white/42">
-                  {item.label}
-                </span>
-              </div>
+        <ScholarshipOfferCountdownCard
+          key={`${activeSlide}-${activeOffer.countdownTarget}`}
+          offer={activeOffer}
+        />
+      </div>
+      {slides.length > 1 ? (
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={showPrevOffer}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/35 bg-white/8 text-[#d7a23a] transition hover:bg-[#d7a23a] hover:text-[#061331]"
+            aria-label="Previous offer"
+          >
+            <ArrowRight className="h-4 w-4 rotate-180" />
+          </button>
+          <div className="flex items-center gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => goToOffer(index)}
+                aria-label={`Show offer ${index + 1}`}
+                className={`h-2.5 rounded-full transition-all ${
+                  activeSlide === index ? 'w-9 bg-[#d7a23a]' : 'w-2.5 bg-white/30 hover:bg-white/50'
+                }`}
+              />
             ))}
           </div>
-
-          <div className="my-7 h-px bg-white/10" />
-
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/42">
-              {section.benefitsTitle}
-            </p>
-            <ul className="mt-4 space-y-3 text-sm font-medium text-white/68">
-              {section.benefits.map(item => (
-                <li key={item} className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d7a23a]" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mt-7 rounded-2xl border border-dashed border-[#d7a23a]/30 bg-[#d7a23a]/9 px-5 py-4 text-center text-sm font-black text-[#d7a23a]">
-            {section.urgencyText}
-          </div>
+          <button
+            type="button"
+            onClick={showNextOffer}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/35 bg-white/8 text-[#d7a23a] transition hover:bg-[#d7a23a] hover:text-[#061331]"
+            aria-label="Next offer"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
+      ) : null}
       </div>
     </section>
+  )
+}
+
+function ScholarshipOfferCountdownCard({
+  offer,
+}: {
+  offer: HomeScholarshipOfferSectionData
+}) {
+  const targetTime = new Date(offer.countdownTarget).getTime()
+  const [timeLeft, setTimeLeft] = useState(() => getCountdownTimeLeft(targetTime))
+
+  useEffect(() => {
+    setTimeLeft(getCountdownTimeLeft(targetTime))
+
+    const interval = window.setInterval(() => {
+      setTimeLeft(getCountdownTimeLeft(targetTime))
+    }, 1000)
+
+    return () => window.clearInterval(interval)
+  }, [targetTime])
+
+  const countdown = [
+    { label: 'Days', value: timeLeft.days },
+    { label: 'Hours', value: timeLeft.hours },
+    { label: 'Mins', value: timeLeft.mins },
+    { label: 'Secs', value: timeLeft.secs },
+  ]
+
+  return (
+    <div className="rounded-[28px] border border-[#d7a23a]/20 bg-white/7 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8">
+      <div className="mb-6 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-[#d7a23a]">
+        <Clock className="h-4 w-4" />
+        Intake Opens In
+      </div>
+
+      <div className="grid grid-cols-4 gap-3">
+        {countdown.map(item => (
+          <div key={item.label} className="text-center">
+            <div className="rounded-2xl border border-[#d7a23a]/25 bg-[#d7a23a]/14 px-2 py-4 text-3xl font-black leading-none text-[#d7a23a] sm:text-4xl">
+              {String(item.value).padStart(2, '0')}
+            </div>
+            <span className="mt-2 block text-[10px] font-black uppercase tracking-wider text-white/42">
+              {item.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="my-7 h-px bg-white/10" />
+
+      <div>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white/42">
+          {offer.benefitsTitle}
+        </p>
+        <ul className="mt-4 space-y-3 text-sm font-medium text-white/68">
+          {offer.benefits.map(item => (
+            <li key={item} className="flex gap-3">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d7a23a]" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-7 rounded-2xl border border-dashed border-[#d7a23a]/30 bg-[#d7a23a]/9 px-5 py-4 text-center text-sm font-black text-[#d7a23a]">
+        {offer.urgencyText}
+      </div>
+    </div>
+  )
+}
+
+function HomeUniversitiesSlider({
+  universities,
+}: {
+  universities: any[]
+}) {
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  useEffect(() => {
+    const slider = sliderRef.current
+    if (!slider) return
+
+    const updateActiveIndex = () => {
+      const firstCard = slider.querySelector<HTMLElement>('[data-university-slide]')
+      const slideWidth = firstCard ? firstCard.offsetWidth + 16 : slider.clientWidth
+      setActiveIndex(Math.round(slider.scrollLeft / Math.max(slideWidth, 1)))
+    }
+
+    updateActiveIndex()
+    slider.addEventListener('scroll', updateActiveIndex, { passive: true })
+    window.addEventListener('resize', updateActiveIndex)
+
+    return () => {
+      slider.removeEventListener('scroll', updateActiveIndex)
+      window.removeEventListener('resize', updateActiveIndex)
+    }
+  }, [universities.length])
+
+  const scroll = (direction: 'prev' | 'next') => {
+    const slider = sliderRef.current
+    if (!slider) return
+    slider.scrollBy({
+      left: direction === 'next' ? slider.clientWidth * 0.9 : -slider.clientWidth * 0.9,
+      behavior: 'smooth',
+    })
+  }
+
+  const scrollToSlide = (index: number) => {
+    const slider = sliderRef.current
+    const target = slider?.querySelector<HTMLElement>(`[data-university-slide="${index}"]`)
+    if (!slider || !target) return
+    slider.scrollTo({ left: target.offsetLeft - slider.offsetLeft, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => scroll('prev')}
+        className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-lg transition hover:bg-[#081638] hover:text-white md:flex"
+        aria-label="Previous universities"
+      >
+        <ArrowRight className="h-4 w-4 rotate-180" />
+      </button>
+      <button
+        type="button"
+        onClick={() => scroll('next')}
+        className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-lg transition hover:bg-[#081638] hover:text-white md:flex"
+        aria-label="Next universities"
+      >
+        <ArrowRight className="h-4 w-4" />
+      </button>
+      <div className="mb-5 flex justify-end gap-2 md:hidden">
+        <button
+          type="button"
+          onClick={() => scroll('prev')}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-sm transition hover:bg-[#081638] hover:text-white"
+          aria-label="Previous universities"
+        >
+          <ArrowRight className="h-4 w-4 rotate-180" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scroll('next')}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-sm transition hover:bg-[#081638] hover:text-white"
+          aria-label="Next universities"
+        >
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+      <div ref={sliderRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {universities.map((univ: any, index) => (
+          <div
+            key={univ.name}
+            data-university-slide={index}
+            className="group relative flex min-w-[82%] snap-start flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(6,19,49,0.12)] sm:min-w-[48%] lg:min-w-[24%]"
+          >
+            <div className="relative h-48 w-full overflow-hidden">
+              <img
+                src={univ.coverImage}
+                alt={`${univ.name} Campus`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"></div>
+              <span className="absolute top-4 right-4 bg-[#d7a23a] text-[#061331] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm z-10">
+                Rank {univ.worldRank}
+              </span>
+              <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
+                <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-black text-sm text-[#081638] uppercase">
+                  {univ.logo}
+                </div>
+                <div className="text-white">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-slate-200 leading-none">Est. {univ.established}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col justify-between grow text-left">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-semibold mb-2">
+                  <span>{univ.location}, {univ.country}</span>
+                </div>
+                <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
+                  {univ.name}
+                </h3>
+                <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-3">
+                  {univ.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-auto">
+                <div className="text-left">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Students</span>
+                  <span className="text-xs font-black text-[#081638]">{univ.students}</span>
+                </div>
+                <Link
+                  href={`/universities/${encodeURIComponent(univ.name)}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
+                >
+                  View Profile
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {universities.length > 1 ? (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          {universities.map((univ: any, index) => (
+            <button
+              key={`${univ.name}-indicator`}
+              type="button"
+              onClick={() => scrollToSlide(index)}
+              aria-label={`Show ${univ.name}`}
+              className={`h-2.5 rounded-full transition-all ${
+                Math.min(activeIndex, universities.length - 1) === index
+                  ? 'w-9 bg-[#d7a23a]'
+                  : 'w-2.5 bg-[#081638]/18 hover:bg-[#081638]/35'
+              }`}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
   )
 }
 
@@ -987,89 +1226,36 @@ export default function NextLevelHomepage({
           </div>
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <Eyebrow>{universitiesSection.eyebrow}</Eyebrow>
-              <h2
-                className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
-                style={{ fontFamily: 'Farro, sans-serif' }}
-              >
-                {universitiesSection.title} <span className="text-[#d7a23a]">{universitiesSection.highlightedTitle}</span>
-              </h2>
-              <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
-                {universitiesSection.description}
-              </p>
-            </div>
-
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              {(universitiesSection.universities && universitiesSection.universities.length > 0
-                ? universitiesSection.universities
-                : Object.values(universitiesData).slice(0, 4)
-              ).map((univ: any) => (
-                <div
-                  key={univ.name}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(6,19,49,0.12)]"
+            <div className="mb-12 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl text-left">
+                <Eyebrow>{universitiesSection.eyebrow}</Eyebrow>
+                <h2
+                  className="mt-3 text-3xl font-bold leading-tight text-[#081638] sm:text-4xl"
+                  style={{ fontFamily: 'Farro, sans-serif' }}
                 >
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <img
-                      src={univ.coverImage}
-                      alt={`${univ.name} Campus`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"></div>
-                    <span className="absolute top-4 right-4 bg-[#d7a23a] text-[#061331] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm z-10">
-                      Rank {univ.worldRank}
-                    </span>
-                    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-                      <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-black text-sm text-[#081638] uppercase">
-                        {univ.logo}
-                      </div>
-                      <div className="text-white">
-                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-200 leading-none">Est. {univ.established}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex flex-col justify-between grow text-left">
-                    <div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-400 font-semibold mb-2">
-                        <span>{univ.flag}</span>
-                        <span>{univ.location}, {univ.country}</span>
-                      </div>
-                      <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
-                        {univ.name}
-                      </h3>
-                      <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-3">
-                        {univ.description}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-auto">
-                      <div className="text-left">
-                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Students</span>
-                        <span className="text-xs font-black text-[#081638]">{univ.students}</span>
-                      </div>
-                      <Link
-                        href={`/universities/${encodeURIComponent(univ.name)}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
-                      >
-                        View Profile
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 text-center">
+                  {universitiesSection.title} <span className="text-[#d7a23a]">{universitiesSection.highlightedTitle}</span>
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-[#59616f] sm:text-base">
+                  {universitiesSection.description}
+                </p>
+              </div>
               <Link
                 href={universitiesSection.cta.href}
-                className="inline-flex min-h-11 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md"
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md lg:self-start"
               >
                 {universitiesSection.cta.label}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+
+            <HomeUniversitiesSlider
+              universities={
+                universitiesSection.universities && universitiesSection.universities.length > 0
+                  ? universitiesSection.universities
+                  : Object.values(universitiesData).slice(0, 8)
+              }
+            />
+
           </div>
         </section>
         )}

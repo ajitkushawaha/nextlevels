@@ -61,10 +61,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     await connectDB()
     const dbCountry = await (CountryModel as any).findOne({ code: normalizedCountry }).lean()
     if (dbCountry) {
+      const seo = dbCountry.cmsData?.seo || {}
+      const title = seo.metaTitle || `Study in ${dbCountry.name} | Next Level Education`
+      const description = seo.metaDescription || dbCountry.intro || dbCountry.description || ''
       return {
-        title: `Study in ${dbCountry.name} | Next Level Education`,
-        description: dbCountry.intro || dbCountry.description || '',
-        alternates: { canonical: `/study-abroad/${dbCountry.code}` },
+        title,
+        description,
+        keywords: seo.metaKeywords || undefined,
+        robots: seo.robots || 'index, follow',
+        alternates: { canonical: seo.canonical || `/study-abroad/${dbCountry.code}` },
+        openGraph: {
+          title: seo.ogTitle || title,
+          description: seo.ogDescription || description,
+          images: seo.ogImage || dbCountry.heroImage || dbCountry.flagImage ? [seo.ogImage || dbCountry.heroImage || dbCountry.flagImage] : [],
+        },
       }
     }
   } catch (err) {
@@ -190,6 +200,10 @@ export default async function StudyDestinationPage({ params }: Params) {
       livingCosts: dbCountry.livingCosts || [],
       faqs: dbCountry.faqs || [],
       cmsData: dbCountry.cmsData || {},
+      faqTitle: dbCountry.cmsData?.faqTitle || 'Ask Next Level Education',
+      faqDescription:
+        dbCountry.cmsData?.faqDescription ||
+        `Key questions students ask before applying to ${dbCountry.name}.`,
     }
 
     // Load associated universities
@@ -608,14 +622,15 @@ export default async function StudyDestinationPage({ params }: Params) {
         <section id="faqs" className="bg-[#061331] py-10 text-white">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <h2 className="text-xl font-extrabold" style={{ fontFamily: 'Farro, sans-serif' }}>
-              Ask Next Level
+              {destination.faqTitle || 'Ask Next Level Education Education'}
             </h2>
             <p className="mt-2 text-sm text-white/65">
-              Key questions students ask before applying to {getCountryDisplayName(destination.country)}.
+              {destination.faqDescription ||
+                `Key questions students ask before applying to ${getCountryDisplayName(destination.country)}.`}
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {destination.faqs.map((faq, index) => (
-                <div key={`${faq.question}-${index}`} className="flex min-h-44 flex-col justify-end rounded-md bg-white p-4 text-[#081638]">
+                <div key={`${faq.question}-${index}`} className="min-h-44 rounded-md bg-white p-4 text-[#081638]">
                   <h3 className="text-xs font-extrabold leading-5">{faq.question}</h3>
                   <p className="mt-2 line-clamp-3 text-[11px] leading-5 text-slate-500">{faq.answer}</p>
                 </div>

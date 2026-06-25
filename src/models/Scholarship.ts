@@ -12,6 +12,7 @@ export interface IScholarship extends Document {
   countryId?: mongoose.Types.ObjectId
   universityId?: mongoose.Types.ObjectId
   programId?: mongoose.Types.ObjectId
+  cmsData?: Record<string, any>
   createdAt: Date
   updatedAt: Date
 }
@@ -29,6 +30,7 @@ const ScholarshipSchema = new Schema<IScholarship>(
     countryId: { type: Schema.Types.ObjectId, ref: 'Country', index: true },
     universityId: { type: Schema.Types.ObjectId, ref: 'University', index: true },
     programId: { type: Schema.Types.ObjectId, ref: 'Program', index: true },
+    cmsData: { type: Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }
 )

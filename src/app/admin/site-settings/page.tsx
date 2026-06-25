@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { Plus, Save, Trash2 } from 'lucide-react'
+import { PanelBottom, PanelTop, Plus, Save, Search, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,12 +14,40 @@ type HeaderKey = keyof SiteSettings['header']
 type FooterKey = keyof SiteSettings['footer']
 type SeoKey = keyof SiteSettings['seo']
 type LinkGroupKey = 'quickLinks' | 'studyLinks' | 'branchLinks' | 'socialLinks' | 'legalLinks'
+type SettingsPanel = 'seo' | 'header' | 'footer'
 
 const emptyLink: SiteLink = { label: '', href: '', enabled: true }
+
+const settingsPanels: Array<{
+  key: SettingsPanel
+  title: string
+  description: string
+  icon: typeof Search
+}> = [
+  {
+    key: 'seo',
+    title: 'SEO & Analytics',
+    description: 'Meta defaults and tracking IDs',
+    icon: Search,
+  },
+  {
+    key: 'header',
+    title: 'Header',
+    description: 'Logo, menu and top actions',
+    icon: PanelTop,
+  },
+  {
+    key: 'footer',
+    title: 'Footer',
+    description: 'Footer logo, CTA and links',
+    icon: PanelBottom,
+  },
+]
 
 export default function SiteSettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSiteSettings)
   const [isSaving, setIsSaving] = useState(false)
+  const [activePanel, setActivePanel] = useState<SettingsPanel>('seo')
 
   useEffect(() => {
     async function loadSettings() {
@@ -174,49 +202,53 @@ export default function SiteSettingsPage() {
         </Button>
       </div>
 
-      <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-black text-[#061331]">SEO & Analytics</h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Manage site-wide fallback meta tags and Google tracking IDs.
-        </p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <Field label="Site Name">
-            <Input value={settings.seo.siteName} onChange={event => updateSeo('siteName', event.target.value)} />
-          </Field>
-          <Field label="Base URL">
-            <Input value={settings.seo.baseUrl} onChange={event => updateSeo('baseUrl', event.target.value)} />
-          </Field>
-          <Field label="Default Meta Title">
-            <Input value={settings.seo.defaultMetaTitle} onChange={event => updateSeo('defaultMetaTitle', event.target.value)} />
-          </Field>
-          <Field label="Default Robots">
-            <Input value={settings.seo.defaultRobots} onChange={event => updateSeo('defaultRobots', event.target.value)} />
-          </Field>
-          <CmsImageField
-            id="default-og-image"
-            label="Default OG Image"
-            value={settings.seo.defaultOgImage}
-            onChange={value => updateSeo('defaultOgImage', value)}
-            folder="nextlevel/site-settings"
-            placeholder="Upload or paste an OG image URL"
-          />
-          <Field label="Default Keywords">
-            <Input value={settings.seo.defaultMetaKeywords} onChange={event => updateSeo('defaultMetaKeywords', event.target.value)} />
-          </Field>
-          <Field label="Google Analytics ID">
-            <Input placeholder="G-XXXXXXXXXX" value={settings.seo.googleAnalyticsId} onChange={event => updateSeo('googleAnalyticsId', event.target.value)} />
-          </Field>
-          <Field label="Google Tag Manager ID">
-            <Input placeholder="GTM-XXXXXXX" value={settings.seo.googleTagManagerId} onChange={event => updateSeo('googleTagManagerId', event.target.value)} />
-          </Field>
-          <Field label="Default Meta Description">
-            <Textarea rows={3} value={settings.seo.defaultMetaDescription} onChange={event => updateSeo('defaultMetaDescription', event.target.value)} />
-          </Field>
-        </div>
-      </section>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+        <div className="min-w-0">
+          {activePanel === 'seo' && (
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 className="text-lg font-black text-[#061331]">SEO & Analytics</h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Manage site-wide fallback meta tags and Google tracking IDs.
+              </p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <Field label="Site Name">
+                  <Input value={settings.seo.siteName} onChange={event => updateSeo('siteName', event.target.value)} />
+                </Field>
+                <Field label="Base URL">
+                  <Input value={settings.seo.baseUrl} onChange={event => updateSeo('baseUrl', event.target.value)} />
+                </Field>
+                <Field label="Default Meta Title">
+                  <Input value={settings.seo.defaultMetaTitle} onChange={event => updateSeo('defaultMetaTitle', event.target.value)} />
+                </Field>
+                <Field label="Default Robots">
+                  <Input value={settings.seo.defaultRobots} onChange={event => updateSeo('defaultRobots', event.target.value)} />
+                </Field>
+                <CmsImageField
+                  id="default-og-image"
+                  label="Default OG Image"
+                  value={settings.seo.defaultOgImage}
+                  onChange={value => updateSeo('defaultOgImage', value)}
+                  folder="nextlevel/site-settings"
+                  placeholder="Upload or paste an OG image URL"
+                />
+                <Field label="Default Keywords">
+                  <Input value={settings.seo.defaultMetaKeywords} onChange={event => updateSeo('defaultMetaKeywords', event.target.value)} />
+                </Field>
+                <Field label="Google Analytics ID">
+                  <Input placeholder="G-XXXXXXXXXX" value={settings.seo.googleAnalyticsId} onChange={event => updateSeo('googleAnalyticsId', event.target.value)} />
+                </Field>
+                <Field label="Google Tag Manager ID">
+                  <Input placeholder="GTM-XXXXXXX" value={settings.seo.googleTagManagerId} onChange={event => updateSeo('googleTagManagerId', event.target.value)} />
+                </Field>
+                <Field label="Default Meta Description">
+                  <Textarea rows={3} value={settings.seo.defaultMetaDescription} onChange={event => updateSeo('defaultMetaDescription', event.target.value)} />
+                </Field>
+              </div>
+            </section>
+          )}
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          {activePanel === 'header' && (
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-black text-[#061331]">Header</h2>
           <div className="mt-5 grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -274,9 +306,11 @@ export default function SiteSettingsPage() {
               ))}
             </div>
           </div>
-        </section>
+            </section>
+          )}
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          {activePanel === 'footer' && (
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-black text-[#061331]">Footer</h2>
           <div className="mt-5 grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -326,7 +360,49 @@ export default function SiteSettingsPage() {
             <FooterLinkGroup title="Social Links" groupKey="socialLinks" settings={settings} onChange={updateFooterLink} onAdd={addFooterLink} onRemove={removeFooterLink} />
             <FooterLinkGroup title="Legal Links" groupKey="legalLinks" settings={settings} onChange={updateFooterLink} onAdd={addFooterLink} onRemove={removeFooterLink} />
           </div>
-        </section>
+            </section>
+          )}
+        </div>
+
+        <aside className="order-first lg:order-last lg:sticky lg:top-6">
+          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+            <p className="px-2 pb-2 text-[11px] font-black uppercase tracking-wider text-slate-400">
+              Settings Menu
+            </p>
+            <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+              {settingsPanels.map(panel => {
+                const Icon = panel.icon
+                const isActive = activePanel === panel.key
+                return (
+                  <button
+                    key={panel.key}
+                    type="button"
+                    onClick={() => setActivePanel(panel.key)}
+                    className={`flex items-start gap-3 rounded-xl border p-3 text-left transition ${
+                      isActive
+                        ? 'border-[#d7a23a]/60 bg-[#061331] text-white shadow-sm'
+                        : 'border-slate-200 bg-slate-50 text-[#061331] hover:border-[#d7a23a]/50 hover:bg-white'
+                    }`}
+                  >
+                    <span
+                      className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
+                        isActive ? 'bg-[#d7a23a] text-[#061331]' : 'bg-white text-[#d7a23a]'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-black">{panel.title}</span>
+                      <span className={`mt-0.5 block text-xs ${isActive ? 'text-white/70' : 'text-slate-500'}`}>
+                        {panel.description}
+                      </span>
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   )

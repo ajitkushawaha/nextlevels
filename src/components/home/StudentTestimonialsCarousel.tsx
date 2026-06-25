@@ -1,13 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { ArrowRight, ArrowLeft, Star, Lock, CirclePlay } from 'lucide-react'
+import { ArrowRight, ArrowLeft, Star, X } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 
 interface Testimonial {
   name: string
@@ -83,6 +83,7 @@ export default function StudentTestimonialsCarousel({
   testimonials,
 }: StudentTestimonialsCarouselProps) {
   const displayTestimonials = [...testimonials, ...testimonials]
+  const [activeReview, setActiveReview] = useState<Testimonial | null>(null)
 
   return (
     <div className="w-full  mt-10">
@@ -122,9 +123,20 @@ export default function StudentTestimonialsCarousel({
                     />
                   ))}
                 </div>
-                <p className="mt-5 flex-1 text-sm leading-7 text-[#273149]">
+                <p className="mt-5 text-sm leading-7 text-[#273149] line-clamp-4">
                   &quot;{testimonial.quote}&quot;
                 </p>
+                {testimonial.quote.length > 150 ? (
+                  <button
+                    type="button"
+                    onClick={() => setActiveReview(testimonial)}
+                    className="mt-3 w-fit text-xs font-black uppercase tracking-wider text-[#d7a23a] transition hover:text-[#061331]"
+                  >
+                    Read More
+                  </button>
+                ) : (
+                  <span className="mt-3 h-4" aria-hidden="true" />
+                )}
                 <div className="mt-6 flex items-center gap-4">
                   <div className="relative h-12 w-12 overflow-hidden rounded-full">
                     <Image
@@ -178,6 +190,44 @@ export default function StudentTestimonialsCarousel({
         }
       `}} />
       </div>
+
+      {activeReview ? (
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-[#061331]/70 px-4 py-6 backdrop-blur-sm">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+            <button
+              type="button"
+              onClick={() => setActiveReview(null)}
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#061331] transition hover:bg-[#061331] hover:text-white"
+              aria-label="Close review"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="flex gap-1 text-[#d7a23a]">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Star key={index} className="h-4 w-4 fill-current" aria-hidden="true" />
+              ))}
+            </div>
+            <p className="mt-5 whitespace-pre-line text-base leading-8 text-[#273149]">
+              &quot;{activeReview.quote}&quot;
+            </p>
+            <div className="mt-7 flex items-center gap-4 border-t border-slate-100 pt-5">
+              <div className="relative h-14 w-14 overflow-hidden rounded-full">
+                <Image
+                  src={activeReview.image}
+                  alt={activeReview.name}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
+                />
+              </div>
+              <div>
+                <p className="text-sm font-black text-[#081638]">{activeReview.name}</p>
+                <p className="text-xs font-semibold text-[#59616f]">{activeReview.country}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

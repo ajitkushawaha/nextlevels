@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import {
   ArrowLeft,
   MapPin,
@@ -25,6 +26,48 @@ import CourseEnquiryForm from './CourseEnquiryForm'
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const decodedId = decodeURIComponent(id)
+
+  try {
+    await connectDb()
+    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
+    const dbProg = await (ProgramModel as any).findOne({
+      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }],
+    }).populate({ path: 'universityId', populate: { path: 'countryId' } }).lean()
+
+    if (dbProg) {
+      const seo = dbProg.cmsData?.seo || {}
+      const title = seo.metaTitle || `${dbProg.title} | Next Level Education`
+      const description =
+        seo.metaDescription ||
+        dbProg.description ||
+        `Explore ${dbProg.title} at ${dbProg.universityId?.name || 'a partner university'}.`
+      const image = seo.ogImage || dbProg.heroImage || dbProg.universityId?.bannerImage
+      return {
+        title,
+        description,
+        keywords: seo.metaKeywords || undefined,
+        robots: seo.robots || 'index, follow',
+        alternates: { canonical: seo.canonical || `/courses/${dbProg._id.toString()}` },
+        openGraph: {
+          title: seo.ogTitle || title,
+          description: seo.ogDescription || description,
+          images: image ? [image] : [],
+        },
+      }
+    }
+  } catch (error) {
+    console.error('Course metadata lookup failed:', error)
+  }
+
+  return {
+    title: `${decodedId} | Next Level Education`,
+    description: `Explore ${decodedId} course details, entry requirements, fees, and intakes.`,
+  }
 }
 
 export default async function CourseDetailPage({ params }: Props) {

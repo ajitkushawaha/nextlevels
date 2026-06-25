@@ -22,7 +22,6 @@ export default function HomeUniversitiesEditor({
   const [loading, setLoading] = useState(true)
   const [selectedUniversities, setSelectedUniversities] = useState<string[]>([])
   const pinnedCount = section.universities?.length || 0
-  const remainingSlots = Math.max(0, 4 - pinnedCount)
 
   useEffect(() => {
     async function fetchUniversities() {
@@ -83,8 +82,6 @@ export default function HomeUniversitiesEditor({
     setSelectedUniversities(prev =>
       prev.includes(univName)
         ? prev.filter(name => name !== univName)
-        : prev.length >= remainingSlots
-          ? prev
         : [...prev, univName]
     )
   }
@@ -93,7 +90,6 @@ export default function HomeUniversitiesEditor({
     const nextPinned = allUniversities
       .filter(university => selectedUniversities.includes(university.name))
       .filter(university => !isPinned(university.name))
-      .slice(0, remainingSlots)
       .map(buildPinnedUniversity)
 
     if (nextPinned.length === 0) return
@@ -195,7 +191,7 @@ export default function HomeUniversitiesEditor({
             <div className="rounded-xl border border-slate-200 bg-white">
               <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-3 py-2">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Select up to 4 universities
+                  Select universities to show in the slider
                 </p>
                 <Button
                   type="button"
@@ -212,13 +208,12 @@ export default function HomeUniversitiesEditor({
                 {allUniversities.map(univ => {
                   const pinned = isPinned(univ.name)
                   const checked = selectedUniversities.includes(univ.name)
-                  const limitReached = !checked && selectedUniversities.length >= remainingSlots
 
                   return (
                     <label
                       key={univ.id || univ._id || univ.name}
                       className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition ${
-                        pinned || limitReached
+                        pinned
                           ? 'cursor-not-allowed bg-slate-50 text-slate-400'
                           : checked
                             ? 'bg-amber-50 text-[#081638]'
@@ -228,7 +223,7 @@ export default function HomeUniversitiesEditor({
                       <input
                         type="checkbox"
                         checked={checked}
-                        disabled={pinned || limitReached}
+                        disabled={pinned}
                         onChange={() => toggleSelectedUniversity(univ.name)}
                         className="h-4 w-4 rounded border-slate-300 text-[#061331] accent-[#061331]"
                       />
@@ -239,7 +234,6 @@ export default function HomeUniversitiesEditor({
                         <span className="block truncate text-[10px] text-slate-400">
                           {univ.location || univ.city}, {univ.country || univ.countryId?.name || 'International'}
                           {pinned ? ' - pinned' : ''}
-                          {limitReached ? ' - limit reached' : ''}
                         </span>
                       </span>
                     </label>
@@ -250,7 +244,7 @@ export default function HomeUniversitiesEditor({
 
             <div className="flex items-center justify-between gap-3">
               <p className="text-[11px] font-semibold text-slate-400">
-                {pinnedCount}/4 pinned · {selectedUniversities.length} selected
+                {pinnedCount} pinned · {selectedUniversities.length} selected
               </p>
               <Button
                 type="button"

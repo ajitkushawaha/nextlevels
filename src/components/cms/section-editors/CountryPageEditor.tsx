@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import CmsImageField from './CmsImageField'
+import SeoFields from './SeoFields'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 
 type CountryData = {
@@ -42,6 +43,8 @@ type CountryData = {
   livingCosts?: Array<{ item: string; cost: string }>
   faqs?: Array<{ question: string; answer: string }>
   cmsData?: {
+    faqTitle?: string
+    faqDescription?: string
     marketingBanner?: {
       image?: string
       alt?: string
@@ -64,7 +67,7 @@ type Props = {
 
 export default function CountryPageEditor({ countryId, onBack }: Props) {
   const [data, setData] = useState<CountryData | null>(null)
-  const [activeTab, setActiveTab] = useState<'hero' | 'why' | 'visa' | 'costs' | 'faqs'>('hero')
+  const [activeTab, setActiveTab] = useState<'hero' | 'why' | 'visa' | 'costs' | 'faqs' | 'seo'>('hero')
   const [isSaving, setIsSaving] = useState(false)
   const [viewportMode, setViewportMode] = useState<PreviewViewportMode>('laptop')
 
@@ -251,6 +254,16 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
     setData({ ...data, faqs: (data.faqs || []).filter((_, i) => i !== index) })
   }
 
+  const updateCmsData = (key: string, val: any) => {
+    setData({
+      ...data,
+      cmsData: {
+        ...(data.cmsData || {}),
+        [key]: val,
+      },
+    })
+  }
+
   return (
     <div className="flex h-[calc(100vh-80px)] flex-col bg-slate-50 text-slate-800">
       {/* Top Header Controls */}
@@ -284,6 +297,7 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
               ['visa', 'Student Visa Info'],
               ['costs', 'Tuition & Living Costs'],
               ['faqs', 'Frequently Asked FAQs'],
+              ['seo', 'SEO'],
             ] as const).map(([tabId, label]) => (
               <button
                 key={tabId}
@@ -677,6 +691,29 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                     <Plus className="h-3 w-3 mr-1" /> Add FAQ
                   </Button>
                 </div>
+                <div className="grid gap-4 rounded-lg border border-slate-100 bg-slate-50/60 p-4 sm:grid-cols-2">
+                  <div className="space-y-1">
+                    <Label>FAQ Section Title</Label>
+                    <Input
+                      value={data.cmsData?.faqTitle || 'Ask Next Level Education'}
+                      onChange={e => updateCmsData('faqTitle', e.target.value)}
+                      placeholder="Ask Next Level Education"
+                      className="bg-white text-xs font-semibold"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>FAQ Section Description</Label>
+                    <Input
+                      value={
+                        data.cmsData?.faqDescription ||
+                        `Key questions students ask before applying to ${data.name}.`
+                      }
+                      onChange={e => updateCmsData('faqDescription', e.target.value)}
+                      placeholder="Key questions students ask before applying..."
+                      className="bg-white text-xs font-semibold"
+                    />
+                  </div>
+                </div>
                 <div className="space-y-4">
                   {(data.faqs || []).map((faq, index) => (
                     <div key={index} className="border border-slate-100 bg-slate-50/50 p-4 rounded-md space-y-2 relative">
@@ -706,6 +743,14 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                   ))}
                 </div>
               </div>
+            )}
+
+            {activeTab === 'seo' && (
+              <SeoFields
+                value={data.cmsData?.seo}
+                onChange={value => updateCmsData('seo', value)}
+                folder="nextlevel/countries/seo"
+              />
             )}
           </div>
         </div>
@@ -910,8 +955,13 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
 
                   {/* FAQs */}
                   <section>
-                    <h2 className="text-base font-extrabold text-[#081638]">Ask Next Level</h2>
-                    <p className="text-xs text-slate-400 mb-4">Key questions students ask before applying to {data.name}.</p>
+                    <h2 className="text-base font-extrabold text-[#081638]">
+                      {data.cmsData?.faqTitle || 'Ask Next Level Education'}
+                    </h2>
+                    <p className="text-xs text-slate-400 mb-4">
+                      {data.cmsData?.faqDescription ||
+                        `Key questions students ask before applying to ${data.name}.`}
+                    </p>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {(data.faqs || []).map((faq, idx) => (
                         <div key={idx} className="border border-slate-100 rounded bg-[#F8FAFC] p-3 text-xs">

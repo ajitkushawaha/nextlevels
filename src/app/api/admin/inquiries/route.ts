@@ -17,7 +17,7 @@ export async function GET() {
 
     await connectDB()
     const inquiries = await (Enquiry as any)
-      .find({})
+      .find({ sourceType: { $ne: 'referral-agent' } })
       .sort({ createdAt: -1 })
       .lean()
 
