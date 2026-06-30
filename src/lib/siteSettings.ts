@@ -73,8 +73,8 @@ const defaultHeaderNavItems: SiteLink[] = [
     dropdownItems: [
       { label: 'Jaffna', href: '/branches/jaffna', enabled: true },
       { label: 'Batticaloa', href: '/branches/batticaloa', enabled: true },
-      { label: 'Colombo', href: '/branches/colombo', enabled: true },
-      { label: 'Vavuniya', href: '/branches/vavuniya', enabled: true },
+      { label: 'Colombo (Coming Soon)', href: '/branches/colombo', enabled: true },
+      { label: 'Vavuniya (Coming Soon)', href: '/branches/vavuniya', enabled: true },
     ],
   },
 ]
@@ -126,8 +126,8 @@ export const defaultSiteSettings: SiteSettings = {
     branchLinks: [
       { label: 'Jaffna', href: '/branches/jaffna', enabled: true },
       { label: 'Batticaloa', href: '/branches/batticaloa', enabled: true },
-      { label: 'Colombo', href: '/branches/colombo', enabled: true },
-      { label: 'Vavuniya', href: '/branches/vavuniya', enabled: true },
+      { label: 'Colombo (Coming Soon)', href: '/branches/colombo', enabled: true },
+      { label: 'Vavuniya (Coming Soon)', href: '/branches/vavuniya', enabled: true },
     ],
     phone: '+94775198195',
     email: 'info@nextlevel.edu.lk',

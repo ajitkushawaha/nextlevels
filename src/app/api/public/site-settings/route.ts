@@ -2,14 +2,16 @@ import { NextResponse } from 'next/server'
 import connectDB from '@/lib/db'
 import SiteSettings from '@/models/SiteSettings'
 import Country from '@/models/Country'
+import Branch from '@/models/Branch'
 import { defaultSiteSettings, mergeSiteSettings } from '@/lib/siteSettings'
 
 export async function GET() {
   try {
     await connectDB()
-    const [storedSettings, countries] = await Promise.all([
+    const [storedSettings, countries, savedBranches] = await Promise.all([
       (SiteSettings as any).findOne({ key: 'global' }).lean(),
       (Country as any).find({}).select('name code cmsData.slug').lean(),
+      (Branch as any).find({ isActive: { $ne: false } }).select('slug').lean(),
     ])
     const settings = mergeSiteSettings(storedSettings)
     const countryPaths = new Map(
@@ -31,6 +33,28 @@ export async function GET() {
           : item.dropdownItems,
     }))
     settings.footer.studyLinks = settings.footer.studyLinks.map(withSavedCountrySlug)
+
+    const liveBranchSlugs = new Set([
+      'jaffna',
+      'batticaloa',
+      ...savedBranches.map((branch: any) => String(branch.slug).toLowerCase()),
+    ])
+    const withBranchStatus = (link: any) => {
+      const slug = String(link.href).split('/').filter(Boolean).pop()?.toLowerCase() || ''
+      const isLive = liveBranchSlugs.has(slug)
+      return {
+        ...link,
+        label: isLive ? String(link.label).replace(/\s*\(Coming Soon\)$/i, '') : `${String(link.label).replace(/\s*\(Coming Soon\)$/i, '')} (Coming Soon)`,
+      }
+    }
+    settings.header.navItems = settings.header.navItems.map(item => ({
+      ...item,
+      dropdownItems:
+        item.label === 'Branches' && item.dropdownItems
+          ? item.dropdownItems.map(withBranchStatus)
+          : item.dropdownItems,
+    }))
+    settings.footer.branchLinks = settings.footer.branchLinks.map(withBranchStatus)
 
     return NextResponse.json({ settings })
   } catch (error) {

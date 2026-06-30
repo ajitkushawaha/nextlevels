@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import BranchEnquiryForm from '@/components/branches/BranchEnquiryForm'
 import Footer from '@/components/layout/footer'
-import { getBranchPage, getBranchSlugs } from '@/lib/branchPages'
+import { getBranchPage, getBranchSlugs, getPlannedBranch } from '@/lib/branchPages'
 
 type Params = {
   params: Promise<{
@@ -36,7 +36,16 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params
   const branch = await getBranchPage(slug)
 
-  if (!branch) return { title: 'Branch Not Found' }
+  if (!branch) {
+    const plannedBranch = getPlannedBranch(slug)
+    return plannedBranch
+      ? {
+          title: `${plannedBranch.city} Branch | Coming Soon`,
+          description: `Next Level Education ${plannedBranch.city} branch is coming soon.`,
+          robots: { index: false, follow: true },
+        }
+      : { title: 'Branch Not Found' }
+  }
 
   return {
     title: branch.seoTitle,
@@ -51,7 +60,53 @@ export default async function BranchPage({ params }: Params) {
   const { slug } = await params
   const branch = await getBranchPage(slug)
 
-  if (!branch) notFound()
+  if (!branch) {
+    const plannedBranch = getPlannedBranch(slug)
+    if (!plannedBranch) notFound()
+
+    return (
+      <div className="min-h-screen bg-white text-[#081638]">
+        <main className="relative flex min-h-[82vh] items-center justify-center overflow-hidden bg-[#eaf0f6] px-5 pb-16 pt-28">
+          <div className="absolute left-1/2 top-14 h-44 w-72 -translate-x-1/2 rounded-full bg-[#d7a23a]/65 blur-3xl sm:h-52 sm:w-120" aria-hidden="true" />
+          <div
+            className="absolute left-1/2 top-24 h-[760px] w-[min(1080px,92vw)] -translate-x-1/2 rounded-[50%] border border-white/90 bg-[radial-gradient(circle_at_50%_0%,rgba(215,162,58,0.42),rgba(255,255,255,0.72)_47%,rgba(234,240,246,0.28)_72%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+            aria-hidden="true"
+          />
+
+          <section className="relative z-10 mx-auto w-full max-w-3xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#081638]/10 bg-white/60 px-4 py-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#081638]/65 backdrop-blur-sm">
+              <MapPin className="h-3.5 w-3.5 text-[#d7a23a]" />
+              {plannedBranch.city} Branch
+            </span>
+            <h1 className="mt-7 text-5xl font-black tracking-[-0.05em] text-[#081638] sm:text-7xl lg:text-8xl" style={{ fontFamily: 'Farro, sans-serif' }}>
+              Coming Soon
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl text-sm font-semibold leading-7 text-slate-500 sm:text-base">
+              This page is currently under construction. We&apos;re preparing the {plannedBranch.city} branch experience and will have it ready for you soon.
+            </p>
+
+            <div className="mx-auto my-8 h-12 w-px bg-linear-to-b from-[#d7a23a]/70 to-[#081638]/10" aria-hidden="true" />
+
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#081638]/55">
+              Visit our active branches
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link href="/branches/jaffna" className="rounded-full bg-[#081638] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#d7a23a] hover:text-[#081638]">
+                Jaffna
+              </Link>
+              <Link href="/branches/batticaloa" className="rounded-full border border-[#081638]/15 bg-white/65 px-6 py-3 text-sm font-bold text-[#081638] backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#d7a23a]">
+                Batticaloa
+              </Link>
+              <Link href="/contact-us" className="rounded-full border border-[#081638]/15 bg-white/65 px-6 py-3 text-sm font-bold text-[#081638] backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-[#d7a23a]">
+                Contact Us
+              </Link>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(branch.mapQuery)}&output=embed`
 

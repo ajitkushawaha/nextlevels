@@ -2,6 +2,8 @@ import connectDB from '@/lib/db'
 import BranchModel from '@/models/Branch'
 import { branches, getBranch as getStaticBranch, type Branch } from '@/lib/branches'
 
+const LIVE_STATIC_BRANCH_SLUGS = new Set(['jaffna', 'batticaloa'])
+
 function serializeBranch(branch: any): Branch {
   return {
     slug: branch.slug,
@@ -37,6 +39,11 @@ export async function getBranchPage(slug: string) {
     console.error('Branch DB lookup failed:', error)
   }
 
+  return LIVE_STATIC_BRANCH_SLUGS.has(slug) ? getStaticBranch(slug) : undefined
+}
+
+export function getPlannedBranch(slug: string) {
+  if (LIVE_STATIC_BRANCH_SLUGS.has(slug)) return undefined
   return getStaticBranch(slug)
 }
 
@@ -52,9 +59,9 @@ export async function getBranchSlugs() {
       .map((branch: { slug?: string }) => branch.slug)
       .filter(Boolean) as string[]
 
-    return Array.from(new Set([...branches.map(branch => branch.slug), ...dbSlugs]))
+    return Array.from(new Set([...LIVE_STATIC_BRANCH_SLUGS, ...dbSlugs]))
   } catch {
-    return branches.map(branch => branch.slug)
+    return Array.from(LIVE_STATIC_BRANCH_SLUGS)
   }
 }
 
@@ -66,7 +73,10 @@ export async function listBranchPages() {
       .sort({ city: 1 })
       .lean()
 
-    if (dbBranches.length) return dbBranches.map(serializeBranch)
+    const savedBySlug = new Map(
+      dbBranches.map((branch: any) => [branch.slug, serializeBranch(branch)])
+    )
+    return branches.map(branch => savedBySlug.get(branch.slug) || branch)
   } catch (error) {
     console.error('Branch list DB lookup failed:', error)
   }
