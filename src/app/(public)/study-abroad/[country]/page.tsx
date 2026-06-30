@@ -123,10 +123,10 @@ function DataTable({
   rows: TableRow[]
 }) {
   return (
-    <div className="my-5 overflow-hidden border border-slate-200 bg-white">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-125 border-collapse text-left text-[13px]">
-          <thead className="bg-slate-50 text-[#081638]">
+    <div className="my-5 overflow-hidden border border-slate-200 bg-white max-[499px]:border-0">
+      <div className="overflow-x-auto max-[499px]:overflow-visible">
+        <table className="w-full min-w-125 border-collapse text-left text-[13px] max-[499px]:block max-[499px]:min-w-0">
+          <thead className="bg-slate-50 text-[#081638] max-[499px]:hidden">
             <tr>
               {columns.map(column => (
                 <th key={column.key} className="border border-slate-200 px-4 py-3 font-bold">
@@ -135,11 +135,15 @@ function DataTable({
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="max-[499px]:grid max-[499px]:gap-3">
             {rows.map((row, index) => (
-              <tr key={index}>
+              <tr key={index} className="max-[499px]:block max-[499px]:overflow-hidden max-[499px]:rounded-lg max-[499px]:border max-[499px]:border-slate-200">
                 {columns.map(column => (
-                  <td key={column.key} className="border border-slate-200 px-4 py-3 leading-6 text-slate-600">
+                  <td
+                    key={column.key}
+                    data-label={column.label}
+                    className="border border-slate-200 px-4 py-3 leading-6 text-slate-600 max-[499px]:block max-[499px]:border-0 max-[499px]:border-b max-[499px]:px-3 max-[499px]:py-2.5 max-[499px]:before:mb-0.5 max-[499px]:before:block max-[499px]:before:text-[10px] max-[499px]:before:font-bold max-[499px]:before:uppercase max-[499px]:before:tracking-wide max-[499px]:before:text-[#081638] max-[499px]:before:content-[attr(data-label)] max-[499px]:last:border-b-0"
+                  >
                     {row[column.key]}
                   </td>
                 ))}
@@ -308,7 +312,7 @@ export default async function StudyDestinationPage({ params }: Params) {
               <div
                 role="img"
                 aria-label={`${destination.country} landmark`}
-                className="relative  h-40 overflow-hidden bg-[#E9EFF6] bg-cover bg-center bg-blend-multiply sm:h-44"
+                className="relative  h-40 overflow-hidden bg-[#E9EFF6] bg-contain bg-no-repeat bg-center bg-blend-multiply sm:h-44"
                 style={{ backgroundImage: `url(${heroTiles[0]})` }}
               >
 

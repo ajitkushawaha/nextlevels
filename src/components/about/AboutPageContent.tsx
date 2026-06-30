@@ -111,7 +111,7 @@ function AboutHero({ section }: { section: AboutHeroSection }) {
           </nav>
         </div>
 
-        <div className="mt-auto space-y-3 pt-6 text-left">
+        <div className="mt-auto space-y-3 pt-26 sm:pt-6 text-left">
           <div>
             <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-[#081638] border border-[#d7a23a]/40 text-[#d7a23a] text-[10px] font-black uppercase tracking-wider shadow-sm">
               About Us

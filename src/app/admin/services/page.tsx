@@ -253,7 +253,7 @@ export default function ServicesManager() {
 
       <div className="grid gap-6 xl:grid-cols-12">
         {/* Left column: List of Services */}
-        <div className="xl:col-span-3">
+        <div className="xl:sticky xl:top-6 xl:col-span-3 xl:self-start">
           <Card className="border-slate-200 bg-white shadow-sm">
             <CardHeader className="border-b border-slate-100 p-4">
               <CardTitle className="text-sm font-bold text-slate-800">
@@ -318,10 +318,10 @@ export default function ServicesManager() {
         </div>
 
         {/* Center column: Form Editor */}
-        <div className="xl:col-span-5 space-y-6">
+        <div className="space-y-6 xl:sticky xl:top-6 xl:col-span-5 xl:self-start">
           {selectedService && editorData ? (
-            <Card className="border-slate-200 bg-white shadow-sm">
-              <CardHeader className="border-b border-slate-100 p-4">
+            <Card className="border-slate-200 bg-white shadow-sm xl:flex xl:max-h-[calc(100vh-3rem)] xl:flex-col xl:overflow-hidden">
+              <CardHeader className="shrink-0 border-b border-slate-100 p-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <div className="mb-1.5 flex items-center gap-1.5">
@@ -364,7 +364,7 @@ export default function ServicesManager() {
                 </div>
               </CardHeader>
 
-              <CardContent className="p-4 space-y-4">
+              <CardContent className="space-y-4 p-4 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">
                 {/* Main Settings */}
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
@@ -425,9 +425,9 @@ export default function ServicesManager() {
         </div>
 
         {/* Right column: Live Preview Frame */}
-        <div className="xl:col-span-4">
+        <div className="xl:sticky xl:top-6 xl:col-span-4 xl:self-start">
           {selectedService && editorData ? (
-            <Card className="overflow-hidden border-slate-200 bg-white shadow-sm xl:sticky xl:top-6">
+            <Card className="overflow-hidden border-slate-200 bg-white shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 p-4">
                 <div>
                   <CardTitle className="text-sm font-semibold text-slate-800">

@@ -569,7 +569,7 @@ Please help me with the admission consultation process.`
       <ReadingProgress />
 
       {/* ── HERO BANNER ── */}
-      <section className="relative  bg-[#081638] overflow-hidden min-h-105 sm:min-h-120 flex flex-col justify-end">
+      <section className="relative flex min-h-90 flex-col justify-end overflow-hidden bg-[#081638] sm:min-h-120">
         {/* Background Image */}
         {post.featuredImage && (
           <div className="absolute  inset-0 z-0">
@@ -589,7 +589,7 @@ Please help me with the admission consultation process.`
         <div className="absolute inset-0 z-10 opacity-20"
           style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, #d7a23a 0%, transparent 50%)' }}
         />
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-14">
+        <div className="relative z-20 mx-auto w-full max-w-7xl px-4 pb-8 pt-28 sm:px-6 sm:pb-14 sm:pt-32 lg:px-8">
           {/* Breadcrumb */}
           <nav className="mb-5 flex items-center gap-2 text-xs text-slate-300/80">
             <Link href="/" className="hover:text-[#d7a23a] transition-colors font-medium">Home</Link>
@@ -607,7 +607,7 @@ Please help me with the admission consultation process.`
           )}
 
           {/* Title */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight max-w-4xl mb-8 font-serif">
+          <h1 className="mb-6 max-w-4xl font-serif text-xl font-extrabold leading-tight text-white sm:mb-8 sm:text-3xl md:text-4xl lg:text-5xl">
             {post.title}
           </h1>
 
@@ -654,7 +654,7 @@ Please help me with the admission consultation process.`
       </section>
 
       {/* ── MAIN BODY ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-12 lg:items-start">
 
           {/* ── LEFT: TABLE OF CONTENTS ── */}
@@ -689,7 +689,7 @@ Please help me with the admission consultation process.`
             {/* Article Content */}
             <article
               id="blog-content"
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8
+              className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-8
               prose prose-base md:prose-lg max-w-none font-sans
               prose-headings:text-[#081638] prose-headings:font-bold prose-headings:font-serif
               prose-h1:text-xl prose-h1:font-extrabold prose-h1:mb-6 prose-h1:mt-0 prose-h1:leading-tight  prose-h1:pb-3 prose-h1:text-[#081638]

@@ -135,12 +135,12 @@ export default async function BlogPage({
             </div>
             
             <h1 
-              className="text-2xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15] font-serif"
+              className="text-3xl sm:text-4xl lg:text-[48px] font-bold text-white tracking-tight leading-[1.15] font-serif"
             >
               Our Blog
             </h1>
             
-            <p className="text-white/80 text-xs sm:text-sm max-w-xl font-medium leading-relaxed">
+            <p className="max-w-xl text-sm font-medium leading-relaxed text-white/80">
               Stay informed with the latest updates on international education, university guides, and study abroad tips from our expert consultancy team.
             </p>
           </div>
@@ -148,14 +148,15 @@ export default async function BlogPage({
       </section>
 
       {/* Main Content */}
-      <main className=" grow py-12 bg-slate-50/40">
-        <div className="w-full max-w-300 mx-auto ">
+      <main className="grow bg-slate-50/40 py-8 sm:py-12">
+        <div className="mx-auto w-full max-w-300 px-4 sm:px-6">
           
           {/* Category Filter list */}
-          <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-12">
+          <div className="mb-8 flex flex-nowrap justify-start gap-2 overflow-x-auto pb-2 sm:mb-12 sm:gap-3 lg:flex-wrap lg:overflow-visible lg:pb-0">
             {filterCategories.map(cat => (
               <Link
                 key={cat}
+                className="shrink-0"
                 href={
                   cat === 'All Posts'
                     ? '/blog'
@@ -165,7 +166,7 @@ export default async function BlogPage({
                 <Button
                   variant={cat === category ? 'default' : 'outline'}
                   size="sm"
-                  className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border ${cat === category
+                  className={`rounded-full border px-4 py-2 text-xs font-bold transition-all duration-300 sm:px-5 sm:text-sm ${cat === category
                     ? 'border-slate-200 text-white bg-[#061331] hover:bg-slate-50 hover:text-[#061331] hover:border-slate-300 shadow-sm hover:scale-[1.02]'
                     : 'bg-white border-slate-200 text-[#061331]/70  shadow-md hover:scale-[1.02]'
                     }`}
@@ -189,7 +190,7 @@ export default async function BlogPage({
 
         {/* All Posts Section */}
         <div className="mb-8">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#061331] flex items-center gap-2 mb-10">
+          <h2 className="mb-6 flex items-center gap-2 text-xl font-extrabold text-[#061331] sm:mb-10 sm:text-3xl">
              Blog Posts
           </h2>
 
@@ -202,7 +203,7 @@ export default async function BlogPage({
                   className="group flex flex-col h-full bg-white transition-all duration-300"
                 >
                   {/* Card Image */}
-                  <div className="relative h-60 w-full overflow-hidden rounded-3xl mb-5 border border-slate-100/50 shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                  <div className="relative mb-4 h-52 w-full overflow-hidden rounded-2xl border border-slate-100/50 shadow-sm transition-shadow duration-300 group-hover:shadow-md sm:mb-5 sm:h-60 sm:rounded-3xl">
                     <BlogImage
                       src={post.featuredImage || '/placeholder.svg'}
                       alt={post.title}
@@ -227,7 +228,7 @@ export default async function BlogPage({
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl sm:text-[22px] font-bold text-[#061331] leading-snug group-hover:text-[#d7a23a] transition-colors px-1 mb-6">
+                  <h3 className="mb-5 px-1 text-lg font-bold leading-snug text-[#061331] transition-colors group-hover:text-[#d7a23a] sm:mb-6 sm:text-[22px]">
                     {post.title}
                   </h3>
 
