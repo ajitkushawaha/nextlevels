@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import {
@@ -20,6 +20,7 @@ import mongoose from 'mongoose'
 import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import ScholarshipEnquiryForm from './ScholarshipEnquiryForm'
+import { slugify } from '@/lib/slug'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     await connectDb()
     const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
     const dbSchol = await (ScholarshipModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }],
+      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }, { 'cmsData.slug': decodedId }],
     })
       .populate('countryId')
       .populate('universityId')
@@ -58,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         keywords: seo.metaKeywords || undefined,
         robots: seo.robots || 'index, follow',
-        alternates: { canonical: seo.canonical || `/scholarships/${dbSchol._id.toString()}` },
+        alternates: { canonical: seo.canonical || `/scholarships/${dbSchol.cmsData?.slug || slugify(dbSchol.title)}` },
         openGraph: {
           title: seo.ogTitle || title,
           description: seo.ogDescription || description,
@@ -81,6 +82,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
   const decodedId = decodeURIComponent(id)
 
   let scholarship: any = null
+  let canonicalSlug = ''
 
   try {
     await connectDb()
@@ -88,7 +90,8 @@ export default async function ScholarshipDetailPage({ params }: Props) {
     const dbSchol = await (ScholarshipModel as any).findOne({
       $or: [
         ...(isValidId ? [{ _id: decodedId }] : []),
-        { title: decodedId }
+        { title: decodedId },
+        { 'cmsData.slug': decodedId }
       ]
     }).populate('countryId').populate('universityId').populate({
       path: 'programId',
@@ -96,6 +99,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
     }).lean()
 
     if (dbSchol) {
+      canonicalSlug = dbSchol.cmsData?.slug || slugify(dbSchol.title)
       scholarship = {
         id: dbSchol._id.toString(),
         title: dbSchol.title,
@@ -120,11 +124,31 @@ export default async function ScholarshipDetailPage({ params }: Props) {
   }
 
   if (!scholarship) {
-    scholarship = scholarshipsData.find(s => s.id === decodedId)
+    scholarship = scholarshipsData.find(s => s.id === decodedId || slugify(s.title) === decodedId)
+    if (scholarship) {
+      canonicalSlug = slugify(scholarship.title)
+
+      try {
+        const matchingScholarship = await (ScholarshipModel as any)
+          .findOne({ title: scholarship.title })
+          .select('cmsData.slug')
+          .lean()
+
+        if (matchingScholarship?.cmsData?.slug) {
+          canonicalSlug = matchingScholarship.cmsData.slug
+        }
+      } catch (error) {
+        console.error('Failed to resolve saved scholarship slug:', error)
+      }
+    }
   }
 
   if (!scholarship) {
     notFound()
+  }
+
+  if (canonicalSlug && decodedId !== canonicalSlug) {
+    permanentRedirect(`/scholarships/${canonicalSlug}`)
   }
 
   const matchingUniversities = Object.values(universitiesData).filter(

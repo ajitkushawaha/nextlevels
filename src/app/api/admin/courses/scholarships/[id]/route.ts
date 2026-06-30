@@ -43,9 +43,10 @@ export async function PUT(req: Request, { params }: Params) {
     }
     const { id } = await params
     const body = await req.json()
+    const { _id, createdAt, updatedAt, __v, ...update } = body
 
     await connectDB()
-    const updated = await (Scholarship as any).findByIdAndUpdate(id, body, { new: true })
+    const updated = await (Scholarship as any).findByIdAndUpdate(id, update, { new: true, runValidators: true })
     if (!updated) {
       return NextResponse.json({ error: 'Scholarship not found' }, { status: 404 })
     }

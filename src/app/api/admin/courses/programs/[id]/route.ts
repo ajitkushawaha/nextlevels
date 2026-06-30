@@ -40,9 +40,10 @@ export async function PUT(req: Request, { params }: Params) {
     }
     const { id } = await params
     const body = await req.json()
+    const { _id, createdAt, updatedAt, __v, ...update } = body
 
     await connectDB()
-    const updated = await (Program as any).findByIdAndUpdate(id, body, { new: true })
+    const updated = await (Program as any).findByIdAndUpdate(id, update, { new: true, runValidators: true })
     if (!updated) {
       return NextResponse.json({ error: 'Program not found' }, { status: 404 })
     }

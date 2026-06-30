@@ -10,6 +10,7 @@ import CmsImageField from './CmsImageField'
 import SeoFields from './SeoFields'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
+import { slugify } from '@/lib/slug'
 
 type ScholarshipData = {
   _id: string
@@ -324,6 +325,9 @@ export default function ScholarshipPageEditor({ scholarshipId, onBack }: Props) 
                 value={data.cmsData?.seo}
                 onChange={value => handleCmsDataChange('seo', value)}
                 folder="nextlevel/scholarships/seo"
+                slug={data.cmsData?.slug || slugify(data.title)}
+                basePath="/scholarships"
+                onSlugChange={slug => handleCmsDataChange('slug', slug)}
               />
             )}
           </div>

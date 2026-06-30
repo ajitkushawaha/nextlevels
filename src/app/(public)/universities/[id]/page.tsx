@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import {
@@ -20,6 +20,7 @@ import mongoose from 'mongoose'
 import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import UniversityEnquiryForm from './UniversityEnquiryForm'
+import UniversityLogo from '@/components/universities/UniversityLogo'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     await connectDb()
     const isValidId = mongoose.Types.ObjectId.isValid(decodedName)
     const dbUniv = await (UniversityModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedName }] : []), { name: decodedName }],
+      $or: [...(isValidId ? [{ _id: decodedName }] : []), { name: decodedName }, { 'cmsData.slug': decodedName }],
     }).populate('countryId').lean()
 
     if (dbUniv) {
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         keywords: seo.metaKeywords || undefined,
         robots: seo.robots || 'index, follow',
-        alternates: { canonical: seo.canonical || `/universities/${encodeURIComponent(dbUniv.name)}` },
+        alternates: { canonical: seo.canonical || `/universities/${dbUniv.cmsData?.slug || encodeURIComponent(dbUniv.name)}` },
         openGraph: {
           title: seo.ogTitle || title,
           description: seo.ogDescription || description,
@@ -72,6 +73,7 @@ export default async function UniversityDetailPage({ params }: Props) {
   const decodedName = decodeURIComponent(id)
 
   let university: any = null
+  let canonicalSlug = ''
 
   try {
     await connectDb()
@@ -79,11 +81,13 @@ export default async function UniversityDetailPage({ params }: Props) {
     const dbUniv = await (UniversityModel as any).findOne({
       $or: [
         ...(isValidId ? [{ _id: decodedName }] : []),
-        { name: decodedName }
+        { name: decodedName },
+        { 'cmsData.slug': decodedName }
       ]
     }).populate('countryId').lean()
 
     if (dbUniv) {
+      canonicalSlug = dbUniv.cmsData?.slug || ''
       university = {
         name: dbUniv.name,
         logo: dbUniv.logo || dbUniv.name.substring(0, 3).toUpperCase(),
@@ -100,6 +104,10 @@ export default async function UniversityDetailPage({ params }: Props) {
     }
   } catch (err) {
     console.error('Failed to load university from database:', err)
+  }
+
+  if (canonicalSlug && decodedName !== canonicalSlug) {
+    permanentRedirect(`/universities/${canonicalSlug}`)
   }
 
   if (!university) {
@@ -310,9 +318,11 @@ export default async function UniversityDetailPage({ params }: Props) {
           {/* Header Row: Back Navigation, Logo and CTA Button */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-center font-black text-sm text-[#081638] shrink-0 uppercase">
-                {university.logo}
-              </div>
+              <UniversityLogo
+                name={university.name}
+                src={university.logo}
+                className="h-12 w-12 shrink-0 rounded-xl border border-slate-200/80 text-sm shadow-xs"
+              />
             </div>
 
             <div className="shrink-0">

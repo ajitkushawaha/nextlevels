@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import {
   ArrowRight,
@@ -20,6 +20,7 @@ import {
 import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import Footer from '@/components/layout/footer'
 import { coursesData, universitiesData } from '@/lib/mockData'
+import { slugify } from '@/lib/slug'
 import {
   getStudyDestinationSlugs,
   getStudyDestination,
@@ -55,11 +56,18 @@ function getCountryDisplayName(countryName: string) {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { country } = await params
+  const rawCountry = country.trim().toLowerCase()
   const normalizedCountry = normalizeStudyDestinationSlug(country)
   
   try {
     await connectDB()
-    const dbCountry = await (CountryModel as any).findOne({ code: normalizedCountry }).lean()
+    const fallbackDestination = getStudyDestination(normalizedCountry)
+    const dbCountry =
+      await (CountryModel as any).findOne({ $or: [{ 'cmsData.slug': rawCountry }, { code: rawCountry }] }).lean() ||
+      await (CountryModel as any).findOne({ $or: [{ 'cmsData.slug': normalizedCountry }, { code: normalizedCountry }] }).lean() ||
+      (fallbackDestination
+        ? await (CountryModel as any).findOne({ name: fallbackDestination.country }).lean()
+        : null)
     if (dbCountry) {
       const seo = dbCountry.cmsData?.seo || {}
       const title = seo.metaTitle || `Study in ${dbCountry.name} | Next Level Education`
@@ -69,7 +77,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         description,
         keywords: seo.metaKeywords || undefined,
         robots: seo.robots || 'index, follow',
-        alternates: { canonical: seo.canonical || `/study-abroad/${dbCountry.code}` },
+        alternates: { canonical: seo.canonical || `/study-abroad/${dbCountry.cmsData?.slug || dbCountry.code}` },
         openGraph: {
           title: seo.ogTitle || title,
           description: seo.ogDescription || description,
@@ -177,18 +185,24 @@ function ArticleBlock({
 
 export default async function StudyDestinationPage({ params }: Params) {
   const { country } = await params
+  const rawCountry = country.trim().toLowerCase()
   const normalizedCountry = normalizeStudyDestinationSlug(country)
   
   await connectDB()
-  
-  const dbCountry = await (CountryModel as any).findOne({ code: normalizedCountry }).lean()
+  const fallbackDestination = getStudyDestination(normalizedCountry)
+  const dbCountry =
+    await (CountryModel as any).findOne({ $or: [{ 'cmsData.slug': rawCountry }, { code: rawCountry }] }).lean() ||
+    await (CountryModel as any).findOne({ $or: [{ 'cmsData.slug': normalizedCountry }, { code: normalizedCountry }] }).lean() ||
+    (fallbackDestination
+      ? await (CountryModel as any).findOne({ name: fallbackDestination.country }).lean()
+      : null)
   let destination: any = null
   let universities: any[] = []
   let courses: any[] = []
 
   if (dbCountry) {
     destination = {
-      slug: dbCountry.code,
+      slug: dbCountry.cmsData?.slug || dbCountry.code,
       country: dbCountry.name,
       shortName: dbCountry.name,
       flag: dbCountry.flagImage,
@@ -214,6 +228,7 @@ export default async function StudyDestinationPage({ params }: Params) {
     const dbUniversities = await (UniversityModel as any).find({ countryId: dbCountry._id }).lean()
     universities = dbUniversities.map((u: any) => ({
       name: u.name,
+      slug: u.cmsData?.slug,
       logo: u.logo,
       coverImage: u.bannerImage || dbCountry.heroImage || dbCountry.flagImage,
       location: u.city,
@@ -226,6 +241,7 @@ export default async function StudyDestinationPage({ params }: Params) {
     const dbCourses = await (ProgramModel as any).find({ universityId: { $in: dbUnivIds } }).populate('universityId').limit(4).lean()
     courses = dbCourses.map((c: any) => ({
       id: c._id.toString(),
+      slug: c.cmsData?.slug,
       title: c.title,
       level: c.degreeLevel,
       university: c.universityId?.name || '',
@@ -236,6 +252,10 @@ export default async function StudyDestinationPage({ params }: Params) {
     destination = mockDest
     universities = getCountryUniversities(destination)
     courses = getCountryCourses(destination)
+  }
+
+  if (destination.slug && rawCountry !== destination.slug) {
+    permanentRedirect(`/study-abroad/${destination.slug}`)
   }
 
   const heroTiles = [
@@ -396,7 +416,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 {courses.length > 0 ? (
                   <div className="mt-5 grid gap-3">
                     {courses.map(course => (
-                      <Link key={course.id} href={`/courses/${course.id}`} className="block border border-slate-200 p-4 transition hover:border-[#d7a23a]">
+                      <Link key={course.id} href={`/courses/${(course as any).slug || slugify(course.title)}`} className="block border border-slate-200 p-4 transition hover:border-[#d7a23a]">
                         <p className="text-[11px] font-bold uppercase text-slate-400">{course.level}</p>
                         <h3 className="mt-1 text-sm font-extrabold text-[#081638]">{course.title}</h3>
                         <p className="mt-1 text-xs font-semibold text-slate-500">{course.university}</p>
@@ -555,7 +575,7 @@ export default async function StudyDestinationPage({ params }: Params) {
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {universities.slice(0, 4).map((university: any, index) => (
-                <Link key={university.name} href={`/universities/${encodeURIComponent(university.name)}`} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#d7a23a]">
+                <Link key={university.name} href={`/universities/${university.slug || encodeURIComponent(university.name)}`} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#d7a23a]">
                   <div className="relative h-24 overflow-hidden rounded bg-slate-50">
                     <Image
                       src={university.coverImage}

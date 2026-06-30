@@ -40,15 +40,22 @@ export async function PUT(req: Request, { params }: Params) {
     }
     const { id } = await params
     const body = await req.json()
+    const { _id, createdAt, updatedAt, __v, ...update } = body
 
     await connectDB()
-    const updated = await (Country as any).findByIdAndUpdate(id, body, { new: true })
+    const updated = await (Country as any).findByIdAndUpdate(id, update, {
+      new: true,
+      runValidators: true,
+    })
     if (!updated) {
       return NextResponse.json({ error: 'Country not found' }, { status: 404 })
     }
     return NextResponse.json({ country: updated })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Admin country PUT failed:', error)
+    if (error?.code === 11000) {
+      return NextResponse.json({ error: 'This page slug is already used by another country.' }, { status: 409 })
+    }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

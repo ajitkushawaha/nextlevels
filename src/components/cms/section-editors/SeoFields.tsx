@@ -20,9 +20,12 @@ type SeoFieldsProps = {
   value?: SeoValue
   onChange: (value: SeoValue) => void
   folder: string
+  slug?: string
+  basePath?: string
+  onSlugChange?: (slug: string) => void
 }
 
-export default function SeoFields({ value = {}, onChange, folder }: SeoFieldsProps) {
+export default function SeoFields({ value = {}, onChange, folder, slug, basePath, onSlugChange }: SeoFieldsProps) {
   const update = (key: keyof SeoValue, nextValue: string) => {
     onChange({ ...value, [key]: nextValue })
   }
@@ -37,6 +40,23 @@ export default function SeoFields({ value = {}, onChange, folder }: SeoFieldsPro
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
+        {typeof slug === 'string' && basePath ? (
+          <div className="space-y-1 sm:col-span-2">
+            <Label>Page Slug</Label>
+            <Input
+              value={slug}
+              onChange={event => onSlugChange?.(
+                event.target.value
+                  .toLowerCase()
+                  .replace(/[^a-z0-9_-]+/g, '-')
+              )}
+              className="font-mono text-xs"
+            />
+            <p className="text-[11px] text-slate-400">
+              Public URL: {basePath}/{slug || 'your-slug'}
+            </p>
+          </div>
+        ) : null}
         <div className="space-y-1">
           <Label>Meta Title</Label>
           <Input value={value.metaTitle || ''} onChange={event => update('metaTitle', event.target.value)} className="text-xs" />
@@ -59,7 +79,7 @@ export default function SeoFields({ value = {}, onChange, folder }: SeoFieldsPro
         </div>
         <div className="space-y-1">
           <Label>Canonical URL</Label>
-          <Input value={value.canonical || ''} onChange={event => update('canonical', event.target.value)} className="text-xs" />
+          <Input placeholder={basePath && slug ? `${basePath}/${slug}` : '/page-url'} value={value.canonical || ''} onChange={event => update('canonical', event.target.value)} className="text-xs" />
         </div>
         <div className="space-y-1 sm:col-span-2">
           <Label>OG Description</Label>

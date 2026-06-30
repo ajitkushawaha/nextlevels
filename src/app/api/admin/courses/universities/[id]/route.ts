@@ -41,8 +41,23 @@ export async function PUT(req: Request, { params }: Params) {
     const { id } = await params
     const body = await req.json()
 
+    const update = {
+      name: body.name,
+      logo: body.logo,
+      bannerImage: body.bannerImage || '',
+      countryId: body.countryId,
+      city: body.city,
+      globalRanking: body.globalRanking || undefined,
+      description: body.description || '',
+      websiteUrl: body.websiteUrl || '',
+      cmsData: body.cmsData || {},
+    }
+
     await connectDB()
-    const updated = await (University as any).findByIdAndUpdate(id, body, { new: true })
+    const updated = await (University as any).findByIdAndUpdate(id, update, {
+      new: true,
+      runValidators: true,
+    })
     if (!updated) {
       return NextResponse.json({ error: 'University not found' }, { status: 404 })
     }

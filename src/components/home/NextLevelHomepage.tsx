@@ -13,6 +13,7 @@ import VisaConsultationForm from './VisaConsultationForm'
 import { universitiesData } from '@/lib/mockData'
 import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
 import { serviceDetails } from '@/lib/serviceDetails'
+import UniversityLogo from '@/components/universities/UniversityLogo'
 import type {
   CmsPageContent,
   CmsSection,
@@ -668,9 +669,11 @@ function HomeUniversitiesSlider({
                 Rank {univ.worldRank}
               </span>
               <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-                <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center justify-center font-black text-sm text-[#081638] uppercase">
-                  {univ.logo}
-                </div>
+                <UniversityLogo
+                  name={univ.name}
+                  src={univ.logo}
+                  className="h-10 w-10 rounded-xl border border-slate-200 text-sm shadow-sm"
+                />
                 <div className="text-white">
                   <p className="text-[10px] font-black uppercase tracking-wider text-slate-200 leading-none">Est. {univ.established}</p>
                 </div>
@@ -696,7 +699,7 @@ function HomeUniversitiesSlider({
                   <span className="text-xs font-black text-[#081638]">{univ.students}</span>
                 </div>
                 <Link
-                  href={`/universities/${encodeURIComponent(univ.name)}`}
+                  href={`/universities/${univ.slug || encodeURIComponent(univ.name)}`}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
                 >
                   View Profile

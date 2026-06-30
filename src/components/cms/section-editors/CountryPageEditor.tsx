@@ -90,21 +90,32 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
 
   const handleSave = async () => {
     if (!data) return
+    if (!data.code?.trim()) {
+      toast.error('Page slug is required')
+      return
+    }
     setIsSaving(true)
     try {
+      const { _id, createdAt, updatedAt, __v, ...payload } = data as CountryData & {
+        _id?: string
+        createdAt?: string
+        updatedAt?: string
+        __v?: number
+      }
       const res = await fetch(`/api/admin/courses/countries/${countryId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       })
-      const json = await res.json()
+      const json = await res.json().catch(() => null)
       if (res.ok) {
+        setData(json.country)
         toast.success('Country page design saved successfully!')
       } else {
-        toast.error(json.error || 'Failed to save changes')
+        toast.error(json?.error || `Failed to save changes (${res.status})`)
       }
     } catch (err) {
-      toast.error('Failed to save changes')
+      toast.error(err instanceof Error ? err.message : 'Failed to save changes')
     } finally {
       setIsSaving(false)
     }
@@ -750,6 +761,9 @@ export default function CountryPageEditor({ countryId, onBack }: Props) {
                 value={data.cmsData?.seo}
                 onChange={value => updateCmsData('seo', value)}
                 folder="nextlevel/countries/seo"
+                slug={data.cmsData?.slug || data.code}
+                basePath="/study-abroad"
+                onSlugChange={slug => updateCmsData('slug', slug)}
               />
             )}
           </div>

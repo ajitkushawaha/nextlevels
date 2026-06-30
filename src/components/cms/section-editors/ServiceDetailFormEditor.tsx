@@ -162,6 +162,9 @@ export default function ServiceDetailFormEditor({
         value={data.seo}
         onChange={value => setField('seo', value)}
         folder="nextlevel/services/seo"
+        slug={data.slug}
+        basePath="/services"
+        onSlugChange={slug => setField('slug', slug)}
       />
 
       {/* Cards Accordion */}

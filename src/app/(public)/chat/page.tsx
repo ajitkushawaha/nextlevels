@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Footer from '@/components/layout/footer'
-import FreeCounsellingForm from '@/components/contact/FreeCounsellingForm'
 import { GraduationCap, BookOpen } from 'lucide-react'
 
 type Ambassador = {
@@ -117,10 +116,17 @@ function ChatContent() {
       </section>
 
       {/* Main Content Area */}
-      <main className="w-full grow py-10 bg-[#fbf8fc] relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="bg-white rounded-4xl p-4 sm:p-5 lg:p-6 shadow-[0_15px_50px_rgba(8,22,56,0.03)]">
-            <FreeCounsellingForm  />
+      <main className="w-full grow  bg-[#fbf8fc] relative z-10">
+        <div className="max-w-7xl mx-auto ">
+          <div className="mx-auto w-full max-w-170 rounded-3xl bg-white shadow-[0_15px_50px_rgba(8,22,56,0.06)]">
+            <iframe
+              title="Next Level CRM enquiry form"
+              src="https://crm.nextlevel.edu.lk/crm/enquiry-form/index.php?refered_by=MTk=/Priyanka&embadd=1"
+              width="610"
+              height="1050"
+              loading="lazy"
+              className="mx-auto block w-full max-w-152.5 border-0"
+            />
           </div>
         </div>
       </main>

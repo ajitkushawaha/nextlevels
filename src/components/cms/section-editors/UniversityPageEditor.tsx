@@ -10,6 +10,7 @@ import CmsImageField from './CmsImageField'
 import SeoFields from './SeoFields'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
+import { slugify } from '@/lib/slug'
 
 type UnivData = {
   _id: string
@@ -27,6 +28,20 @@ type UnivData = {
 type Props = {
   universityId: string
   onBack: () => void
+}
+
+function normalizeExternalUrl(value?: string) {
+  const trimmed = value?.trim()
+  if (!trimmed) return ''
+
+  const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
+
+  try {
+    const url = new URL(candidate)
+    return url.hostname.includes('.') ? url.toString() : ''
+  } catch {
+    return ''
+  }
 }
 
 export default function UniversityPageEditor({ universityId, onBack }: Props) {
@@ -65,12 +80,35 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
 
   const handleSave = async () => {
     if (!data) return
+
+    const countryId = data.countryId && typeof data.countryId === 'object'
+      ? data.countryId._id
+      : data.countryId
+
+    if (!data.name.trim() || !data.logo.trim() || !countryId || !data.city.trim()) {
+      toast.error('University name, logo, country, and city are required')
+      return
+    }
+
+    const websiteUrl = normalizeExternalUrl(data.websiteUrl)
+    if (data.websiteUrl?.trim() && !websiteUrl) {
+      toast.error('Enter a valid university website URL, for example https://www.asu.edu')
+      return
+    }
+
     setIsSaving(true)
     try {
       // Clean up countryId to just save the string ID
       const payload = {
-        ...data,
-        countryId: typeof data.countryId === 'object' ? data.countryId._id : data.countryId
+        name: data.name,
+        logo: data.logo,
+        bannerImage: data.bannerImage || '',
+        countryId,
+        city: data.city,
+        globalRanking: data.globalRanking,
+        description: data.description || '',
+        websiteUrl,
+        cmsData: data.cmsData || {},
       }
 
       const res = await fetch(`/api/admin/courses/universities/${universityId}`, {
@@ -78,14 +116,15 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      const json = await res.json()
+      const json = await res.json().catch(() => null)
       if (res.ok) {
+        setData(current => current ? { ...current, ...json.university } : current)
         toast.success('University profile updated successfully!')
       } else {
-        toast.error(json.error || 'Failed to save changes')
+        toast.error(json?.error || `Failed to save changes (${res.status})`)
       }
     } catch (err) {
-      toast.error('Failed to save changes')
+      toast.error(err instanceof Error ? err.message : 'Failed to save changes')
     } finally {
       setIsSaving(false)
     }
@@ -111,8 +150,11 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
   }
 
   // Get active country
-  const selectedCountryId = typeof data.countryId === 'object' ? data.countryId?._id : data.countryId
+  const selectedCountryId = data.countryId && typeof data.countryId === 'object'
+    ? data.countryId._id
+    : data.countryId
   const activeCountry = countries.find(c => c._id === selectedCountryId)
+  const previewWebsiteUrl = normalizeExternalUrl(data.websiteUrl)
 
   return (
     <div className="flex h-[calc(100vh-80px)] flex-col bg-slate-50 text-slate-800">
@@ -228,6 +270,7 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
                 <div className="space-y-1">
                   <Label>Official Website URL</Label>
                   <Input
+                    type="url"
                     value={data.websiteUrl || ''}
                     onChange={e => setData({ ...data, websiteUrl: e.target.value })}
                     placeholder="e.g. https://ox.ac.uk"
@@ -290,6 +333,9 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
                 value={data.cmsData?.seo}
                 onChange={value => handleCmsDataChange('seo', value)}
                 folder="nextlevel/universities/seo"
+                slug={data.cmsData?.slug || slugify(data.name)}
+                basePath="/universities"
+                onSlugChange={slug => handleCmsDataChange('slug', slug)}
               />
             )}
           </div>
@@ -347,8 +393,8 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
                       <p className="text-xs font-bold text-slate-800">{data.name.substring(0, 3).toUpperCase()}</p>
                     </div>
                   </div>
-                  {data.websiteUrl && (
-                    <a href={data.websiteUrl} target="_blank" rel="noreferrer" className="text-[10px] font-bold bg-[#061331] text-white hover:bg-slate-800 px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
+                  {previewWebsiteUrl && (
+                    <a href={previewWebsiteUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold bg-[#061331] text-white hover:bg-slate-800 px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
                       <Link2 className="h-3 w-3" /> Visit Website
                     </a>
                   )}

@@ -10,6 +10,7 @@ import CmsImageField from './CmsImageField'
 import SeoFields from './SeoFields'
 import ResponsivePreviewFrame, { PreviewViewportMode } from '../ResponsivePreviewFrame'
 import { toast } from 'sonner'
+import { slugify } from '@/lib/slug'
 
 type ProgramData = {
   _id: string
@@ -356,6 +357,9 @@ export default function ProgramPageEditor({ programId, onBack }: Props) {
                 value={data.cmsData?.seo}
                 onChange={value => handleCmsDataChange('seo', value)}
                 folder="nextlevel/programs/seo"
+                slug={data.cmsData?.slug || slugify(data.title)}
+                basePath="/courses"
+                onSlugChange={slug => handleCmsDataChange('slug', slug)}
               />
             )}
           </div>

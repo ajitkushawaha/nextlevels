@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import {
   ArrowLeft,
@@ -23,6 +23,7 @@ import mongoose from 'mongoose'
 import Footer from '@/components/layout/footer'
 import Image from 'next/image'
 import CourseEnquiryForm from './CourseEnquiryForm'
+import { slugify } from '@/lib/slug'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     await connectDb()
     const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
     const dbProg = await (ProgramModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }],
+      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }, { 'cmsData.slug': decodedId }],
     }).populate({ path: 'universityId', populate: { path: 'countryId' } }).lean()
 
     if (dbProg) {
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         keywords: seo.metaKeywords || undefined,
         robots: seo.robots || 'index, follow',
-        alternates: { canonical: seo.canonical || `/courses/${dbProg._id.toString()}` },
+        alternates: { canonical: seo.canonical || `/courses/${dbProg.cmsData?.slug || dbProg._id.toString()}` },
         openGraph: {
           title: seo.ogTitle || title,
           description: seo.ogDescription || description,
@@ -75,6 +76,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const decodedId = decodeURIComponent(id)
 
   let course: any = null
+  let canonicalSlug = ''
 
   try {
     await connectDb()
@@ -82,21 +84,26 @@ export default async function CourseDetailPage({ params }: Props) {
     const dbProg = await (ProgramModel as any).findOne({
       $or: [
         ...(isValidId ? [{ _id: decodedId }] : []),
-        { title: decodedId }
+        { title: decodedId },
+        { 'cmsData.slug': decodedId }
       ]
     }).populate({ path: 'universityId', populate: { path: 'countryId' } }).lean()
 
     if (dbProg) {
+      canonicalSlug = dbProg.cmsData?.slug || slugify(dbProg.title)
       course = {
         id: dbProg._id.toString(),
         title: dbProg.title,
         university: dbProg.universityId?.name || 'Partner University',
+        universitySlug: dbProg.universityId?.cmsData?.slug,
         level: dbProg.degreeLevel,
         field: dbProg.discipline,
         duration: dbProg.duration,
         fees: `${dbProg.currency} ${dbProg.tuitionFee?.toLocaleString()}/year`,
         ielts: `${dbProg.ieltsScoreRequired || '6.0'}`,
-        intakes: dbProg.intakes?.join(', ') || 'September',
+        intakes: Array.isArray(dbProg.intakes) && dbProg.intakes.length > 0
+          ? dbProg.intakes
+          : ['September'],
         location: dbProg.universityId?.city || 'Main Campus',
         country: dbProg.universityId?.countryId?.name || 'International',
         flag: '🏛️',
@@ -117,11 +124,31 @@ export default async function CourseDetailPage({ params }: Props) {
   }
 
   if (!course) {
-    course = coursesData.find(c => c.id === decodedId)
+    course = coursesData.find(c => c.id === decodedId || slugify(c.title) === decodedId)
+    if (course) {
+      canonicalSlug = slugify(course.title)
+
+      try {
+        const matchingProgram = await (ProgramModel as any)
+          .findOne({ title: course.title })
+          .select('cmsData.slug')
+          .lean()
+
+        if (matchingProgram?.cmsData?.slug) {
+          canonicalSlug = matchingProgram.cmsData.slug
+        }
+      } catch (error) {
+        console.error('Failed to resolve saved course slug:', error)
+      }
+    }
   }
 
   if (!course) {
     notFound()
+  }
+
+  if (canonicalSlug && decodedId !== canonicalSlug) {
+    permanentRedirect(`/courses/${canonicalSlug}`)
   }
 
   const matchingScholarships = scholarshipsData.filter(
@@ -236,7 +263,7 @@ export default async function CourseDetailPage({ params }: Props) {
               <div className="text-left">
                 <p className="text-[9px] font-black text-[#d7a23a] uppercase tracking-wider">Institution Profile</p>
                 <Link
-                  href={`/universities/${encodeURIComponent(course.university)}`}
+                  href={`/universities/${course.universitySlug || encodeURIComponent(course.university)}`}
                   className="text-xs font-extrabold text-[#081638] hover:text-[#d7a23a] transition-colors line-clamp-1 underline decoration-dotted"
                 >
                   {course.university}
@@ -343,7 +370,9 @@ export default async function CourseDetailPage({ params }: Props) {
 
                   <div className="flex justify-between items-center text-xs font-semibold">
                     <span className="text-slate-400 flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Intakes</span>
-                    <span className="text-[#081638] font-bold">{course.intakes.join(', ')}</span>
+                    <span className="text-[#081638] font-bold">
+                      {Array.isArray(course.intakes) ? course.intakes.join(', ') : course.intakes || 'September'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -357,7 +386,7 @@ export default async function CourseDetailPage({ params }: Props) {
                   <div className="space-y-3">
                     {matchingScholarships.map(sch => (
                       <div key={sch.id} className="p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100 hover:border-[#d7a23a] transition-all">
-                        <Link href={`/scholarships/${sch.id}`} className="font-extrabold text-[#081638] text-xs hover:text-[#d7a23a] hover:underline line-clamp-1">
+                        <Link href={`/scholarships/${slugify(sch.title)}`} className="font-extrabold text-[#081638] text-xs hover:text-[#d7a23a] hover:underline line-clamp-1">
                           {sch.title}
                         </Link>
                         <p className="text-[10px] text-emerald-600 font-bold mt-1 truncate">{sch.award}</p>
