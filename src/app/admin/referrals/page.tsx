@@ -215,7 +215,7 @@ export default function ReferralAgentsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => copyText(`${origin}/referral/${agent.code.toLowerCase()}`, 'Form link copied')}
+                        onClick={() => copyText(`${origin}/register/${agent.code.toLowerCase()}`, 'Form link copied')}
                         className="gap-1.5 text-xs border-slate-200 hover:bg-slate-50 text-slate-700 font-bold"
                       >
                         <Link2 className="h-3.5 w-3.5 text-[#d7a23a]" />
@@ -327,7 +327,7 @@ export default function ReferralAgentsPage() {
                 }))}
                 placeholder="priyanka"
               />
-              <p className="text-xs text-slate-400">Public URL: /referral/{form.code || 'your-slug'}</p>
+              <p className="text-xs text-slate-400">Public URL: /register/{form.code || 'your-slug'}</p>
             </Field>
             <Field label="Iframe URL or Embed Code">
               <Textarea

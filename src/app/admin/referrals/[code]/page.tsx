@@ -42,7 +42,7 @@ export default function AgentDashboardPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
-  const referralLink = agent ? `${origin}/referral/${agent.code.toLowerCase()}` : ''
+  const referralLink = agent ? `${origin}/register/${agent.code.toLowerCase()}` : ''
 
   const loadAgentDetails = async () => {
     if (!code) return
