@@ -133,7 +133,7 @@ export default function ServicesInteractiveHub({
 
       {/* Why Next Level Stands Out */}
       {showCredentials && credentials && (
-      <section className="py-10 bg-white/70 rounded-3xl border border-slate-100 p-8 sm:p-12 mt-16">
+      <section className="py-10 bg-white/70 rounded-3xl border border-slate-100 p-0 sm:p-12 mt-16">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
             <div className="text-[#081638] text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">

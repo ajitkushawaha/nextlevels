@@ -37,11 +37,25 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   if (!service) return { title: 'Service Not Found' }
 
+  const seo = service.seo || {}
+  const title = seo.metaTitle || `${service.title} | Next Level Education`
+  const description = seo.metaDescription || service.shortDesc
+  const canonical = seo.canonical || `/services/${service.slug}`
+
   return {
-    title: `${service.title} | Next Level Education`,
-    description: service.shortDesc,
+    title,
+    description,
+    keywords: seo.metaKeywords || undefined,
+    robots: seo.robots || undefined,
     alternates: {
-      canonical: `/services/${service.slug}`,
+      canonical,
+    },
+    openGraph: {
+      title: seo.ogTitle || title,
+      description: seo.ogDescription || description,
+      url: canonical,
+      type: 'website',
+      images: seo.ogImage ? [{ url: seo.ogImage }] : undefined,
     },
   }
 }

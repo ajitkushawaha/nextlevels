@@ -16,6 +16,16 @@ export type ServiceDetail = {
   benefits: Array<string | ServiceCardDetail>
   process: Array<string | ServiceCardDetail>
   outcomes: Array<string | ServiceCardDetail>
+  seo?: {
+    metaTitle?: string
+    metaDescription?: string
+    metaKeywords?: string
+    ogTitle?: string
+    ogDescription?: string
+    ogImage?: string
+    canonical?: string
+    robots?: string
+  }
 }
 
 export const serviceDetails: ServiceDetail[] = [

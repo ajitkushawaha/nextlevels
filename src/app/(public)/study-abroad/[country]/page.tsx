@@ -304,11 +304,11 @@ export default async function StudyDestinationPage({ params }: Params) {
                 Enquire now
               </Link>
             </div>
-            <div className="relative grid w-full lg:w-1/3">
+            <div className="relative mx-auto grid w-4/5 items-center sm:w-full lg:mx-0 lg:w-1/3">
               <div
                 role="img"
                 aria-label={`${destination.country} landmark`}
-                className="relative col-span-1 row-span-2 h-40 overflow-hidden bg-[#E9EFF6] bg-cover bg-center bg-blend-multiply sm:h-44"
+                className="relative  h-40 overflow-hidden bg-[#E9EFF6] bg-cover bg-center bg-blend-multiply sm:h-44"
                 style={{ backgroundImage: `url(${heroTiles[0]})` }}
               >
 

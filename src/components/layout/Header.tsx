@@ -187,6 +187,8 @@ export default function Header() {
           >
             <SheetTrigger asChild>
               <button
+                type="button"
+                onClick={() => setOpen(true)}
                 className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border transition duration-300 text-[#061331] border-[#061331]/20 hover:border-[#d7a23a] hover:text-[#d7a23a] lg:hidden focus-visible:outline-none"
                 aria-label="Open menu"
               >
@@ -195,7 +197,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-75 sm:w-87.5 bg-[#061331] text-white border-l border-white/10 p-6 flex flex-col justify-between focus-visible:outline-none"
+              className="w-[300px] sm:w-[350px] bg-[#061331] text-white border-l border-white/10 p-6 flex flex-col justify-between focus-visible:outline-none"
             >
               <div className="flex flex-col gap-6">
                 <SheetHeader className="text-left border-b border-white/10 pb-4">
@@ -263,7 +265,7 @@ export default function Header() {
 
               <div className="border-t border-white/10 pt-4 mt-auto">
                 <a
-                href={settings.callHref}
+                  href={settings.callHref}
                   className="flex items-center gap-3 rounded-md border border-[#d7a23a]/40 bg-white/5 px-4 py-3 transition duration-300 hover:bg-[#d7a23a]/10"
                 >
                   <PhoneCall className="h-5 w-5 text-[#d7a23a]" />

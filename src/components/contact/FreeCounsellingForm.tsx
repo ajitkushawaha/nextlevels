@@ -212,7 +212,7 @@ function FreeCounsellingFormInner({
             className={compact ? 'grid gap-3.5 text-left' : 'grid gap-3.5 md:grid-cols-2 text-left'}
           >
             {/* First Name */}
-            <div className="form-field flex flex-col">
+            <div className="form-field flex min-w-0 flex-col">
               <label htmlFor="first_name" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 First name*
               </label>
@@ -228,7 +228,7 @@ function FreeCounsellingFormInner({
             </div>
 
             {/* Last Name */}
-            <div className="form-field flex flex-col">
+            <div className="form-field flex min-w-0 flex-col">
               <label htmlFor="last_name" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 Last name*
               </label>
@@ -244,7 +244,7 @@ function FreeCounsellingFormInner({
             </div>
 
             {/* Email Address */}
-            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
+            <div className={`form-field flex min-w-0 flex-col ${compact ? '' : 'md:col-span-2'}`}>
               <label htmlFor="primary_email" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 Email address*
               </label>
@@ -260,11 +260,11 @@ function FreeCounsellingFormInner({
             </div>
 
             {/* Mobile Number */}
-            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
+            <div className={`form-field flex min-w-0 flex-col ${compact ? '' : 'md:col-span-2'}`}>
               <label htmlFor="primary_mobile_number" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 Mobile number*
               </label>
-              <div className="flex gap-2">
+              <div className="flex min-w-0 gap-2">
                 <select
                   name="dialCode"
                   id="dialCode"
@@ -286,13 +286,13 @@ function FreeCounsellingFormInner({
                   inputMode="numeric"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="flex-1 bg-white border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-[#081638] focus:outline-none focus:border-[#d7a23a] transition-all"
+                  className="min-w-0 flex-1 bg-white border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-[#081638] focus:outline-none focus:border-[#d7a23a] transition-all"
                 />
               </div>
             </div>
 
             {/* Highest Qualification */}
-            <div className={`form-field flex flex-col ${compact ? '' : 'md:col-span-2'}`}>
+            <div className={`form-field flex min-w-0 flex-col ${compact ? '' : 'md:col-span-2'}`}>
               <label htmlFor="highest_qualification" className="text-[11px] font-bold text-[#081638] uppercase tracking-wider mb-1">
                 {qualificationLabel}*
               </label>

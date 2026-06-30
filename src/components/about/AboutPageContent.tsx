@@ -51,7 +51,7 @@ export default function AboutPageContent({
 
   return (
     <div className="min-h-screen bg-white text-[#061331]">
-      <main className="space-y-12 pb-16">
+      <main className="space-y-12 pb-1 ">
         {sections
           .filter(section => section.enabled)
           .map(section => (
@@ -86,7 +86,7 @@ function AboutSectionRenderer({ section }: { section: CmsSection }) {
 
 function AboutHero({ section }: { section: AboutHeroSection }) {
   return (
-    <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30 ">
+    <section className="relative overflow-hidden min-h-85 sm:h-90 lg:h-100 flex flex-col justify-between pt-2 sm:pt-28 lg:pt-27.5 pb-6 sm:pb-8 lg:py-10 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-linear-to-b before:from-black/50 before:via-black/70 before:to-black/90 lg:before:bg-linear-to-r lg:before:from-black/85 lg:before:to-black/30 ">
       <Image
         src={section.image}
         alt={section.title}
@@ -170,7 +170,7 @@ function AboutCeoMessage({ section }: { section: AboutCeoMessageSection }) {
             fill
             priority
             loading="eager"
-            className="object-contain object-center"
+            className="object-cover object-center"
             sizes="(max-width: 1024px) 100vw, 520px"
           />
           <div className="absolute inset-0 bg-linear-to-t from-[#061331]/90 via-[#061331]/15 to-transparent" />
@@ -369,7 +369,7 @@ function AboutCta({ section }: { section: AboutCtaSection }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
-      <div className="bg-linear-to-r from-[#02133f] via-[#052062] to-[#0a3297] text-white rounded-3xl py-2 px-10 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10">
+      <div className="bg-linear-to-r from-[#02133f] via-[#052062] to-[#0a3297] text-white rounded-3xl px-4 py-6 sm:px-6 lg:flex-row lg:gap-10 lg:px-10 lg:py-2 relative overflow-hidden shadow-2xl flex flex-col items-center justify-between gap-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(215,162,58,0.1),transparent_40%)] pointer-events-none"></div>
 
         <div className="w-full lg:w-1/2 space-y-6 text-left relative z-10">

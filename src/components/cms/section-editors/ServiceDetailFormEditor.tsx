@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import CmsImageField from './CmsImageField'
+import SeoFields from './SeoFields'
 import type { ServiceDetail, ServiceCardDetail } from '@/lib/serviceDetails'
 import {
   Accordion,
@@ -156,6 +157,12 @@ export default function ServiceDetailFormEditor({
           />
         </div>
       </div>
+
+      <SeoFields
+        value={data.seo}
+        onChange={value => setField('seo', value)}
+        folder="nextlevel/services/seo"
+      />
 
       {/* Cards Accordion */}
       <div className="rounded-xl border border-slate-200 bg-white p-5">
