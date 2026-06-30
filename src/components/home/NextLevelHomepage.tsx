@@ -651,7 +651,7 @@ function HomeUniversitiesSlider({
           <ArrowRight className="h-4 w-4" />
         </button>
       </div>
-      <div ref={sliderRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div ref={sliderRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         {universities.map((univ: any, index) => (
           <div
             key={univ.name}
