@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { ChevronLeft, ChevronRight, Link2, Plus, RefreshCw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Link2, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,7 +20,7 @@ type ReferralAgent = {
   _id: string
   name: string
   code: string
-  publicToken?: string
+  iframeUrl: string
   email?: string
   phone?: string
   notes?: string
@@ -30,6 +30,8 @@ type ReferralAgent = {
 
 const emptyForm = {
   name: '',
+  code: '',
+  iframeUrl: '',
   email: '',
   phone: '',
   notes: '',
@@ -43,6 +45,7 @@ export default function ReferralAgentsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingAgent, setEditingAgent] = useState<ReferralAgent | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -71,23 +74,44 @@ export default function ReferralAgentsPage() {
     loadAgents()
   }, [])
 
-  const createAgent = async (event: React.FormEvent) => {
+  const openCreateDialog = () => {
+    setEditingAgent(null)
+    setForm(emptyForm)
+    setIsDialogOpen(true)
+  }
+
+  const openEditDialog = (agent: ReferralAgent) => {
+    setEditingAgent(agent)
+    setForm({
+      name: agent.name,
+      code: agent.code.toLowerCase(),
+      iframeUrl: agent.iframeUrl || '',
+      email: agent.email || '',
+      phone: agent.phone || '',
+      notes: agent.notes || '',
+    })
+    setIsDialogOpen(true)
+  }
+
+  const saveAgent = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!form.name.trim()) {
-      toast.error('Agent name is required')
+    if (!form.name.trim() || !form.code.trim() || !form.iframeUrl.trim()) {
+      toast.error('Agent name, URL slug, and iframe URL are required')
       return
     }
 
     setIsSaving(true)
     try {
-      const response = await fetch('/api/admin/referral-agents', {
-        method: 'POST',
+      const response = await fetch(
+        editingAgent ? `/api/admin/referral-agents/${editingAgent.code}` : '/api/admin/referral-agents',
+        {
+        method: editingAgent ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Unable to create referral agent')
-      toast.success('Referral agent created')
+      toast.success(editingAgent ? 'Referral agent updated' : 'Referral agent created')
       setForm(emptyForm)
       setIsDialogOpen(false)
       await loadAgents()
@@ -95,6 +119,19 @@ export default function ReferralAgentsPage() {
       toast.error(error.message || 'Unable to create referral agent')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const deleteAgent = async (agent: ReferralAgent) => {
+    if (!window.confirm(`Delete ${agent.name}? Their referral URL will stop working.`)) return
+    try {
+      const response = await fetch(`/api/admin/referral-agents/${agent.code}`, { method: 'DELETE' })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Unable to delete referral agent')
+      toast.success('Referral agent deleted')
+      await loadAgents()
+    } catch (error: any) {
+      toast.error(error.message || 'Unable to delete referral agent')
     }
   }
 
@@ -123,7 +160,7 @@ export default function ReferralAgentsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button onClick={() => setIsDialogOpen(true)} className="gap-2 bg-[#d7a23a] font-bold text-slate-950 hover:bg-[#d7a23a]/90">
+          <Button onClick={openCreateDialog} className="gap-2 bg-[#d7a23a] font-bold text-slate-950 hover:bg-[#d7a23a]/90">
             <Plus className="h-4 w-4" />
             Create Agent Link
           </Button>
@@ -150,7 +187,7 @@ export default function ReferralAgentsPage() {
                 <th className="px-6 py-3.5">Email</th>
                 <th className="px-6 py-3.5">Phone</th>
                 <th className="px-6 py-3.5 text-center">Total Leads</th>
-                <th className="px-6 py-3.5">Status</th>
+
                 <th className="px-6 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
@@ -178,7 +215,7 @@ export default function ReferralAgentsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => copyText(`${origin}/referral/${agent.publicToken || agent.code}`, 'Form link copied')}
+                        onClick={() => copyText(`${origin}/referral/${agent.code.toLowerCase()}`, 'Form link copied')}
                         className="gap-1.5 text-xs border-slate-200 hover:bg-slate-50 text-slate-700 font-bold"
                       >
                         <Link2 className="h-3.5 w-3.5 text-[#d7a23a]" />
@@ -192,22 +229,22 @@ export default function ReferralAgentsPage() {
                         {agent.totalLeads || 0}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                        agent.isActive 
-                          ? 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20' 
-                          : 'bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/10'
-                      }`}>
-                        {agent.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
+
                     <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/admin/referrals/${agent.code}`}
-                        className="inline-flex items-center justify-center rounded-lg bg-[#061331] px-4 py-2 text-xs font-bold text-white hover:bg-[#061331]/90 transition-colors"
-                      >
-                        Dashboard
-                      </Link>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => openEditDialog(agent)} aria-label={`Edit ${agent.name}`}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => deleteAgent(agent)} className="text-red-600 hover:bg-red-50 hover:text-red-700" aria-label={`Delete ${agent.name}`}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Link
+                          href={`/admin/referrals/${agent.code}`}
+                          className="inline-flex items-center justify-center rounded-lg bg-[#061331] px-4 py-2 text-xs font-bold text-white hover:bg-[#061331]/90 transition-colors"
+                        >
+                          Dashboard
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -264,20 +301,42 @@ export default function ReferralAgentsPage() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-white rounded-2xl p-6">
+        <DialogContent className="max-h-[90vh] overflow-y-auto bg-white p-6 sm:max-w-[520px] sm:rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-lg font-black text-[#061331]">Create Agent Link</DialogTitle>
+            <DialogTitle className="text-lg font-black text-[#061331]">
+              {editingAgent ? 'Edit Agent' : 'Create Agent Link'}
+            </DialogTitle>
             <DialogDescription className="text-xs text-slate-500">
-              Fill in the details below to generate a new referral agent tracking link.
+              {editingAgent ? 'Update the agent details, referral slug, or embedded form.' : 'Fill in the details below to generate a new referral agent tracking link.'}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={createAgent} className="mt-4 space-y-4">
+          <form onSubmit={saveAgent} className="mt-4 space-y-4">
             <Field label="Agent Name">
               <Input
                 value={form.name}
                 onChange={event => setForm(prev => ({ ...prev, name: event.target.value }))}
                 placeholder="John Doe"
               />
+            </Field>
+            <Field label="URL Slug">
+              <Input
+                value={form.code}
+                onChange={event => setForm(prev => ({
+                  ...prev,
+                  code: event.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, ''),
+                }))}
+                placeholder="priyanka"
+              />
+              <p className="text-xs text-slate-400">Public URL: /referral/{form.code || 'your-slug'}</p>
+            </Field>
+            <Field label="Iframe URL or Embed Code">
+              <Textarea
+                rows={4}
+                value={form.iframeUrl}
+                onChange={event => setForm(prev => ({ ...prev, iframeUrl: event.target.value }))}
+                placeholder={'<iframe width="610" height="1050" src="https://crm.example.com/enquiry-form/..."></iframe>'}
+              />
+              <p className="text-xs text-slate-400">Paste the complete iframe code or only its src URL.</p>
             </Field>
             <Field label="Email">
               <Input
@@ -307,7 +366,7 @@ export default function ReferralAgentsPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={isSaving} className="bg-[#061331] text-white hover:bg-[#061331]/95">
-                {isSaving ? 'Creating...' : 'Create Agent'}
+                {isSaving ? 'Saving...' : editingAgent ? 'Save Changes' : 'Create Agent'}
               </Button>
             </div>
           </form>

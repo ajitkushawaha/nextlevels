@@ -11,7 +11,7 @@ type ReferralAgent = {
   _id: string
   name: string
   code: string
-  publicToken?: string
+  iframeUrl: string
   email?: string
   phone?: string
   notes?: string
@@ -42,7 +42,7 @@ export default function AgentDashboardPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
-  const referralLink = agent ? `${origin}/referral/${agent.publicToken || agent.code}` : ''
+  const referralLink = agent ? `${origin}/referral/${agent.code.toLowerCase()}` : ''
 
   const loadAgentDetails = async () => {
     if (!code) return

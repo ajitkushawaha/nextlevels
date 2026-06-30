@@ -10,17 +10,24 @@ async function requireAdmin() {
   return Boolean(session && (session.user as any)?.role === 'admin')
 }
 
-function makeCode(name: string) {
-  const base = name
+function normalizeSlug(value: string) {
+  return value
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 18) || 'AGENT'
-  return `${base}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`
+    .slice(0, 48)
 }
 
-function makeToken() {
-  return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`.toUpperCase()
+function getIframeUrl(value: unknown) {
+  const input = String(value || '').trim()
+  const srcMatch = input.match(/<iframe\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/i)
+  const candidate = (srcMatch?.[2] || input).replace(/&amp;/g, '&')
+  try {
+    const url = new URL(candidate)
+    return ['http:', 'https:'].includes(url.protocol) ? url.toString() : null
+  } catch {
+    return null
+  }
 }
 
 export async function GET() {
@@ -30,16 +37,7 @@ export async function GET() {
     }
 
     await connectDB()
-    const existingAgents = await (ReferralAgent as any).find({}).sort({ createdAt: -1 })
-    await Promise.all(
-      existingAgents
-        .filter((agent: any) => !agent.publicToken)
-        .map((agent: any) => {
-          agent.publicToken = makeToken()
-          return agent.save()
-        })
-    )
-    const agents = existingAgents.map((agent: any) => agent.toObject())
+    const agents = await (ReferralAgent as any).find({}).sort({ createdAt: -1 }).lean()
     const counts = await (Enquiry as any).aggregate([
       { $match: { referralAgentCode: { $nin: ['', null] } } },
       { $group: { _id: '$referralAgentCode', total: { $sum: 1 } } },
@@ -65,15 +63,22 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    if (!body.name) {
+    const code = normalizeSlug(String(body.code || ''))
+    if (!String(body.name || '').trim()) {
       return NextResponse.json({ error: 'Agent name is required' }, { status: 400 })
     }
+    if (!code) {
+      return NextResponse.json({ error: 'URL slug is required' }, { status: 400 })
+    }
+
+    const iframeUrl = getIframeUrl(body.iframeUrl)
+    if (!iframeUrl) return NextResponse.json({ error: 'A valid iframe URL or embed code is required' }, { status: 400 })
 
     await connectDB()
     const created = await ReferralAgent.create({
-      name: body.name,
-      code: body.code ? String(body.code).trim().toUpperCase() : makeCode(body.name),
-      publicToken: makeToken(),
+      name: String(body.name).trim(),
+      code,
+      iframeUrl,
       email: body.email || '',
       phone: body.phone || '',
       notes: body.notes || '',
@@ -84,7 +89,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('Admin referral agents POST failed:', error)
     return NextResponse.json(
-      { error: error.code === 11000 ? 'Agent code already exists' : 'Internal server error' },
+      { error: error.code === 11000 ? 'This URL slug already exists' : 'Internal server error' },
       { status: 500 }
     )
   }
