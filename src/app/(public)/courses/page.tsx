@@ -184,13 +184,6 @@ function CourseFinderContent() {
     router.replace(`/courses?${params.toString()}`, { scroll: false })
   }
 
-  useEffect(() => {
-    const tab = searchParams.get('tab')
-    if (tab === 'programmes' || tab === 'universities' || tab === 'scholarships') {
-      setActiveTab(tab)
-    }
-  }, [searchParams])
-
   // Wizard / Matcher States
   const [showWizard, setShowWizard] = useState(false)
   const [wizardStep, setWizardStep] = useState(0)
