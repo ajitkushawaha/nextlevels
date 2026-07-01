@@ -197,7 +197,7 @@ function CourseFinderContent() {
 
       return matchSearch && matchCountry && matchField && matchLevel && matchUniversity
     })
-  }, [searchTerm, selectedCountries, selectedFields, selectedDegreeTypes, selectedUniversities])
+  }, [coursesData, searchTerm, selectedCountries, selectedFields, selectedDegreeTypes, selectedUniversities])
 
   // Count active filters
   const activeFiltersCount = useMemo(() => {
@@ -319,7 +319,9 @@ function CourseFinderContent() {
       .filter(course => countries.includes(course.country))
       .map(c => c.university)
     return Array.from(new Set(list))
-  }, [countries, filterSettings.universities])
+  }, [coursesData, countries, filterSettings.universities])
+
+  const filteredScholarships = scholarshipsData
 
   // Handle Wizard Match click
   const handleWizardSelect = (key: 'country' | 'field' | 'level', value: string) => {
@@ -806,7 +808,7 @@ function CourseFinderContent() {
                         <>Found <span className="text-[#081638] font-bold">{universitiesList.length}</span> partner institutions</>
                       )}
                       {activeTab === 'scholarships' && (
-                        <>Found <span className="text-[#081638] font-bold">{scholarshipsData.filter(s => countries.includes(s.country) && (selectedCountries.length === 0 || selectedCountries.includes(s.country))).length}</span> scholarships available</>
+                        <>Found <span className="text-[#081638] font-bold">{filteredScholarships.length}</span> scholarships available</>
                       )}
                     </p>
                   </div>
@@ -1115,9 +1117,7 @@ function CourseFinderContent() {
 
                 {activeTab === 'scholarships' && (
                   <div className="space-y-6">
-                    {scholarshipsData
-                      .filter(s => countries.includes(s.country) && (selectedCountries.length === 0 || selectedCountries.includes(s.country)))
-                      .map(sch => (
+                    {filteredScholarships.map(sch => (
                         <div
                           key={sch.id}
                           className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-xs hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between gap-5 relative"

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authConfig'
 import connectDB from '@/lib/db'
 import Program from '@/models/Program'
+import University from '@/models/University'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
@@ -37,6 +38,11 @@ export async function POST(req: Request) {
     }
 
     await connectDB()
+    const universityExists = await (University as any).exists({ _id: universityId })
+    if (!universityExists) {
+      return NextResponse.json({ error: 'Please select a valid university.' }, { status: 400 })
+    }
+
     const created = await Program.create({
       title,
       universityId,

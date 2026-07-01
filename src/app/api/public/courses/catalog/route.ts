@@ -13,7 +13,9 @@ export async function GET() {
       (University as any).find({}).populate('countryId').sort({ name: 1 }).lean(),
     ])
 
-    const courseItems = programs.map((program: any) => ({
+    const courseItems = programs
+      .filter((program: any) => program.universityId?.name && program.universityId?.countryId?.name)
+      .map((program: any) => ({
         id: program.cmsData?.slug || program._id.toString(),
         title: program.title,
         heroImage: program.heroImage || '',

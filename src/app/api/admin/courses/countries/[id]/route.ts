@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authConfig'
 import connectDB from '@/lib/db'
 import Country from '@/models/Country'
+import University from '@/models/University'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
@@ -67,6 +68,13 @@ export async function DELETE(req: Request, { params }: Params) {
     }
     const { id } = await params
     await connectDB()
+    const universityCount = await (University as any).countDocuments({ countryId: id })
+    if (universityCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete this country because ${universityCount} universities are linked to it.` },
+        { status: 409 }
+      )
+    }
     const deleted = await (Country as any).findByIdAndDelete(id)
     if (!deleted) {
       return NextResponse.json({ error: 'Country not found' }, { status: 404 })

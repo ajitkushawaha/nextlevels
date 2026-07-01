@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   ChevronRight,
   SlidersHorizontal,
+  AlertTriangle,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -47,6 +48,7 @@ export default function CourseFinderAdminPage() {
   })
 
   const [loading, setLoading] = useState(true)
+  const orphanedPrograms = programs.filter(program => !program.universityId?.name)
 
   // Edit states
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -438,11 +440,12 @@ export default function CourseFinderAdminPage() {
       const res = await fetch(`/api/admin/courses/${type}/${id}`, {
         method: 'DELETE',
       })
-      if (!res.ok) throw new Error('Delete failed')
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Delete failed')
       toast.success('Item deleted successfully')
       fetchData()
-    } catch (err) {
-      toast.error('Failed to delete item')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to delete item')
     }
   }
 
@@ -493,6 +496,20 @@ export default function CourseFinderAdminPage() {
           </p>
         </div>
       </div>
+
+      {!loading && orphanedPrograms.length > 0 && (
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+          <div>
+            <p className="text-sm font-bold">
+              {orphanedPrograms.length} program{orphanedPrograms.length === 1 ? '' : 's'} need a university
+            </p>
+            <p className="mt-1 text-xs leading-5 text-amber-800">
+              These programs are hidden from Course Finder until they are edited and assigned to a valid university.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Tabs list */}
       <div className="mb-6 flex flex-wrap gap-2 rounded-xl bg-slate-200/80 p-1.5 max-w-4xl">
@@ -560,6 +577,11 @@ export default function CourseFinderAdminPage() {
                       activeTab === 'scholarships' ? scholarships.length : 4
                     } items registered.
                   </CardDescription>
+                  {activeTab === 'programs' && (
+                    <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                      {programs.length - orphanedPrograms.length} valid · {orphanedPrograms.length} need assignment
+                    </p>
+                  )}
                 </div>
                 {activeTab === 'countries' && (
                   <Button
@@ -644,11 +666,11 @@ export default function CourseFinderAdminPage() {
                 ))}
 
                 {activeTab === 'programs' && programs.map(item => (
-                  <div key={item._id} className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                  <div key={item._id} className={`flex items-center justify-between rounded-xl border p-4 ${item.universityId?.name ? 'border-slate-100 bg-slate-50/50' : 'border-amber-300 bg-amber-50'}`}>
                     <div>
                       <p className="font-bold text-slate-800">{item.title}</p>
                       <p className="text-xs text-slate-400">
-                        {item.degreeLevel} in {item.discipline} | {item.universityId?.name || 'Unknown University'}
+                        {item.degreeLevel} in {item.discipline} | {item.universityId?.name || 'University assignment required'}
                       </p>
                       <p className="mt-1 text-[11px] font-bold text-[#d7a23a]">
                         Fee: {item.currency} {item.tuitionFee} / year | Duration: {item.duration}

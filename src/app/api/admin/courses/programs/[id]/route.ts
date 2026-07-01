@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/authConfig'
 import connectDB from '@/lib/db'
 import Program from '@/models/Program'
+import University from '@/models/University'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
@@ -43,6 +44,9 @@ export async function PUT(req: Request, { params }: Params) {
     const { _id, createdAt, updatedAt, __v, ...update } = body
 
     await connectDB()
+    if (!update.universityId || !(await (University as any).exists({ _id: update.universityId }))) {
+      return NextResponse.json({ error: 'Please select a valid university.' }, { status: 400 })
+    }
     const updated = await (Program as any).findByIdAndUpdate(id, update, { new: true, runValidators: true })
     if (!updated) {
       return NextResponse.json({ error: 'Program not found' }, { status: 404 })
