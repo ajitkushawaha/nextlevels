@@ -95,9 +95,14 @@ function CourseFinderContent() {
         const json = await res.json()
         if (!res.ok) throw new Error(json.error || 'Unable to load course catalog')
         if (!isMounted) return
-        setCoursesData(Array.isArray(json.courses) ? json.courses : [])
+        const loadedCourses = Array.isArray(json.courses) ? json.courses : []
+        const loadedUniversities = json.universities && typeof json.universities === 'object' ? json.universities : {}
+        setCoursesData(loadedCourses)
         setScholarshipsData(Array.isArray(json.scholarships) ? json.scholarships : [])
-        setUniversitiesData(json.universities && typeof json.universities === 'object' ? json.universities : {})
+        setUniversitiesData(loadedUniversities)
+        if (loadedCourses.length === 0 && Object.keys(loadedUniversities).length > 0) {
+          setActiveTab('universities')
+        }
       } catch {
         if (!isMounted) return
         setCoursesData([])
