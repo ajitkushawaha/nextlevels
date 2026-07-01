@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, Suspense, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Search,
   Filter,
@@ -48,6 +48,7 @@ const defaultDegreeTypes = defaultCourseFilterSettings.degreeTypes
 const levels = ['Undergraduate', 'Postgraduate', 'Diploma']
 
 function CourseFinderContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const initialUniversity = searchParams.get('university') || ''
@@ -158,7 +159,9 @@ function CourseFinderContent() {
   }, [matchedCountry, initialSearch, initialUniversity])
 
   const [sortBy, setSortBy] = useState('popularity')
-  const [activeTab, setActiveTab] = useState<'programmes' | 'universities' | 'scholarships'>('programmes')
+  const requestedTab = searchParams.get('tab')
+  const initialTab = requestedTab === 'universities' || requestedTab === 'scholarships' ? requestedTab : 'programmes'
+  const [activeTab, setActiveTab] = useState<'programmes' | 'universities' | 'scholarships'>(initialTab)
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [showMobileSort, setShowMobileSort] = useState(false)
 
@@ -173,6 +176,20 @@ function CourseFinderContent() {
   const [searchFieldQuery, setSearchFieldQuery] = useState('')
   const [searchDegreeQuery, setSearchDegreeQuery] = useState('')
   const [searchUniversityQuery, setSearchUniversityQuery] = useState('')
+
+  const changeTab = (tab: 'programmes' | 'universities' | 'scholarships') => {
+    setActiveTab(tab)
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', tab)
+    router.replace(`/courses?${params.toString()}`, { scroll: false })
+  }
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab === 'programmes' || tab === 'universities' || tab === 'scholarships') {
+      setActiveTab(tab)
+    }
+  }, [searchParams])
 
   // Wizard / Matcher States
   const [showWizard, setShowWizard] = useState(false)
@@ -866,7 +883,7 @@ function CourseFinderContent() {
                   <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
                     <div className="bg-slate-100 p-1 rounded-xl flex gap-1 items-center">
                       <button
-                        onClick={() => setActiveTab('programmes')}
+                        onClick={() => changeTab('programmes')}
                         className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'programmes'
                           ? 'bg-[#081638] text-white shadow-sm'
                           : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -875,7 +892,7 @@ function CourseFinderContent() {
                         Programmes
                       </button>
                       <button
-                        onClick={() => setActiveTab('universities')}
+                        onClick={() => changeTab('universities')}
                         className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'universities'
                           ? 'bg-[#081638] text-white shadow-sm'
                           : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -884,7 +901,7 @@ function CourseFinderContent() {
                         Universities
                       </button>
                       <button
-                        onClick={() => setActiveTab('scholarships')}
+                        onClick={() => changeTab('scholarships')}
                         className={`px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'scholarships'
                           ? 'bg-[#081638] text-white shadow-sm'
                           : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -1085,7 +1102,7 @@ function CourseFinderContent() {
                             setSelectedUniversities(prev =>
                               prev.includes(uni) ? prev.filter(u => u !== uni) : [...prev, uni]
                             )
-                            setActiveTab('programmes')
+                            changeTab('programmes')
                           }}
                           className={`bg-white rounded-3xl border p-6 transition-all duration-300 text-left cursor-pointer flex flex-col justify-between gap-5 hover:shadow-xl ${isSelected
                             ? 'border-[#d7a23a] bg-[#d7a23a]/2 shadow-sm'
