@@ -9,7 +9,13 @@ export async function GET() {
     await connectDB()
     const [programs, scholarships, universities] = await Promise.all([
       (Program as any).find({}).populate({ path: 'universityId', populate: { path: 'countryId' } }).sort({ title: 1 }).lean(),
-      (Scholarship as any).find({}).populate('countryId').sort({ title: 1 }).lean(),
+      (Scholarship as any)
+        .find({})
+        .populate('countryId')
+        .populate({ path: 'universityId', populate: { path: 'countryId' } })
+        .populate({ path: 'programId', populate: { path: 'universityId', populate: { path: 'countryId' } } })
+        .sort({ title: 1 })
+        .lean(),
       (University as any).find({}).populate('countryId').sort({ name: 1 }).lean(),
     ])
 
@@ -21,6 +27,7 @@ export async function GET() {
         heroImage: program.heroImage || '',
         university: program.universityId?.name || 'University not assigned',
         universitySlug: program.universityId?.cmsData?.slug || '',
+        universityLogo: program.universityId?.logo || '',
         location: program.universityId?.city || '',
         country: program.universityId?.countryId?.name || '',
         flag: program.universityId?.countryId?.flagImage || '',
@@ -41,7 +48,15 @@ export async function GET() {
       title: scholarship.title,
       heroImage: scholarship.heroImage || '',
       award: scholarship.awardAmount || '',
-      country: scholarship.countryId?.name || 'Global',
+      country:
+        scholarship.countryId?.name ||
+        scholarship.universityId?.countryId?.name ||
+        scholarship.programId?.universityId?.countryId?.name ||
+        'Global',
+      university: scholarship.universityId?.name || scholarship.programId?.universityId?.name || '',
+      program: scholarship.programId?.title || '',
+      field: scholarship.programId?.discipline || '',
+      degreeType: scholarship.programId?.degreeLevel || '',
       eligibility: scholarship.eligibilityCriteria || '',
       deadline: scholarship.deadline || '',
       type: scholarship.type || '',

@@ -33,8 +33,14 @@ import { slugify } from '@/lib/slug'
 import type { Course, Scholarship, University } from '@/lib/mockData'
 import { defaultCourseFilterSettings } from '@/lib/courseFilterSettings'
 
-type CatalogCourse = Course & { universitySlug?: string }
+type CatalogCourse = Course & { universitySlug?: string; universityLogo?: string }
 type CatalogUniversity = University & { slug?: string }
+type CatalogScholarship = Scholarship & {
+  university?: string
+  program?: string
+  field?: string
+  degreeType?: string
+}
 
 const defaultCountries = defaultCourseFilterSettings.countries
 const defaultFields = defaultCourseFilterSettings.fields
@@ -46,7 +52,7 @@ function CourseFinderContent() {
   const initialSearch = searchParams.get('search') || ''
   const initialUniversity = searchParams.get('university') || ''
   const [coursesData, setCoursesData] = useState<CatalogCourse[]>([])
-  const [scholarshipsData, setScholarshipsData] = useState<Scholarship[]>([])
+  const [scholarshipsData, setScholarshipsData] = useState<CatalogScholarship[]>([])
   const [universitiesData, setUniversitiesData] = useState<Record<string, CatalogUniversity>>({})
   const [filterSettings, setFilterSettings] = useState(defaultCourseFilterSettings)
   const countries = filterSettings.countries.length ? filterSettings.countries : defaultCountries
@@ -321,7 +327,40 @@ function CourseFinderContent() {
     return Array.from(new Set(list))
   }, [coursesData, countries, filterSettings.universities])
 
-  const filteredScholarships = scholarshipsData
+  const filteredUniversitiesList = useMemo(() => universitiesList.filter(university => {
+    const details = universitiesData[university]
+    const universityCourses = coursesData.filter(course => course.university === university)
+    const matchesSearch = !searchTerm ||
+      university.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      universityCourses.some(course => course.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    const matchesCountry = selectedCountries.length === 0 ||
+      selectedCountries.includes(details?.country || universityCourses[0]?.country || '')
+    const matchesField = selectedFields.length === 0 ||
+      universityCourses.some(course => selectedFields.includes(course.field))
+    const matchesDegree = selectedDegreeTypes.length === 0 ||
+      universityCourses.some(course => selectedDegreeTypes.includes(course.degreeType))
+
+    return matchesSearch && matchesCountry && matchesField && matchesDegree
+  }), [coursesData, searchTerm, selectedCountries, selectedDegreeTypes, selectedFields, universitiesData, universitiesList])
+
+  const filteredScholarships = useMemo(() => scholarshipsData.filter(scholarship => {
+    const matchesSearch = !searchTerm ||
+      scholarship.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      scholarship.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      scholarship.university?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      scholarship.program?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCountry = selectedCountries.length === 0 ||
+      scholarship.country === 'Global' ||
+      selectedCountries.includes(scholarship.country)
+    const matchesUniversity = selectedUniversities.length === 0 ||
+      (!!scholarship.university && selectedUniversities.includes(scholarship.university))
+    const matchesField = selectedFields.length === 0 ||
+      (!!scholarship.field && selectedFields.includes(scholarship.field))
+    const matchesDegree = selectedDegreeTypes.length === 0 ||
+      (!!scholarship.degreeType && selectedDegreeTypes.includes(scholarship.degreeType))
+
+    return matchesSearch && matchesCountry && matchesUniversity && matchesField && matchesDegree
+  }), [scholarshipsData, searchTerm, selectedCountries, selectedDegreeTypes, selectedFields, selectedUniversities])
 
   // Handle Wizard Match click
   const handleWizardSelect = (key: 'country' | 'field' | 'level', value: string) => {
@@ -805,7 +844,7 @@ function CourseFinderContent() {
                         <>Found <span className="text-[#081638] font-bold">{filteredCourses.length}</span> matching programs</>
                       )}
                       {activeTab === 'universities' && (
-                        <>Found <span className="text-[#081638] font-bold">{universitiesList.length}</span> partner institutions</>
+                        <>Found <span className="text-[#081638] font-bold">{filteredUniversitiesList.length}</span> partner institutions</>
                       )}
                       {activeTab === 'scholarships' && (
                         <>Found <span className="text-[#081638] font-bold">{filteredScholarships.length}</span> scholarships available</>
@@ -898,8 +937,13 @@ function CourseFinderContent() {
                           >
                             {/* Top Row: Logo & Organisation Info */}
                             <div className="flex gap-4 items-start">
-                              <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs">
-                                {universityInitials}
+                              <div
+                                className="h-12 w-12 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center bg-contain bg-center bg-no-repeat font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs"
+                                style={course.universityLogo ? { backgroundImage: `url("${course.universityLogo}")` } : undefined}
+                                role={course.universityLogo ? 'img' : undefined}
+                                aria-label={course.universityLogo ? `${course.university} logo` : undefined}
+                              >
+                                {!course.universityLogo && universityInitials}
                               </div>
                               <div className="grow space-y-0.5 min-w-0">
                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -913,7 +957,15 @@ function CourseFinderContent() {
                                   </span>
                                 </div>
                                 <p className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
-                                  <span>{course.flag}</span> {course.location}, {course.country}
+                                  {course.flag && (
+                                    <span
+                                      className="h-3.5 w-5 shrink-0 rounded-xs bg-cover bg-center"
+                                      style={{ backgroundImage: `url("${course.flag}")` }}
+                                      role="img"
+                                      aria-label={`${course.country} flag`}
+                                    />
+                                  )}
+                                  {[course.location, course.country].filter(Boolean).join(', ')}
                                 </p>
                                 <span className="inline-block text-[9px] font-black text-[#d7a23a] bg-[#d7a23a]/5 px-2 py-0.5 rounded border border-[#d7a23a]/15 uppercase tracking-wider mt-1">
                                   Top 5% Worldwide
@@ -991,15 +1043,17 @@ function CourseFinderContent() {
 
                 {activeTab === 'universities' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {universitiesList.map(uni => {
+                    {filteredUniversitiesList.length > 0 ? filteredUniversitiesList.map(uni => {
                       const count = coursesData.filter(c => c.university === uni).length
                       const sampleCourse = coursesData.find(c => c.university === uni)
                       const country = sampleCourse ? sampleCourse.country : ''
-                      const flag = sampleCourse ? sampleCourse.flag : '🏛️'
+                      const flag = sampleCourse?.flag || universitiesData[uni]?.flag || ''
                       const isSelected = selectedUniversities.includes(uni)
 
                       const uniDetails = universitiesData[uni] || {
                         slug: slugify(uni),
+                        logo: '',
+                        country,
                         worldRank: '#900+',
                         location: sampleCourse ? sampleCourse.location : 'Global Campus',
                         established: '1970'
@@ -1022,8 +1076,13 @@ function CourseFinderContent() {
                         >
                           {/* Header section */}
                           <header className="flex gap-4 items-start">
-                            <div className="h-12 w-12 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs">
-                              {logoInitials}
+                            <div
+                              className="h-12 w-12 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center bg-contain bg-center bg-no-repeat font-black text-sm text-[#081638] uppercase shrink-0 shadow-2xs"
+                              style={uniDetails.logo ? { backgroundImage: `url("${uniDetails.logo}")` } : undefined}
+                              role={uniDetails.logo ? 'img' : undefined}
+                              aria-label={uniDetails.logo ? `${uni} logo` : undefined}
+                            >
+                              {!uniDetails.logo && logoInitials}
                             </div>
                             <div className="space-y-0.5 min-w-0 grow">
                               <h2 className="font-extrabold text-[#081638] text-base truncate">
@@ -1048,7 +1107,17 @@ function CourseFinderContent() {
                             <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                               <div className="space-y-1">
                                 <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Location</div>
-                                <div className="text-[#081638] font-bold truncate">{flag} {uniDetails.location || country}</div>
+                                <div className="flex items-center gap-1.5 text-[#081638] font-bold truncate">
+                                  {flag && (
+                                    <span
+                                      className="h-3.5 w-5 shrink-0 rounded-xs bg-cover bg-center"
+                                      style={{ backgroundImage: `url("${flag}")` }}
+                                      role="img"
+                                      aria-label={`${uniDetails.country || country} flag`}
+                                    />
+                                  )}
+                                  <span className="truncate">{uniDetails.location || country}</span>
+                                </div>
                               </div>
                               <div className="space-y-1">
                                 <div className="text-slate-400 text-[10px] font-black uppercase tracking-wider">Attendance</div>
@@ -1111,13 +1180,26 @@ function CourseFinderContent() {
                           </footer>
                         </div>
                       )
-                    })}
+                    }) : (
+                      <div className="col-span-full rounded-3xl border border-slate-100 bg-white p-12 text-center shadow-xs">
+                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-slate-100 bg-slate-50">
+                          <Search className="h-6 w-6 text-slate-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-[#061331]">No Universities Found</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                          No universities match your selected filters. Try changing or resetting the filters.
+                        </p>
+                        <button onClick={resetFilters} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#061331] px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#d7a23a] hover:text-[#061331]">
+                          <RotateCcw className="h-4 w-4" /> Reset Filters
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {activeTab === 'scholarships' && (
                   <div className="space-y-6">
-                    {filteredScholarships.map(sch => (
+                    {filteredScholarships.length > 0 ? filteredScholarships.map(sch => (
                         <div
                           key={sch.id}
                           className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-xs hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between gap-5 relative"
@@ -1180,7 +1262,20 @@ function CourseFinderContent() {
                             </Link> 
                           </div>
                         </div>
-                      ))}
+                      )) : (
+                        <div className="rounded-3xl border border-slate-100 bg-white p-12 text-center shadow-xs">
+                          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-slate-100 bg-slate-50">
+                            <Search className="h-6 w-6 text-slate-400" />
+                          </div>
+                          <h3 className="text-lg font-bold text-[#061331]">No Scholarships Found</h3>
+                          <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                            No scholarships match your selected filters. Try changing or resetting the filters.
+                          </p>
+                          <button onClick={resetFilters} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#061331] px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#d7a23a] hover:text-[#061331]">
+                            <RotateCcw className="h-4 w-4" /> Reset Filters
+                          </button>
+                        </div>
+                      )}
                   </div>
                 )}
               </div>
