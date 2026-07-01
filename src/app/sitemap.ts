@@ -2,7 +2,6 @@ import type { MetadataRoute } from 'next'
 import connectDB from '@/lib/db'
 import { getBranchSlugs } from '@/lib/branchPages'
 import { serviceDetails } from '@/lib/serviceDetails'
-import { coursesData, scholarshipsData, universitiesData } from '@/lib/mockData'
 import { slugify } from '@/lib/slug'
 import Blog from '@/models/Blog'
 import Country from '@/models/Country'
@@ -52,24 +51,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const serviceEntries = serviceDetails.map(service =>
     entry(`/services/${service.slug}`, 'monthly', 0.8)
   )
-  const mockCourseEntries = coursesData.map(course =>
-    entry(`/courses/${slugify(course.title)}`, 'monthly', 0.7)
-  )
-  const mockScholarshipEntries = scholarshipsData.map(scholarship =>
-    entry(`/scholarships/${slugify(scholarship.title)}`, 'weekly', 0.7)
-  )
-  const mockUniversityEntries = Object.values(universitiesData).map(university =>
-    entry(`/universities/${encodeURIComponent(university.name)}`, 'monthly', 0.7)
-  )
-
   const uniqueEntries = new Map<string, SitemapEntry>()
   for (const item of [
     ...staticEntries,
     ...branchEntries,
     ...serviceEntries,
-    ...mockCourseEntries,
-    ...mockScholarshipEntries,
-    ...mockUniversityEntries,
     ...databaseEntries,
   ]) {
     uniqueEntries.set(item.url, item)

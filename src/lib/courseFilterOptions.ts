@@ -1,5 +1,6 @@
 import Country from '@/models/Country'
 import University from '@/models/University'
+import Program from '@/models/Program'
 import {
   defaultCourseFilterSettings,
   type CourseFilterSettings,
@@ -39,11 +40,13 @@ function sortCountries(countries: string[]) {
 }
 
 export async function getDynamicCourseFilterSettings(
-  settings?: Partial<CourseFilterSettings> | null
+  _settings?: Partial<CourseFilterSettings> | null
 ) {
-  const [countries, universities] = await Promise.all([
+  const [countries, universities, fields, degreeTypes] = await Promise.all([
     (Country as any).find({}).select('name').sort({ name: 1 }).lean(),
     (University as any).find({}).select('name').sort({ name: 1 }).lean(),
+    (Program as any).distinct('discipline'),
+    (Program as any).distinct('degreeLevel'),
   ])
 
   const databaseCountries = countries
@@ -55,20 +58,12 @@ export async function getDynamicCourseFilterSettings(
 
   return {
     countries: sortCountries([
-      ...(settings?.countries || []),
       ...databaseCountries,
-      ...defaultCourseFilterSettings.countries,
     ]),
-    fields: settings?.fields?.length
-      ? settings.fields
-      : defaultCourseFilterSettings.fields,
-    degreeTypes: settings?.degreeTypes?.length
-      ? settings.degreeTypes
-      : defaultCourseFilterSettings.degreeTypes,
+    fields: uniqueList(fields.filter(Boolean)),
+    degreeTypes: uniqueList(degreeTypes.filter(Boolean)),
     universities: uniqueList([
-      ...(settings?.universities || []),
       ...databaseUniversities,
-      ...defaultCourseFilterSettings.universities,
     ]),
   }
 }

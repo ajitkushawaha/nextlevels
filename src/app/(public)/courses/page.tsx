@@ -29,9 +29,8 @@ import {
 import Link from 'next/link'
 import Footer from '@/components/layout/footer'
 
-import { coursesData, scholarshipsData, universitiesData } from '@/lib/mockData'
 import { slugify } from '@/lib/slug'
-import type { Course } from '@/lib/mockData'
+import type { Course, Scholarship, University } from '@/lib/mockData'
 import { defaultCourseFilterSettings } from '@/lib/courseFilterSettings'
 
 const defaultCountries = defaultCourseFilterSettings.countries
@@ -43,6 +42,9 @@ function CourseFinderContent() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const initialUniversity = searchParams.get('university') || ''
+  const [coursesData, setCoursesData] = useState<Course[]>([])
+  const [scholarshipsData, setScholarshipsData] = useState<Scholarship[]>([])
+  const [universitiesData, setUniversitiesData] = useState<Record<string, University>>({})
   const [filterSettings, setFilterSettings] = useState(defaultCourseFilterSettings)
   const countries = filterSettings.countries.length ? filterSettings.countries : defaultCountries
   const fields = filterSettings.fields.length ? filterSettings.fields : defaultFields
@@ -79,6 +81,32 @@ function CourseFinderContent() {
 
     loadFilterSettings()
 
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch('/api/public/courses/catalog')
+        const json = await res.json()
+        if (!res.ok) throw new Error(json.error || 'Unable to load course catalog')
+        if (!isMounted) return
+        setCoursesData(Array.isArray(json.courses) ? json.courses : [])
+        setScholarshipsData(Array.isArray(json.scholarships) ? json.scholarships : [])
+        setUniversitiesData(json.universities && typeof json.universities === 'object' ? json.universities : {})
+      } catch {
+        if (!isMounted) return
+        setCoursesData([])
+        setScholarshipsData([])
+        setUniversitiesData({})
+      }
+    }
+
+    loadCatalog()
     return () => {
       isMounted = false
     }

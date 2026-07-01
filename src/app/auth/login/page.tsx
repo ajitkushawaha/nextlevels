@@ -37,10 +37,13 @@ function LoginForm() {
         callbackUrl,
       })
 
-      if (res?.error) {
+      if (!res) {
+        setError('Authentication service did not return a response. Please try again.')
+        toast.error('Authentication service unavailable')
+      } else if (res.error) {
         setError(res.error === 'CredentialsSignin' ? 'Invalid credentials' : res.error)
         toast.error('Authentication Failed: ' + (res.error === 'CredentialsSignin' ? 'Invalid credentials' : res.error))
-      } else if (res?.ok) {
+      } else if (res.ok) {
         toast.success('Successfully logged in!')
         router.push(callbackUrl)
         router.refresh()
