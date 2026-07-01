@@ -88,9 +88,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ agent: created }, { status: 201 })
   } catch (error: any) {
     console.error('Admin referral agents POST failed:', error)
-    return NextResponse.json(
-      { error: error.code === 11000 ? 'This URL slug already exists' : 'Internal server error' },
-      { status: 500 }
-    )
+    let errorMessage = 'Internal server error'
+    let status = 500
+    if (error.code === 11000) {
+      status = 409
+      const keys = Object.keys(error.keyPattern || {})
+      if (keys.includes('code')) {
+        errorMessage = 'This URL slug already exists'
+      } else {
+        errorMessage = `Duplicate value for field: ${keys.join(', ')}`
+      }
+    }
+    return NextResponse.json({ error: errorMessage }, { status })
   }
 }

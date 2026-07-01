@@ -99,10 +99,18 @@ export async function PATCH(req: Request, { params }: Params) {
     return NextResponse.json({ agent: updated })
   } catch (error: any) {
     console.error('Admin referral agent PATCH failed:', error)
-    return NextResponse.json(
-      { error: error.code === 11000 ? 'This URL slug already exists' : 'Internal server error' },
-      { status: error.code === 11000 ? 409 : 500 }
-    )
+    let errorMessage = 'Internal server error'
+    let status = 500
+    if (error.code === 11000) {
+      status = 409
+      const keys = Object.keys(error.keyPattern || {})
+      if (keys.includes('code')) {
+        errorMessage = 'This URL slug already exists'
+      } else {
+        errorMessage = `Duplicate value for field: ${keys.join(', ')}`
+      }
+    }
+    return NextResponse.json({ error: errorMessage }, { status })
   }
 }
 
