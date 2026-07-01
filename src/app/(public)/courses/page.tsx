@@ -55,6 +55,8 @@ function CourseFinderContent() {
   const [scholarshipsData, setScholarshipsData] = useState<CatalogScholarship[]>([])
   const [universitiesData, setUniversitiesData] = useState<Record<string, CatalogUniversity>>({})
   const [filterSettings, setFilterSettings] = useState(defaultCourseFilterSettings)
+  const [isCatalogLoading, setIsCatalogLoading] = useState(true)
+  const [isFiltersLoading, setIsFiltersLoading] = useState(true)
   const countries = filterSettings.countries.length ? filterSettings.countries : defaultCountries
   const fields = filterSettings.fields.length ? filterSettings.fields : defaultFields
   const degreeTypes = filterSettings.degreeTypes.length ? filterSettings.degreeTypes : defaultDegreeTypes
@@ -85,6 +87,8 @@ function CourseFinderContent() {
         }
       } catch {
         if (isMounted) setFilterSettings(defaultCourseFilterSettings)
+      } finally {
+        if (isMounted) setIsFiltersLoading(false)
       }
     }
 
@@ -117,6 +121,8 @@ function CourseFinderContent() {
         setCoursesData([])
         setScholarshipsData([])
         setUniversitiesData({})
+      } finally {
+        if (isMounted) setIsCatalogLoading(false)
       }
     }
 
@@ -467,6 +473,12 @@ function CourseFinderContent() {
           </button>
         )}
       </div>
+
+      {isFiltersLoading && (
+        <div className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-xs font-semibold text-slate-500">
+          <Loader2 className="h-4 w-4 animate-spin text-[#d7a23a]" /> Loading filter options...
+        </div>
+      )}
 
       {/* Keyword Search */}
       <div className="space-y-2">
@@ -840,13 +852,11 @@ function CourseFinderContent() {
                       Search Degrees
                     </h2>
                     <p className="text-slate-400 text-xs font-semibold mt-1 uppercase tracking-wider">
-                      {activeTab === 'programmes' && (
+                      {isCatalogLoading ? 'Loading results...' : activeTab === 'programmes' ? (
                         <>Found <span className="text-[#081638] font-bold">{filteredCourses.length}</span> matching programs</>
-                      )}
-                      {activeTab === 'universities' && (
+                      ) : activeTab === 'universities' ? (
                         <>Found <span className="text-[#081638] font-bold">{filteredUniversitiesList.length}</span> partner institutions</>
-                      )}
-                      {activeTab === 'scholarships' && (
+                      ) : (
                         <>Found <span className="text-[#081638] font-bold">{filteredScholarships.length}</span> scholarships available</>
                       )}
                     </p>
@@ -924,7 +934,11 @@ function CourseFinderContent() {
               <div className="space-y-6">
                 {activeTab === 'programmes' && (
                   <div className="space-y-6">
-                    {sortedCourses.length > 0 ? (
+                    {isCatalogLoading ? (
+                      <div className="flex min-h-64 items-center justify-center rounded-3xl border border-slate-100 bg-white">
+                        <div className="text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin text-[#d7a23a]" /><p className="mt-3 text-sm font-semibold text-slate-500">Loading programs...</p></div>
+                      </div>
+                    ) : sortedCourses.length > 0 ? (
                       sortedCourses.map(course => {
                         const universityInitials = course.university
                           .split(' ')
@@ -1043,7 +1057,11 @@ function CourseFinderContent() {
 
                 {activeTab === 'universities' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {filteredUniversitiesList.length > 0 ? filteredUniversitiesList.map(uni => {
+                    {isCatalogLoading ? (
+                      <div className="col-span-full flex min-h-64 items-center justify-center rounded-3xl border border-slate-100 bg-white">
+                        <div className="text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin text-[#d7a23a]" /><p className="mt-3 text-sm font-semibold text-slate-500">Loading universities...</p></div>
+                      </div>
+                    ) : filteredUniversitiesList.length > 0 ? filteredUniversitiesList.map(uni => {
                       const count = coursesData.filter(c => c.university === uni).length
                       const sampleCourse = coursesData.find(c => c.university === uni)
                       const country = sampleCourse ? sampleCourse.country : ''
@@ -1199,7 +1217,11 @@ function CourseFinderContent() {
 
                 {activeTab === 'scholarships' && (
                   <div className="space-y-6">
-                    {filteredScholarships.length > 0 ? filteredScholarships.map(sch => (
+                    {isCatalogLoading ? (
+                      <div className="flex min-h-64 items-center justify-center rounded-3xl border border-slate-100 bg-white">
+                        <div className="text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin text-[#d7a23a]" /><p className="mt-3 text-sm font-semibold text-slate-500">Loading scholarships...</p></div>
+                      </div>
+                    ) : filteredScholarships.length > 0 ? filteredScholarships.map(sch => (
                         <div
                           key={sch.id}
                           className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-xs hover:shadow-xl transition-all duration-300 text-left flex flex-col justify-between gap-5 relative"
