@@ -13,16 +13,15 @@ export async function GET() {
       (University as any).find({}).populate('countryId').sort({ name: 1 }).lean(),
     ])
 
-    const courseItems = programs
-      .filter((program: any) => program.universityId?.name)
-      .map((program: any) => ({
+    const courseItems = programs.map((program: any) => ({
         id: program.cmsData?.slug || program._id.toString(),
         title: program.title,
         heroImage: program.heroImage || '',
-        university: program.universityId.name,
-        location: program.universityId.city || '',
-        country: program.universityId.countryId?.name || '',
-        flag: program.universityId.countryId?.flagImage || '',
+        university: program.universityId?.name || 'University not assigned',
+        universitySlug: program.universityId?.cmsData?.slug || '',
+        location: program.universityId?.city || '',
+        country: program.universityId?.countryId?.name || '',
+        flag: program.universityId?.countryId?.flagImage || '',
         field: program.discipline || '',
         level: program.degreeLevel || '',
         duration: program.duration || '',
@@ -53,6 +52,7 @@ export async function GET() {
         university.name,
         {
           name: university.name,
+          slug: university.cmsData?.slug || '',
           logo: university.logo || '',
           coverImage: university.bannerImage || '',
           worldRank: university.globalRanking ? `#${university.globalRanking}` : '',

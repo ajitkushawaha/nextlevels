@@ -263,7 +263,7 @@ export default async function CourseDetailPage({ params }: Props) {
               <div className="text-left">
                 <p className="text-[9px] font-black text-[#d7a23a] uppercase tracking-wider">Institution Profile</p>
                 <Link
-                  href={`/universities/${course.universitySlug || encodeURIComponent(course.university)}`}
+                  href={`/universities/${course.universitySlug || slugify(course.university)}`}
                   className="text-xs font-extrabold text-[#081638] hover:text-[#d7a23a] transition-colors line-clamp-1 underline decoration-dotted"
                 >
                   {course.university}

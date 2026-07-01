@@ -33,6 +33,9 @@ import { slugify } from '@/lib/slug'
 import type { Course, Scholarship, University } from '@/lib/mockData'
 import { defaultCourseFilterSettings } from '@/lib/courseFilterSettings'
 
+type CatalogCourse = Course & { universitySlug?: string }
+type CatalogUniversity = University & { slug?: string }
+
 const defaultCountries = defaultCourseFilterSettings.countries
 const defaultFields = defaultCourseFilterSettings.fields
 const defaultDegreeTypes = defaultCourseFilterSettings.degreeTypes
@@ -42,9 +45,9 @@ function CourseFinderContent() {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
   const initialUniversity = searchParams.get('university') || ''
-  const [coursesData, setCoursesData] = useState<Course[]>([])
+  const [coursesData, setCoursesData] = useState<CatalogCourse[]>([])
   const [scholarshipsData, setScholarshipsData] = useState<Scholarship[]>([])
-  const [universitiesData, setUniversitiesData] = useState<Record<string, University>>({})
+  const [universitiesData, setUniversitiesData] = useState<Record<string, CatalogUniversity>>({})
   const [filterSettings, setFilterSettings] = useState(defaultCourseFilterSettings)
   const countries = filterSettings.countries.length ? filterSettings.countries : defaultCountries
   const fields = filterSettings.fields.length ? filterSettings.fields : defaultFields
@@ -181,8 +184,6 @@ function CourseFinderContent() {
   // Dynamic filter lists
   const filteredCourses = useMemo(() => {
     return coursesData.filter(course => {
-      if (!countries.includes(course.country)) return false
-
       const matchSearch =
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.university.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -901,7 +902,7 @@ function CourseFinderContent() {
                               <div className="grow space-y-0.5 min-w-0">
                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                                   <strong className="text-xs font-black text-[#081638] hover:text-[#d7a23a] transition-colors truncate max-w-55 sm:max-w-none">
-                                    <Link href={`/universities/${encodeURIComponent(course.university)}`} className="hover:underline">
+                                    <Link href={`/universities/${course.universitySlug || slugify(course.university)}`} className="hover:underline">
                                       {course.university}
                                     </Link>
                                   </strong>
@@ -996,6 +997,7 @@ function CourseFinderContent() {
                       const isSelected = selectedUniversities.includes(uni)
 
                       const uniDetails = universitiesData[uni] || {
+                        slug: slugify(uni),
                         worldRank: '#900+',
                         location: sampleCourse ? sampleCourse.location : 'Global Campus',
                         established: '1970'
@@ -1024,7 +1026,7 @@ function CourseFinderContent() {
                             <div className="space-y-0.5 min-w-0 grow">
                               <h2 className="font-extrabold text-[#081638] text-base truncate">
                                 <Link
-                                  href={`/universities/${encodeURIComponent(uni)}`}
+                                  href={`/universities/${uniDetails.slug || slugify(uni)}`}
                                   onClick={(e) => e.stopPropagation()}
                                   className="hover:underline hover:text-[#d7a23a] transition-colors"
                                 >
@@ -1097,7 +1099,7 @@ function CourseFinderContent() {
                               </span>
                             </div>
                              <Link
-                              href={`/universities/${encodeURIComponent(uni)}`}
+                              href={`/universities/${uniDetails.slug || slugify(uni)}`}
                               onClick={(e) => e.stopPropagation()}
                               className="px-4 py-2 rounded-full border border-slate-200 text-[#081638] hover:bg-slate-50 text-[11px] font-black tracking-wide cursor-pointer transition-colors text-center whitespace-nowrap"
                             >
