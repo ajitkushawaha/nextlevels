@@ -26,20 +26,39 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
+async function findScholarshipBySlugOrId(value: string) {
+  const isValidId = mongoose.Types.ObjectId.isValid(value)
+  let scholarshipId: string | null = null
+
+  const directMatch = await (ScholarshipModel as any).findOne({
+    $or: [...(isValidId ? [{ _id: value }] : []), { title: value }, { 'cmsData.slug': value }],
+  }).select('_id').lean()
+
+  if (directMatch?._id) {
+    scholarshipId = directMatch._id.toString()
+  } else {
+    const titleCandidates = await (ScholarshipModel as any).find({}).select('_id title').lean()
+    const generatedSlugMatch = titleCandidates.find((item: any) => slugify(item.title) === value)
+    scholarshipId = generatedSlugMatch?._id?.toString() || null
+  }
+
+  if (!scholarshipId) return null
+
+  return (ScholarshipModel as any)
+    .findById(scholarshipId)
+    .populate('countryId')
+    .populate('universityId')
+    .populate({ path: 'programId', populate: { path: 'universityId' } })
+    .lean()
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const decodedId = decodeURIComponent(id)
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
-    const dbSchol = await (ScholarshipModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }, { 'cmsData.slug': decodedId }],
-    })
-      .populate('countryId')
-      .populate('universityId')
-      .populate({ path: 'programId', populate: { path: 'universityId' } })
-      .lean()
+    const dbSchol = await findScholarshipBySlugOrId(decodedId)
 
     if (dbSchol) {
       const seo = dbSchol.cmsData?.seo || {}
@@ -86,17 +105,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
-    const dbSchol = await (ScholarshipModel as any).findOne({
-      $or: [
-        ...(isValidId ? [{ _id: decodedId }] : []),
-        { title: decodedId },
-        { 'cmsData.slug': decodedId }
-      ]
-    }).populate('countryId').populate('universityId').populate({
-      path: 'programId',
-      populate: { path: 'universityId' },
-    }).lean()
+    const dbSchol = await findScholarshipBySlugOrId(decodedId)
 
     if (dbSchol) {
       canonicalSlug = dbSchol.cmsData?.slug || slugify(dbSchol.title)

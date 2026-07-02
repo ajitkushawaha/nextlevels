@@ -3,6 +3,7 @@ import connectDB from '@/lib/db'
 import Program from '@/models/Program'
 import Scholarship from '@/models/Scholarship'
 import University from '@/models/University'
+import { slugify } from '@/lib/slug'
 
 export async function GET() {
   try {
@@ -45,6 +46,7 @@ export async function GET() {
 
     const scholarshipItems = scholarships.map((scholarship: any) => ({
       id: scholarship.cmsData?.slug || scholarship._id.toString(),
+      slug: scholarship.cmsData?.slug || slugify(scholarship.title),
       title: scholarship.title,
       heroImage: scholarship.heroImage || '',
       award: scholarship.awardAmount || '',

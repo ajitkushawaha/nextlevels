@@ -21,9 +21,26 @@ import Image from 'next/image'
 import Footer from '@/components/layout/footer'
 import UniversityEnquiryForm from './UniversityEnquiryForm'
 import UniversityLogo from '@/components/universities/UniversityLogo'
+import { slugify } from '@/lib/slug'
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+async function findUniversityBySlugOrId(value: string) {
+  const isValidId = mongoose.Types.ObjectId.isValid(value)
+  const directMatch = await (UniversityModel as any).findOne({
+    $or: [...(isValidId ? [{ _id: value }] : []), { name: value }, { 'cmsData.slug': value }],
+  }).select('_id').lean()
+
+  let universityId = directMatch?._id?.toString() || null
+  if (!universityId) {
+    const candidates = await (UniversityModel as any).find({}).select('_id name').lean()
+    universityId = candidates.find((item: any) => slugify(item.name) === value)?._id?.toString() || null
+  }
+
+  if (!universityId) return null
+  return (UniversityModel as any).findById(universityId).populate('countryId').lean()
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -32,10 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedName)
-    const dbUniv = await (UniversityModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedName }] : []), { name: decodedName }, { 'cmsData.slug': decodedName }],
-    }).populate('countryId').lean()
+    const dbUniv = await findUniversityBySlugOrId(decodedName)
 
     if (dbUniv) {
       const seo = dbUniv.cmsData?.seo || {}
@@ -50,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         keywords: seo.metaKeywords || undefined,
         robots: seo.robots || 'index, follow',
-        alternates: { canonical: seo.canonical || `/universities/${dbUniv.cmsData?.slug || encodeURIComponent(dbUniv.name)}` },
+        alternates: { canonical: seo.canonical || `/universities/${dbUniv.cmsData?.slug || slugify(dbUniv.name)}` },
         openGraph: {
           title: seo.ogTitle || title,
           description: seo.ogDescription || description,
@@ -77,17 +91,10 @@ export default async function UniversityDetailPage({ params }: Props) {
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedName)
-    const dbUniv = await (UniversityModel as any).findOne({
-      $or: [
-        ...(isValidId ? [{ _id: decodedName }] : []),
-        { name: decodedName },
-        { 'cmsData.slug': decodedName }
-      ]
-    }).populate('countryId').lean()
+    const dbUniv = await findUniversityBySlugOrId(decodedName)
 
     if (dbUniv) {
-      canonicalSlug = dbUniv.cmsData?.slug || ''
+      canonicalSlug = dbUniv.cmsData?.slug || slugify(dbUniv.name)
       university = {
         name: dbUniv.name,
         logo: dbUniv.logo || dbUniv.name.substring(0, 3).toUpperCase(),

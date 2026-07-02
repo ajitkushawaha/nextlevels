@@ -36,6 +36,7 @@ import { defaultCourseFilterSettings } from '@/lib/courseFilterSettings'
 type CatalogCourse = Course & { universitySlug?: string; universityLogo?: string }
 type CatalogUniversity = University & { slug?: string }
 type CatalogScholarship = Scholarship & {
+  slug?: string
   university?: string
   program?: string
   field?: string
@@ -1261,7 +1262,7 @@ function CourseFinderContent() {
                           {/* Middle Section: Title & Description */}
                           <div className="space-y-2">
                             <h2 className="font-extrabold text-[#081638] text-lg sm:text-xl leading-snug hover:text-[#d7a23a] transition-colors">
-                              <Link href={`/scholarships/${slugify(sch.title)}`} className="hover:underline">
+                              <Link href={`/scholarships/${sch.slug || slugify(sch.title)}`} className="hover:underline">
                                 {sch.title}
                               </Link>
                             </h2>
@@ -1287,7 +1288,7 @@ function CourseFinderContent() {
                             </div>
 
                             <Link
-                              href={`/scholarships/${slugify(sch.title)}`}
+                              href={`/scholarships/${sch.slug || slugify(sch.title)}`}
                               className="inline-flex items-center gap-1.5 text-xs font-bold text-[#d7a23a] hover:text-[#081638] transition-colors mt-2"
                             >
                               Read more about eligibility <ArrowRight className="w-3.5 h-3.5" />

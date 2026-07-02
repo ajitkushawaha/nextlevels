@@ -29,16 +29,32 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
+async function findProgramBySlugOrId(value: string) {
+  const isValidId = mongoose.Types.ObjectId.isValid(value)
+  const directMatch = await (ProgramModel as any).findOne({
+    $or: [...(isValidId ? [{ _id: value }] : []), { title: value }, { 'cmsData.slug': value }],
+  }).select('_id').lean()
+
+  let programId = directMatch?._id?.toString() || null
+  if (!programId) {
+    const candidates = await (ProgramModel as any).find({}).select('_id title').lean()
+    programId = candidates.find((item: any) => slugify(item.title) === value)?._id?.toString() || null
+  }
+
+  if (!programId) return null
+  return (ProgramModel as any)
+    .findById(programId)
+    .populate({ path: 'universityId', populate: { path: 'countryId' } })
+    .lean()
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const decodedId = decodeURIComponent(id)
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
-    const dbProg = await (ProgramModel as any).findOne({
-      $or: [...(isValidId ? [{ _id: decodedId }] : []), { title: decodedId }, { 'cmsData.slug': decodedId }],
-    }).populate({ path: 'universityId', populate: { path: 'countryId' } }).lean()
+    const dbProg = await findProgramBySlugOrId(decodedId)
 
     if (dbProg) {
       const seo = dbProg.cmsData?.seo || {}
@@ -80,14 +96,7 @@ export default async function CourseDetailPage({ params }: Props) {
 
   try {
     await connectDb()
-    const isValidId = mongoose.Types.ObjectId.isValid(decodedId)
-    const dbProg = await (ProgramModel as any).findOne({
-      $or: [
-        ...(isValidId ? [{ _id: decodedId }] : []),
-        { title: decodedId },
-        { 'cmsData.slug': decodedId }
-      ]
-    }).populate({ path: 'universityId', populate: { path: 'countryId' } }).lean()
+    const dbProg = await findProgramBySlugOrId(decodedId)
 
     if (dbProg) {
       canonicalSlug = dbProg.cmsData?.slug || slugify(dbProg.title)
