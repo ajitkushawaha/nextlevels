@@ -1,7 +1,7 @@
 'use client'
 
 import { Mail, MapPin, Phone, PhoneCall, ArrowRight } from 'lucide-react'
-import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa6'
+import { FaFacebook, FaInstagram, FaLinkedin, FaLocationPin, FaLocationPinLock, FaYoutube } from 'react-icons/fa6'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -148,7 +148,7 @@ export default function Footer() {
               <span>{settings.email}</span>
             </li>
             <li className="flex gap-3 items-start">
-              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/60" />
               <span>
                 {settings.address}</span>
             </li>
@@ -160,6 +160,8 @@ export default function Footer() {
                     <a
                       key={item.label}
                       href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-white/80 transition hover:border-[#f6da73] hover:text-[#f6da73]"
                       aria-label={item.label}
                     >

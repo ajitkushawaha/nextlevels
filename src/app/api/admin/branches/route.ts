@@ -5,6 +5,7 @@ import connectDB from '@/lib/db'
 import Branch from '@/models/Branch'
 import { branches as defaultBranches } from '@/lib/branches'
 import { listBranchPages } from '@/lib/branchPages'
+import { revalidatePath } from 'next/cache'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
@@ -33,6 +34,7 @@ export async function PUT(req: Request) {
 
     const body = await req.json()
     const branch = body.branch
+    const publish = Boolean(body.publish)
 
     if (!branch?.slug || !branch?.city) {
       return NextResponse.json({ error: 'Branch slug and city are required.' }, { status: 400 })
@@ -49,13 +51,20 @@ export async function PUT(req: Request) {
       team: Array.isArray(branch.team) ? branch.team : fallback?.team || [],
       gallery: Array.isArray(branch.gallery) ? branch.gallery : fallback?.gallery || [],
       faqs: Array.isArray(branch.faqs) ? branch.faqs : fallback?.faqs || [],
-      isActive: true,
+      isActive: publish ? true : (branch?.isActive ?? fallback?.isActive ?? true),
     }
 
     await connectDB()
     const saved = await (Branch as any)
       .findOneAndUpdate({ slug: merged.slug }, merged, { new: true, upsert: true })
       .lean()
+
+    try {
+      revalidatePath(`/branches/${merged.slug}`)
+      revalidatePath('/')
+    } catch (error) {
+      console.error('Failed to revalidate branch path:', error)
+    }
 
     return NextResponse.json({ branch: saved })
   } catch (error) {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Save, RefreshCw, MapPin } from 'lucide-react'
+import { Save, RefreshCw, MapPin, Send } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -59,6 +59,7 @@ export default function AdminBranchesPage() {
   const [draft, setDraft] = useState<BranchEditorData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [publishing, setPublishing] = useState(false)
 
   const activeBranch = useMemo(
     () => branches.find(branch => branch.slug === activeSlug),
@@ -132,14 +133,20 @@ export default function AdminBranchesPage() {
     setDraft({ ...draft, [field]: ((draft[field] || []) as any[]).filter((_, itemIndex) => itemIndex !== index) })
   }
 
-  const saveBranch = async () => {
+  const persistBranch = async (publish = false) => {
     if (!draft) return
-    setSaving(true)
+
+    if (publish) {
+      setPublishing(true)
+    } else {
+      setSaving(true)
+    }
+
     try {
       const res = await fetch('/api/admin/branches', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ branch: draft }),
+        body: JSON.stringify({ branch: draft, publish }),
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error || 'Unable to save branch')
@@ -147,11 +154,12 @@ export default function AdminBranchesPage() {
       setBranches(current =>
         current.map(branch => (branch.slug === draft.slug ? { ...branch, ...draft } : branch))
       )
-      toast.success('Branch content saved')
+      toast.success(publish ? 'Branch published' : 'Branch content saved')
     } catch (error: any) {
       toast.error(error.message || 'Unable to save branch')
     } finally {
       setSaving(false)
+      setPublishing(false)
     }
   }
 
@@ -166,34 +174,33 @@ export default function AdminBranchesPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-        <Card className="rounded-md border-slate-200 bg-white shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-sm">Branches</CardTitle>
-            <CardDescription>Select a branch to edit.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {loading ? (
-              <p className="text-sm text-slate-500">Loading branches...</p>
-            ) : (
-              branches.map(branch => (
+      <div className="sticky top-0 z-10 -mx-6 bg-slate-50/90 backdrop-blur px-6 py-4 border-b border-slate-200 mb-6 shadow-sm">
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 mr-2">Branches</span>
+          {loading ? (
+            <p className="text-sm text-slate-500">Loading branches...</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {branches.map(branch => (
                 <button
                   key={branch.slug}
                   onClick={() => setActiveSlug(branch.slug)}
-                  className={`flex w-full items-center gap-2 rounded-md border px-3 py-2 text-left text-sm font-semibold transition ${
+                  className={`flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                     activeSlug === branch.slug
-                      ? 'border-[#d7a23a] bg-[#d7a23a]/10 text-[#081638]'
-                      : 'border-slate-200 bg-white text-slate-600 hover:border-[#d7a23a]/60'
+                      ? 'border-[#d7a23a] bg-[#d7a23a] text-[#081638] shadow-sm'
+                      : 'border-slate-200 bg-white text-slate-600 hover:border-[#d7a23a]/60 hover:bg-slate-50'
                   }`}
                 >
-                  <MapPin className="h-4 w-4 text-[#d7a23a]" />
+                  <MapPin className="h-3.5 w-3.5" />
                   {branch.city}
                 </button>
-              ))
-            )}
-          </CardContent>
-        </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
+      <div className="grid gap-6">
         <Card className="rounded-md border-slate-200 bg-white shadow-sm">
           <CardHeader className="border-b border-slate-100">
             <CardTitle className="text-sm">Branch Details</CardTitle>
@@ -277,7 +284,7 @@ export default function AdminBranchesPage() {
                   </div>
                   <div className="space-y-3">
                     {(draft.areas || []).map((area, index) => (
-                      <div key={`${area.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-2">
+                      <div key={index} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-2">
                         <Field label="Area Name" value={area.name} onChange={value => updateArrayItem('areas', index, 'name', value)} />
                         <Field label="Title" value={area.title} onChange={value => updateArrayItem('areas', index, 'title', value)} />
                         <div className="space-y-1.5 md:col-span-2">
@@ -310,7 +317,7 @@ export default function AdminBranchesPage() {
                   </div>
                   <div className="space-y-3">
                     {(draft.stories || []).map((story, index) => (
-                      <div key={`${story.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-3">
+                      <div key={index} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-3">
                         <Field label="Student Name" value={story.name} onChange={value => updateArrayItem('stories', index, 'name', value)} />
                         <Field label="Country" value={story.country} onChange={value => updateArrayItem('stories', index, 'country', value)} />
                         <Field label="University" value={story.university} onChange={value => updateArrayItem('stories', index, 'university', value)} />
@@ -353,7 +360,7 @@ export default function AdminBranchesPage() {
                   </div>
                   <div className="space-y-3">
                     {(draft.team || []).map((member, index) => (
-                      <div key={`${member.name}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+                      <div key={index} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_1fr_1fr_auto]">
                         <Field
                           label="Name"
                           value={member.name}
@@ -402,7 +409,7 @@ export default function AdminBranchesPage() {
                   </div>
                   <div className="space-y-3">
                     {(draft.gallery || []).map((item, index) => (
-                      <div key={`${item.title}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_2fr_auto]">
+                      <div key={index} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 md:grid-cols-[1fr_2fr_auto]">
                         <Field label="Title" value={item.title} onChange={value => updateArrayItem('gallery', index, 'title', value)} />
                         <CmsImageField
                           id={`gallery-image-${index}`}
@@ -437,7 +444,7 @@ export default function AdminBranchesPage() {
                   </div>
                   <div className="space-y-3">
                     {(draft.faqs || []).map((faq, index) => (
-                      <div key={`${faq.question}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
+                      <div key={index} className="grid gap-3 rounded-md border border-slate-200 bg-slate-50 p-3">
                         <Field label="Question" value={faq.question} onChange={value => updateArrayItem('faqs', index, 'question', value)} />
                         <div className="space-y-1.5">
                           <Label>Answer</Label>
@@ -452,10 +459,14 @@ export default function AdminBranchesPage() {
                     ))}
                   </div>
                 </div>
-                <div className="flex gap-2 md:col-span-2">
-                  <Button onClick={saveBranch} disabled={saving} className="bg-[#081638] text-white hover:bg-[#0d2256]">
+                <div className="flex flex-wrap gap-2 md:col-span-2">
+                  <Button onClick={() => persistBranch(false)} disabled={saving || publishing} className="bg-[#081638] text-white hover:bg-[#0d2256]">
                     <Save className="mr-2 h-4 w-4" />
                     {saving ? 'Saving...' : 'Save Branch'}
+                  </Button>
+                  <Button onClick={() => persistBranch(true)} disabled={saving || publishing} className="bg-[#d7a23a] text-[#081638] hover:bg-[#f1c84a]">
+                    <Send className="mr-2 h-4 w-4" />
+                    {publishing ? 'Publishing...' : 'Publish Branch'}
                   </Button>
                   <Button variant="outline" onClick={() => activeBranch && setDraft(activeBranch)}>
                     <RefreshCw className="mr-2 h-4 w-4" />
