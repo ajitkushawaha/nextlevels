@@ -51,7 +51,7 @@ export async function PUT(req: Request) {
       team: Array.isArray(branch.team) ? branch.team : fallback?.team || [],
       gallery: Array.isArray(branch.gallery) ? branch.gallery : fallback?.gallery || [],
       faqs: Array.isArray(branch.faqs) ? branch.faqs : fallback?.faqs || [],
-      isActive: publish ? true : (branch?.isActive ?? fallback?.isActive ?? true),
+      isActive: publish ? true : (branch?.isActive ?? (fallback as any)?.isActive ?? true),
     }
 
     await connectDB()
