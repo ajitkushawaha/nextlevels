@@ -364,6 +364,7 @@ function ScholarshipOfferSection({
   const slides = ((section as any).offers?.length ? (section as any).offers : [section]) as HomeScholarshipOfferSectionData[]
   const [activeSlide, setActiveSlide] = useState(0)
   const [slideTick, setSlideTick] = useState(0)
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
   const activeOffer = slides[activeSlide] || section
 
   useEffect(() => {
@@ -391,8 +392,20 @@ function ScholarshipOfferSection({
     setSlideTick(prev => prev + 1)
   }
 
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchStart.current || slides.length <= 1) return
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchStart.current.x
+    const deltaY = touch.clientY - touchStart.current.y
+    touchStart.current = null
+
+    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return
+    if (deltaX < 0) showNextOffer()
+    else showPrevOffer()
+  }
+
   return (
-    <section className="relative overflow-hidden bg-[#061331] px-4 py-12 text-white sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-[#061331] px-4 py-6 text-white sm:px-6 sm:py-12 lg:px-8">
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-18"
@@ -407,38 +420,43 @@ function ScholarshipOfferSection({
       <div className="relative z-10 mx-auto max-w-7xl">
       <div
         key={activeSlide}
-        className="grid items-center gap-8 transition-all duration-500 ease-out lg:grid-cols-[1.25fr_0.85fr]"
+        onTouchStart={event => {
+          const touch = event.touches[0]
+          touchStart.current = { x: touch.clientX, y: touch.clientY }
+        }}
+        onTouchEnd={handleTouchEnd}
+        className="grid items-center gap-5 transition-all duration-500 ease-out sm:gap-8 lg:grid-cols-[1.25fr_0.85fr]"
       >
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#d7a23a] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-[#061331]">
-              <Award className="h-3.5 w-3.5 fill-[#061331]" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#d7a23a] px-3 py-1.5 text-[9px] font-black uppercase tracking-wider text-[#061331] sm:gap-2 sm:px-4 sm:py-2 sm:text-[11px]">
+              <Award className="h-3 w-3 fill-[#061331] sm:h-3.5 sm:w-3.5" />
               {activeOffer.badgeText}
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#d7a23a]/35 bg-white/8 px-3 py-2 text-xs font-bold text-[#f3d79c]">
-              <Clock className="h-3.5 w-3.5" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d7a23a]/35 bg-white/8 px-3 py-1.5 text-[10px] font-bold text-[#f3d79c] sm:gap-2 sm:py-2 sm:text-xs">
+              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               {activeOffer.intakeLabel}
             </span>
           </div>
 
-          <h2 className="mt-7 max-w-4xl text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[64px]">
+          <h2 className="mt-4 max-w-4xl text-2xl font-black leading-[1.08] tracking-tight text-white sm:mt-7 sm:text-5xl lg:text-[64px]">
             {activeOffer.titlePrefix}{' '}
             <span className="text-[#d7a23a]">{activeOffer.scholarshipAmount}</span>{' '}
             {activeOffer.titleSuffix}
           </h2>
 
-          <p className="mt-6 max-w-3xl text-base font-medium leading-8 text-white/72 sm:text-lg">
+          <p className="mt-3 max-w-3xl text-sm font-medium leading-6 text-white/72 sm:mt-6 sm:text-lg sm:leading-8">
             {activeOffer.description}
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/82">
+          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-xs font-bold text-white/82 sm:mt-7 sm:gap-3 sm:text-sm">
             {activeOffer.featureChips.map(item => {
               const Icon = scholarshipOfferIconMap[item.icon] || Award
 
               return (
                 <span key={item.text} className="inline-flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/15 text-[#d7a23a]">
-                    <Icon className="h-4 w-4" />
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[#d7a23a]/30 bg-[#d7a23a]/15 text-[#d7a23a] sm:h-8 sm:w-8">
+                    <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
                   </span>
                   {item.text}
                 </span>
@@ -446,16 +464,16 @@ function ScholarshipOfferSection({
             })}
           </div>
 
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="mt-5 flex flex-col gap-2 sm:mt-9 sm:flex-row sm:items-center sm:gap-4">
             <Link
               href={activeOffer.ctaHref}
-              className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-[#d7a23a] px-8 text-base font-black text-[#061331] shadow-[0_20px_42px_rgba(215,162,58,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e4b85d]"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#d7a23a] px-6 text-sm font-black text-[#061331] shadow-[0_20px_42px_rgba(215,162,58,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e4b85d] sm:min-h-14 sm:gap-3 sm:px-8 sm:text-base"
             >
               {activeOffer.ctaLabel}
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
             {activeOffer.note ? (
-              <span className="text-sm font-medium text-white/38">{activeOffer.note}</span>
+              <span className="text-center text-xs font-medium text-white/38 sm:text-left sm:text-sm">{activeOffer.note}</span>
             ) : null}
           </div>
         </div>
@@ -466,7 +484,20 @@ function ScholarshipOfferSection({
         />
       </div>
       {slides.length > 1 ? (
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <>
+        <div className="mt-4 flex items-center justify-center gap-2 sm:hidden" aria-label={`Offer ${activeSlide + 1} of ${slides.length}`}>
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => goToOffer(index)}
+              aria-label={`Show offer ${index + 1}`}
+              aria-current={activeSlide === index ? 'true' : undefined}
+              className={`h-2 rounded-full transition-all ${activeSlide === index ? 'w-7 bg-[#d7a23a]' : 'w-2 bg-white/30'}`}
+            />
+          ))}
+        </div>
+        <div className="mt-8 hidden flex-wrap items-center justify-center gap-4 sm:flex">
           <button
             type="button"
             onClick={showPrevOffer}
@@ -497,6 +528,7 @@ function ScholarshipOfferSection({
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
+        </>
       ) : null}
       </div>
     </section>
@@ -529,7 +561,7 @@ function ScholarshipOfferCountdownCard({
   ]
 
   return (
-    <div className="rounded-[28px] border border-[#d7a23a]/20 bg-white/7 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8">
+    <div className="hidden rounded-[28px] border border-[#d7a23a]/20 bg-white/7 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md md:block md:p-8">
       <div className="mb-6 flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-[#d7a23a]">
         <Clock className="h-4 w-4" />
         Intake Opens In

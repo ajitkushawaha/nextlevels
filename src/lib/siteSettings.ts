@@ -64,8 +64,6 @@ const defaultHeaderNavItems: SiteLink[] = [
     ],
   },
   { label: 'Testimonial', href: '/testimonial', enabled: true },
-  { label: 'Blog', href: '/blog', enabled: true },
-  { label: 'Contact Us', href: '/contact-us', enabled: true },
   {
     label: 'Branches',
     href: '/branches',
@@ -77,6 +75,8 @@ const defaultHeaderNavItems: SiteLink[] = [
       { label: 'Vavuniya (Coming Soon)', href: '/branches/vavuniya', enabled: true },
     ],
   },
+  { label: 'Blog', href: '/blog', enabled: true },
+  { label: 'Contact Us', href: '/contact-us', enabled: true },
 ]
 
 export const defaultSiteSettings: SiteSettings = {
@@ -148,15 +148,13 @@ export const defaultSiteSettings: SiteSettings = {
 
 function normalizeHeaderNavItems(navItems?: SiteLink[]): SiteLink[] {
   const items = navItems?.length ? navItems : defaultHeaderNavItems
-  const hasBranches = items.some(item => item.label.trim().toLowerCase() === 'branches')
-  if (hasBranches) return items
-
-  const branchesItem = defaultHeaderNavItems.find(item => item.label === 'Branches')
+  const existingBranches = items.find(item => item.label.trim().toLowerCase() === 'branches')
+  const branchesItem = existingBranches || defaultHeaderNavItems.find(item => item.label === 'Branches')
   if (!branchesItem) return items
 
-  const contactIndex = items.findIndex(item => item.label.trim().toLowerCase() === 'contact us')
-  const nextItems = [...items]
-  const insertAt = contactIndex >= 0 ? contactIndex + 1 : nextItems.length
+  const nextItems = items.filter(item => item.label.trim().toLowerCase() !== 'branches')
+  const testimonialIndex = nextItems.findIndex(item => item.label.trim().toLowerCase() === 'testimonial')
+  const insertAt = testimonialIndex >= 0 ? testimonialIndex + 1 : nextItems.length
   nextItems.splice(insertAt, 0, branchesItem)
   return nextItems
 }
