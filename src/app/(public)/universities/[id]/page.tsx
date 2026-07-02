@@ -368,7 +368,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                 <h2 className="text-lg font-black text-[#081638] flex items-center gap-2 mb-4">
                   <BookOpen className="w-5 h-5 text-[#d7a23a]" /> About the Institution
                 </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                   {university.description}
                 </p>
               </div>

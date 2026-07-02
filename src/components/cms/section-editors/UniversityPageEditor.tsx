@@ -98,6 +98,11 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
 
     setIsSaving(true)
     try {
+      const cmsData = { ...(data.cmsData || {}) }
+      if (!cmsData.slug) {
+        cmsData.slug = slugify(data.name)
+      }
+
       // Clean up countryId to just save the string ID
       const payload = {
         name: data.name,
@@ -108,7 +113,7 @@ export default function UniversityPageEditor({ universityId, onBack }: Props) {
         globalRanking: data.globalRanking,
         description: data.description || '',
         websiteUrl,
-        cmsData: data.cmsData || {},
+        cmsData,
       }
 
       const res = await fetch(`/api/admin/courses/universities/${universityId}`, {
