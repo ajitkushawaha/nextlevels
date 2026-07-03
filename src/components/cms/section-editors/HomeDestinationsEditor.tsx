@@ -72,7 +72,7 @@ export default function HomeDestinationsEditor({
 
         {destinations.destinations.map((destination, index) => (
           <div
-            key={`${destination.name}-${index}`}
+            key={`destination-card-${index}`}
             className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3"
           >
             <div className="flex items-center justify-between gap-3">
