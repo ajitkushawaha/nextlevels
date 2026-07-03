@@ -57,7 +57,6 @@ async function syncUniversityLogos(content: CmsPageContent) {
         coverImage: dbUniv.bannerImage || univ.coverImage,
         worldRank: dbUniv.globalRanking ? `#${dbUniv.globalRanking}` : univ.worldRank,
         location: dbUniv.city ? `${dbUniv.city}, ${univ.country || ''}` : univ.location,
-        website: dbUniv.websiteUrl || univ.website,
       }
     })
 
