@@ -14,6 +14,11 @@ interface HomeUniversitiesEditorProps {
   onChange: (section: HomeUniversitiesSection) => void
 }
 
+function RequiredFieldError({ id, value, label }: { id: string; value: string; label: string }) {
+  if (value.trim()) return null
+  return <p id={id} className="text-[11px] font-semibold text-red-600">{label} is required.</p>
+}
+
 export default function HomeUniversitiesEditor({
   section,
   onChange,
@@ -65,6 +70,7 @@ export default function HomeUniversitiesEditor({
     const students = univ.students || univ.cmsData?.students || 'N/A'
 
     return {
+      id: String(univ._id || univ.id || ''),
       name,
       logo,
       coverImage,
@@ -119,8 +125,13 @@ export default function HomeUniversitiesEditor({
         <Input
           id="univ-eyebrow"
           value={section.eyebrow}
+          required
+          aria-invalid={!section.eyebrow.trim()}
+          aria-describedby={!section.eyebrow.trim() ? 'univ-eyebrow-error' : undefined}
+          className={!section.eyebrow.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
           onChange={e => onChange({ ...section, eyebrow: e.target.value })}
         />
+        <RequiredFieldError id="univ-eyebrow-error" value={section.eyebrow} label="Eyebrow" />
       </div>
 
       <div className="space-y-1.5">
@@ -128,8 +139,12 @@ export default function HomeUniversitiesEditor({
         <Input
           id="univ-title"
           value={section.title}
+          required
+          aria-invalid={!section.title.trim()}
+          className={!section.title.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
           onChange={e => onChange({ ...section, title: e.target.value })}
         />
+        <RequiredFieldError id="univ-title-error" value={section.title} label="Title prefix" />
       </div>
 
       <div className="space-y-1.5">
@@ -137,8 +152,12 @@ export default function HomeUniversitiesEditor({
         <Input
           id="univ-highlight"
           value={section.highlightedTitle}
+          required
+          aria-invalid={!section.highlightedTitle.trim()}
+          className={!section.highlightedTitle.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
           onChange={e => onChange({ ...section, highlightedTitle: e.target.value })}
         />
+        <RequiredFieldError id="univ-highlight-error" value={section.highlightedTitle} label="Highlighted title" />
       </div>
 
       <div className="space-y-1.5">
@@ -147,8 +166,12 @@ export default function HomeUniversitiesEditor({
           id="univ-description"
           rows={3}
           value={section.description}
+          required
+          aria-invalid={!section.description.trim()}
+          className={!section.description.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
           onChange={e => onChange({ ...section, description: e.target.value })}
         />
+        <RequiredFieldError id="univ-description-error" value={section.description} label="Description" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -157,6 +180,9 @@ export default function HomeUniversitiesEditor({
           <Input
             id="univ-cta-label"
             value={section.cta.label}
+            required
+            aria-invalid={!section.cta.label.trim()}
+            className={!section.cta.label.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
             onChange={e =>
               onChange({
                 ...section,
@@ -164,12 +190,16 @@ export default function HomeUniversitiesEditor({
               })
             }
           />
+          <RequiredFieldError id="univ-cta-label-error" value={section.cta.label} label="CTA label" />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="univ-cta-href">CTA Link</Label>
           <Input
             id="univ-cta-href"
             value={section.cta.href}
+            required
+            aria-invalid={!section.cta.href.trim()}
+            className={!section.cta.href.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
             onChange={e =>
               onChange({
                 ...section,
@@ -177,6 +207,7 @@ export default function HomeUniversitiesEditor({
               })
             }
           />
+          <RequiredFieldError id="univ-cta-href-error" value={section.cta.href} label="CTA link" />
         </div>
       </div>
 

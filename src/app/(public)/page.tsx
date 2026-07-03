@@ -39,20 +39,31 @@ async function syncUniversityLogos(content: CmsPageContent) {
 
   try {
     await connectDb()
+    const pinnedIds = pinnedUniversities.map(university => university.id).filter(Boolean)
     const universityRecords = await (UniversityModel as any)
-      .find({ name: { $in: pinnedUniversities.map(u => u.name) } })
+      .find({
+        $or: [
+          ...(pinnedIds.length > 0 ? [{ _id: { $in: pinnedIds } }] : []),
+          { name: { $in: pinnedUniversities.map(university => university.name) } },
+        ],
+      })
       .lean()
 
-    const dbUniMap = new Map<string, any>(
+    const dbUniMapByName = new Map<string, any>(
       universityRecords.map((univ: any) => [univ.name, univ])
+    )
+    const dbUniMapById = new Map<string, any>(
+      universityRecords.map((univ: any) => [String(univ._id), univ])
     )
 
     const syncedUniversities = pinnedUniversities.map(univ => {
-      const dbUniv = dbUniMap.get(univ.name)
+      const dbUniv = (univ.id && dbUniMapById.get(univ.id)) || dbUniMapByName.get(univ.name)
       if (!dbUniv) return univ
 
       return {
         ...univ,
+        id: String(dbUniv._id),
+        name: dbUniv.name || univ.name,
         logo: dbUniv.logo || univ.logo,
         coverImage: dbUniv.bannerImage || univ.coverImage,
         worldRank: dbUniv.globalRanking ? `#${dbUniv.globalRanking}` : univ.worldRank,

@@ -40,13 +40,6 @@ const defaultPages: Record<string, { title: string; content: CmsPageContent }> =
   },
 }
 
-const homeDestinationOrder = [
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'New Zealand',
-]
-
 export function normalizeCmsPageSlug(slug: string) {
   if (!slug || slug === 'home') return '/'
   if (slug === 'about') return '/about-us'
@@ -103,16 +96,7 @@ function withDefaultSections(content: unknown, slug: string) {
       } as CmsSection
     }
 
-    if (section.type !== 'homeDestinations') return section
-
-    return {
-      ...section,
-      destinations: homeDestinationOrder
-        .map(countryName =>
-          section.destinations.find(destination => destination.name === countryName)
-        )
-        .filter(Boolean),
-    } as CmsSection
+    return section
   })
 
   parsed.sections.forEach(section => {

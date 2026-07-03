@@ -261,6 +261,7 @@ export type HomeUniversitiesSection = {
     href: string
   }
   universities?: Array<{
+    id?: string
     name: string
     logo: string
     coverImage: string

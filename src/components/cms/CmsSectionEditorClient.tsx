@@ -502,21 +502,24 @@ export default function CmsSectionEditorClient({
     )
   }
 
+  const persistDraft = async () => {
+    const response = await fetch(`/api/admin/cms/pages/${pageKey}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, draftContent: content }),
+    })
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null)
+      throw new Error(data?.error || 'Save draft failed')
+    }
+  }
+
   const saveDraft = async () => {
     setIsSaving(true)
 
     try {
-      const response = await fetch(`/api/admin/cms/pages/${pageKey}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, draftContent: content }),
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null)
-        throw new Error(data?.error || 'Save draft failed')
-      }
-
+      await persistDraft()
       toast.success('Draft saved')
     } catch (error: any) {
       toast.error(error.message || 'Could not save draft')
@@ -529,7 +532,7 @@ export default function CmsSectionEditorClient({
     setIsPublishing(true)
 
     try {
-      await saveDraft()
+      await persistDraft()
 
       const response = await fetch(`/api/admin/cms/pages/${pageKey}/publish`, {
         method: 'POST',
@@ -567,6 +570,26 @@ export default function CmsSectionEditorClient({
       </div>
     )
   }
+
+  const hasInvalidDestination = Boolean(
+    isHomeDestinations &&
+    destinations?.destinations.some(
+      destination => !destination.name.trim() || !destination.image.trim()
+    )
+  )
+  const hasInvalidUniversitySection = Boolean(
+    isHomeUniversities &&
+    activeCmsSection?.type === 'homeUniversities' &&
+    [
+      activeCmsSection.eyebrow,
+      activeCmsSection.title,
+      activeCmsSection.highlightedTitle,
+      activeCmsSection.description,
+      activeCmsSection.cta.label,
+      activeCmsSection.cta.href,
+    ].some(value => !value.trim())
+  )
+  const hasValidationErrors = hasInvalidDestination || hasInvalidUniversitySection
 
   if (!isReadySection) {
     return (
@@ -635,14 +658,14 @@ export default function CmsSectionEditorClient({
           <Button
             variant="outline"
             onClick={saveDraft}
-            disabled={isLoading || isSaving}
+            disabled={isLoading || isSaving || hasValidationErrors}
           >
             <Save className="h-4 w-4" />
             {isSaving ? 'Saving...' : 'Save Draft'}
           </Button>
           <Button
             onClick={publish}
-            disabled={isLoading || isPublishing}
+            disabled={isLoading || isPublishing || hasValidationErrors}
             className="bg-[#061331] text-white hover:bg-slate-800"
           >
             <Send className="h-4 w-4" />

@@ -22,7 +22,21 @@ const farro = Farro({
 
 export async function generateMetadata() {
   const settings = await getGlobalSettings();
+  const configuredBaseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    settings.seo.baseUrl ||
+    defaultSiteSettings.seo.baseUrl;
+
+  let metadataBase;
+  try {
+    metadataBase = new URL(configuredBaseUrl);
+  } catch {
+    metadataBase = new URL(defaultSiteSettings.seo.baseUrl);
+  }
+
   return {
+    metadataBase,
     title: settings.seo.defaultMetaTitle,
     description: settings.seo.defaultMetaDescription,
     keywords: settings.seo.defaultMetaKeywords

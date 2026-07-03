@@ -120,13 +120,6 @@ const destinationHrefMap: Record<string, string> = {
   'New Zealand': '/study-abroad/new-zealand',
 }
 
-const homeDestinationOrder = [
-  'United Kingdom',
-  'Canada',
-  'Australia',
-  'New Zealand',
-]
-
 const testimonials = [
   {
     name: 'Ananya S.',
@@ -794,14 +787,7 @@ function getHomeDestinationsSection(content: CmsPageContent): HomeDestinationsSe
     ) as HomeDestinationsSectionData | undefined
   ) || (getDefaultHomeSection('homeDestinations') as HomeDestinationsSectionData)
 
-  return {
-    ...section,
-    destinations: homeDestinationOrder
-      .map(countryName =>
-        section.destinations.find(destination => destination.name === countryName)
-      )
-      .filter(Boolean) as HomeDestinationsSectionData['destinations'],
-  }
+  return section
 }
 
 function getHomeWhyChooseUsSection(content: CmsPageContent): HomeWhyChooseUsSectionData {
@@ -1153,13 +1139,17 @@ export default function NextLevelHomepage({
                   className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
                   style={{ position: 'relative', height: '300px' }}
                 >
-                  <Image
-                    src={country.image}
-                    alt={country.alt || country.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  {country.image?.trim() ? (
+                    <Image
+                      src={country.image}
+                      alt={country.alt || country.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-slate-300" aria-hidden="true" />
+                  )}
                   {/* Dark overlay with transition */}
                   <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/45" />
 

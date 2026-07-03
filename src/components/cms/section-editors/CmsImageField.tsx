@@ -14,6 +14,7 @@ interface CmsImageFieldProps {
   onChange: (value: string) => void
   folder?: string
   placeholder?: string
+  required?: boolean
 }
 
 export default function CmsImageField({
@@ -23,6 +24,7 @@ export default function CmsImageField({
   onChange,
   folder = 'nextlevel/home',
   placeholder = 'https://example.com/image.jpg or /image.png',
+  required = false,
 }: CmsImageFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [mode, setMode] = useState<'url' | 'upload'>('url')
@@ -96,6 +98,9 @@ export default function CmsImageField({
           <Input
             id={id}
             value={value}
+            required={required}
+            aria-invalid={required && !value.trim()}
+            className={required && !value.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
             placeholder={placeholder}
             onChange={event => onChange(event.target.value)}
           />
@@ -129,6 +134,10 @@ export default function CmsImageField({
           </div>
         )}
       </div>
+
+      {required && !value.trim() ? (
+        <p className="text-[11px] font-semibold text-red-600">{label} is required.</p>
+      ) : null}
 
       {value && (
         <div className="space-y-2 min-w-0">

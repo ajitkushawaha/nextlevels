@@ -95,16 +95,26 @@ export default function HomeDestinationsEditor({
               <Input
                 id={`destination-name-${index}`}
                 value={destination.name}
+                required
+                aria-invalid={!destination.name.trim()}
+                aria-describedby={!destination.name.trim() ? `destination-name-error-${index}` : undefined}
+                className={!destination.name.trim() ? 'border-red-500 focus-visible:ring-red-500' : undefined}
                 onChange={event =>
                   setDestinationCardField(index, 'name', event.target.value)
                 }
               />
+              {!destination.name.trim() ? (
+                <p id={`destination-name-error-${index}`} className="text-[11px] font-semibold text-red-600">
+                  Destination name is required. Enter at least one word.
+                </p>
+              ) : null}
             </div>
 
             <CmsImageField
               id={`destination-image-${index}`}
               label="Image"
               value={destination.image}
+              required
               folder="nextlevel/home/destinations"
               onChange={value =>
                 setDestinationCardField(index, 'image', value)

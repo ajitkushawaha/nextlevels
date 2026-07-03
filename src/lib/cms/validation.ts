@@ -133,6 +133,7 @@ const homeUniversitiesSectionSchema = z.object({
     href: z.string().trim().min(1).max(240),
   }),
   universities: z.array(z.object({
+    id: z.string().trim().optional(),
     name: z.string().trim().min(1).max(180),
     logo: z.string().trim().min(1).max(80),
     coverImage: z.string().trim().min(1).max(500),
