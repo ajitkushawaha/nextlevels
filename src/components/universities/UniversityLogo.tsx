@@ -8,8 +8,23 @@ type UniversityLogoProps = {
   className?: string
 }
 
+function isImageSource(value?: string) {
+  if (!value) return false
+
+  const source = value.trim()
+
+  return (
+    source.startsWith('/') ||
+    source.startsWith('http://') ||
+    source.startsWith('https://') ||
+    source.startsWith('data:image/') ||
+    source.startsWith('blob:')
+  )
+}
+
 export default function UniversityLogo({ name, src, className = '' }: UniversityLogoProps) {
-  const [hasError, setHasError] = useState(false)
+  const [failedSource, setFailedSource] = useState('')
+  const imageSource = isImageSource(src) ? src!.trim() : ''
   const initials = name
     .split(/\s+/)
     .filter(Boolean)
@@ -24,14 +39,14 @@ export default function UniversityLogo({ name, src, className = '' }: University
       aria-label={`${name} logo`}
     >
       <span aria-hidden="true">{initials}</span>
-      {src && !hasError ? (
+      {imageSource && imageSource !== failedSource ? (
         // Native img allows a reliable client-side fallback for arbitrary CMS URLs.
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={src}
+          src={imageSource}
           alt=""
           className="absolute inset-0 h-full w-full bg-white object-cover"
-          onError={() => setHasError(true)}
+          onError={() => setFailedSource(imageSource)}
         />
       ) : null}
     </div>

@@ -541,11 +541,9 @@ function ScholarshipOfferCountdownCard({
   offer: HomeScholarshipOfferSectionData
 }) {
   const targetTime = new Date(offer.countdownTarget).getTime()
-  const [timeLeft, setTimeLeft] = useState(() => getCountdownTimeLeft(targetTime))
-  const [isMounted, setIsMounted] = useState(false)
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 })
 
   useEffect(() => {
-    setIsMounted(true)
     setTimeLeft(getCountdownTimeLeft(targetTime))
 
     const interval = window.setInterval(() => {
@@ -556,10 +554,10 @@ function ScholarshipOfferCountdownCard({
   }, [targetTime])
 
   const countdown = [
-    { label: 'Days', value: isMounted ? timeLeft.days : 0 },
-    { label: 'Hours', value: isMounted ? timeLeft.hours : 0 },
-    { label: 'Mins', value: isMounted ? timeLeft.mins : 0 },
-    { label: 'Secs', value: isMounted ? timeLeft.secs : 0 },
+    { label: 'Days', value: timeLeft.days },
+    { label: 'Hours', value: timeLeft.hours },
+    { label: 'Mins', value: timeLeft.mins },
+    { label: 'Secs', value: timeLeft.secs },
   ]
 
   return (
