@@ -81,6 +81,7 @@ const homeDestinationCardSchema = z.object({
   name: z.string().trim().min(1).max(80),
   image: z.string().trim().min(1).max(500),
   alt: z.string().trim().max(160).optional(),
+  href: z.string().trim().max(500).optional(),
 })
 
 const homeDestinationsSectionSchema = z.object({

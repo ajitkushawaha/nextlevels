@@ -157,21 +157,25 @@ const canonicalHomeDestinations = [
     name: 'United Kingdom',
     image: '/destinations_uk.png',
     alt: 'United Kingdom study destination',
+    href: '/study-abroad/study-in-uk',
   },
   {
     name: 'Canada',
     image: '/destinations_canada.png',
     alt: 'Canada study destination',
+    href: '/study-abroad/study-in-canada',
   },
   {
     name: 'Australia',
     image: '/destinations_australia.png',
     alt: 'Australia study destination',
+    href: '/study-abroad/study-in-australia',
   },
   {
     name: 'New Zealand',
     image: '/destinations_nz.png',
     alt: 'New Zealand study destination',
+    href: '/study-abroad/study-in-new-zealand',
   },
 ]
 
@@ -395,7 +399,7 @@ export default function CmsSectionEditorClient({
 
   const setDestinationCardField = (
     index: number,
-    key: 'name' | 'image' | 'alt',
+    key: 'name' | 'image' | 'alt' | 'href',
     value: string
   ) => {
     setContent(prev =>

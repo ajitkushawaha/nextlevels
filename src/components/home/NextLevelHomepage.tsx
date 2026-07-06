@@ -1144,7 +1144,7 @@ export default function NextLevelHomepage({
               {destinationsSection.destinations.map((country) => (
                 <Link
                   key={country.name}
-                  href={destinationHrefMap[country.name] || `/courses?search=${encodeURIComponent(country.name)}`}
+                  href={country.href?.trim() || destinationHrefMap[country.name] || '/courses'}
                   className="group w-full overflow-hidden rounded-2xl shadow-[0_12px_36px_rgba(8,22,56,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(8,22,56,0.15)] cursor-pointer"
                   style={{ position: 'relative', height: '300px' }}
                 >

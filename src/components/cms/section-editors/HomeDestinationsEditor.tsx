@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,6 +8,13 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import type { HomeDestinationsSection } from '@/lib/cms/types'
 import CmsImageField from './CmsImageField'
+
+type CountryPageOption = {
+  _id: string
+  name: string
+  code: string
+  cmsData?: { slug?: string }
+}
 
 interface HomeDestinationsEditorProps {
   destinations: HomeDestinationsSection
@@ -16,7 +24,7 @@ interface HomeDestinationsEditorProps {
   ) => void
   setDestinationCardField: (
     index: number,
-    key: 'name' | 'image' | 'alt',
+    key: 'name' | 'image' | 'alt' | 'href',
     value: string
   ) => void
   addDestination: () => void
@@ -30,6 +38,29 @@ export default function HomeDestinationsEditor({
   addDestination,
   removeDestination,
 }: HomeDestinationsEditorProps) {
+  const [countryPages, setCountryPages] = useState<CountryPageOption[]>([])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadCountryPages() {
+      try {
+        const response = await fetch('/api/admin/courses/countries')
+        const data = await response.json()
+        if (active && response.ok && Array.isArray(data.countries)) {
+          setCountryPages(data.countries)
+        }
+      } catch {
+        // Keep the existing CMS value if country pages cannot be loaded.
+      }
+    }
+
+    loadCountryPages()
+    return () => {
+      active = false
+    }
+  }, [])
+
   return (
     <>
       <div className="space-y-1.5">
@@ -120,6 +151,32 @@ export default function HomeDestinationsEditor({
                 setDestinationCardField(index, 'image', value)
               }
             />
+
+            <div className="space-y-1.5">
+              <Label htmlFor={`destination-href-${index}`}>Country Page</Label>
+              <select
+                id={`destination-href-${index}`}
+                value={destination.href || ''}
+                onChange={event =>
+                  setDestinationCardField(index, 'href', event.target.value)
+                }
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="">Select a country page</option>
+                {countryPages.map(country => {
+                  const slug = country.cmsData?.slug?.trim() || country.code.trim().toLowerCase()
+                  const href = `/study-abroad/${slug}`
+                  return (
+                    <option key={country._id} value={href}>
+                      {country.name}
+                    </option>
+                  )
+                })}
+              </select>
+              <p className="text-[11px] text-slate-500">
+                The card will open the selected country page.
+              </p>
+            </div>
 
             <div className="space-y-1.5">
               <Label htmlFor={`destination-alt-${index}`}>Image Alt</Label>

@@ -145,6 +145,7 @@ export type HomeDestinationCard = {
   name: string
   image: string
   alt?: string
+  href?: string
 }
 
 export type HomeDestinationsSection = {
