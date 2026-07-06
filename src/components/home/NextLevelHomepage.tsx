@@ -114,10 +114,10 @@ const approvedHomeServices = serviceDetails.map(service => ({
 }))
 
 const destinationHrefMap: Record<string, string> = {
-  'United Kingdom': '/study-abroad/uk',
-  Canada: '/study-abroad/canada',
-  Australia: '/study-abroad/australia',
-  'New Zealand': '/study-abroad/new-zealand',
+  'United Kingdom': '/study-abroad/study-in-uk',
+  Canada: '/study-abroad/study-in-canada',
+  Australia: '/study-abroad/study-in-australia',
+  'New Zealand': '/study-abroad/study-in-new-zealand',
 }
 
 const testimonials = [
