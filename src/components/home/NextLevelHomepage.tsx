@@ -602,25 +602,33 @@ function HomeUniversitiesSlider({
   universities: any[]
 }) {
   const sliderRef = useRef<HTMLDivElement>(null)
+  const slideWidthRef = useRef(1)
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
     const slider = sliderRef.current
     if (!slider) return
 
-    const updateActiveIndex = () => {
+    const measureSlides = () => {
       const firstCard = slider.querySelector<HTMLElement>('[data-university-slide]')
-      const slideWidth = firstCard ? firstCard.offsetWidth + 16 : slider.clientWidth
-      setActiveIndex(Math.round(slider.scrollLeft / Math.max(slideWidth, 1)))
+      slideWidthRef.current = firstCard ? firstCard.getBoundingClientRect().width + 16 : slider.clientWidth
+    }
+    const updateActiveIndex = () => {
+      setActiveIndex(Math.round(slider.scrollLeft / Math.max(slideWidthRef.current, 1)))
     }
 
+    measureSlides()
     updateActiveIndex()
     slider.addEventListener('scroll', updateActiveIndex, { passive: true })
-    window.addEventListener('resize', updateActiveIndex)
+    const resizeObserver = new ResizeObserver(() => {
+      measureSlides()
+      updateActiveIndex()
+    })
+    resizeObserver.observe(slider)
 
     return () => {
       slider.removeEventListener('scroll', updateActiveIndex)
-      window.removeEventListener('resize', updateActiveIndex)
+      resizeObserver.disconnect()
     }
   }, [universities.length])
 
@@ -983,9 +991,10 @@ export default function NextLevelHomepage({
                   src={heroSection.image.src}
                   alt={heroSection.image.alt}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 480px"
+                  sizes="(max-width: 639px) 280px, (max-width: 1023px) 340px, 480px"
                   className="object-contain  object-top hover:scale-100 transition-transform duration-700"
                   priority
+                  fetchPriority="high"
                 />
               </div>
             </div>
@@ -1578,7 +1587,6 @@ export default function NextLevelHomepage({
                       src={blog.image}
                       alt={blog.title}
                       fill
-                      loading="eager"
                       className="object-cover"
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />

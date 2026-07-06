@@ -120,7 +120,7 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
           heroData.title.trim().length > 8 &&
           !/^get$/i.test(heroData.title.trim())
             ? heroData.title
-            : 'Next Level Education Consultancy | Study Abroad Expert')
+            : 'Next Level Education | Study Abroad Expert')
         const computedDescription =
           heroData.metaDescription ||
           heroData.description ||

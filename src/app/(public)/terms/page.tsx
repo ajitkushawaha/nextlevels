@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 
 export async function generateMetadata() {
   const seoData = await fetchSEOData('/terms')
-  if (seoData.metaTitle === 'Next Level Education Consultancy | Study Abroad Expert') {
+  if (seoData.metaTitle === 'Next Level Education| Study Abroad Expert') {
     return generateSEOMetadata({
       ...seoData,
       metaTitle: 'Terms & Conditions | Next Level Education',

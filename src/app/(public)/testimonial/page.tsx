@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 
 export async function generateMetadata() {
   const seoData = await fetchSEOData('/testimonial')
-  const isDefaultSeo = seoData.metaTitle === 'Next Level Education Consultancy | Study Abroad Expert'
+  const isDefaultSeo = seoData.metaTitle === 'Next Level Education | Study Abroad Expert'
 
   return generateSEOMetadata(
     isDefaultSeo

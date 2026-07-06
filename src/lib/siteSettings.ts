@@ -13,6 +13,7 @@ export type SiteSettings = {
     defaultMetaDescription: string
     defaultMetaKeywords: string
     defaultOgImage: string
+    faviconUrl: string
     baseUrl: string
     defaultRobots: string
     googleAnalyticsId: string
@@ -83,11 +84,12 @@ export const defaultSiteSettings: SiteSettings = {
   key: 'global',
   seo: {
     siteName: 'Next Level Education Consultancy',
-    defaultMetaTitle: 'Next Level Education Consultancy | Study Abroad Expert',
+    defaultMetaTitle: 'Next Level Education | Study Abroad Expert',
     defaultMetaDescription:
       'Leading overseas education consultancy providing free student visa consultation, university admission guidance, and comprehensive support to study in the UK, Canada, Australia, and New Zealand.',
     defaultMetaKeywords: 'education consultancy, study abroad, student visa, Next Level Education',
     defaultOgImage: '/logo.png',
+    faviconUrl: '/site-favicon.png',
     baseUrl: 'https://nextleveleducation.com',
     defaultRobots: 'index, follow',
     googleAnalyticsId: '',

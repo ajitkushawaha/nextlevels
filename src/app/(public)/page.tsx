@@ -1,4 +1,5 @@
-export const dynamic = 'force-dynamic'
+// Keep the homepage fast while still refreshing published CMS content regularly.
+export const revalidate = 60
 
 import PageRenderer from '@/components/cms/PageRenderer'
 import {

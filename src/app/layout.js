@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import connectDB from "@/lib/db";
 import SiteSettings from "@/models/SiteSettings";
 import { defaultSiteSettings, mergeSiteSettings } from "@/lib/siteSettings";
+import { cache } from "react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,6 +20,8 @@ const farro = Farro({
   weight: ["300", "400", "500", "700"],
   display: "swap",
 });
+
+export const revalidate = 60;
 
 export async function generateMetadata() {
   const settings = await getGlobalSettings();
@@ -51,14 +54,14 @@ export async function generateMetadata() {
     },
     robots: settings.seo.defaultRobots,
     icons: {
-      icon: "/logo.png",
-      shortcut: "/logo.png",
-      apple: "/logo.png",
+      icon: settings.seo.faviconUrl || "/site-favicon.png",
+      shortcut: settings.seo.faviconUrl || "/site-favicon.png",
+      apple: settings.seo.faviconUrl || "/site-favicon.png",
     },
   };
 }
 
-async function getGlobalSettings() {
+const getGlobalSettings = cache(async function getGlobalSettings() {
   try {
     await connectDB();
     const settings = await SiteSettings.findOne({ key: "global" }).lean();
@@ -66,7 +69,7 @@ async function getGlobalSettings() {
   } catch {
     return defaultSiteSettings;
   }
-}
+});
 
 export default async function RootLayout({ children }) {
   const settings = await getGlobalSettings();

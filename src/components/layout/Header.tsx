@@ -22,7 +22,6 @@ function Logo({ settings }: { settings: SiteSettings['header'] }) {
         alt={settings.logoAlt}
         width={150}
         height={74}
-        priority
         className="h-auto w-29 sm:w-33 transition-all duration-300"
       />
     </Link>

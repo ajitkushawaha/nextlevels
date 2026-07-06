@@ -231,6 +231,14 @@ export default function SiteSettingsPage() {
                   folder="nextlevel/site-settings"
                   placeholder="Upload or paste an OG image URL"
                 />
+                <CmsImageField
+                  id="site-favicon"
+                  label="Favicon"
+                  value={settings.seo.faviconUrl}
+                  onChange={value => updateSeo('faviconUrl', value)}
+                  folder="nextlevel/site-settings"
+                  placeholder="Upload or paste a square favicon URL"
+                />
                 <Field label="Default Keywords">
                   <Input value={settings.seo.defaultMetaKeywords} onChange={event => updateSeo('defaultMetaKeywords', event.target.value)} />
                 </Field>
