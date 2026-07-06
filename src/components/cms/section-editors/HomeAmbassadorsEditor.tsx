@@ -48,6 +48,17 @@ export default function HomeAmbassadorsEditor({
     })
   }
 
+  const updateAmbassadorName = (index: number, name: string) => {
+    onChange({
+      ...section,
+      ambassadors: section.ambassadors.map((ambassador, ambassadorIndex) =>
+        ambassadorIndex === index
+          ? { ...ambassador, name, link: `/chat?name=${encodeURIComponent(name)}` }
+          : ambassador
+      ),
+    })
+  }
+
   const addAmbassador = () => {
     onChange({
       ...section,
@@ -82,7 +93,7 @@ export default function HomeAmbassadorsEditor({
         </div>
         <Button type="button" onClick={addAmbassador} className="bg-[#061331] text-white hover:bg-[#061331]/95">
           <Plus className="h-4 w-4" />
-          Add Ambassador
+          Add
         </Button>
       </div>
 
@@ -111,7 +122,7 @@ export default function HomeAmbassadorsEditor({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Name">
-                <Input value={ambassador.name} onChange={event => updateAmbassador(index, 'name', event.target.value)} />
+                <Input value={ambassador.name} onChange={event => updateAmbassadorName(index, event.target.value)} />
               </Field>
               <Field label="Program">
                 <Input value={ambassador.program} onChange={event => updateAmbassador(index, 'program', event.target.value)} />
@@ -119,8 +130,8 @@ export default function HomeAmbassadorsEditor({
               <Field label="University">
                 <Input value={ambassador.university} onChange={event => updateAmbassador(index, 'university', event.target.value)} />
               </Field>
-              <Field label="Chat Link">
-                <Input value={ambassador.link} onChange={event => updateAmbassador(index, 'link', event.target.value)} />
+              <Field label="Chat Link (automatic)">
+                <Input value={`/chat?name=${encodeURIComponent(ambassador.name)}`} readOnly className="bg-slate-50 text-slate-500" />
               </Field>
             </div>
 

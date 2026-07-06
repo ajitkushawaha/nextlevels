@@ -120,6 +120,15 @@ const destinationHrefMap: Record<string, string> = {
   'New Zealand': '/study-abroad/study-in-new-zealand',
 }
 
+function getAmbassadorChatHref(name: string, savedLink?: string) {
+  const link = savedLink?.trim()
+  if (link?.startsWith('/chat?') || link?.startsWith('https://') || link?.startsWith('http://')) {
+    return link
+  }
+
+  return `/chat?name=${encodeURIComponent(name)}`
+}
+
 const testimonials = [
   {
     name: 'Ananya S.',
@@ -1391,7 +1400,7 @@ export default function NextLevelHomepage({
                       </span>
                     </div>
                     <Link
-                      href={ambassador.link}
+                      href={getAmbassadorChatHref(ambassador.name, ambassador.link)}
                       className="inline-flex items-center gap-1 text-sm font-bold text-[#0f54b6] hover:text-[#0b3e87] transition-colors"
                     >
                       Chat with me <span className="font-semibold">&gt;</span>
