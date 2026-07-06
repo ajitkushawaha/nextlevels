@@ -122,11 +122,11 @@ const destinationHrefMap: Record<string, string> = {
 
 function getAmbassadorChatHref(name: string, savedLink?: string) {
   const link = savedLink?.trim()
-  if (link?.startsWith('/chat?') || link?.startsWith('https://') || link?.startsWith('http://')) {
+  if (link?.startsWith('https://') || link?.startsWith('http://')) {
     return link
   }
 
-  return `/chat?name=${encodeURIComponent(name)}`
+  return `/${name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`
 }
 
 const testimonials = [

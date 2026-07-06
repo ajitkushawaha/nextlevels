@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import CmsImageField from './CmsImageField'
 import type { HomeAmbassadorsSection } from '@/lib/cms/types'
+import { slugify } from '@/lib/slug'
 
 interface HomeAmbassadorsEditorProps {
   section: HomeAmbassadorsSection
@@ -53,7 +54,7 @@ export default function HomeAmbassadorsEditor({
       ...section,
       ambassadors: section.ambassadors.map((ambassador, ambassadorIndex) =>
         ambassadorIndex === index
-          ? { ...ambassador, name, link: `/chat?name=${encodeURIComponent(name)}` }
+          ? { ...ambassador, name, link: name.trim() ? `/${slugify(name)}` : '' }
           : ambassador
       ),
     })
@@ -131,7 +132,7 @@ export default function HomeAmbassadorsEditor({
                 <Input value={ambassador.university} onChange={event => updateAmbassador(index, 'university', event.target.value)} />
               </Field>
               <Field label="Chat Link (automatic)">
-                <Input value={`/chat?name=${encodeURIComponent(ambassador.name)}`} readOnly className="bg-slate-50 text-slate-500" />
+                <Input value={ambassador.name.trim() ? `/${slugify(ambassador.name)}` : ''} readOnly className="bg-slate-50 text-slate-500" />
               </Field>
             </div>
 

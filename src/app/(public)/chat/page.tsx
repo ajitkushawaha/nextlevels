@@ -35,9 +35,9 @@ const fallbackAmbassadors: Ambassador[] = [
   },
 ]
 
-function ChatContent() {
+export function AmbassadorChatContent({ ambassadorName }: { ambassadorName?: string }) {
   const searchParams = useSearchParams()
-  const name = searchParams.get('name') || 'Geraldine Penarete'
+  const name = ambassadorName || searchParams.get('name') || 'Geraldine Penarete'
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>(fallbackAmbassadors)
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function ChatPage() {
         <p className="text-slate-400 animate-pulse">Loading...</p>
       </div>
     }>
-      <ChatContent />
+      <AmbassadorChatContent />
     </Suspense>
   )
 }
