@@ -6,6 +6,43 @@ import HeroSection from '@/models/HeroSection'
 import SiteSettings from '@/models/SiteSettings'
 import { defaultSiteSettings, mergeSiteSettings } from '@/lib/siteSettings'
 
+const seoSlugAliases: Record<string, string> = {
+  '': '',
+  '/': '',
+  home: '',
+  about: 'about-us',
+  'about-us': 'about-us',
+  services: 'services',
+  'our services': 'services',
+  'our-services': 'services',
+  'our/services': 'services',
+  'contact-us': 'contact-us',
+  contact: 'contact-us',
+  faq: 'faq',
+  testimonial: 'testimonial',
+  testimonials: 'testimonial',
+  'testimonial-next-level-education': 'testimonial',
+  'testimonials-next': 'testimonial',
+  blog: 'blog',
+  'privacy-policy': 'privacy-policy',
+  privacy: 'privacy-policy',
+  terms: 'terms',
+  'terms-and-conditions': 'terms',
+}
+
+function normalizeSeoPath(path: string) {
+  const slug = path.trim().replace(/^\/+/, '').replace(/\/+$/, '')
+  return seoSlugAliases[slug.toLowerCase()] ?? slug
+}
+
+function getSeoSlugCandidates(slug: string) {
+  const aliases = Object.entries(seoSlugAliases)
+    .filter(([, canonical]) => canonical === slug)
+    .map(([alias]) => alias)
+
+  return Array.from(new Set([slug, ...aliases]))
+}
+
 interface SEOData {
   metaTitle: string
   metaDescription: string
@@ -89,8 +126,15 @@ export async function fetchSEOData(path: string): Promise<SEOData> {
     baseUrl = process.env.NEXT_PUBLIC_BASE_URL || siteSettings.seo.baseUrl || defaultSiteSettings.seo.baseUrl
 
     // Try to find page by slug first
-    const slug = path.startsWith('/') ? path.slice(1) : path
-    const page: any = await (Page as any).findOne({ slug, status: 'active' }).lean()
+    const slug = normalizeSeoPath(path)
+    let page: any = await (Page as any).findOne({ slug, status: 'active' }).lean()
+
+    if (!page) {
+      page = await (Page as any)
+        .findOne({ slug: { $in: getSeoSlugCandidates(slug) }, status: 'active' })
+        .sort({ updatedAt: -1 })
+        .lean()
+    }
 
     if (page) {
       return {

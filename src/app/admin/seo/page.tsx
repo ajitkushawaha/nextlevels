@@ -86,8 +86,12 @@ export default function AdminSeoPage() {
       if (!res.ok) throw new Error(data.error || 'Unable to save SEO page')
 
       setPages(current =>
-        current.map(page => (page.slug === draft.slug ? { ...page, ...data.page } : page))
+        current.map(page =>
+          page.slug === draft.slug || page.slug === data.page.slug ? { ...page, ...data.page } : page
+        )
       )
+      setActiveSlug(data.page.slug || '')
+      setDraft(data.page)
       toast.success('SEO settings saved')
     } catch (error: any) {
       toast.error(error.message || 'Save failed')
