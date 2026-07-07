@@ -158,37 +158,84 @@ export default function AdminSeoPage() {
             ) : (
               <>
                 <Field label="Page Title">
-                  <Input value={draft.title || ''} onChange={event => updateDraft('title', event.target.value)} />
+                  <Input
+                    placeholder="Example: Services"
+                    value={draft.title || ''}
+                    onChange={event => updateDraft('title', event.target.value)}
+                  />
                 </Field>
                 <Field label="Page Slug / Path">
-                  <Input value={draft.slug || ''} onChange={event => updateDraft('slug', event.target.value.replace(/^\/+/, ''))} />
+                  <Input
+                    placeholder="Example: services"
+                    value={draft.slug || ''}
+                    onChange={event => updateDraft('slug', event.target.value.replace(/^\/+/, ''))}
+                  />
                 </Field>
                 <Field label={`Meta Title (${(draft.metaTitle || '').length})`}>
-                  <Input value={draft.metaTitle || ''} onChange={event => updateDraft('metaTitle', event.target.value)} />
+                  <Input
+                    placeholder="Example: Study Abroad Services | Next Level Education"
+                    value={draft.metaTitle || ''}
+                    onChange={event => updateDraft('metaTitle', event.target.value)}
+                  />
                 </Field>
                 <Field label="Robots">
-                  <Input placeholder="index, follow" value={draft.robots || ''} onChange={event => updateDraft('robots', event.target.value)} />
+                  <Input
+                    placeholder="Example: index, follow"
+                    value={draft.robots || ''}
+                    onChange={event => updateDraft('robots', event.target.value)}
+                  />
                 </Field>
                 <Field label="Canonical URL">
-                  <Input value={draft.canonical || ''} onChange={event => updateDraft('canonical', event.target.value)} />
+                  <Input
+                    placeholder="Example: https://www.nextlevel.edu.lk/services"
+                    value={draft.canonical || ''}
+                    onChange={event => updateDraft('canonical', event.target.value)}
+                  />
                 </Field>
                 <Field label="Meta Keywords">
-                  <Input value={draft.metaKeywords || ''} onChange={event => updateDraft('metaKeywords', event.target.value)} />
+                  <Input
+                    placeholder="Example: study abroad, student visa, university admission"
+                    value={draft.metaKeywords || ''}
+                    onChange={event => updateDraft('metaKeywords', event.target.value)}
+                  />
                 </Field>
                 <Field label="Status">
-                  <Input value={draft.status || 'active'} onChange={event => updateDraft('status', event.target.value)} />
+                  <Input
+                    placeholder="Example: active"
+                    value={draft.status || 'active'}
+                    onChange={event => updateDraft('status', event.target.value)}
+                  />
                 </Field>
                 <Field label={`Meta Description (${(draft.metaDescription || '').length})`}>
-                  <Textarea rows={4} value={draft.metaDescription || ''} onChange={event => updateDraft('metaDescription', event.target.value)} />
+                  <Textarea
+                    rows={4}
+                    placeholder="Example: Get expert study abroad guidance for university admission, student visa support, scholarships, and course selection."
+                    value={draft.metaDescription || ''}
+                    onChange={event => updateDraft('metaDescription', event.target.value)}
+                  />
                 </Field>
                 <Field label="OG Title">
-                  <Input value={draft.ogTitle || ''} onChange={event => updateDraft('ogTitle', event.target.value)} />
+                  <Input
+                    placeholder="Example: Study Abroad Services"
+                    value={draft.ogTitle || ''}
+                    onChange={event => updateDraft('ogTitle', event.target.value)}
+                  />
                 </Field>
                 <Field label="OG Description">
-                  <Textarea rows={4} value={draft.ogDescription || ''} onChange={event => updateDraft('ogDescription', event.target.value)} />
+                  <Textarea
+                    rows={4}
+                    placeholder="Example: Start your study abroad journey with free counselling from Next Level Education."
+                    value={draft.ogDescription || ''}
+                    onChange={event => updateDraft('ogDescription', event.target.value)}
+                  />
                 </Field>
                 <Field label="Internal Description / Notes">
-                  <Textarea rows={4} value={draft.description || ''} onChange={event => updateDraft('description', event.target.value)} />
+                  <Textarea
+                    rows={4}
+                    placeholder="Example: Internal note for admin only. Not shown as public SEO unless meta description is empty."
+                    value={draft.description || ''}
+                    onChange={event => updateDraft('description', event.target.value)}
+                  />
                 </Field>
                 <div className="md:col-span-2">
                   <CmsImageField
