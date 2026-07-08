@@ -3,6 +3,7 @@ import connectDB from '@/lib/db'
 import { getBranchSlugs } from '@/lib/branchPages'
 import { serviceDetails } from '@/lib/serviceDetails'
 import { slugify } from '@/lib/slug'
+import { getStudyDestinationCanonicalSlug } from '@/lib/studyDestinations'
 import Blog from '@/models/Blog'
 import Country from '@/models/Country'
 import Program from '@/models/Program'
@@ -78,7 +79,7 @@ async function getDatabaseEntries(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...blogs.map((item: any) => entry(`/blog/${item.slug}`, 'weekly', 0.7, item.updatedAt)),
-      ...countries.map((item: any) => entry(`/study-abroad/${item.cmsData?.slug || item.code}`, 'monthly', 0.8, item.updatedAt)),
+      ...countries.map((item: any) => entry(`/study-abroad/${getStudyDestinationCanonicalSlug(item.cmsData?.slug || item.code)}`, 'monthly', 0.8, item.updatedAt)),
       ...programs.map((item: any) => entry(`/courses/${item.cmsData?.slug || slugify(item.title)}`, 'monthly', 0.7, item.updatedAt)),
       ...scholarships.map((item: any) => entry(`/scholarships/${item.cmsData?.slug || slugify(item.title)}`, 'weekly', 0.7, item.updatedAt)),
       ...services.map((item: any) => entry(`/services/${item.slug}`, 'monthly', 0.8, item.updatedAt)),

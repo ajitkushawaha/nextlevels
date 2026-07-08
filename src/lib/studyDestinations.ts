@@ -408,8 +408,15 @@ const destinationSlugAliases: Record<string, string> = {
 }
 
 export function normalizeStudyDestinationSlug(slug: string) {
-  const normalizedSlug = slug.trim().toLowerCase()
+  const normalizedSlug = slug.trim().toLowerCase().replace(/_/g, '-')
   return destinationSlugAliases[normalizedSlug] || normalizedSlug
+}
+
+export function getStudyDestinationCanonicalSlug(slug: string) {
+  const normalizedSlug = normalizeStudyDestinationSlug(slug)
+  const alias = Object.entries(destinationSlugAliases).find(([, destinationSlug]) => destinationSlug === normalizedSlug)
+
+  return alias?.[0] || normalizedSlug
 }
 
 export function getStudyDestinationSlugs() {

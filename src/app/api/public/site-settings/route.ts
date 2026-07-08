@@ -4,6 +4,7 @@ import SiteSettings from '@/models/SiteSettings'
 import Country from '@/models/Country'
 import Branch from '@/models/Branch'
 import { defaultSiteSettings, mergeSiteSettings } from '@/lib/siteSettings'
+import { getStudyDestinationCanonicalSlug } from '@/lib/studyDestinations'
 
 export async function GET() {
   try {
@@ -17,7 +18,7 @@ export async function GET() {
     const countryPaths = new Map(
       countries.map((country: any) => [
         String(country.name).toLowerCase(),
-        `/study-abroad/${country.cmsData?.slug || country.code}`,
+        `/study-abroad/${getStudyDestinationCanonicalSlug(country.cmsData?.slug || country.code)}`,
       ])
     )
     const withSavedCountrySlug = (link: any) => ({

@@ -25,6 +25,7 @@ import {
   getStudyDestinationSlugs,
   getStudyDestination,
   normalizeStudyDestinationSlug,
+  getStudyDestinationCanonicalSlug,
   type StudyDestination,
 } from '@/lib/studyDestinations'
 import connectDB from '@/lib/db'
@@ -111,11 +112,17 @@ function getCountryCourses(destination: StudyDestination) {
     .slice(0, 4)
 }
 
+function hasTableRows(rows?: TableRow[]) {
+  return Array.isArray(rows) && rows.some(row =>
+    Object.values(row).some(value => String(value || '').trim().length > 0)
+  )
+}
+
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <h2
       id={id}
-      className="scroll-mt-32 text-xl font-extrabold leading-tight text-[#081638] sm:text-2xl"
+      className="max-w-full scroll-mt-32 break-words text-lg font-extrabold leading-tight text-[#081638] sm:text-2xl"
       style={{ fontFamily: 'Farro, sans-serif' }}
     >
       {children}
@@ -131,26 +138,25 @@ function DataTable({
   rows: TableRow[]
 }) {
   return (
-    <div className="my-5 overflow-hidden border border-slate-200 bg-white max-[499px]:border-0">
-      <div className="overflow-x-auto max-[499px]:overflow-visible">
-        <table className="w-full min-w-125 border-collapse text-left text-[13px] max-[499px]:block max-[499px]:min-w-0">
-          <thead className="bg-slate-50 text-[#081638] max-[499px]:hidden">
+    <div className="my-5 max-w-full overflow-x-auto overscroll-x-contain border border-slate-200 bg-white [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="min-w-full">
+        <table className="w-full min-w-full table-fixed border-collapse text-left text-[13px]">
+          <thead className="bg-slate-50 text-[#081638]">
             <tr>
               {columns.map(column => (
-                <th key={column.key} className="border border-slate-200 px-4 py-3 font-bold">
+                <th key={column.key} className="border border-slate-200 px-3 py-3 font-bold sm:px-4">
                   {column.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="max-[499px]:grid max-[499px]:gap-3">
+          <tbody>
             {rows.map((row, index) => (
-              <tr key={index} className="max-[499px]:block max-[499px]:overflow-hidden max-[499px]:rounded-lg max-[499px]:border max-[499px]:border-slate-200">
+              <tr key={index}>
                 {columns.map(column => (
                   <td
                     key={column.key}
-                    data-label={column.label}
-                    className="border border-slate-200 px-4 py-3 leading-6 text-slate-600 max-[499px]:block max-[499px]:border-0 max-[499px]:border-b max-[499px]:px-3 max-[499px]:py-2.5 max-[499px]:before:mb-0.5 max-[499px]:before:block max-[499px]:before:text-[10px] max-[499px]:before:font-bold max-[499px]:before:uppercase max-[499px]:before:tracking-wide max-[499px]:before:text-[#081638] max-[499px]:before:content-[attr(data-label)] max-[499px]:last:border-b-0"
+                    className="break-words border border-slate-200 px-3 py-3 leading-6 text-slate-600 sm:px-4"
                   >
                     {row[column.key]}
                   </td>
@@ -176,7 +182,7 @@ function ArticleBlock({
   return (
     <section className="border-b border-slate-200 py-7 last:border-b-0">
       <H2 id={id}>{title}</H2>
-      <div className="mt-3 text-[14px] leading-7 text-slate-600">
+      <div className="mt-3 max-w-full break-words text-[14px] leading-7 text-slate-600">
         {children}
       </div>
     </section>
@@ -254,8 +260,9 @@ export default async function StudyDestinationPage({ params }: Params) {
     courses = getCountryCourses(destination)
   }
 
-  if (destination.slug && rawCountry !== destination.slug) {
-    permanentRedirect(`/study-abroad/${destination.slug}`)
+  const canonicalCountrySlug = getStudyDestinationCanonicalSlug(destination.slug || normalizedCountry)
+  if (rawCountry !== canonicalCountrySlug) {
+    permanentRedirect(`/study-abroad/${canonicalCountrySlug}`)
   }
 
   const heroTiles = [
@@ -263,10 +270,13 @@ export default async function StudyDestinationPage({ params }: Params) {
     universities[0]?.coverImage || destination.heroImage,
     universities[1]?.coverImage || destination.heroImage,
   ]
+  const hasTuitionCosts = hasTableRows(destination.costs)
+  const hasLivingCosts = hasTableRows(destination.livingCosts)
+  const shouldShowCostSection = hasTuitionCosts || hasLivingCosts
   const navLinks = [
     ['Why study', 'why-study'],
     ['Requirements', 'requirements'],
-    ['Cost', 'cost'],
+    ...(shouldShowCostSection ? [['Cost', 'cost']] : []),
     ['Scholarships', 'scholarships'],
     ['Universities', 'universities'],
     ['Jobs', 'jobs'],
@@ -300,6 +310,7 @@ export default async function StudyDestinationPage({ params }: Params) {
   )
     .filter((banner: any) => banner?.enabled !== false && typeof banner?.image === 'string' && banner.image.trim())
     .slice(0, 4)
+  const hasMarketingBanners = marketingBanners.length > 0
 
   return (
     <div className="min-h-screen bg-white text-[#081638]">
@@ -360,7 +371,7 @@ export default async function StudyDestinationPage({ params }: Params) {
 
         <section className="bg-white py-9">
           <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,920px)_400px]">
-            <article>
+            <article className="min-w-0">
               <ArticleBlock id="why-study" title={`Why study in ${getCountryDisplayName(destination.country)}?`}>
                 <p>{destination.intro}</p>
                 <ul className="mt-4 space-y-2">
@@ -426,25 +437,31 @@ export default async function StudyDestinationPage({ params }: Params) {
                 ) : null}
               </ArticleBlock>
 
-              <ArticleBlock id="cost" title={`Cost of studying in ${getCountryDisplayName(destination.country)}`}>
-                <p>
-                  Tuition and living costs vary by institution, city, study level and lifestyle. The table below gives a practical planning range.
-                </p>
-                <DataTable
-                  columns={[
-                    { key: 'program', label: 'Program' },
-                    { key: 'fee', label: 'Indicative tuition fee' },
-                  ]}
-                  rows={destination.costs}
-                />
-                <DataTable
-                  columns={[
-                    { key: 'item', label: 'Living cost item' },
-                    { key: 'cost', label: 'Estimated cost' },
-                  ]}
-                  rows={destination.livingCosts}
-                />
-              </ArticleBlock>
+              {shouldShowCostSection ? (
+                <ArticleBlock id="cost" title={`Cost of studying in ${getCountryDisplayName(destination.country)}`}>
+                  <p>
+                    Tuition and living costs vary by institution, city, study level and lifestyle. The table below gives a practical planning range.
+                  </p>
+                  {hasTuitionCosts ? (
+                    <DataTable
+                      columns={[
+                        { key: 'program', label: 'Program' },
+                        { key: 'fee', label: 'Indicative tuition fee' },
+                      ]}
+                      rows={destination.costs}
+                    />
+                  ) : null}
+                  {hasLivingCosts ? (
+                    <DataTable
+                      columns={[
+                        { key: 'item', label: 'Living cost item' },
+                        { key: 'cost', label: 'Estimated cost' },
+                      ]}
+                      rows={destination.livingCosts}
+                    />
+                  ) : null}
+                </ArticleBlock>
+              ) : null}
 
               <ArticleBlock id="scholarships" title={`Scholarships to study in ${getCountryDisplayName(destination.country)}`}>
                 <p>
@@ -474,9 +491,12 @@ export default async function StudyDestinationPage({ params }: Params) {
               </ArticleBlock>
             </article>
 
-            <aside id="request-assessment" className="hidden scroll-mt-28 self-start lg:block">
-              <div className="space-y-4">
-                <div className="sticky top-24 rounded-md border border-[#d7a23a]/20 bg-white p-4 shadow-sm">
+            <aside
+              id="request-assessment"
+              className={`hidden scroll-mt-28 self-start lg:block ${hasMarketingBanners ? '' : 'sticky top-24'}`}
+            >
+              <div className={hasMarketingBanners ? 'space-y-4' : 'min-h-[calc(100vh-8rem)]'}>
+                <div className={`${hasMarketingBanners ? 'sticky top-24' : ''} rounded-md border border-[#d7a23a]/20 bg-white p-4 shadow-sm`}>
                   <FreeCounsellingForm
                     compact
                     showImage={false}
@@ -488,7 +508,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                     sourceCountry={destination.country}
                   />
                 </div>
-                {marketingBanners.length > 0 ? (
+                {hasMarketingBanners ? (
                   <div className="space-y-3">
                     {marketingBanners.map((banner: any, index: number) => (
                       <Link
