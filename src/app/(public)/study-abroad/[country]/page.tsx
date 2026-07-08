@@ -333,7 +333,7 @@ export default async function StudyDestinationPage({ params }: Params) {
                 Looking for overseas education information? Explore everything about studying in {getCountryDisplayName(destination.country)}, including visa, admission, costs, scholarships and top universities.
               </p>
               <Link
-                href="/contact-us"
+                href="#country-enquiry-form"
                 className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md bg-[#d7a23a] px-5 py-2 text-xs font-bold text-[#061331] transition hover:bg-[#061331] hover:text-white"
               >
                 Enquire now
@@ -493,10 +493,10 @@ export default async function StudyDestinationPage({ params }: Params) {
 
             <aside
               id="request-assessment"
-              className={`hidden scroll-mt-28 self-start lg:block ${hasMarketingBanners ? '' : 'sticky top-24'}`}
+              className="sticky top-24 hidden scroll-mt-28 self-start lg:block"
             >
               <div className={hasMarketingBanners ? 'space-y-4' : 'min-h-[calc(100vh-8rem)]'}>
-                <div className={`${hasMarketingBanners ? 'sticky top-24' : ''} rounded-md border border-[#d7a23a]/20 bg-white p-4 shadow-sm`}>
+                <div className="rounded-md border border-[#d7a23a]/20 bg-white p-4 shadow-sm">
                   <FreeCounsellingForm
                     compact
                     showImage={false}
@@ -683,7 +683,7 @@ export default async function StudyDestinationPage({ params }: Params) {
           </div>
         </section>
 
-        <section className="bg-[#E9EFF6] py-10">
+        <section id="country-enquiry-form" className="scroll-mt-28 bg-[#E9EFF6] py-10">
           <div className="mx-auto max-w-7xl px-6 sm:px-8">
             <div className="rounded-md bg-white/40 p-3 sm:p-4">
               <FreeCounsellingForm />
