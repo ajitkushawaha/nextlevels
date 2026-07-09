@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { AmbassadorChatContent } from '@/app/(public)/chat/page'
+import { AmbassadorChatContent } from '@/app/(public)/chat/ChatClient'
 import { defaultHomePageContent } from '@/lib/cms/homeDefaults'
 import { getPublishedCmsContent } from '@/lib/cms/pages'
 import { slugify } from '@/lib/slug'
@@ -25,7 +25,7 @@ export default async function LegacyAmbassadorPage({ params }: Props) {
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
-      <AmbassadorChatContent ambassadorName={match.name} />
+      <AmbassadorChatContent ambassadorName={match.name} serverAmbassadors={section.ambassadors} />
     </Suspense>
   )
 }
