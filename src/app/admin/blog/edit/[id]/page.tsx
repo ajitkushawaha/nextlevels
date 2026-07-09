@@ -1026,86 +1026,78 @@ export default function EditBlogPage() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="author">Author *</Label>
-                  <Select
-                    value={formData.author}
-                    onValueChange={value => {
-                      if (value === 'add-new') {
-                        router.push('/admin/blog/config')
-                      } else {
-                        handleInputChange('author', value)
-                      }
-                    }}
-                    disabled={loadingAuthors}
-                  >
-                    <SelectTrigger id="author">
-                      <SelectValue
-                        placeholder={
-                          loadingAuthors
-                            ? 'Loading authors...'
-                            : 'Select an author'
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="author">Author *</Label>
+                    <Select
+                      value={formData.author || undefined}
+                      onValueChange={value => {
+                        if (value === 'add-new') {
+                          router.push('/admin/blog/config')
+                        } else {
+                          handleInputChange('author', value)
                         }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {authors.length > 0 ? (
-                        authors.map(author => (
-                          <SelectItem
-                            key={author._id || author.name}
-                            value={author.name}
-                          >
-                            <div className="flex items-center gap-2">
-                              {author.profileImage && (
-                                <img
-                                  src={author.profileImage}
-                                  alt={author.name}
-                                  className="w-6 h-6 rounded-full object-cover"
-                                  onError={e => {
-                                    e.currentTarget.style.display = 'none'
-                                  }}
-                                />
-                              )}
-                              <span>{author.name}</span>
-                            </div>
-                          </SelectItem>
-                        ))
-                      ) : (
+                      }}
+                      disabled={loadingAuthors}
+                    >
+                      <SelectTrigger id="author" className='text-black'>
+                        <SelectValue
+                          placeholder={
+                            loadingAuthors
+                              ? 'Loading authors...'
+                              : 'Select an author'
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white text-slate-800 border-slate-200">
+                        {authors.length > 0 &&
+                          authors.map(author => (
+                            <SelectItem
+                              key={author._id || author.name}
+                              value={author.name}
+                            >
+                              <div className="flex items-center gap-2">
+                                {author.profileImage && (
+                                  <img
+                                    src={author.profileImage}
+                                    alt={author.name}
+                                    className="w-6 h-6 rounded-full object-cover"
+                                    onError={e => {
+                                      e.currentTarget.style.display = 'none'
+                                    }}
+                                  />
+                                )}
+                                <span>{author.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
                         <SelectItem value="add-new">
                           <div className="flex items-center gap-2 text-blue-600">
                             <span>+</span>
                             <span>Add New Author</span>
                           </div>
                         </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {formData.author &&
+                      authors.find(a => a.name === formData.author) && (
+                        <p className="text-sm text-gray-500 mt-1">
+                          Selected: {formData.author}
+                        </p>
                       )}
-                      <SelectItem value="add-new">
-                        <div className="flex items-center gap-2 text-blue-600">
-                          <span>+</span>
-                          <span>Add New Author</span>
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {formData.author &&
-                    authors.find(a => a.name === formData.author) && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        Selected: {formData.author}
+                    {authors.length === 0 && (
+                      <p className="text-xs text-gray-400 mt-1">
+                        No authors configured.{' '}
+                        <Link
+                          href="/admin/blog/config"
+                          className="text-blue-600 hover:underline"
+                        >
+                          Add authors in Blog Configuration
+                        </Link>
                       </p>
                     )}
-                  {authors.length === 0 && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      No authors configured.{' '}
-                      <Link
-                        href="/admin/blog/config"
-                        className="text-blue-600 hover:underline"
-                      >
-                        Add authors in Blog Configuration
-                      </Link>
-                    </p>
-                  )}
-                </div>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
                     <Select
@@ -1127,7 +1119,7 @@ export default function EditBlogPage() {
                   <div className="space-y-2">
                     <Label htmlFor="category">Category</Label>
                     <Select
-                      value={formData.category}
+                      value={formData.category || undefined}
                       onValueChange={value => {
                         if (value === 'add-new') {
                           router.push('/admin/blog/config?tab=categories')
@@ -1173,16 +1165,19 @@ export default function EditBlogPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="tags">Tags</Label>
-                    <Input
-                      id="tags"
-                      placeholder="tag1, tag2, tag3"
-                      value={formData.tags}
-                      onChange={e => handleInputChange('tags', e.target.value)}
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tags">Tags</Label>
+                  <Input
+                    id="tags"
+                    placeholder="tag1, tag2, tag3"
+                    value={formData.tags}
+                    onChange={e => handleInputChange('tags', e.target.value)}
+                  />
+                  <p className="text-sm text-gray-500">
+                    Separate tags with commas
+                  </p>
                 </div>
               </TabsContent>
 

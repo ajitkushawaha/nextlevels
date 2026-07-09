@@ -887,10 +887,13 @@ export default function CreateBlogPage() {
                   )}
                 </div>
 
-                <div className="space-y-2">
+              
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
                   <Label htmlFor="author">Author *</Label>
                   <Select
-                    value={formData.author}
+                    value={formData.author || undefined}
                     onValueChange={value => {
                       if (value === 'add-new') {
                         router.push('/admin/blog/config')
@@ -909,14 +912,14 @@ export default function CreateBlogPage() {
                         }
                       />
                     </SelectTrigger>
-                    <SelectContent>
-                      {authors.length > 0 ? (
+                    <SelectContent className="bg-white text-slate-800 border-slate-200">
+                      {authors.length > 0 &&
                         authors.map(author => (
                           <SelectItem
                             key={author._id || author.name}
                             value={author.name}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex bg-white  items-center gap-2">
                               {author.profileImage && (
                                 <img
                                   src={author.profileImage}
@@ -930,15 +933,7 @@ export default function CreateBlogPage() {
                               <span>{author.name}</span>
                             </div>
                           </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="add-new">
-                          <div className="flex items-center gap-2 text-blue-600">
-                            <span>+</span>
-                            <span>Add New Author</span>
-                          </div>
-                        </SelectItem>
-                      )}
+                        ))}
                       <SelectItem value="add-new">
                         <div className="flex items-center gap-2 text-blue-600">
                           <span>+</span>
@@ -965,8 +960,6 @@ export default function CreateBlogPage() {
                     </p>
                   )}
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
                     <Select
@@ -988,7 +981,7 @@ export default function CreateBlogPage() {
                   <div className="space-y-2">
                     <Label htmlFor="category">Category *</Label>
                     <Select
-                      value={formData.category}
+                      value={formData.category || undefined}
                       onValueChange={value => {
                         if (value === 'add-new') {
                           router.push('/admin/blog/config?tab=categories')
@@ -1035,7 +1028,9 @@ export default function CreateBlogPage() {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
+                 
+                </div>
+                 <div className="space-y-2">
                     <Label htmlFor="tags">Tags</Label>
                     <Input
                       id="tags"
@@ -1047,7 +1042,6 @@ export default function CreateBlogPage() {
                       Separate tags with commas
                     </p>
                   </div>
-                </div>
               </TabsContent>
 
               <TabsContent value="ctas" className="space-y-6 mt-6">

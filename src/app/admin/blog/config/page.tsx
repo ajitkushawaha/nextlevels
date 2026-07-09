@@ -161,16 +161,25 @@ function BlogConfigContent() {
     try {
       setSaving(true)
 
-      const saveData = {
-        authors: config.authors || [],
-        categories: config.categories || [],
-        headerCTA: config.headerCTA,
-        visaPlanCTA: config.visaPlanCTA,
-        footerCTA: config.footerCTA,
-        sidebarCTA: config.sidebarCTA,
+      let endpoint = '/api/admin/blog-config'
+      let saveData: any = {}
+
+      if (activeTab === 'authors') {
+        endpoint = '/api/admin/blog-config/authors'
+        saveData = { authors: config.authors || [] }
+      } else if (activeTab === 'categories') {
+        endpoint = '/api/admin/blog-config/categories'
+        saveData = { categories: config.categories || [] }
+      } else {
+        saveData = {
+          headerCTA: config.headerCTA,
+          visaPlanCTA: config.visaPlanCTA,
+          footerCTA: config.footerCTA,
+          sidebarCTA: config.sidebarCTA,
+        }
       }
 
-      const response = await fetch('/api/admin/blog-config', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,6 +195,33 @@ function BlogConfigContent() {
         setConfig({
           authors: configData.authors || [],
           categories: configData.categories || [],
+          headerCTA: configData.headerCTA || {
+            title: '',
+            buttonText: '',
+            buttonLink: '',
+            isActive: false,
+          },
+          footerCTA: configData.footerCTA || {
+            title: '',
+            buttonText: '',
+            buttonLink: '',
+            isActive: false,
+          },
+          sidebarCTA: configData.sidebarCTA || {
+            title: 'Study Abroad in 4 Quick Steps',
+            buttonText: 'Get Started',
+            buttonLink: '/contact-us',
+            isActive: true,
+          },
+          visaPlanCTA: configData.visaPlanCTA || {
+            badgeText: 'Popular',
+            title: 'Book Your Consultation',
+            processingTime: 'Within 24 Hours',
+            price: 'Free Consultation',
+            buttonText: 'Book Now',
+            buttonLink: '/contact-us',
+            isActive: true,
+          },
         })
       } else {
         toast.error(data.error || 'Failed to save blog configuration')
