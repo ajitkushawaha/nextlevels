@@ -1375,11 +1375,11 @@ export default function NextLevelHomepage({
                 )}
               </div>
 
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-2 lg:px-2 [&::-webkit-scrollbar]:hidden">
                 {ambassadorsSection.ambassadors.map((ambassador) => (
                   <div
                     key={ambassador.name}
-                    className="bg-white border border-[#ece8df] rounded-3xl p-4 flex flex-col items-center justify-between text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                    className="flex min-h-[220px] w-[78vw] shrink-0 snap-start flex-col items-center justify-between rounded-3xl border border-[#ece8df] bg-white p-4 text-center shadow-[0_12px_34px_rgba(8,22,56,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)] sm:w-[320px] lg:w-[224px] xl:w-[240px]"
                   >
                     <div className="flex flex-col items-center w-full">
                       <div className="relative w-20 h-20 rounded-full overflow-hidden mb-2 border-2 border-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]">

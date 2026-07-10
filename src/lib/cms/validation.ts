@@ -170,7 +170,7 @@ const homeTestimonialsSectionSchema = z.object({
     name: z.string().trim().min(1).max(100),
     country: z.string().trim().min(1).max(100),
     image: z.string().trim().min(1).max(500),
-    quote: z.string().trim().min(1).max(700),
+    quote: z.string().trim().min(1),
   })).min(1).max(10),
 })
 
@@ -186,7 +186,7 @@ const homeAmbassadorsSectionSchema = z.object({
     university: z.string().trim().min(1).max(160),
     image: z.string().trim().min(1).max(500),
     link: z.string().trim().min(1).max(240),
-    intro: z.string().trim().max(700).optional(),
+    intro: z.string().trim().optional(),
   })).min(1).max(10),
 })
 
