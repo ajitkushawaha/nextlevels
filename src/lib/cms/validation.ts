@@ -198,10 +198,10 @@ const homeSuccessStoriesSectionSchema = z.object({
   description: z.string().trim().min(1).max(260),
   videos: z.array(z.object({
     mediaType: z.enum(['youtube', 'image']).default('image'),
-    youtubeUrl: z.string().trim().max(500).optional(),
+    youtubeUrl: z.string().trim().max(1000).optional(),
     studentName: z.string().trim().min(1).max(100),
-    studentAvatar: z.string().trim().min(1).max(500),
-    thumbnail: z.string().trim().max(500).optional(),
+    studentAvatar: z.string().trim().min(1).max(1000),
+    thumbnail: z.string().trim().max(1000).optional(),
     isLocked: z.boolean().optional(),
   })).min(1).max(8),
 })

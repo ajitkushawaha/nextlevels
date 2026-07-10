@@ -515,7 +515,17 @@ export default function CmsSectionEditorClient({
 
     if (!response.ok) {
       const data = await response.json().catch(() => null)
-      throw new Error(data?.error || 'Save draft failed')
+      const details = Array.isArray(data?.details)
+        ? data.details
+            .slice(0, 3)
+            .map((issue: any) => {
+              const path = Array.isArray(issue?.path) ? issue.path.join('.') : ''
+              return [path, issue?.message].filter(Boolean).join(': ')
+            })
+            .filter(Boolean)
+            .join(' | ')
+        : ''
+      throw new Error(details || data?.error || 'Save draft failed')
     }
   }
 
