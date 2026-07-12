@@ -241,11 +241,11 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
   const totalDots = maxIndex + 1
 
   return (
-    <section ref={sectionRef} className="bg-[#081638] py-10 text-white overflow-hidden select-none">
+    <section ref={sectionRef} className="bg-[#081638] py-8 text-white overflow-hidden select-none sm:py-10">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         
         {/* Header Block */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12">
+        <div className="mb-7 flex flex-col sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div className="text-left">
             {/* Eyebrow / LATEST FAQS */}
             <div className="inline-block mb-3">
@@ -257,7 +257,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
             
             {/* Main Title */}
             <h2 
-              className="text-3xl font-extrabold text-white sm:text-4xl"
+              className="text-2xl font-extrabold leading-tight text-white sm:text-4xl"
               style={{ fontFamily: 'Farro, sans-serif' }}
             >
               {section?.title || 'Frequently Asked Questions'}
@@ -275,7 +275,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative px-2 sm:px-8">
+        <div className="relative px-0 sm:px-8">
           
           {/* Left Arrow Button */}
           <button
@@ -287,7 +287,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           </button>
 
           {/* Slider Window */}
-          <div className="overflow-hidden py-4">
+          <div className="overflow-hidden py-3 sm:py-4">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
@@ -302,14 +302,14 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
                     width: `${100 / cardsToShow}%`,
                   }}
                 >
-                  <div className="bg-white rounded-xl border border-[#d7a23a]/20 shadow-[0_12px_34px_rgba(0,0,0,0.14)] p-5 sm:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.24)] text-left min-h-65 sm:aspect-square flex flex-col justify-between overflow-hidden">
+                  <div className="flex min-h-0 flex-col gap-5 overflow-hidden rounded-xl border border-[#d7a23a]/20 bg-white p-5 text-left shadow-[0_12px_34px_rgba(0,0,0,0.14)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.24)] sm:aspect-square sm:min-h-65 sm:justify-between sm:p-8">
                     {/* Question */}
-                    <h3 className="sm:text-[17px] font-extrabold text-[#081638] leading-snug min-h-13">
+                    <h3 className="font-extrabold leading-snug text-[#081638] sm:min-h-13 sm:text-[17px]">
                       {faq.question}
                     </h3>
 
                     {/* Answer Summary */}
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium min-h-16 mb-6 ">
+                    <p className="text-sm font-medium leading-relaxed text-slate-500 sm:min-h-16">
                       {faq.answer}
                     </p>
 
@@ -339,7 +339,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
 
         {/* Indicator Dots */}
         {totalDots > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-8">
+          <div className="mt-5 flex items-center justify-center gap-2 sm:mt-8">
             {Array.from({ length: totalDots }).map((_, i) => (
               <button
                 key={i}
@@ -353,7 +353,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           </div>
         )}
 
-        <div className="mt-8 flex justify-center sm:hidden">
+        <div className="mt-6 flex justify-center sm:hidden">
           <Link
             href="/faq"
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/25 px-5 py-3 text-sm font-bold text-white transition hover:border-[#d7a23a] hover:text-[#d7a23a]"
