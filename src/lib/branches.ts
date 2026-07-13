@@ -46,6 +46,7 @@ export type Branch = {
   email: string
   workingHours: string
   mapQuery: string
+  mapUrl?: string
   faqs: BranchFaq[]
 }
 

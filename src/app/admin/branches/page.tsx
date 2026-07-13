@@ -24,6 +24,7 @@ type BranchEditorData = {
   email: string
   workingHours: string
   mapQuery: string
+  mapUrl?: string
   areas: Array<{
     name: string
     title: string
@@ -76,7 +77,10 @@ export default function AdminBranchesPage() {
         const json = await res.json()
         if (!res.ok) throw new Error(json.error || 'Unable to load branches')
         if (!mounted) return
-        const data = json.branches || []
+        const data = (json.branches || []).map((branch: BranchEditorData) => ({
+          ...branch,
+          mapUrl: branch.mapUrl || '',
+        }))
         setBranches(data)
         setActiveSlug(data[0]?.slug || '')
         setDraft(data[0] || null)
@@ -150,10 +154,19 @@ export default function AdminBranchesPage() {
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error || 'Unable to save branch')
+      const savedBranch = {
+        ...draft,
+        ...(json.branch || {}),
+        mapUrl:
+          typeof json.branch?.mapUrl === 'string'
+            ? json.branch.mapUrl
+            : draft.mapUrl || '',
+      }
 
       setBranches(current =>
-        current.map(branch => (branch.slug === draft.slug ? { ...branch, ...draft } : branch))
+        current.map(branch => (branch.slug === draft.slug ? { ...branch, ...savedBranch } : branch))
       )
+      setDraft(savedBranch)
       toast.success(publish ? 'Branch published' : 'Branch content saved')
     } catch (error: any) {
       toast.error(error.message || 'Unable to save branch')
@@ -232,7 +245,22 @@ export default function AdminBranchesPage() {
                 </div>
                 <div className="space-y-1.5 md:col-span-2">
                   <Label>Map Query</Label>
-                  <Input value={draft.mapQuery} onChange={event => updateField('mapQuery', event.target.value)} />
+                  <Input
+                    value={draft.mapQuery}
+                    onChange={event => updateField('mapQuery', event.target.value)}
+                    placeholder="Example: Next Level Education Jaffna Sri Lanka"
+                  />
+                  <p className="text-xs text-slate-500">Fallback search query used when Map Embed URL is empty.</p>
+                </div>
+                <div className="space-y-1.5 md:col-span-2">
+                  <Label>Map Embed URL</Label>
+                  <Textarea
+                    value={draft.mapUrl || ''}
+                    onChange={event => updateField('mapUrl', event.target.value)}
+                    rows={4}
+                    placeholder="Paste Google Maps embed URL for this branch"
+                  />
+                  <p className="text-xs text-slate-500">Use this for the exact branch map iframe location. Leave empty to use Map Query.</p>
                 </div>
                 <div className="space-y-1.5 md:col-span-2">
                   <Label>SEO Title</Label>

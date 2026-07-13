@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
@@ -84,6 +84,17 @@ export default function StudentTestimonialsCarousel({
 }: StudentTestimonialsCarouselProps) {
   const displayTestimonials = [...testimonials, ...testimonials]
   const [activeReview, setActiveReview] = useState<Testimonial | null>(null)
+
+  useEffect(() => {
+    if (!activeReview) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [activeReview])
 
   return (
     <div className="w-full  mt-10">
@@ -192,25 +203,44 @@ export default function StudentTestimonialsCarousel({
       </div>
 
       {activeReview ? (
-        <div className="fixed inset-0 z-60 flex items-center justify-center bg-[#061331]/70 px-4 py-6 backdrop-blur-sm">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+        <div
+          className="fixed inset-0 z-60 flex items-end justify-center bg-[#061331]/70 px-3 py-3 backdrop-blur-sm sm:items-center sm:px-4 sm:py-6"
+          onClick={() => setActiveReview(null)}
+        >
+          <div
+            className="relative flex max-h-[82svh] w-full max-w-2xl flex-col overflow-hidden rounded-[28px] bg-white shadow-2xl sm:max-h-[86vh] sm:rounded-3xl"
+            onClick={event => event.stopPropagation()}
+          >
             <button
               type="button"
               onClick={() => setActiveReview(null)}
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#061331] transition hover:bg-[#061331] hover:text-white"
+              className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-[#061331] shadow-sm transition hover:bg-[#061331] hover:text-white"
               aria-label="Close review"
             >
               <X className="h-4 w-4" />
             </button>
-            <div className="flex gap-1 text-[#d7a23a]">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star key={index} className="h-4 w-4 fill-current" aria-hidden="true" />
-              ))}
+
+            <div className="shrink-0 border-b border-slate-100 px-5 pb-4 pt-5 pr-16 sm:px-8 sm:pt-7">
+              <div className="flex gap-1 text-[#d7a23a]">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Star key={index} className="h-4 w-4 fill-current" aria-hidden="true" />
+                ))}
+              </div>
+              <p className="mt-3 text-sm font-black text-[#081638] sm:text-base">
+                {activeReview.name}
+              </p>
+              <p className="mt-1 text-xs font-semibold text-[#59616f]">
+                {activeReview.country}
+              </p>
             </div>
-            <p className="mt-5 whitespace-pre-line text-base leading-8 text-[#273149]">
-              &quot;{activeReview.quote}&quot;
-            </p>
-            <div className="mt-7 flex items-center gap-4 border-t border-slate-100 pt-5">
+
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 [-webkit-overflow-scrolling:touch] sm:px-8 sm:py-6">
+              <p className="whitespace-pre-line text-sm leading-7 text-[#273149] sm:text-base sm:leading-8">
+                &quot;{activeReview.quote}&quot;
+              </p>
+            </div>
+
+            <div className="shrink-0 flex items-center gap-4 border-t border-slate-100 bg-white px-5 py-4 sm:px-8 sm:py-5">
               <div className="relative h-14 w-14 overflow-hidden rounded-full">
                 <Image
                   src={activeReview.image}

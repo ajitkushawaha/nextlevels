@@ -27,6 +27,16 @@ type Params = {
   }>
 }
 
+function getMapEmbedSrc(branch: { mapUrl?: string; mapQuery: string }) {
+  const mapUrl = branch.mapUrl?.trim()
+  if (mapUrl) {
+    const iframeSrc = mapUrl.match(/src=["']([^"']+)["']/i)?.[1]
+    return iframeSrc || mapUrl
+  }
+
+  return `https://www.google.com/maps?q=${encodeURIComponent(branch.mapQuery)}&output=embed`
+}
+
 export async function generateStaticParams() {
   const slugs = await getBranchSlugs()
   return slugs.map(slug => ({ slug }))
@@ -108,7 +118,7 @@ export default async function BranchPage({ params }: Params) {
     )
   }
 
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(branch.mapQuery)}&output=embed`
+  const mapSrc = getMapEmbedSrc(branch)
 
   return (
     <div className="min-h-screen bg-white text-[#081638]">

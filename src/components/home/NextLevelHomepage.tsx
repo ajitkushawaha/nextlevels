@@ -675,24 +675,6 @@ function HomeUniversitiesSlider({
       >
         <ArrowRight className="h-4 w-4" />
       </button>
-      <div className="mb-5 flex justify-end gap-2 md:hidden">
-        <button
-          type="button"
-          onClick={() => scroll('prev')}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-sm transition hover:bg-[#081638] hover:text-white"
-          aria-label="Previous universities"
-        >
-          <ArrowRight className="h-4 w-4 rotate-180" />
-        </button>
-        <button
-          type="button"
-          onClick={() => scroll('next')}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7a23a]/40 bg-white text-[#081638] shadow-sm transition hover:bg-[#081638] hover:text-white"
-          aria-label="Next universities"
-        >
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </div>
       <div ref={sliderRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
         {universities.map((univ: any, index) => (
           <div
@@ -1260,7 +1242,7 @@ export default function NextLevelHomepage({
 
         {/* Featured Partner Universities Section */}
         {renderUniversities && (
-        <section className="bg-slate-50 border-y border-[#ece8df]/40 py-10 relative overflow-hidden">
+        <section className="bg-slate-50 border-y border-[#ece8df]/40 py-8 sm:py-10 relative overflow-hidden">
           <div aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 opacity-30">
             <div className="h-56 w-28 bg-[radial-gradient(#d7a23a_2px,transparent_1px)] bg-size-[1.25rem_1.25rem]" />
           </div>
@@ -1269,7 +1251,7 @@ export default function NextLevelHomepage({
           </div>
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10 relative z-10">
-            <div className="mb-12 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="mb-6 flex flex-col gap-4 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl text-left">
                 <Eyebrow>{universitiesSection.eyebrow}</Eyebrow>
                 <h2
@@ -1284,7 +1266,7 @@ export default function NextLevelHomepage({
               </div>
               <Link
                 href={universitiesSection.cta.href}
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-3 rounded-md bg-[#061331] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md lg:self-start"
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-3 rounded-md bg-[#061331] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#d7a23a] hover:text-[#061331] shadow-md sm:px-6 lg:self-start"
               >
                 {universitiesSection.cta.label}
                 <ArrowRight className="h-4 w-4" />

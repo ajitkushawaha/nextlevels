@@ -35,6 +35,7 @@ export interface IBranch extends Document {
   email: string
   workingHours: string
   mapQuery: string
+  mapUrl?: string
   faqs: Array<{
     question: string
     answer: string
@@ -80,6 +81,7 @@ const BranchSchema = new Schema<IBranch>(
     email: { type: String, required: true },
     workingHours: { type: String, required: true },
     mapQuery: { type: String, required: true },
+    mapUrl: { type: String, default: '' },
     faqs: [{
       question: String,
       answer: String,

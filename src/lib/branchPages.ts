@@ -23,6 +23,7 @@ function serializeBranch(branch: any): Branch {
     email: branch.email,
     workingHours: branch.workingHours,
     mapQuery: branch.mapQuery,
+    mapUrl: branch.mapUrl || '',
     faqs: Array.isArray(branch.faqs) ? branch.faqs : [],
   }
 }

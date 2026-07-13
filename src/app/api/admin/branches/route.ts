@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/authConfig'
 import connectDB from '@/lib/db'
 import Branch from '@/models/Branch'
 import { branches as defaultBranches } from '@/lib/branches'
-import { listBranchPages } from '@/lib/branchPages'
+import { getBranchPage, listBranchPages } from '@/lib/branchPages'
 import { revalidatePath } from 'next/cache'
 
 async function requireAdmin() {
@@ -50,6 +50,7 @@ export async function PUT(req: Request) {
       stories: Array.isArray(branch.stories) ? branch.stories : fallback?.stories || [],
       team: Array.isArray(branch.team) ? branch.team : fallback?.team || [],
       gallery: Array.isArray(branch.gallery) ? branch.gallery : fallback?.gallery || [],
+      mapUrl: typeof branch.mapUrl === 'string' ? branch.mapUrl.trim() : (fallback as any)?.mapUrl || '',
       faqs: Array.isArray(branch.faqs) ? branch.faqs : fallback?.faqs || [],
       isActive: publish ? true : (branch?.isActive ?? (fallback as any)?.isActive ?? true),
     }
@@ -66,7 +67,13 @@ export async function PUT(req: Request) {
       console.error('Failed to revalidate branch path:', error)
     }
 
-    return NextResponse.json({ branch: saved })
+    const serializedBranch = await getBranchPage(saved.slug)
+    return NextResponse.json({
+      branch: {
+        ...(serializedBranch || saved),
+        mapUrl: saved?.mapUrl || merged.mapUrl || '',
+      },
+    })
   } catch (error) {
     console.error('Admin branches PUT failed:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

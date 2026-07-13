@@ -16,12 +16,11 @@ const STEPS = [
 ]
 
 const educationOptions = [
-  'Ordinary Levels (O/L)',
-  'Advanced Levels (A/L)',
-  'Diploma / HND',
+  'Ordinary Level (O/L)',
+  'Advanced Level (A/L)',
+  'HND or Diploma',
   "Bachelor's Degree",
   "Master's Degree",
-  'PhD / Research Program',
 ]
 
 const countryOptions = [

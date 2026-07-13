@@ -433,15 +433,15 @@ const contactMapOfficeSectionSchema = z.object({
   id: z.string().trim().min(1),
   type: z.literal('contactMapOffice'),
   enabled: z.boolean(),
-  mapUrl: z.string().trim().min(1).max(1000),
+  mapUrl: z.string().trim().max(3000),
   eyebrow: z.string().trim().min(1).max(100),
   title: z.string().trim().min(1).max(180),
   branches: z.array(z.object({
     name: z.string().trim().min(1).max(120),
     addressLine1: z.string().trim().min(1).max(240),
     addressLine2: z.string().trim().min(1).max(240),
-    mapQuery: z.string().trim().min(1).max(300).optional(),
-    mapUrl: z.string().trim().min(1).max(1000).optional(),
+    mapQuery: z.string().trim().max(300).optional(),
+    mapUrl: z.string().trim().max(3000).optional(),
   })).min(1).max(6),
 })
 

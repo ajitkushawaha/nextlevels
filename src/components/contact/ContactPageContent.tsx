@@ -57,12 +57,23 @@ function getBranchHref(branchName: string) {
   return '/branches/jaffna'
 }
 
-function getBranchMapUrl(branch: ContactMapOfficeSection['branches'][number]) {
-  if (branch.mapUrl?.trim()) return branch.mapUrl
+function normalizeMapEmbedUrl(value?: string) {
+  const mapUrl = value?.trim()
+  if (!mapUrl) return ''
+
+  return mapUrl.match(/src=["']([^"']+)["']/i)?.[1] || mapUrl
+}
+
+function getBranchMapUrl(branch: ContactMapOfficeSection['branches'][number], defaultMapUrl = '') {
+  const branchMapUrl = normalizeMapEmbedUrl(branch.mapUrl)
+  if (branchMapUrl) return branchMapUrl
 
   if (branch.mapQuery?.trim()) {
     return `https://www.google.com/maps?q=${encodeURIComponent(branch.mapQuery)}&output=embed`
   }
+
+  const sectionMapUrl = normalizeMapEmbedUrl(defaultMapUrl)
+  if (sectionMapUrl) return sectionMapUrl
 
   const branchName = branch.name
   const lowerName = branchName.toLowerCase()
@@ -225,7 +236,10 @@ function ContactForm({ section }: { section: ContactFormSection }) {
 
 function ContactMapOffice({ section }: { section: ContactMapOfficeSection }) {
   const branchMap = new Map(section.branches.map(branch => [branch.name, branch]))
-  const branches = fallbackBranches.map(branch => branchMap.get(branch.name) || branch)
+  const branches = fallbackBranches.map(branch => ({
+    ...branch,
+    ...(branchMap.get(branch.name) || {}),
+  }))
 
   return (
     <div className="space-y-8 border-t border-slate-200 bg-white px-6 py-10 shadow-[0_10px_35px_rgba(8,22,56,0.02)] sm:px-8 lg:px-14">
@@ -250,7 +264,7 @@ function ContactMapOffice({ section }: { section: ContactMapOfficeSection }) {
           >
             <div className="relative h-44 overflow-hidden border-b border-[#d7a23a]/20 bg-white">
               <iframe
-                src={getBranchMapUrl(branch)}
+                src={getBranchMapUrl(branch, section.mapUrl)}
                 width="100%"
                 height="100%"
                 style={{ border: 0, pointerEvents: 'none' }}

@@ -20,6 +20,7 @@ import HomeSuccessStoriesEditor from '@/components/cms/section-editors/HomeSucce
 import HomeUniversitiesEditor from '@/components/cms/section-editors/HomeUniversitiesEditor'
 import HomeBlogEditor from '@/components/cms/section-editors/HomeBlogEditor'
 import HomeAmbassadorsEditor from '@/components/cms/section-editors/HomeAmbassadorsEditor'
+import ContactMapOfficeEditor from '@/components/cms/section-editors/ContactMapOfficeEditor'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -46,6 +47,7 @@ import type {
   HomeUniversitiesSection,
   HomeBlogSection,
   HomeAmbassadorsSection,
+  ContactMapOfficeSection,
 } from '@/lib/cms/types'
 import { toast } from 'sonner'
 
@@ -219,6 +221,7 @@ export default function CmsSectionEditorClient({
   const isHomeSuccessStories =
     pageKey === 'home' && sectionId === 'home-success-stories'
   const isServicesList = pageKey === 'services' && sectionId === 'services-list'
+  const isContactMapOffice = pageKey === 'contact' && sectionId === 'contact-map-office'
   const isEditableHomeSection =
     isHomeHero ||
     isHomeProgram ||
@@ -231,8 +234,13 @@ export default function CmsSectionEditorClient({
     isHomeAmbassadors ||
     isHomeSuccessStories
   const isEditableServicesSection = isServicesList
-  const isJsonReadySection = section?.status === 'ready' && !isEditableHomeSection && !isEditableServicesSection
-  const isReadySection = isEditableHomeSection || isEditableServicesSection || isJsonReadySection
+  const isEditableContactSection = isContactMapOffice
+  const isJsonReadySection =
+    section?.status === 'ready' &&
+    !isEditableHomeSection &&
+    !isEditableServicesSection &&
+    !isEditableContactSection
+  const isReadySection = isEditableHomeSection || isEditableServicesSection || isEditableContactSection || isJsonReadySection
 
   useEffect(() => {
     if (!isReadySection) return
@@ -828,6 +836,17 @@ export default function CmsSectionEditorClient({
               {isHomeSuccessStories && activeCmsSection && (
                 <HomeSuccessStoriesEditor
                   section={activeCmsSection as HomeSuccessStoriesSection}
+                  onChange={nextSection =>
+                    setContent(prev =>
+                      updateSectionById(prev, sectionId, nextSection)
+                    )
+                  }
+                />
+              )}
+
+              {isContactMapOffice && activeCmsSection && (
+                <ContactMapOfficeEditor
+                  section={activeCmsSection as ContactMapOfficeSection}
                   onChange={nextSection =>
                     setContent(prev =>
                       updateSectionById(prev, sectionId, nextSection)

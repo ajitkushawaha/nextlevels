@@ -1510,9 +1510,9 @@ function CourseFinderContent() {
                     className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-600 bg-slate-50 focus:outline-none focus:border-[#d7a23a]"
                   >
                     <option value="">Select Qualification</option>
-                    <option value="Ordinary Levels (O/L)">Ordinary Levels (O/L)</option>
-                    <option value="Advanced Levels (A/L)">Advanced Levels (A/L)</option>
-                    <option value="Diploma / HND">Diploma / HND</option>
+                    <option value="Ordinary Level (O/L)">Ordinary Level (O/L)</option>
+                    <option value="Advanced Level (A/L)">Advanced Level (A/L)</option>
+                    <option value="HND or Diploma">HND or Diploma</option>
                     <option value="Bachelor's Degree">Bachelor&apos;s Degree</option>
                     <option value="Master's Degree">Master&apos;s Degree</option>
                   </select>

@@ -31,13 +31,11 @@ type FreeCounsellingFormProps = {
 }
 
 const defaultQualificationOptions = [
-  'O/L',
-  'A/L',
-  'Diploma',
-  'Higher Diploma',
+  'Ordinary Level (O/L)',
+  'Advanced Level (A/L)',
+  'HND or Diploma',
   "Bachelor's Degree",
   "Master's Degree",
-  'Other',
 ]
 
 export default function FreeCounsellingForm(props: FreeCounsellingFormProps) {
