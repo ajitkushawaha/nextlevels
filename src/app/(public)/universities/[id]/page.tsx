@@ -250,7 +250,6 @@ export default async function UniversityDetailPage({ params }: Props) {
       ]
     },
   }
-
   return (
     <div className="min-h-screen bg-white text-[#061331] flex flex-col justify-between">
 
@@ -290,7 +289,7 @@ export default async function UniversityDetailPage({ params }: Props) {
                   <span className="ml-1.5 text-white/60">/</span>
                 </li>
                 <li className="pointer-events-none text-white font-semibold line-clamp-1">
-                  <span>{university.name}</span>
+                  <span>{canonicalSlug}</span>
                 </li>
               </ol>
             </nav>

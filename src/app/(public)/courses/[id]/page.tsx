@@ -213,7 +213,7 @@ export default async function CourseDetailPage({ params }: Props) {
                   <span className="ml-1.5 text-white/60">/</span>
                 </li>
                 <li className="pointer-events-none text-white font-semibold line-clamp-1">
-                  <span>{course.title}</span>
+                  <span>{canonicalSlug}</span>
                 </li>
               </ol>
             </nav>

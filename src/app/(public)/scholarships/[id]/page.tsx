@@ -234,7 +234,7 @@ export default async function ScholarshipDetailPage({ params }: Props) {
                   <span className="ml-1.5 text-white/35">/</span>
                 </li>
                 <li className="pointer-events-none font-semibold line-clamp-1">
-                  <span>{scholarship.title}</span>
+                  <span>{canonicalSlug}</span>
                 </li>
               </ol>
             </nav>

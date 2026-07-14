@@ -260,7 +260,7 @@ export default function ReferralAgentsPage() {
 
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px] border-collapse text-left text-sm">
+          <table className="w-full min-w-200 border-collapse text-left text-sm">
             <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-3.5">Agent Name</th>
@@ -394,7 +394,7 @@ export default function ReferralAgentsPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="referral-agent-modal-title"
-            className="flex max-h-[92vh] w-full max-w-[560px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_30px_90px_rgba(6,19,49,0.28)]"
+            className="flex max-h-[92vh] w-full max-w-140 flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_30px_90px_rgba(6,19,49,0.28)]"
             onMouseDown={event => event.stopPropagation()}
           >
             <div className="flex shrink-0 items-start justify-between gap-4 border-b border-slate-100 bg-white px-5 py-5 sm:px-7">
