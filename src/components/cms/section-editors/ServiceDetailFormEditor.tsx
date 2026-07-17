@@ -156,6 +156,19 @@ export default function ServiceDetailFormEditor({
             className="text-xs"
           />
         </div>
+
+        <div className="space-y-1.5">
+          <CmsImageField
+            id="service-hero-image"
+            label="Hero / Service Image"
+            value={data.image || ''}
+            folder="nextlevel/services"
+            onChange={value => setField('image', value)}
+          />
+          <p className="text-[11px] text-slate-500">
+            This image is used on the service detail hero and as the fallback OG image when no custom SEO OG image is set.
+          </p>
+        </div>
       </div>
 
       <SeoFields

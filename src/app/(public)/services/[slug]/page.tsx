@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const title = seo.metaTitle || `${service.title} | Next Level Education`
   const description = seo.metaDescription || service.shortDesc
   const canonical = seo.canonical || `/services/${service.slug}`
+  const ogImage = seo.ogImage || service.image
 
   return {
     title,
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       description: seo.ogDescription || description,
       url: canonical,
       type: 'website',
-      images: seo.ogImage ? [{ url: seo.ogImage }] : undefined,
+      images: ogImage ? [{ url: ogImage }] : undefined,
     },
   }
 }

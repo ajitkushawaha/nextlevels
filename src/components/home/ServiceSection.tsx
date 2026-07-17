@@ -92,7 +92,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                 </div>
 
                 {/* Card Content & Details */}
-                <div className="p-6 flex flex-col justify-between grow text-left">
+                <div className="flex grow flex-col justify-between p-5 text-left sm:p-6">
                   <div>
                    
                     <h3 className="text-lg font-black text-[#081638] group-hover:text-[#d7a23a] transition-colors duration-300 line-clamp-1 mb-2">
@@ -104,17 +104,17 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                   </div>
 
                   {/* Bottom Row */}
-                  <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-auto">
-                    <div className="text-left">
+                  <div className="mt-auto flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
+                    <div className="min-w-0 text-left">
                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">Scope</span>
-                      <span className="text-xs font-black text-[#081638]">{serviceStats}</span>
+                      <span className="line-clamp-2 text-xs font-black leading-4 text-[#081638]">{serviceStats}</span>
                     </div>
                     <Link
                       href={service.href || '/services'}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#081638] hover:bg-[#d7a23a] text-white hover:text-[#081638] text-[11px] font-black tracking-wide transition-all shadow-sm"
+                      className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#081638] px-3.5 py-2 text-[10px] font-black leading-none tracking-wide text-white shadow-sm transition-all hover:bg-[#d7a23a] hover:text-[#081638] sm:px-4 sm:text-[11px]"
                     >
-                      Read More
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span className="whitespace-nowrap">Read More</span>
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                     </Link>
                   </div>
                 </div>
