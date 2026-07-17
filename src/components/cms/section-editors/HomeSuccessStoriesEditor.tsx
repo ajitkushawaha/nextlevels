@@ -24,6 +24,8 @@ const emptyStory: SuccessStory = {
   isLocked: false,
 }
 
+const createEmptyStory = (): SuccessStory => ({ ...emptyStory })
+
 export default function HomeSuccessStoriesEditor({
   section,
   onChange,
@@ -43,7 +45,7 @@ export default function HomeSuccessStoriesEditor({
   const addStory = () => {
     onChange({
       ...section,
-      videos: [...section.videos, emptyStory],
+      videos: [...section.videos, createEmptyStory()],
     })
   }
 
@@ -93,7 +95,7 @@ export default function HomeSuccessStoriesEditor({
 
         {section.videos.map((story, index) => (
           <div
-            key={`${story.studentName}-${index}`}
+            key={`success-story-${index}`}
             className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
           >
             <div className="flex items-center justify-between gap-3">
