@@ -203,7 +203,7 @@ const homeSuccessStoriesSectionSchema = z.object({
     studentAvatar: z.string().trim().min(1).max(1000),
     thumbnail: z.string().trim().max(1000).optional(),
     isLocked: z.boolean().optional(),
-  })).min(1).max(30),
+  })).min(1),
 })
 
 const homeFaqsSectionSchema = z.object({
