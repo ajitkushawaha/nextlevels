@@ -1435,7 +1435,7 @@ export default function NextLevelHomepage({
                 )}
               </div>
 
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-2 lg:px-2 [&::-webkit-scrollbar]:hidden">
                 {successStoriesSection.videos.map((video) => {
                   const isYoutube = video.mediaType === 'youtube'
                   const embedUrl = isYoutube ? getYoutubeEmbedUrl(video.youtubeUrl) : ''
@@ -1447,7 +1447,7 @@ export default function NextLevelHomepage({
                   return (
                     <div
                       key={`${video.studentName}-${thumbnail}-${video.youtubeUrl || ''}`}
-                      className="bg-white rounded-3xl border border-[#ece8df] overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)]"
+                      className="flex w-[82vw] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-3xl border border-[#ece8df] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.05)] sm:w-[320px] lg:w-[282px]"
                     >
                       {embedUrl ? (
                         <button
