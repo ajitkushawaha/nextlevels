@@ -33,13 +33,43 @@ function serializeServicePage(page: any): SerializedServicePage {
   }
 }
 
+function isDefaultServiceData(service: SerializedServicePage) {
+  const defaultService = serviceDetails.find(item => item.number === service.data.number)
+  if (!defaultService) return false
+
+  return service.slug === defaultService.slug && service.data.title === defaultService.title
+}
+
+function dedupeServicePages(services: SerializedServicePage[]) {
+  const serviceMap = new Map<string, SerializedServicePage>()
+
+  services.forEach(service => {
+    const key = service.data.number || service.slug
+    const existing = serviceMap.get(key)
+
+    if (!existing) {
+      serviceMap.set(key, service)
+      return
+    }
+
+    const existingIsDefault = isDefaultServiceData(existing)
+    const nextIsDefault = isDefaultServiceData(service)
+
+    if (existingIsDefault && !nextIsDefault) {
+      serviceMap.set(key, service)
+    }
+  })
+
+  return Array.from(serviceMap.values())
+}
+
 export async function seedDefaultServicePages() {
   await connectDB()
 
   await Promise.all(
     serviceDetails.map(service =>
       (ServicePage as any).findOneAndUpdate(
-        { slug: service.slug },
+        { $or: [{ slug: service.slug }, { 'data.number': service.number }] },
         {
           $setOnInsert: {
             slug: service.slug,
@@ -63,7 +93,7 @@ export async function getAdminServicePages() {
     .sort({ createdAt: 1 })
     .lean()
 
-  return pages.map(serializeServicePage)
+  return dedupeServicePages(pages.map(serializeServicePage))
 }
 
 export async function getPublishedServiceDetail(slug: string) {
@@ -73,7 +103,24 @@ export async function getPublishedServiceDetail(slug: string) {
       .findOne({ slug, status: 'published' })
       .lean()
 
-    if (page) return parseServiceDetail(page.data)
+    if (page) {
+      const service = serializeServicePage(page)
+      if (isDefaultServiceData(service)) {
+        const editedService = await (ServicePage as any)
+          .findOne({
+            status: 'published',
+            slug: { $ne: service.slug },
+            'data.number': service.data.number,
+          })
+          .lean()
+
+        if (editedService && !isDefaultServiceData(serializeServicePage(editedService))) {
+          return null
+        }
+      }
+
+      return service.data
+    }
   } catch (error) {
     console.error('Published service lookup failed:', error)
   }
@@ -86,11 +133,16 @@ export async function getPublishedServiceSlugs() {
     await connectDB()
     const pages = await (ServicePage as any)
       .find({ status: 'published' })
-      .select('slug')
       .lean()
 
-    const dbSlugs = pages.map((page: any) => String(page.slug))
-    return Array.from(new Set([...serviceDetails.map(service => service.slug), ...dbSlugs]))
+    const dbServices = dedupeServicePages(pages.map(serializeServicePage))
+    const dbNumbers = new Set(dbServices.map(service => service.data.number))
+    const staticSlugs = serviceDetails
+      .filter(service => !dbNumbers.has(service.number))
+      .map(service => service.slug)
+    const dbSlugs = dbServices.map(service => service.slug)
+
+    return Array.from(new Set([...staticSlugs, ...dbSlugs]))
   } catch {
     return serviceDetails.map(service => service.slug)
   }
