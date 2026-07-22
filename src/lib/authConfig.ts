@@ -10,6 +10,10 @@ import bcrypt from 'bcryptjs'
 import { getGoogleOAuthConfig } from '@/lib/googleOAuthConfig'
 import type { NextAuthOptions } from 'next-auth'
 
+function normalizeEmail(value: unknown) {
+  return String(value || '').trim().toLowerCase()
+}
+
 // Create dynamic auth options
 export async function createAuthOptions(): Promise<NextAuthOptions> {
   const googleConfig = await getGoogleOAuthConfig()
@@ -31,6 +35,7 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
         await connectDB()
         const { email, password, role, mobile, otp, isNewUser, name } =
           credentials!
+        const normalizedEmail = normalizeEmail(email)
 
         // OTP Login Flow
         if (mobile && otp) {
@@ -57,7 +62,8 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
 
           // Determine if identifier is email or mobile
           const isEmail = mobile.includes('@')
-          const query = isEmail ? { email: mobile } : { mobile: mobile }
+          const normalizedIdentifierEmail = isEmail ? normalizeEmail(mobile) : ''
+          const query = isEmail ? { email: normalizedIdentifierEmail } : { mobile: mobile }
 
           let user = await (User as any).findOne(query)
 
@@ -71,8 +77,8 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
               })
 
               // Check if email is already taken if provided (and different from identifier)
-              if (email && email !== mobile) {
-                const existingEmail = await (User as any).findOne({ email })
+              if (normalizedEmail && normalizedEmail !== normalizedIdentifierEmail) {
+                const existingEmail = await (User as any).findOne({ email: normalizedEmail })
                 if (existingEmail) {
                   throw new Error('Email already registered')
                 }
@@ -81,8 +87,8 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
               user = await (User as any).create({
                 name: name || 'New User',
                 email: isEmail
-                  ? mobile
-                  : email || `${mobile.replace('+', '')}@mobile.temp`, // Use identifier if email, else provided email or temp
+                  ? normalizedIdentifierEmail
+                  : normalizedEmail || `${mobile.replace('+', '')}@mobile.temp`, // Use identifier if email, else provided email or temp
                 mobile: isEmail ? undefined : mobile, // Use identifier if mobile, else undefined (or provided elsewhere?)
                 role: 'user',
                 isMobileVerified: !isEmail,
@@ -110,15 +116,15 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
         }
 
         console.log('🔐 Login attempt:', {
-          email,
+          email: normalizedEmail,
           role,
           passwordLength: password?.length,
         })
 
         try {
-          const user = await (User as any).findOne({ email })
+          const user = await (User as any).findOne({ email: normalizedEmail })
           if (!user) {
-            console.log('❌ User not found:', email)
+            console.log('❌ User not found:', normalizedEmail)
             return null
           }
 
@@ -157,6 +163,7 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
           if (user.role.toLowerCase() !== 'admin' && !user.status?.isActive) {
             console.log('❌ User account is inactive:', {
               email,
+              normalizedEmail,
               isActive: user.status?.isActive,
             })
             return null
@@ -165,6 +172,7 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
           if (user.role.toLowerCase() !== 'admin') {
             console.log('✅ User status check passed:', {
               email,
+              normalizedEmail,
               isActive: user.status?.isActive,
             })
           } else {
@@ -175,7 +183,7 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
           if (user.role.toLowerCase() === 'agent') {
             const agent = await (Agent as any).findOne({ userId: user._id })
             if (!agent) {
-              console.log('❌ Agent record not found for user:', email)
+              console.log('❌ Agent record not found for user:', normalizedEmail)
               return null
             }
 
@@ -186,18 +194,19 @@ export async function createAuthOptions(): Promise<NextAuthOptions> {
             ) {
               console.log('❌ Agent account is inactive/disabled/suspended:', {
                 email,
+                normalizedEmail,
                 status: agent.status,
               })
               return null
             }
 
             console.log('✅ Agent status check passed:', {
-              email,
+              email: normalizedEmail,
               agentStatus: agent.status,
             })
           }
 
-          console.log('✅ Login successful for:', email)
+          console.log('✅ Login successful for:', normalizedEmail)
           return {
             id: user._id.toString(),
             name: user.name,
@@ -284,17 +293,18 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         await connectDB()
         const { email, password, role } = credentials!
+        const normalizedEmail = normalizeEmail(email)
 
         console.log('🔐 Login attempt:', {
-          email,
+          email: normalizedEmail,
           role,
           passwordLength: password?.length,
         })
 
         try {
-          const user = await (User as any).findOne({ email })
+          const user = await (User as any).findOne({ email: normalizedEmail })
           if (!user) {
-            console.log('❌ User not found:', email)
+            console.log('❌ User not found:', normalizedEmail)
             return null
           }
 
@@ -333,6 +343,7 @@ export const authOptions: NextAuthOptions = {
           if (user.role.toLowerCase() !== 'admin' && !user.status?.isActive) {
             console.log('❌ User account is inactive:', {
               email,
+              normalizedEmail,
               isActive: user.status?.isActive,
             })
             return null
@@ -341,6 +352,7 @@ export const authOptions: NextAuthOptions = {
           if (user.role.toLowerCase() !== 'admin') {
             console.log('✅ User status check passed:', {
               email,
+              normalizedEmail,
               isActive: user.status?.isActive,
             })
           } else {
@@ -351,7 +363,7 @@ export const authOptions: NextAuthOptions = {
           if (user.role.toLowerCase() === 'agent') {
             const agent = await (Agent as any).findOne({ userId: user._id })
             if (!agent) {
-              console.log('❌ Agent record not found for user:', email)
+              console.log('❌ Agent record not found for user:', normalizedEmail)
               return null
             }
 
@@ -362,18 +374,19 @@ export const authOptions: NextAuthOptions = {
             ) {
               console.log('❌ Agent account is inactive/disabled/suspended:', {
                 email,
+                normalizedEmail,
                 status: agent.status,
               })
               return null
             }
 
             console.log('✅ Agent status check passed:', {
-              email,
+              email: normalizedEmail,
               agentStatus: agent.status,
             })
           }
 
-          console.log('✅ Login successful for:', email)
+          console.log('✅ Login successful for:', normalizedEmail)
           return {
             id: user._id.toString(),
             name: user.name,

@@ -31,8 +31,14 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const { data: session, status } = useSession()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false)
 
   const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const confirmSignOut = () => {
+    setShowSignOutConfirm(false)
+    signOut({ callbackUrl: '/' })
+  }
 
   // Render loading state
   if (status === 'loading') {
@@ -250,7 +256,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 {!isCollapsed && <span>Live Site</span>}
               </Link>
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => setShowSignOutConfirm(true)}
                 className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition text-left ${isCollapsed ? 'justify-center' : ''}`}
                 title="Sign Out"
               >
@@ -272,6 +278,53 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
+
+      {showSignOutConfirm ? (
+        <div
+          className="fixed inset-0 z-100 flex items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-[2px]"
+          role="presentation"
+          onMouseDown={() => setShowSignOutConfirm(false)}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="sign-out-confirm-title"
+            className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_24px_80px_rgba(6,19,49,0.28)]"
+            onMouseDown={event => event.stopPropagation()}
+          >
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+                <LogOut className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 id="sign-out-confirm-title" className="text-base font-black text-[#061331]">
+                  Sign out?
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  Are you sure you want to sign out from the admin panel?
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowSignOutConfirm(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={confirmSignOut}
+                className="bg-red-600 text-white hover:bg-red-700"
+              >
+                Yes, Sign Out
+              </Button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   )
 }

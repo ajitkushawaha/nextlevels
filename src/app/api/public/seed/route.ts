@@ -13,9 +13,12 @@ export async function GET() {
     const existingAdmin = await (User as any).findOne({ role: 'admin' })
     let seededAdminEmail = existingAdmin?.email || ''
 
+    const defaultEmail = String(process.env.ADMIN_EMAIL || process.env.EMAIL_USER || 'Info@nextlevel.edu.lk')
+      .trim()
+      .toLowerCase()
+    const defaultPassword = process.env.ADMIN_PASSWORD || 'admin@1234'
+
     if (!existingAdmin) {
-      const defaultEmail = 'admin@nextlevel.com'
-      const defaultPassword = 'Admin@123456'
       const hashedPassword = await bcrypt.hash(defaultPassword, 10)
 
       const admin = await (User as any).create({
@@ -28,6 +31,34 @@ export async function GET() {
       })
       seededAdminEmail = admin.email
       adminStatus = 'Admin user seeded successfully'
+    } else if (existingAdmin.email !== defaultEmail) {
+      const emailOwner = await (User as any).findOne({
+        email: defaultEmail,
+        _id: { $ne: existingAdmin._id },
+      })
+
+      if (!emailOwner) {
+        existingAdmin.email = defaultEmail
+        existingAdmin.password = await bcrypt.hash(defaultPassword, 10)
+        existingAdmin.isEmailVerified = true
+        existingAdmin.status = { ...(existingAdmin.status || {}), isActive: true }
+        await existingAdmin.save()
+        seededAdminEmail = existingAdmin.email
+        adminStatus = 'Admin email and password updated'
+      } else {
+        existingAdmin.password = await bcrypt.hash(defaultPassword, 10)
+        existingAdmin.isEmailVerified = true
+        existingAdmin.status = { ...(existingAdmin.status || {}), isActive: true }
+        await existingAdmin.save()
+        adminStatus = 'Admin password updated, but email was not changed because the target email is already used'
+      }
+    } else {
+      existingAdmin.password = await bcrypt.hash(defaultPassword, 10)
+      existingAdmin.isEmailVerified = true
+      existingAdmin.status = { ...(existingAdmin.status || {}), isActive: true }
+      await existingAdmin.save()
+      seededAdminEmail = existingAdmin.email
+      adminStatus = 'Admin password updated'
     }
 
     // 2. Seed Mock Blog Posts
