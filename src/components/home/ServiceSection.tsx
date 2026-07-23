@@ -125,12 +125,12 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
       </Swiper>
 
       {/* Left Button */}
-      <button className="swiper-prev absolute left-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-100">
+      <button className="swiper-prev absolute left-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md transition hover:bg-gray-100 sm:flex">
         <ArrowLeft size={20} />
       </button>
 
       {/* Right Button */}
-      <button className="swiper-next absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#07034F] text-white shadow-md transition hover:bg-[#1f1c84]">
+      <button className="swiper-next absolute right-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#07034F] text-white shadow-md transition hover:bg-[#1f1c84] sm:flex">
         <ArrowRight size={20} />
       </button>
 

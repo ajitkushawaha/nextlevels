@@ -177,6 +177,8 @@ const faqCards: FAQCard[] = [
 
 export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
   const sectionRef = useRef<HTMLElement>(null)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [cardsToShow, setCardsToShow] = useState(4)
   const cards = section?.faqs?.length
@@ -235,6 +237,31 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
     setCurrentIndex(index)
   }
 
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    touchStartX.current = touch.clientX
+    touchStartY.current = touch.clientY
+  }
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null || touchStartY.current === null) return
+
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchStartX.current
+    const deltaY = touch.clientY - touchStartY.current
+
+    touchStartX.current = null
+    touchStartY.current = null
+
+    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) < Math.abs(deltaY)) return
+
+    if (deltaX < 0) {
+      nextSlide()
+    } else {
+      prevSlide()
+    }
+  }
+
   // Calculate total number of slide pages/dots
   const maxIndex = Math.max(cards.length - cardsToShow, 0)
   const safeCurrentIndex = Math.min(currentIndex, maxIndex)
@@ -280,14 +307,18 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Left Arrow Button */}
           <button
             onClick={prevSlide}
-            className="absolute -left-3.75 sm:-left-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -left-3.75 sm:-left-1.25 top-1/2 -translate-y-1/2 z-20 hidden h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer sm:flex"
             aria-label="Previous FAQs"
           >
             <ChevronLeft className="h-5 w-5 stroke-[2.5]" />
           </button>
 
           {/* Slider Window */}
-          <div className="overflow-hidden py-3 sm:py-4">
+          <div
+            className="overflow-hidden py-3 sm:py-4"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
@@ -330,7 +361,7 @@ export default function FAQSection({ section }: { section?: HomeFaqsSection }) {
           {/* Right Arrow Button */}
           <button
             onClick={nextSlide}
-            className="absolute -right-3.75 sm:-right-1.25 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="absolute -right-3.75 sm:-right-1.25 top-1/2 -translate-y-1/2 z-20 hidden h-10 w-10 items-center justify-center rounded-full bg-white text-[#081638] shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-white/20 hover:text-[#d7a23a] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer sm:flex"
             aria-label="Next FAQs"
           >
             <ChevronRight className="h-5 w-5 stroke-[2.5]" />
